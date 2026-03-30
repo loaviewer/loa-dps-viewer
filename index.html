@@ -42,13 +42,14 @@
     }
 
     .top-title {
+      width: 100%;
       text-align: center;
       font-size: 30px;
       font-weight: 800;
       letter-spacing: 1px;
       color: #f6d18b;
       text-shadow: 0 0 18px rgba(246, 209, 139, 0.18);
-      width: 100%;
+      margin: 0 auto;
     }
 
     .top-datetime {
@@ -92,7 +93,8 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      align-self: stretch;
+      align-self: start;
+      height: auto;
     }
 
     .menu-title,
@@ -470,11 +472,13 @@
       .top-title {
         width: 100%;
         text-align: center;
+        margin: 0 auto;
       }
 
       .top-datetime {
         position: static;
         transform: none;
+        display: inline-block;
         margin: 0 auto;
       }
 
@@ -484,6 +488,7 @@
 
       .right {
         gap: 14px;
+        align-self: start;
       }
 
       .menu-list {
@@ -531,12 +536,16 @@
 
       .top-bar {
         width: 100%;
-        align-items: center;
+        display: flex;
+        flex-direction: column;
         justify-content: center;
+        align-items: center;
+        gap: 10px;
         text-align: center;
       }
 
       .top-title {
+        display: block;
         width: 100%;
         font-size: 21px;
         line-height: 1.2;
@@ -686,7 +695,7 @@
 <body>
   <div class="app">
     <div class="top-bar">
-      <div class="top-title">LOST ARK DPS VIEWER (v08)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v09)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
