@@ -957,7 +957,7 @@
   <div class="app">
     <div class="top-bar">
       <div class="top-spacer"></div>
-      <div class="top-title">LOST ARK DPS VIEWER (v14)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v14.1)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
@@ -1319,7 +1319,7 @@
             currentGatoBoss = btn.dataset.boss;
 
             trackEvent(
-              `/event/gato1730/${currentGatoBoss}`,
+              `/이벤트/가토/${currentGatoBoss}`,
               `보스 클릭 - ${currentGatoBoss}`
             );
 
@@ -1352,8 +1352,10 @@
 
           const meta = raidMeta[currentMenu][currentCombo];
           const menuName = currentMenu === "serka" ? "세르카" : "성당";
+          const tabName = `${meta.title.replace(/\s*\(.+\)/, "")}_${meta.gateName}`;
+          
           trackEvent(
-            `/event/tab/${currentMenu}/${currentCombo}`,
+            `/이벤트/탭/${menuName}/${tabName}`,
             `탭 클릭 - ${menuName} ${meta.title.replace(/\s*\(.+\)/, "")} ${meta.gateName}`
           );
 
@@ -1630,15 +1632,15 @@
 
         if (currentMenu === "serka") {
           currentCombo = "hard_gate1";
-          trackEvent("/event/menu/serka", "메뉴 클릭 - 세르카");
+          trackEvent("/이벤트/메뉴/세르카", "메뉴 클릭 - 세르카");
         } else if (currentMenu === "cathedral") {
           currentCombo = "hard_gate1";
-          trackEvent("/event/menu/cathedral", "메뉴 클릭 - 성당");
+          trackEvent("/이벤트/메뉴/성당", "메뉴 클릭 - 성당");
         } else if (currentMenu === "gato1730") {
           currentGatoBoss = "루멘칼리고";
-          trackEvent("/event/menu/gato1730", "메뉴 클릭 - 1730 가토");
+          trackEvent("/이벤트/메뉴/1730가토", "메뉴 클릭 - 1730 가토");
         } else if (currentMenu === "gato1750") {
-          trackEvent("/event/menu/gato1750", "메뉴 클릭 - 1750 가토");
+          trackEvent("/이벤트/메뉴/1750가토", "메뉴 클릭 - 1750 가토");
         }
 
         setBaseTimeByMenu(currentMenu);
