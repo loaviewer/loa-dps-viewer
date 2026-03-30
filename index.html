@@ -20,7 +20,7 @@
     .app {
       width: 1280px;
       margin: 24px auto;
-      padding: 22px;
+      padding: 22px 22px 40px;
       border: 1px solid rgba(255, 215, 140, 0.25);
       background: rgba(10, 14, 22, 0.88);
       box-shadow:
@@ -28,6 +28,7 @@
         0 20px 60px rgba(0,0,0,0.45);
       border-radius: 24px;
       backdrop-filter: blur(8px);
+      overflow: visible;
     }
 
     .top-bar {
@@ -554,12 +555,13 @@
       }
 
       .top-datetime {
-        display: inline-block;
+        display: block;
         position: static;
         transform: none;
         margin: 0 auto;
         font-size: 12px;
         padding: 8px 10px;
+        text-align: center;
       }
 
       .center-top {
