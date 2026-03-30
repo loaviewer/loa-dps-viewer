@@ -80,9 +80,9 @@
         0 12px 30px rgba(0,0,0,0.35);
     }
 
-    .left { padding: 18px; }
-    .center { padding: 18px; }
-    .right { padding: 18px; }
+    .left, .center, .right {
+      padding: 18px;
+    }
 
     .menu-title,
     .side-title {
@@ -270,45 +270,51 @@
     .row-40 td { background: rgba(158, 107, 214, 0.22); }
 
     .share-cell {
-      position: relative;
       width: 150px;
       min-width: 150px;
-      padding-left: 46px;
-      text-align: center;
       color: #ffe8b3;
       font-weight: 800;
-      overflow: visible;
+      padding: 10px 8px;
+    }
+
+    .share-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
     }
 
     .share-text {
       display: inline-block;
-      min-width: 48px;
+      min-width: 42px;
       color: #ffe8b3 !important;
       font-weight: 800;
       font-size: 15px;
       line-height: 1;
-      position: relative;
-      z-index: 3;
       opacity: 1 !important;
       visibility: visible !important;
     }
 
     .cut-icon {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
       width: 22px;
       height: 22px;
       border-radius: 999px;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       font-size: 12px;
       font-weight: 900;
       border: 1px solid transparent;
       box-shadow: 0 0 8px rgba(0,0,0,0.2);
-      z-index: 2;
+      flex: 0 0 22px;
+    }
+
+    .cut-placeholder {
+      width: 22px;
+      height: 22px;
+      display: inline-block;
+      flex: 0 0 22px;
     }
 
     .cut-30 {
@@ -401,6 +407,14 @@
       font-size: 13px;
       color: #a9997e;
       line-height: 1.5;
+    }
+
+    .version {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #cfae69;
+      text-align: right;
+      opacity: 0.85;
     }
 
     .badge {
@@ -534,6 +548,7 @@
             구글 시트 데이터를 읽어옵니다.<br>
             시간 변경 시 DPS는 자동 계산됩니다.
           </div>
+          <div class="version">v02</div>
         </div>
       </div>
     </div>
@@ -898,11 +913,11 @@
       });
     }
 
-    function getCutIcon(share) {
+    function getCutIconHtml(share) {
       if (share === 30) return `<span class="cut-icon cut-30">⚔</span>`;
       if (share === 33) return `<span class="cut-icon cut-33">◆</span>`;
       if (share === 40) return `<span class="cut-icon cut-40">✦</span>`;
-      return "";
+      return `<span class="cut-placeholder"></span>`;
     }
 
     function renderHead() {
@@ -963,8 +978,10 @@
     function renderShareCell(share) {
       return `
         <td class="share-cell">
-          ${getCutIcon(share)}
-          <span class="share-text">${share}%</span>
+          <div class="share-inner">
+            ${getCutIconHtml(share)}
+            <span class="share-text">${share}%</span>
+          </div>
         </td>
       `;
     }
