@@ -957,7 +957,7 @@
   <div class="app">
     <div class="top-bar">
       <div class="top-spacer"></div>
-      <div class="top-title">LOST ARK DPS VIEWER (v13)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v14)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
@@ -1119,6 +1119,16 @@
         nightmare_gate2: { diffKey: "nightmare", gateKey: "gate2", title: "3단계 (1750)", gateName: "2관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-nightmare" }
       }
     };
+
+    function trackEvent(path, title) {
+      if (window.goatcounter && typeof window.goatcounter.count === "function") {
+        window.goatcounter.count({
+          path,
+          title,
+          event: true
+        });
+      }
+    }
 
     function formatDateTime(date) {
       const y = date.getFullYear();
@@ -1307,6 +1317,12 @@
         tabs.querySelectorAll(".tab[data-boss]").forEach(btn => {
           btn.addEventListener("click", () => {
             currentGatoBoss = btn.dataset.boss;
+
+            trackEvent(
+              `/event/gato1730/${currentGatoBoss}`,
+              `보스 클릭 - ${currentGatoBoss}`
+            );
+
             renderTabs();
             renderTable();
           });
@@ -1333,6 +1349,14 @@
       tabs.querySelectorAll(".tab[data-combo]").forEach(btn => {
         btn.addEventListener("click", () => {
           currentCombo = btn.dataset.combo;
+
+          const meta = raidMeta[currentMenu][currentCombo];
+          const menuName = currentMenu === "serka" ? "세르카" : "성당";
+          trackEvent(
+            `/event/tab/${currentMenu}/${currentCombo}`,
+            `탭 클릭 - ${menuName} ${meta.title.replace(/\s*\(.+\)/, "")} ${meta.gateName}`
+          );
+
           renderTabs();
           renderTable();
         });
@@ -1606,10 +1630,15 @@
 
         if (currentMenu === "serka") {
           currentCombo = "hard_gate1";
+          trackEvent("/event/menu/serka", "메뉴 클릭 - 세르카");
         } else if (currentMenu === "cathedral") {
           currentCombo = "hard_gate1";
+          trackEvent("/event/menu/cathedral", "메뉴 클릭 - 성당");
         } else if (currentMenu === "gato1730") {
           currentGatoBoss = "루멘칼리고";
+          trackEvent("/event/menu/gato1730", "메뉴 클릭 - 1730 가토");
+        } else if (currentMenu === "gato1750") {
+          trackEvent("/event/menu/gato1750", "메뉴 클릭 - 1750 가토");
         }
 
         setBaseTimeByMenu(currentMenu);
