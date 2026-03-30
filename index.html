@@ -141,6 +141,7 @@
       font-size: 26px;
       font-weight: 800;
       color: #f4ddb0;
+      line-height: 1.2;
     }
 
     .content-sub {
@@ -269,8 +270,30 @@
     .share-cell {
       color: #ffe8b3 !important;
       font-weight: 900;
-      font-size: 16px;
-      letter-spacing: 0.3px;
+      font-size: 15px;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      text-align: left;
+      padding-left: 16px;
+    }
+
+    .share-label {
+      display: inline-block;
+      min-width: 54px;
+      margin-right: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      opacity: 0.95;
+    }
+
+    .label-30 { color: #ffcf7a; }
+    .label-33 { color: #8ef0c9; }
+    .label-40 { color: #d8b2ff; }
+
+    .share-value {
+      display: inline-block;
+      min-width: 34px;
+      text-align: right;
     }
 
     .dps-cell {
@@ -486,7 +509,7 @@
             구글 시트 데이터를 읽어옵니다.<br>
             시간 변경 시 DPS는 자동 계산됩니다.
           </div>
-          <div class="version">v04</div>
+          <div class="version">v05</div>
         </div>
       </div>
     </div>
@@ -696,18 +719,18 @@
         if (diff === "nightmare") return "3단계 (1750)";
       }
       if (menu === "gato1730") {
-        return `${currentGatoBoss} (1730)`;
+        return "";
       }
       if (menu === "gato1750") {
-        return "준비중";
+        return "";
       }
-      return "준비중";
+      return "";
     }
 
     function getContentName(menu) {
       if (menu === "serka") return "세르카";
       if (menu === "cathedral") return "지평의 성당";
-      if (menu === "gato1730") return "1730 가디언 토벌";
+      if (menu === "gato1730") return `1730 가디언 토벌 : ${currentGatoBoss}`;
       if (menu === "gato1750") return "1750 가디언 토벌";
       return "콘텐츠";
     }
@@ -851,6 +874,19 @@
       });
     }
 
+    function renderShareCell(share) {
+      if (share === 30) {
+        return `<td class="share-cell"><span class="share-label label-30">강투컷</span><span class="share-value">${share}%</span></td>`;
+      }
+      if (share === 33) {
+        return `<td class="share-cell"><span class="share-label label-33">1인분</span><span class="share-value">${share}%</span></td>`;
+      }
+      if (share === 40) {
+        return `<td class="share-cell"><span class="share-label label-40">잔혈컷</span><span class="share-value">${share}%</span></td>`;
+      }
+      return `<td class="share-cell"><span class="share-value">${share}%</span></td>`;
+    }
+
     function renderHead() {
       const head = document.getElementById("tableHead");
 
@@ -904,10 +940,6 @@
           <th>DPS</th>
         </tr>
       `;
-    }
-
-    function renderShareCell(share) {
-      return `<td class="share-cell">${share}%</td>`;
     }
 
     function renderTable() {
