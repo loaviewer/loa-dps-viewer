@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>로아 딜지분</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255,210,120,0.12), transparent 30%),
+        linear-gradient(180deg, #101722 0%, #0b1018 45%, #070b12 100%);
+      color: #f3e7c2;
+    }
+
+    .app {
+      width: 1280px;
+      margin: 24px auto;
+      padding: 22px;
+      border: 1px solid rgba(255, 215, 140, 0.25);
+      background: rgba(10, 14, 22, 0.88);
+      box-shadow:
+        0 0 0 1px rgba(255,215,140,0.08) inset,
+        0 20px 60px rgba(0,0,0,0.45);
+      border-radius: 24px;
+      backdrop-filter: blur(8px);
+    }
+
+    .top-bar {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 18px;
+      min-height: 50px;
+    }
+
+    .top-title {
+      text-align: center;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #f6d18b;
+      text-shadow: 0 0 18px rgba(246, 209, 139, 0.18);
+    }
+
+    .top-datetime {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+      font-variant-numeric: tabular-nums;
+      color: #e2d2a9;
+      letter-spacing: 0.6px;
+      opacity: 0.95;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,214,153,0.16);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr 250px;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(28,36,50,0.92), rgba(16,22,32,0.92));
+      border: 1px solid rgba(255, 214, 153, 0.18);
+      border-radius: 20px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.03) inset,
+        0 12px 30px rgba(0,0,0,0.35);
+    }
+
+    .left {
+      padding: 18px;
+    }
+
+    .menu-title,
+    .side-title {
+      font-size: 13px;
+      color: #cfae69;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+      opacity: 0.9;
+    }
+
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .menu-btn {
+      width: 100%;
+      border: 1px solid rgba(255,214,153,0.2);
+      background: linear-gradient(180deg, rgba(61, 76, 102, 0.28), rgba(21, 28, 39, 0.88));
+      color: #f5e7c5;
+      min-height: 72px;
+      border-radius: 16px;
+      font-size: 19px;
+      font-weight: 700;
+      text-align: left;
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: 0.18s ease;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.22);
+    }
+
+    .menu-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,214,153,0.45);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.28);
+    }
+
+    .menu-btn.active {
+      border-color: rgba(255, 214, 153, 0.8);
+      background: linear-gradient(180deg, rgba(138, 108, 51, 0.35), rgba(44, 34, 18, 0.95));
+      box-shadow:
+        0 0 0 1px rgba(255,220,160,0.12) inset,
+        0 0 18px rgba(255,196,92,0.14);
+    }
+
+    .center {
+      padding: 18px;
+    }
+
+    .center-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .content-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #f4ddb0;
+    }
+
+    .content-sub {
+      font-size: 13px;
+      color: #b9a98b;
+      margin-top: 4px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      max-width: 820px;
+    }
+
+    .tab {
+      min-width: 120px;
+      min-height: 46px;
+      padding: 8px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,214,153,0.28);
+      background: rgba(255,255,255,0.03);
+      color: #e8dcc0;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.18s ease;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .tab:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,214,153,0.5);
+    }
+
+    .tab.active {
+      color: #1a140a;
+      background: linear-gradient(180deg, #f7d590, #d9a955);
+      border-color: rgba(255,229,182,0.95);
+      transform: translateY(-1px) scale(1.03);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.25) inset,
+        0 0 18px rgba(255, 214, 153, 0.38);
+    }
+
+    .tab.gato {
+      min-width: 128px;
+      min-height: 64px;
+      padding: 9px 10px;
+      font-size: 14px;
+      text-align: center;
+      flex: 0 0 auto;
+    }
+
+    .tab-label {
+      line-height: 1;
+    }
+
+    .tab.active .tab-label {
+      color: #241700;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+    }
+
+    .tab-meta {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      min-height: 18px;
+    }
+
+    .tab.active .tab-meta {
+      margin-top: 6px;
+      padding: 3px 6px;
+      border-radius: 999px;
+      background: rgba(18, 24, 35, 0.18);
+    }
+
+    .table-wrap {
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(255,214,153,0.18);
+      background: rgba(9, 13, 20, 0.55);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+      table-layout: fixed;
+    }
+
+    thead th {
+      background: linear-gradient(180deg, rgba(157,115,58,0.95), rgba(107,72,34,0.95));
+      color: #fff3d7;
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(255,224,177,0.18);
+    }
+
+    thead tr.subhead th {
+      background: rgba(255, 220, 180, 0.12);
+      color: #f4dfb8;
+      padding: 10px 10px;
+    }
+
+    tbody td {
+      padding: 10px 10px;
+      text-align: center;
+      color: #f3ead8;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.015);
+    }
+
+    tbody tr:hover td {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .row-30 td { background: rgba(245, 166, 35, 0.18); }
+    .row-33 td { background: rgba(61, 195, 145, 0.18); }
+    .row-40 td { background: rgba(158, 107, 214, 0.22); }
+
+    .share-cell {
+      position: relative;
+      font-weight: 800;
+      color: #ffe8b3;
+      width: 150px;
+      padding-left: 46px;
+      text-align: center;
+    }
+
+    .share-text {
+      display: inline-block;
+      min-width: 42px;
+    }
+
+    .cut-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid transparent;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    .cut-30 {
+      background: rgba(245, 166, 35, 0.22);
+      color: #ffcf7a;
+      border-color: rgba(245, 166, 35, 0.45);
+    }
+
+    .cut-33 {
+      background: rgba(61, 195, 145, 0.20);
+      color: #8ef0c9;
+      border-color: rgba(61, 195, 145, 0.45);
+    }
+
+    .cut-40 {
+      background: rgba(158, 107, 214, 0.22);
+      color: #d8b2ff;
+      border-color: rgba(158, 107, 214, 0.45);
+    }
+
+    .dps-cell {
+      font-weight: 800;
+      color: #ffd58c;
+    }
+
+    .gate-divider {
+      border-right: 2px solid rgba(255, 214, 153, 0.32) !important;
+    }
+
+    .status {
+      text-align: right;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #a7987d;
+    }
+
+    .right {
+      padding: 18px;
+    }
+
+    .side-box {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,214,153,0.16);
+      background: rgba(255,255,255,0.03);
+      margin-bottom: 16px;
+    }
+
+    .time-view {
+      text-align: center;
+      font-size: 30px;
+      font-weight: 800;
+      color: #f4ddb0;
+      margin: 8px 0 16px;
+      letter-spacing: 1px;
+    }
+
+    .time-inputs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .time-inputs input {
+      width: 76px;
+      height: 46px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,214,153,0.22);
+      background: rgba(0,0,0,0.24);
+      color: #f8edd1;
+      font-size: 20px;
+      text-align: center;
+      outline: none;
+    }
+
+    .time-labels {
+      text-align: center;
+      font-size: 13px;
+      color: #b6a483;
+      margin-bottom: 10px;
+    }
+
+    .auto-refresh {
+      text-align: center;
+      font-size: 14px;
+      color: #8ef0c9;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      opacity: 0.92;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #a9997e;
+      line-height: 1.5;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 20px;
+      padding: 0 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.12);
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .attr-dark { background: rgba(126, 87, 194, 0.22); color: #dab8ff; }
+    .attr-earth { background: rgba(121, 85, 72, 0.24); color: #e0c2a8; }
+    .attr-lightning { background: rgba(255, 214, 10, 0.22); color: #ffe98f; }
+    .attr-holy { background: rgba(255, 236, 179, 0.20); color: #fff2b0; }
+    .attr-fire { background: rgba(255, 112, 67, 0.22); color: #ffbfaa; }
+    .attr-none { background: rgba(255,255,255,0.08); color: #d1d5db; }
+
+    .type-human { background: rgba(100, 181, 246, 0.18); color: #bfe1ff; }
+    .type-ancient { background: rgba(186, 104, 200, 0.18); color: #edc6ff; }
+    .type-beast { background: rgba(141, 110, 99, 0.22); color: #e4c9bb; }
+    .type-insect { background: rgba(174, 213, 129, 0.20); color: #e2f5bf; }
+    .type-spirit { background: rgba(128, 222, 234, 0.18); color: #c6f7ff; }
+
+    .tab.active .badge {
+      background: rgba(18, 24, 35, 0.72) !important;
+      color: #fff4de !important;
+      border-color: rgba(255,255,255,0.18) !important;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset;
+    }
+
+    .header-meta {
+      margin-top: 6px;
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .th-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    @media (max-width: 1320px) {
+      .app { width: calc(100% - 20px); }
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .top-bar {
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .top-datetime {
+        position: static;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top-bar">
+      <div class="top-title">LOST ARK DPS VIEWER</div>
+      <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
+    </div>
+
+    <div class="layout">
+      <div class="panel left">
+        <div class="menu-title">CONTENT MENU</div>
+        <div class="menu-list">
+          <button class="menu-btn active" data-menu="serka">세르카 딜지분 보기</button>
+          <button class="menu-btn" data-menu="cathedral">지평의 성당 보기</button>
+          <button class="menu-btn" data-menu="gato1730">1730 가토 딜지분</button>
+          <button class="menu-btn" data-menu="gato1750">1750 가토 딜지분</button>
+        </div>
+      </div>
+
+      <div class="panel center">
+        <div class="center-top">
+          <div>
+            <div class="content-title" id="contentTitle">세르카</div>
+            <div class="content-sub" id="tableTitle">하드 (1730)</div>
+          </div>
+
+          <div class="tabs" id="tabs"></div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="dataTable">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="status" id="status">불러오는 중...</div>
+      </div>
+
+      <div class="panel right">
+        <div class="side-title">CLEAR TIME</div>
+
+        <div class="side-box">
+          <div class="time-view" id="timeDisplay">10:00</div>
+
+          <div class="time-inputs">
+            <input type="number" id="minutes" value="10" min="0" />
+            <input type="number" id="seconds" value="0" min="0" max="59" />
+          </div>
+
+          <div class="time-labels" id="timeBaseLabel">기본값 10분(600초)</div>
+          <div class="auto-refresh">자동 갱신중</div>
+        </div>
+
+        <div class="side-box">
+          <div class="side-title" style="margin-bottom:10px;">INFO</div>
+          <div class="hint">
+            구글 시트 데이터를 읽어옵니다.<br>
+            시간 변경 시 DPS는 자동 계산됩니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/1v4gfG-Lr0iFmiP0PXtVTsijdMziekQaZ-wBTWrobncY/export?format=csv&gid=0";
+
+    let currentMenu = "serka";
+    let currentDiff = "hard";
+    let currentGatoBoss = "루멘칼리고";
+
+    const parsedData = {
+      serka: { normal: [], hard: [], nightmare: [] },
+      cathedral: { normal: [], hard: [], nightmare: [] },
+      gato1730: {},
+      gato1750: {}
+    };
+
+    const gato1730Bosses = [
+      "루멘칼리고",
+      "가르가디스",
+      "스콜라키아",
+      "크라티오스",
+      "아게오로스",
+      "드렉탈라스",
+      "소나벨",
+      "베스칼"
+    ];
+
+    const gato1730Layout = [
+      { boss: "루멘칼리고", startRow: 66, shareCol: 1, damageCol: 3 },
+      { boss: "가르가디스", startRow: 66, shareCol: 9, damageCol: 11 },
+      { boss: "스콜라키아", startRow: 66, shareCol: 17, damageCol: 19 },
+      { boss: "크라티오스", startRow: 98, shareCol: 1, damageCol: 3 },
+      { boss: "아게오로스", startRow: 98, shareCol: 9, damageCol: 11 },
+      { boss: "드렉탈라스", startRow: 98, shareCol: 17, damageCol: 19 },
+      { boss: "소나벨", startRow: 130, shareCol: 1, damageCol: 3 },
+      { boss: "베스칼", startRow: 130, shareCol: 9, damageCol: 11 }
+    ];
+
+    const gatoMeta = {
+      "루멘칼리고": {
+        type: { text: "고대", cls: "type-ancient" },
+        attr: { text: "암속성 취약", cls: "attr-dark" }
+      },
+      "가르가디스": {
+        type: { text: "야수", cls: "type-beast" },
+        attr: { text: "토속성 취약", cls: "attr-earth" }
+      },
+      "스콜라키아": {
+        type: { text: "곤충", cls: "type-insect" },
+        attr: { text: "토속성 취약", cls: "attr-earth" }
+      },
+      "크라티오스": {
+        type: { text: "야수", cls: "type-beast" },
+        attr: { text: "뇌속성 취약", cls: "attr-lightning" }
+      },
+      "아게오로스": {
+        type: { text: "고대", cls: "type-ancient" },
+        attr: { text: "성속성 취약", cls: "attr-holy" }
+      },
+      "드렉탈라스": {
+        type: { text: "야수", cls: "type-beast" },
+        attr: { text: "화속성 취약", cls: "attr-fire" }
+      },
+      "소나벨": {
+        type: { text: "정령", cls: "type-spirit" },
+        attr: { text: "암속성 취약", cls: "attr-dark" }
+      },
+      "베스칼": {
+        type: { text: "야수", cls: "type-beast" },
+        attr: { text: "화속성 취약", cls: "attr-fire" }
+      }
+    };
+
+    function getGateMeta(menu) {
+      if (menu === "serka") {
+        return {
+          gate1: {
+            type: { text: "인간", cls: "type-human" },
+            attr: { text: "속성 없음", cls: "attr-none" }
+          },
+          gate2: {
+            type: { text: "고대", cls: "type-ancient" },
+            attr: { text: "성속성 취약", cls: "attr-holy" }
+          }
+        };
+      }
+
+      if (menu === "cathedral") {
+        return {
+          gate1: {
+            type: { text: "인간", cls: "type-human" },
+            attr: { text: "암속성 취약", cls: "attr-dark" }
+          },
+          gate2: {
+            type: { text: "인간", cls: "type-human" },
+            attr: { text: "암속성 취약", cls: "attr-dark" }
+          }
+        };
+      }
+
+      return {
+        gate1: null,
+        gate2: null
+      };
+    }
+
+    function formatDateTime(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      const h = String(date.getHours()).padStart(2, "0");
+      const min = String(date.getMinutes()).padStart(2, "0");
+      const s = String(date.getSeconds()).padStart(2, "0");
+      return `${y} / ${m} / ${d}  ${h}:${min}:${s}`;
+    }
+
+    function updateTopDateTime() {
+      document.getElementById("topDateTime").textContent = formatDateTime(new Date());
+    }
+
+    function makeBadge(text, cls) {
+      return `<span class="badge ${cls}">${text}</span>`;
+    }
+
+    function updateTimeDisplay() {
+      const min = parseInt(document.getElementById("minutes").value || 0, 10);
+      const sec = parseInt(document.getElementById("seconds").value || 0, 10);
+      document.getElementById("timeDisplay").textContent =
+        `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+    }
+
+    function setBaseTimeByMenu(menu) {
+      const minInput = document.getElementById("minutes");
+      const secInput = document.getElementById("seconds");
+      const label = document.getElementById("timeBaseLabel");
+
+      if (menu === "gato1730") {
+        minInput.value = 1;
+        secInput.value = 50;
+        label.textContent = "기본값 1분 50초(110초)";
+      } else {
+        minInput.value = 10;
+        secInput.value = 0;
+        label.textContent = "기본값 10분(600초)";
+      }
+      updateTimeDisplay();
+    }
+
+    function getTotalSeconds() {
+      const min = parseInt(document.getElementById("minutes").value || 0, 10);
+      const sec = parseInt(document.getElementById("seconds").value || 0, 10);
+      return Math.max(1, min * 60 + sec);
+    }
+
+    function fmt(n) {
+      return Number(n || 0).toLocaleString("ko-KR");
+    }
+
+    function toNum(v) {
+      if (v === undefined || v === null) return 0;
+      const s = String(v).replace(/,/g, "").replace(/"/g, "").trim();
+      const n = Number(s);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function parseCSVLine(line) {
+      const result = [];
+      let cur = "";
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') {
+            cur += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (ch === "," && !inQuotes) {
+          result.push(cur);
+          cur = "";
+        } else {
+          cur += ch;
+        }
+      }
+      result.push(cur);
+      return result;
+    }
+
+    function percentNum(v) {
+      const m = String(v || "").match(/(\d+)%/);
+      return m ? Number(m[1]) : null;
+    }
+
+    function getTitle(menu, diff) {
+      if (menu === "serka") {
+        if (diff === "normal") return "노말 (1710)";
+        if (diff === "hard") return "하드 (1730)";
+        if (diff === "nightmare") return "나메 (1740)";
+      }
+      if (menu === "cathedral") {
+        if (diff === "normal") return "1단계 (1700)";
+        if (diff === "hard") return "2단계 (1720)";
+        if (diff === "nightmare") return "3단계 (1750)";
+      }
+      if (menu === "gato1730") {
+        return `${currentGatoBoss} (1730)`;
+      }
+      if (menu === "gato1750") {
+        return "준비중";
+      }
+      return "준비중";
+    }
+
+    function getContentName(menu) {
+      if (menu === "serka") return "세르카";
+      if (menu === "cathedral") return "지평의 성당";
+      if (menu === "gato1730") return "1730 가디언 토벌";
+      if (menu === "gato1750") return "1750 가디언 토벌";
+      return "콘텐츠";
+    }
+
+    function getTabList(menu) {
+      if (menu === "serka") {
+        return [
+          { key: "normal", label: "노말 (1710)" },
+          { key: "hard", label: "하드 (1730)" },
+          { key: "nightmare", label: "나메 (1740)" }
+        ];
+      }
+      if (menu === "cathedral") {
+        return [
+          { key: "normal", label: "1단계 (1700)" },
+          { key: "hard", label: "2단계 (1720)" },
+          { key: "nightmare", label: "3단계 (1750)" }
+        ];
+      }
+      if (menu === "gato1730") {
+        return gato1730Bosses.map(name => ({
+          key: name,
+          label: name,
+          gato: true
+        }));
+      }
+      return [];
+    }
+
+    function renderTabs() {
+      const tabs = document.getElementById("tabs");
+      const list = getTabList(currentMenu);
+
+      tabs.innerHTML = list.map(item => {
+        const isActive = currentMenu === "gato1730"
+          ? item.key === currentGatoBoss
+          : item.key === currentDiff;
+
+        let metaHtml = "";
+
+        if (currentMenu === "gato1730") {
+          const meta = gatoMeta[item.key];
+          if (meta) {
+            metaHtml = `
+              <div class="tab-meta">
+                ${makeBadge(meta.type.text, meta.type.cls)}
+                ${makeBadge(meta.attr.text, meta.attr.cls)}
+              </div>
+            `;
+          }
+        }
+
+        return `
+          <button class="tab ${item.gato ? 'gato' : ''} ${isActive ? 'active' : ''}" data-key="${item.key}">
+            <div class="tab-label">${item.label}</div>
+            ${metaHtml}
+          </button>
+        `;
+      }).join("");
+
+      tabs.querySelectorAll(".tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          if (currentMenu === "gato1730") {
+            currentGatoBoss = btn.dataset.key;
+          } else {
+            currentDiff = btn.dataset.key;
+          }
+          renderTabs();
+          renderTable();
+        });
+      });
+    }
+
+    function clearAllData() {
+      parsedData.serka = { normal: [], hard: [], nightmare: [] };
+      parsedData.cathedral = { normal: [], hard: [], nightmare: [] };
+      parsedData.gato1730 = {};
+      parsedData.gato1750 = {};
+    }
+
+    function parseBlock(lines, startRow, type) {
+      for (let r = startRow + 3; r < startRow + 29; r++) {
+        const cols = parseCSVLine(lines[r] || "");
+        const share = percentNum(cols[1]);
+        if (!share) continue;
+
+        parsedData[type].normal.push({
+          share,
+          g1: toNum(cols[3]),
+          g2: toNum(cols[6])
+        });
+
+        parsedData[type].hard.push({
+          share,
+          g1: toNum(cols[11]),
+          g2: toNum(cols[14])
+        });
+
+        parsedData[type].nightmare.push({
+          share,
+          g1: toNum(cols[19]),
+          g2: toNum(cols[22])
+        });
+      }
+    }
+
+    function parseCathedral(lines) {
+      for (let i = 0; i < lines.length; i++) {
+        if ((lines[i] || "").includes("지평의 성당 1~3단계 딜지분 상세")) {
+          parseBlock(lines, i + 1, "cathedral");
+          return;
+        }
+      }
+    }
+
+    function parseSerka(lines) {
+      for (let i = 0; i < lines.length; i++) {
+        if ((lines[i] || "").includes("세르카 딜지분 상세")) {
+          parseBlock(lines, i + 1, "serka");
+          return;
+        }
+      }
+    }
+
+    function parseGato1730(lines) {
+      gato1730Bosses.forEach(name => {
+        parsedData.gato1730[name] = [];
+      });
+
+      gato1730Layout.forEach(info => {
+        for (let r = info.startRow + 3; r <= info.startRow + 28; r++) {
+          const cols = parseCSVLine(lines[r] || "");
+          const share = percentNum(cols[info.shareCol]);
+          if (!share) continue;
+
+          parsedData.gato1730[info.boss].push({
+            share,
+            damage: toNum(cols[info.damageCol])
+          });
+        }
+      });
+    }
+
+    function getCutIcon(share) {
+      if (share === 30) return `<span class="cut-icon cut-30">⚔</span>`;
+      if (share === 33) return `<span class="cut-icon cut-33">◆</span>`;
+      if (share === 40) return `<span class="cut-icon cut-40">✦</span>`;
+      return "";
+    }
+
+    function renderHead() {
+      const head = document.getElementById("tableHead");
+
+      if (currentMenu === "gato1730") {
+        head.innerHTML = `
+          <tr>
+            <th>딜지분</th>
+            <th>딜량/억</th>
+            <th>DPS</th>
+          </tr>
+        `;
+        return;
+      }
+
+      const gateMeta = getGateMeta(currentMenu);
+
+      const gate1 = gateMeta.gate1
+        ? `
+          ${makeBadge(gateMeta.gate1.type.text, gateMeta.gate1.type.cls)}
+          ${makeBadge(gateMeta.gate1.attr.text, gateMeta.gate1.attr.cls)}
+        `
+        : "";
+
+      const gate2 = gateMeta.gate2
+        ? `
+          ${makeBadge(gateMeta.gate2.type.text, gateMeta.gate2.type.cls)}
+          ${makeBadge(gateMeta.gate2.attr.text, gateMeta.gate2.attr.cls)}
+        `
+        : "";
+
+      head.innerHTML = `
+        <tr>
+          <th rowspan="2">딜지분</th>
+          <th colspan="2" class="gate-divider">
+            <div class="th-stack">
+              <div>1관</div>
+              <div class="header-meta">${gate1}</div>
+            </div>
+          </th>
+          <th colspan="2">
+            <div class="th-stack">
+              <div>2관</div>
+              <div class="header-meta">${gate2}</div>
+            </div>
+          </th>
+        </tr>
+        <tr class="subhead">
+          <th>딜량/억</th>
+          <th class="gate-divider">DPS</th>
+          <th>딜량/억</th>
+          <th>DPS</th>
+        </tr>
+      `;
+    }
+
+    function renderTable() {
+      updateTimeDisplay();
+      renderHead();
+
+      document.getElementById("contentTitle").textContent = getContentName(currentMenu);
+      document.getElementById("tableTitle").textContent = getTitle(currentMenu, currentDiff);
+
+      const body = document.getElementById("tableBody");
+      const totalSeconds = getTotalSeconds();
+
+      if (currentMenu === "gato1730") {
+        const rows = parsedData.gato1730[currentGatoBoss] || [];
+
+        if (!rows.length) {
+          body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
+          return;
+        }
+
+        body.innerHTML = rows.map(row => {
+          const dps = (row.damage / totalSeconds).toFixed(1);
+
+          let cls = "";
+          if (row.share === 30) cls = "row-30";
+          if (row.share === 33) cls = "row-33";
+          if (row.share === 40) cls = "row-40";
+
+          return `
+            <tr class="${cls}">
+              <td class="share-cell">
+                ${getCutIcon(row.share)}
+                <span class="share-text">${row.share}%</span>
+              </td>
+              <td>${fmt(row.damage)}</td>
+              <td class="dps-cell">${dps}</td>
+            </tr>
+          `;
+        }).join("");
+        return;
+      }
+
+      const rows = parsedData[currentMenu]?.[currentDiff] || [];
+
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="5">데이터 없음</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = rows.map(row => {
+        const dps1 = (row.g1 / totalSeconds).toFixed(1);
+        const dps2 = (row.g2 / totalSeconds).toFixed(1);
+
+        let cls = "";
+        if (row.share === 30) cls = "row-30";
+        if (row.share === 33) cls = "row-33";
+        if (row.share === 40) cls = "row-40";
+
+        return `
+          <tr class="${cls}">
+            <td class="share-cell">
+              ${getCutIcon(row.share)}
+              <span class="share-text">${row.share}%</span>
+            </td>
+            <td>${fmt(row.g1)}</td>
+            <td class="dps-cell gate-divider">${dps1}</td>
+            <td>${fmt(row.g2)}</td>
+            <td class="dps-cell">${dps2}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadCSV() {
+      document.getElementById("status").textContent = "시트 불러오는 중...";
+      try {
+        const res = await fetch(CSV_URL);
+        const text = await res.text();
+        const lines = text.split(/\r?\n/);
+
+        clearAllData();
+        parseCathedral(lines);
+        parseSerka(lines);
+        parseGato1730(lines);
+
+        renderTabs();
+        renderTable();
+        document.getElementById("status").textContent = "연동 완료";
+      } catch (e) {
+        console.error(e);
+        document.getElementById("status").textContent = "불러오기 실패";
+      }
+    }
+
+    document.querySelectorAll(".menu-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".menu-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        currentMenu = btn.dataset.menu;
+
+        if (currentMenu === "gato1730") {
+          currentGatoBoss = "루멘칼리고";
+          setBaseTimeByMenu(currentMenu);
+        } else if (currentMenu === "gato1750") {
+          setBaseTimeByMenu(currentMenu);
+        } else {
+          currentDiff = "hard";
+          setBaseTimeByMenu(currentMenu);
+        }
+
+        renderTabs();
+        renderTable();
+      });
+    });
+
+    document.getElementById("minutes").addEventListener("input", renderTable);
+    document.getElementById("seconds").addEventListener("input", renderTable);
+
+    updateTopDateTime();
+    setInterval(updateTopDateTime, 1000);
+
+    setBaseTimeByMenu("serka");
+    loadCSV();
+  </script>
+</body>
+</html>
