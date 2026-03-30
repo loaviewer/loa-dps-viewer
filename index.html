@@ -35,28 +35,29 @@
       width: min(1380px, calc(100% - 20px));
       margin: 0 auto 18px;
       text-align: center;
-      font-size: 18px;
-      letter-spacing: 1px;
-      color: rgba(255, 223, 170, 0.7);
-      font-family: "Segoe Script", "Brush Script MT", "Nanum Pen Script", cursive;
-      text-shadow:
-        0 0 2px rgba(255,255,255,0.25),
-        0 0 8px rgba(255,210,120,0.16),
-        0 0 18px rgba(255,180,80,0.10);
-      opacity: 0.88;
       user-select: none;
     }
 
     .footer-signature span {
       display: inline-block;
-      padding: 4px 14px;
-      border-top: 1px solid rgba(255, 214, 153, 0.16);
-      border-bottom: 1px solid rgba(255, 214, 153, 0.08);
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,210,120,0.02));
+      padding: 7px 18px 8px;
       border-radius: 999px;
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 20px;
+      font-style: italic;
+      letter-spacing: 0.8px;
+      color: rgba(255, 228, 188, 0.92);
+      border-top: 1px solid rgba(255,223,170,0.20);
+      border-bottom: 1px solid rgba(255,223,170,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,214,153,0.028));
+      text-shadow:
+        0 0 2px rgba(255,255,255,0.18),
+        0 0 8px rgba(255,210,120,0.12),
+        0 0 16px rgba(255,180,90,0.06);
       box-shadow:
         0 0 0 1px rgba(255,255,255,0.02) inset,
-        0 0 14px rgba(255,190,100,0.06);
+        0 0 18px rgba(255,190,100,0.05);
+      opacity: 0.9;
     }
 
     .top-bar {
@@ -288,10 +289,10 @@
     }
 
     .tab.gato.active .tab-label {
-      color: #fff6e9;
+      color: #fff6e9 !important;
       text-shadow:
         0 0 4px rgba(255,255,255,0.18),
-        0 1px 0 rgba(0,0,0,0.28);
+        0 1px 0 rgba(0,0,0,0.28) !important;
     }
 
     .tab.gato.active .tab-meta {
@@ -319,13 +320,6 @@
     .tab.active .tab-sub {
       color: #241700;
       text-shadow: 0 1px 0 rgba(255,255,255,0.35);
-    }
-
-    .tab.gato.active .tab-label {
-      color: #fff6e9 !important;
-      text-shadow:
-        0 0 4px rgba(255,255,255,0.18),
-        0 1px 0 rgba(0,0,0,0.28) !important;
     }
 
     .tab-meta {
@@ -727,8 +721,12 @@
 
       .footer-signature {
         width: calc(100% - 12px);
-        font-size: 16px;
         margin-bottom: 14px;
+      }
+
+      .footer-signature span {
+        font-size: 17px;
+        padding: 6px 14px 7px;
       }
 
       .top-title {
@@ -889,7 +887,7 @@
   <div class="app">
     <div class="top-bar">
       <div class="top-spacer"></div>
-      <div class="top-title">LOST ARK DPS VIEWER (v12)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v13)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
@@ -953,7 +951,7 @@
   </div>
 
   <div class="footer-signature">
-    <span>만든이 : 인벤 Priest</span>
+    <span>Crafted by Priest</span>
   </div>
 
   <script>
