@@ -54,7 +54,6 @@
       top: 50%;
       transform: translateY(-50%);
       font-size: 15px;
-      font-family: "Segoe UI", "Malgun Gothic", sans-serif;
       font-variant-numeric: tabular-nums;
       color: #e2d2a9;
       letter-spacing: 0.6px;
@@ -81,9 +80,9 @@
         0 12px 30px rgba(0,0,0,0.35);
     }
 
-    .left {
-      padding: 18px;
-    }
+    .left { padding: 18px; }
+    .center { padding: 18px; }
+    .right { padding: 18px; }
 
     .menu-title,
     .side-title {
@@ -128,10 +127,6 @@
       box-shadow:
         0 0 0 1px rgba(255,220,160,0.12) inset,
         0 0 18px rgba(255,196,92,0.14);
-    }
-
-    .center {
-      padding: 18px;
     }
 
     .center-top {
@@ -276,16 +271,26 @@
 
     .share-cell {
       position: relative;
-      font-weight: 800;
-      color: #ffe8b3;
       width: 150px;
+      min-width: 150px;
       padding-left: 46px;
       text-align: center;
+      color: #ffe8b3;
+      font-weight: 800;
+      overflow: visible;
     }
 
     .share-text {
       display: inline-block;
-      min-width: 42px;
+      min-width: 48px;
+      color: #ffe8b3 !important;
+      font-weight: 800;
+      font-size: 15px;
+      line-height: 1;
+      position: relative;
+      z-index: 3;
+      opacity: 1 !important;
+      visibility: visible !important;
     }
 
     .cut-icon {
@@ -303,6 +308,7 @@
       font-weight: 900;
       border: 1px solid transparent;
       box-shadow: 0 0 8px rgba(0,0,0,0.2);
+      z-index: 2;
     }
 
     .cut-30 {
@@ -337,10 +343,6 @@
       margin-top: 10px;
       font-size: 13px;
       color: #a7987d;
-    }
-
-    .right {
-      padding: 18px;
     }
 
     .side-box {
@@ -958,6 +960,15 @@
       `;
     }
 
+    function renderShareCell(share) {
+      return `
+        <td class="share-cell">
+          ${getCutIcon(share)}
+          <span class="share-text">${share}%</span>
+        </td>
+      `;
+    }
+
     function renderTable() {
       updateTimeDisplay();
       renderHead();
@@ -986,10 +997,7 @@
 
           return `
             <tr class="${cls}">
-              <td class="share-cell">
-                ${getCutIcon(row.share)}
-                <span class="share-text">${row.share}%</span>
-              </td>
+              ${renderShareCell(row.share)}
               <td>${fmt(row.damage)}</td>
               <td class="dps-cell">${dps}</td>
             </tr>
@@ -1016,10 +1024,7 @@
 
         return `
           <tr class="${cls}">
-            <td class="share-cell">
-              ${getCutIcon(row.share)}
-              <span class="share-text">${row.share}%</span>
-            </td>
+            ${renderShareCell(row.share)}
             <td>${fmt(row.g1)}</td>
             <td class="dps-cell gate-divider">${dps1}</td>
             <td>${fmt(row.g2)}</td>
