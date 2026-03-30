@@ -170,10 +170,18 @@
 
     .tabs {
       display: flex;
-      gap: 10px;
       flex-wrap: wrap;
+      gap: 10px;
       justify-content: flex-end;
-      max-width: 820px;
+      max-width: 860px;
+    }
+
+    .tab-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
+      justify-content: flex-end;
     }
 
     .tab {
@@ -219,6 +227,14 @@
       flex: 0 0 auto;
     }
 
+    .tab.gate {
+      min-width: 80px;
+      min-height: 40px;
+      padding: 6px 12px;
+      font-size: 14px;
+      border-radius: 12px;
+    }
+
     .tab-label { line-height: 1; }
 
     .tab.active .tab-label {
@@ -253,14 +269,10 @@
 
     table {
       width: 100%;
-      min-width: 720px;
+      min-width: 520px;
       border-collapse: collapse;
       font-size: 15px;
       table-layout: fixed;
-    }
-
-    table.gato-mode {
-      min-width: 520px;
     }
 
     thead th {
@@ -268,12 +280,6 @@
       color: #fff3d7;
       padding: 12px 10px;
       border-bottom: 1px solid rgba(255,224,177,0.18);
-    }
-
-    thead tr.subhead th {
-      background: rgba(255, 220, 180, 0.12);
-      color: #f4dfb8;
-      padding: 10px 10px;
     }
 
     tbody td {
@@ -332,10 +338,6 @@
     .dps-cell {
       font-weight: 800;
       color: #ffd58c;
-    }
-
-    .gate-divider {
-      border-right: 2px solid rgba(255, 214, 153, 0.32) !important;
     }
 
     .status {
@@ -454,7 +456,7 @@
       gap: 4px;
     }
 
-    @media (max-width: 1320px) {
+    @media (max-width: 1360px) {
       .app {
         width: calc(100% - 20px);
       }
@@ -509,7 +511,8 @@
         font-size: 22px;
       }
 
-      .tabs {
+      .tabs,
+      .tab-row {
         justify-content: flex-start;
         max-width: 100%;
       }
@@ -593,7 +596,8 @@
         border-radius: 14px;
       }
 
-      .tabs {
+      .tabs,
+      .tab-row {
         gap: 8px;
       }
 
@@ -612,6 +616,12 @@
         padding: 6px 8px;
       }
 
+      .tab.gate {
+        min-width: 72px;
+        min-height: 36px;
+        font-size: 12px;
+      }
+
       .tab-meta {
         gap: 3px;
       }
@@ -626,12 +636,7 @@
         font-size: 13px;
       }
 
-      table.gato-mode {
-        min-width: 460px;
-      }
-
       thead th,
-      thead tr.subhead th,
       tbody td {
         padding: 8px 6px;
       }
@@ -688,10 +693,6 @@
       }
 
       table {
-        min-width: 680px;
-      }
-
-      table.gato-mode {
         min-width: 440px;
       }
     }
@@ -700,7 +701,7 @@
 <body>
   <div class="app">
     <div class="top-bar">
-      <div class="top-title">LOST ARK DPS VIEWER (v10)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v11)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
@@ -766,6 +767,7 @@
 
     let currentMenu = "serka";
     let currentDiff = "hard";
+    let currentGate = "gate1";
     let currentGatoBoss = "루멘칼리고";
 
     const parsedData = {
@@ -964,14 +966,12 @@
         if (diff === "hard") return "2단계 (1720)";
         if (diff === "nightmare") return "3단계 (1750)";
       }
-      if (menu === "gato1730") return "";
-      if (menu === "gato1750") return "";
       return "";
     }
 
     function getContentName(menu) {
-      if (menu === "serka") return "세르카";
-      if (menu === "cathedral") return "지평의 성당";
+      if (menu === "serka") return `세르카 : ${currentGate === "gate1" ? "1관" : "2관"}`;
+      if (menu === "cathedral") return `지평의 성당 : ${currentGate === "gate1" ? "1관" : "2관"}`;
       if (menu === "gato1730") return `1730 가디언 토벌 : ${currentGatoBoss}`;
       if (menu === "gato1750") return "1750 가디언 토벌";
       return "콘텐츠";
@@ -1006,7 +1006,7 @@
       const tabs = document.getElementById("tabs");
       const list = getTabList(currentMenu);
 
-      tabs.innerHTML = list.map(item => {
+      const topTabs = list.map(item => {
         const isActive = currentMenu === "gato1730"
           ? item.key === currentGatoBoss
           : item.key === currentDiff;
@@ -1033,13 +1033,33 @@
         `;
       }).join("");
 
-      tabs.querySelectorAll(".tab").forEach(btn => {
+      let gateTabs = "";
+      if (currentMenu === "serka" || currentMenu === "cathedral") {
+        gateTabs = `
+          <div class="tab-row">
+            <button class="tab gate ${currentGate === 'gate1' ? 'active' : ''}" data-gate="gate1">1관</button>
+            <button class="tab gate ${currentGate === 'gate2' ? 'active' : ''}" data-gate="gate2">2관</button>
+          </div>
+        `;
+      }
+
+      tabs.innerHTML = `<div class="tab-row">${topTabs}</div>${gateTabs}`;
+
+      tabs.querySelectorAll(".tab[data-key]").forEach(btn => {
         btn.addEventListener("click", () => {
           if (currentMenu === "gato1730") {
             currentGatoBoss = btn.dataset.key;
           } else {
             currentDiff = btn.dataset.key;
           }
+          renderTabs();
+          renderTable();
+        });
+      });
+
+      tabs.querySelectorAll(".tab[data-gate]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentGate = btn.dataset.gate;
           renderTabs();
           renderTable();
         });
@@ -1162,6 +1182,8 @@
       const head = document.getElementById("tableHead");
       const table = document.getElementById("dataTable");
 
+      table.classList.remove("gato-mode");
+
       if (currentMenu === "gato1730") {
         table.classList.add("gato-mode");
         head.innerHTML = `
@@ -1174,44 +1196,22 @@
         return;
       }
 
-      table.classList.remove("gato-mode");
-
       const gateMeta = getGateMeta(currentMenu);
-
-      const gate1 = gateMeta.gate1
-        ? `
-          ${makeBadge(gateMeta.gate1.type.text, gateMeta.gate1.type.cls)}
-          ${makeBadge(gateMeta.gate1.attr.text, gateMeta.gate1.attr.cls)}
-        `
-        : "";
-
-      const gate2 = gateMeta.gate2
-        ? `
-          ${makeBadge(gateMeta.gate2.type.text, gateMeta.gate2.type.cls)}
-          ${makeBadge(gateMeta.gate2.attr.text, gateMeta.gate2.attr.cls)}
-        `
-        : "";
+      const gate = currentGate === "gate1" ? gateMeta.gate1 : gateMeta.gate2;
+      const gateName = currentGate === "gate1" ? "1관" : "2관";
 
       head.innerHTML = `
         <tr>
-          <th rowspan="2">딜지분</th>
-          <th colspan="2" class="gate-divider">
+          <th>딜지분</th>
+          <th>
             <div class="th-stack">
-              <div>1관</div>
-              <div class="header-meta">${gate1}</div>
+              <div>${gateName}</div>
+              <div class="header-meta">
+                ${makeBadge(gate.type.text, gate.type.cls)}
+                ${makeBadge(gate.attr.text, gate.attr.cls)}
+              </div>
             </div>
           </th>
-          <th colspan="2">
-            <div class="th-stack">
-              <div>2관</div>
-              <div class="header-meta">${gate2}</div>
-            </div>
-          </th>
-        </tr>
-        <tr class="subhead">
-          <th>딜량/억</th>
-          <th class="gate-divider">DPS</th>
-          <th>딜량/억</th>
           <th>DPS</th>
         </tr>
       `;
@@ -1255,7 +1255,7 @@
       const rows = parsedData[currentMenu]?.[currentDiff] || [];
 
       if (!rows.length) {
-        body.innerHTML = `<tr><td colspan="5">데이터 없음</td></tr>`;
+        body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
         return;
       }
 
@@ -1265,13 +1265,14 @@
         if (row.share === 33) cls = "row-33";
         if (row.share === 40) cls = "row-40";
 
+        const damage = currentGate === "gate1" ? row.g1 : row.g2;
+        const dps = (damage / totalSeconds).toFixed(1);
+
         return `
           <tr class="${cls}">
             ${renderShareCell(row.share)}
-            <td>${fmt(row.g1)}</td>
-            <td class="dps-cell gate-divider">${(row.g1 / totalSeconds).toFixed(1)}</td>
-            <td>${fmt(row.g2)}</td>
-            <td class="dps-cell">${(row.g2 / totalSeconds).toFixed(1)}</td>
+            <td>${fmt(damage)}</td>
+            <td class="dps-cell">${dps}</td>
           </tr>
         `;
       }).join("");
@@ -1312,6 +1313,7 @@
           setBaseTimeByMenu(currentMenu);
         } else {
           currentDiff = "hard";
+          currentGate = "gate1";
           setBaseTimeByMenu(currentMenu);
         }
 
