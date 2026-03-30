@@ -257,6 +257,7 @@
       color: #f3ead8;
       border-top: 1px solid rgba(255,255,255,0.05);
       background: rgba(255,255,255,0.015);
+      vertical-align: middle;
     }
 
     tbody tr:hover td {
@@ -272,17 +273,23 @@
       font-weight: 900;
       font-size: 15px;
       letter-spacing: 0.2px;
-      white-space: nowrap;
       text-align: left;
-      padding-left: 16px;
+      padding: 10px 12px;
+    }
+
+    .share-row {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      align-items: center;
+      column-gap: 8px;
+      min-height: 22px;
     }
 
     .share-label {
-      display: inline-block;
-      min-width: 54px;
-      margin-right: 8px;
       font-size: 12px;
       font-weight: 800;
+      text-align: left;
+      white-space: nowrap;
       opacity: 0.95;
     }
 
@@ -291,9 +298,10 @@
     .label-40 { color: #d8b2ff; }
 
     .share-value {
-      display: inline-block;
-      min-width: 34px;
-      text-align: right;
+      font-size: 15px;
+      font-weight: 900;
+      text-align: left;
+      white-space: nowrap;
     }
 
     .dps-cell {
@@ -509,7 +517,7 @@
             구글 시트 데이터를 읽어옵니다.<br>
             시간 변경 시 DPS는 자동 계산됩니다.
           </div>
-          <div class="version">v05</div>
+          <div class="version">v06</div>
         </div>
       </div>
     </div>
@@ -718,12 +726,8 @@
         if (diff === "hard") return "2단계 (1720)";
         if (diff === "nightmare") return "3단계 (1750)";
       }
-      if (menu === "gato1730") {
-        return "";
-      }
-      if (menu === "gato1750") {
-        return "";
-      }
+      if (menu === "gato1730") return "";
+      if (menu === "gato1750") return "";
       return "";
     }
 
@@ -876,15 +880,44 @@
 
     function renderShareCell(share) {
       if (share === 30) {
-        return `<td class="share-cell"><span class="share-label label-30">강투컷</span><span class="share-value">${share}%</span></td>`;
+        return `
+          <td class="share-cell">
+            <div class="share-row">
+              <span class="share-label label-30">강투컷</span>
+              <span class="share-value">30%</span>
+            </div>
+          </td>
+        `;
       }
       if (share === 33) {
-        return `<td class="share-cell"><span class="share-label label-33">1인분</span><span class="share-value">${share}%</span></td>`;
+        return `
+          <td class="share-cell">
+            <div class="share-row">
+              <span class="share-label label-33">1인분</span>
+              <span class="share-value">33%</span>
+            </div>
+          </td>
+        `;
       }
       if (share === 40) {
-        return `<td class="share-cell"><span class="share-label label-40">잔혈컷</span><span class="share-value">${share}%</span></td>`;
+        return `
+          <td class="share-cell">
+            <div class="share-row">
+              <span class="share-label label-40">잔혈컷</span>
+              <span class="share-value">40%</span>
+            </div>
+          </td>
+        `;
       }
-      return `<td class="share-cell"><span class="share-value">${share}%</span></td>`;
+
+      return `
+        <td class="share-cell">
+          <div class="share-row">
+            <span class="share-label"></span>
+            <span class="share-value">${share}%</span>
+          </div>
+        </td>
+      `;
     }
 
     function renderHead() {
