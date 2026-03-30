@@ -172,12 +172,27 @@
       flex-wrap: wrap;
     }
 
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     .content-title {
       font-size: 26px;
       font-weight: 800;
       color: #f4ddb0;
       line-height: 1.2;
       word-break: keep-all;
+    }
+
+    .title-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+      min-height: 24px;
     }
 
     .content-sub {
@@ -594,22 +609,6 @@
         0 0 8px rgba(255,210,120,0.08);
     }
 
-    .header-meta {
-      margin-top: 6px;
-      display: flex;
-      justify-content: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .th-stack {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
     .coming-soon {
       padding: 44px 20px;
       text-align: center;
@@ -747,6 +746,14 @@
         margin-bottom: 12px;
       }
 
+      .title-row {
+        gap: 8px;
+      }
+
+      .title-meta {
+        gap: 4px;
+      }
+
       .content-title {
         font-size: 18px;
       }
@@ -862,10 +869,6 @@
         font-weight: 800;
       }
 
-      .header-meta {
-        gap: 2px;
-      }
-
       .time-view {
         font-size: 24px;
       }
@@ -972,7 +975,10 @@
       <div class="panel center">
         <div class="center-top">
           <div>
-            <div class="content-title" id="contentTitle">세르카 : 하드 1관</div>
+            <div class="title-row">
+              <div class="content-title" id="contentTitle">세르카 : 하드 1관</div>
+              <div class="title-meta" id="titleMeta"></div>
+            </div>
             <div class="content-sub" id="tableTitle">입장레벨 : 1730</div>
           </div>
 
@@ -1254,6 +1260,30 @@
       return "";
     }
 
+    function renderTitleMeta() {
+      const titleMeta = document.getElementById("titleMeta");
+
+      if (currentMenu === "serka" || currentMenu === "cathedral") {
+        const meta = raidMeta[currentMenu][currentCombo];
+        titleMeta.innerHTML = `
+          ${makeBadge(meta.type.text, meta.type.cls)}
+          ${makeBadge(meta.attr.text, meta.attr.cls)}
+        `;
+        return;
+      }
+
+      if (currentMenu === "gato1730") {
+        const meta = gatoMeta[currentGatoBoss];
+        titleMeta.innerHTML = `
+          ${makeBadge(meta.type.text, meta.type.cls)}
+          ${makeBadge(meta.attr.text, meta.attr.cls)}
+        `;
+        return;
+      }
+
+      titleMeta.innerHTML = "";
+    }
+
     function renderTabs() {
       const tabs = document.getElementById("tabs");
 
@@ -1425,7 +1455,7 @@
         head.innerHTML = `
           <tr>
             <th>딜지분</th>
-            <th>딜량/억</th>
+            <th>피해/억</th>
             <th>DPS</th>
           </tr>
         `;
@@ -1437,20 +1467,10 @@
         return;
       }
 
-      const meta = raidMeta[currentMenu][currentCombo];
-
       head.innerHTML = `
         <tr>
           <th>딜지분</th>
-          <th>
-            <div class="th-stack">
-              <div>${meta.gateName}</div>
-              <div class="header-meta">
-                ${makeBadge(meta.type.text, meta.type.cls)}
-                ${makeBadge(meta.attr.text, meta.attr.cls)}
-              </div>
-            </div>
-          </th>
+          <th>피해/억</th>
           <th>DPS</th>
         </tr>
       `;
@@ -1483,6 +1503,7 @@
 
       document.getElementById("contentTitle").textContent = getContentName();
       document.getElementById("tableTitle").textContent = getTableTitle();
+      renderTitleMeta();
 
       if (currentMenu === "gato1750") {
         renderComingSoon();
