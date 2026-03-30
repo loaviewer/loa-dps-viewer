@@ -803,35 +803,67 @@
       }
 
       .badge {
-        font-size: 10px;
-        height: 18px;
-        padding: 0 6px;
+        font-size: 9px;
+        height: 16px;
+        padding: 0 5px;
+      }
+
+      .table-wrap {
+        overflow-x: hidden;
       }
 
       table {
-        font-size: 13px;
+        min-width: 100%;
+        width: 100%;
+        table-layout: fixed;
+        font-size: 12px;
       }
 
       thead th,
       tbody td {
-        padding: 8px 6px;
+        padding: 7px 4px;
+      }
+
+      thead th:nth-child(1),
+      tbody td:nth-child(1) {
+        width: 34%;
+      }
+
+      thead th:nth-child(2),
+      tbody td:nth-child(2) {
+        width: 33%;
+      }
+
+      thead th:nth-child(3),
+      tbody td:nth-child(3) {
+        width: 33%;
       }
 
       .share-cell {
-        padding: 8px 8px;
+        padding: 6px 6px;
+        font-size: 12px;
       }
 
       .share-row {
-        grid-template-columns: 48px 1fr;
-        column-gap: 6px;
+        grid-template-columns: 42px 1fr;
+        column-gap: 4px;
       }
 
       .share-label {
-        font-size: 11px;
+        font-size: 10px;
       }
 
       .share-value {
-        font-size: 13px;
+        font-size: 12px;
+      }
+
+      .dps-cell {
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .header-meta {
+        gap: 2px;
       }
 
       .time-view {
@@ -855,7 +887,11 @@
       }
 
       .content-title {
-        font-size: 17px;
+        font-size: 16px;
+      }
+
+      .content-sub {
+        font-size: 11px;
       }
 
       .tab {
@@ -873,8 +909,39 @@
         font-size: 10px;
       }
 
+      .table-wrap {
+        overflow-x: hidden;
+      }
+
       table {
-        min-width: 440px;
+        min-width: 100%;
+        font-size: 11px;
+      }
+
+      thead th,
+      tbody td {
+        padding: 6px 3px;
+      }
+
+      .share-cell {
+        padding: 6px 4px;
+      }
+
+      .share-row {
+        grid-template-columns: 38px 1fr;
+        column-gap: 3px;
+      }
+
+      .share-label {
+        font-size: 9px;
+      }
+
+      .share-value {
+        font-size: 11px;
+      }
+
+      .dps-cell {
+        font-size: 11px;
       }
 
       .coming-soon h3 {
@@ -906,7 +973,7 @@
         <div class="center-top">
           <div>
             <div class="content-title" id="contentTitle">세르카 : 하드 1관</div>
-            <div class="content-sub" id="tableTitle">하드 (1730) / 1관</div>
+            <div class="content-sub" id="tableTitle">입장레벨 : 1730</div>
           </div>
 
           <div class="tabs" id="tabs"></div>
@@ -1177,9 +1244,12 @@
     function getTableTitle() {
       if (currentMenu === "serka" || currentMenu === "cathedral") {
         const meta = raidMeta[currentMenu][currentCombo];
-        return `${meta.title} / ${meta.gateName}`;
+        const levelMatch = meta.title.match(/\((\d+)\)/);
+        const level = levelMatch ? levelMatch[1] : "-";
+        return `입장레벨 : ${level}`;
       }
-      if (currentMenu === "gato1730") return "보스별 단일 표";
+
+      if (currentMenu === "gato1730") return "잔영 1단계";
       if (currentMenu === "gato1750") return "데이터 준비중";
       return "";
     }
