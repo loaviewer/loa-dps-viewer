@@ -736,4 +736,896 @@
       }
 
       .top-datetime {
-        font-size: 
+        font-size: 12px;
+        padding: 8px 10px;
+        text-align: center;
+      }
+
+      .center-top {
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .title-row {
+        gap: 8px;
+      }
+
+      .title-meta {
+        gap: 4px;
+      }
+
+      .content-title {
+        font-size: 18px;
+      }
+
+      .content-sub {
+        font-size: 12px;
+      }
+
+      .menu-title,
+      .side-title {
+        font-size: 11px;
+        margin-bottom: 10px;
+      }
+
+      .menu-btn {
+        min-height: 52px;
+        font-size: 16px;
+        padding: 10px 12px;
+        border-radius: 14px;
+      }
+
+      .tabs {
+        gap: 8px;
+      }
+
+      .tab {
+        min-width: 94px;
+        min-height: 42px;
+        padding: 6px 10px;
+        font-size: 12px;
+        border-radius: 14px;
+      }
+
+      .tab.gato {
+        min-width: 108px;
+        min-height: 54px;
+        font-size: 12px;
+        padding: 6px 8px;
+      }
+
+      .tab.combo {
+        min-width: 92px;
+        min-height: 52px;
+        font-size: 11px;
+        padding: 6px 8px;
+      }
+
+      .tab-sub {
+        font-size: 10px;
+      }
+
+      .tab-meta {
+        gap: 3px;
+      }
+
+      .badge {
+        font-size: 9px;
+        height: 16px;
+        padding: 0 5px;
+      }
+
+      .table-wrap {
+        overflow-x: hidden;
+      }
+
+      table {
+        min-width: 100%;
+        width: 100%;
+        table-layout: fixed;
+        font-size: 12px;
+      }
+
+      thead th,
+      tbody td {
+        padding: 7px 4px;
+      }
+
+      thead th:nth-child(1),
+      tbody td:nth-child(1) {
+        width: 34%;
+      }
+
+      thead th:nth-child(2),
+      tbody td:nth-child(2) {
+        width: 33%;
+      }
+
+      thead th:nth-child(3),
+      tbody td:nth-child(3) {
+        width: 33%;
+      }
+
+      .share-cell {
+        padding: 6px 6px;
+        font-size: 12px;
+      }
+
+      .share-row {
+        grid-template-columns: 42px 1fr;
+        column-gap: 4px;
+      }
+
+      .share-label {
+        font-size: 10px;
+      }
+
+      .share-value {
+        font-size: 12px;
+      }
+
+      .dps-cell {
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .time-view {
+        font-size: 24px;
+      }
+
+      .time-inputs input {
+        width: 64px;
+        height: 40px;
+        font-size: 18px;
+      }
+
+      .hint {
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .top-title {
+        font-size: 18px;
+      }
+
+      .content-title {
+        font-size: 16px;
+      }
+
+      .content-sub {
+        font-size: 11px;
+      }
+
+      .tab {
+        min-width: 84px;
+        font-size: 11px;
+      }
+
+      .tab.gato {
+        min-width: 96px;
+        font-size: 11px;
+      }
+
+      .tab.combo {
+        min-width: 82px;
+        font-size: 10px;
+      }
+
+      .table-wrap {
+        overflow-x: hidden;
+      }
+
+      table {
+        min-width: 100%;
+        font-size: 11px;
+      }
+
+      thead th,
+      tbody td {
+        padding: 6px 3px;
+      }
+
+      .share-cell {
+        padding: 6px 4px;
+      }
+
+      .share-row {
+        grid-template-columns: 38px 1fr;
+        column-gap: 3px;
+      }
+
+      .share-label {
+        font-size: 9px;
+      }
+
+      .share-value {
+        font-size: 11px;
+      }
+
+      .dps-cell {
+        font-size: 11px;
+      }
+
+      .coming-soon h3 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top-bar">
+      <div class="top-spacer"></div>
+      <div class="top-title">LOST ARK DPS VIEWER (v13)</div>
+      <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
+    </div>
+
+    <div class="layout">
+      <div class="panel left">
+        <div class="menu-title">CONTENT MENU</div>
+        <div class="menu-list">
+          <button class="menu-btn active" data-menu="serka">세르카 딜지분 보기</button>
+          <button class="menu-btn" data-menu="cathedral">성당 딜지분 보기</button>
+          <button class="menu-btn" data-menu="gato1730">1730 가토 딜지분</button>
+          <button class="menu-btn" data-menu="gato1750">1750 가토 딜지분</button>
+        </div>
+      </div>
+
+      <div class="panel center">
+        <div class="center-top">
+          <div>
+            <div class="title-row">
+              <div class="content-title" id="contentTitle">세르카 : 하드 1관</div>
+              <div class="title-meta" id="titleMeta"></div>
+            </div>
+            <div class="content-sub" id="tableTitle">입장레벨 : 1730</div>
+          </div>
+
+          <div class="tabs" id="tabs"></div>
+        </div>
+
+        <div id="mainContent">
+          <div class="table-wrap" id="tableWrap">
+            <table id="dataTable">
+              <thead id="tableHead"></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="status" id="status">불러오는 중...</div>
+      </div>
+
+      <div class="panel right">
+        <div class="side-title">CLEAR TIME</div>
+
+        <div class="side-box">
+          <div class="time-view" id="timeDisplay">10:00</div>
+
+          <div class="time-inputs">
+            <input type="number" id="minutes" value="10" min="0" />
+            <input type="number" id="seconds" value="0" min="0" max="59" />
+          </div>
+
+          <div class="time-labels" id="timeBaseLabel">기본값 10분(600초)</div>
+          <div class="auto-refresh">자동 갱신중</div>
+        </div>
+
+        <div class="side-box">
+          <div class="side-title" style="margin-bottom:10px;">INFO</div>
+          <div class="hint" id="infoHint">
+            구글 시트 데이터를 읽어옵니다.<br>
+            시간 변경 시 DPS는 자동 계산됩니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-signature">
+    <span>Crafted by Priest</span>
+  </div>
+
+  <script data-goatcounter="https://loaviewer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  <script>
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/1v4gfG-Lr0iFmiP0PXtVTsijdMziekQaZ-wBTWrobncY/export?format=csv&gid=0";
+
+    let currentMenu = "serka";
+    let currentCombo = "hard_gate1";
+    let currentGatoBoss = "루멘칼리고";
+
+    const parsedData = {
+      serka: { normal: [], hard: [], nightmare: [] },
+      cathedral: { normal: [], hard: [], nightmare: [] },
+      gato1730: {},
+      gato1750: {}
+    };
+
+    const gato1730Bosses = [
+      "루멘칼리고",
+      "가르가디스",
+      "스콜라키아",
+      "크라티오스",
+      "아게오로스",
+      "드렉탈라스",
+      "소나벨",
+      "베스칼"
+    ];
+
+    const gato1730Layout = [
+      { boss: "루멘칼리고", startRow: 66, shareCol: 1, damageCol: 3 },
+      { boss: "가르가디스", startRow: 66, shareCol: 9, damageCol: 11 },
+      { boss: "스콜라키아", startRow: 66, shareCol: 17, damageCol: 19 },
+      { boss: "크라티오스", startRow: 98, shareCol: 1, damageCol: 3 },
+      { boss: "아게오로스", startRow: 98, shareCol: 9, damageCol: 11 },
+      { boss: "드렉탈라스", startRow: 98, shareCol: 17, damageCol: 19 },
+      { boss: "소나벨", startRow: 130, shareCol: 1, damageCol: 3 },
+      { boss: "베스칼", startRow: 130, shareCol: 9, damageCol: 11 }
+    ];
+
+    const gatoMeta = {
+      "루멘칼리고": {
+        type: { text: "고대", cls: "type-ancient" },
+        attr: { text: "암속성 취약", cls: "attr-dark" }
+      },
+      "가르가디스": {
+        type: { text: "야수", cls: "type-beast" },
+        attr: { text: "토속성 취약", cls: "attr-earth" }
+      },
+      "스콜라키아": {
+        type: { text: "곤충", cls: "type-insect" },
+        attr: { text: "토속성 취약", cls: "attr-earth" }
+      },
+      "크라티오스": {
+        type: { text: "야수", cls: "type-beast" },
+        attr: { text: "뇌속성 취약", cls: "attr-lightning" }
+      },
+      "아게오로스": {
+        type: { text: "고대", cls: "type-ancient" },
+        attr: { text: "성속성 취약", cls: "attr-holy" }
+      },
+      "드렉탈라스": {
+        type: { text: "야수", cls: "type-beast" },
+        attr: { text: "화속성 취약", cls: "attr-fire" }
+      },
+      "소나벨": {
+        type: { text: "정령", cls: "type-spirit" },
+        attr: { text: "암속성 취약", cls: "attr-dark" }
+      },
+      "베스칼": {
+        type: { text: "야수", cls: "type-beast" },
+        attr: { text: "화속성 취약", cls: "attr-fire" }
+      }
+    };
+
+    const raidMeta = {
+      serka: {
+        normal_gate1: { diffKey: "normal", gateKey: "gate1", title: "노말 (1710)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "속성 없음", cls: "attr-none" }, tierClass: "tab-tier-normal" },
+        normal_gate2: { diffKey: "normal", gateKey: "gate2", title: "노말 (1710)", gateName: "2관", type: { text: "고대", cls: "type-ancient" }, attr: { text: "성속성 취약", cls: "attr-holy" }, tierClass: "tab-tier-normal" },
+        hard_gate1: { diffKey: "hard", gateKey: "gate1", title: "하드 (1730)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "속성 없음", cls: "attr-none" }, tierClass: "tab-tier-hard" },
+        hard_gate2: { diffKey: "hard", gateKey: "gate2", title: "하드 (1730)", gateName: "2관", type: { text: "고대", cls: "type-ancient" }, attr: { text: "성속성 취약", cls: "attr-holy" }, tierClass: "tab-tier-hard" },
+        nightmare_gate1: { diffKey: "nightmare", gateKey: "gate1", title: "나메 (1740)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "속성 없음", cls: "attr-none" }, tierClass: "tab-tier-nightmare" },
+        nightmare_gate2: { diffKey: "nightmare", gateKey: "gate2", title: "나메 (1740)", gateName: "2관", type: { text: "고대", cls: "type-ancient" }, attr: { text: "성속성 취약", cls: "attr-holy" }, tierClass: "tab-tier-nightmare" }
+      },
+      cathedral: {
+        normal_gate1: { diffKey: "normal", gateKey: "gate1", title: "1단계 (1700)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-normal" },
+        normal_gate2: { diffKey: "normal", gateKey: "gate2", title: "1단계 (1700)", gateName: "2관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-normal" },
+        hard_gate1: { diffKey: "hard", gateKey: "gate1", title: "2단계 (1720)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-hard" },
+        hard_gate2: { diffKey: "hard", gateKey: "gate2", title: "2단계 (1720)", gateName: "2관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-hard" },
+        nightmare_gate1: { diffKey: "nightmare", gateKey: "gate1", title: "3단계 (1750)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-nightmare" },
+        nightmare_gate2: { diffKey: "nightmare", gateKey: "gate2", title: "3단계 (1750)", gateName: "2관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-nightmare" }
+      }
+    };
+
+    function formatDateTime(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      const h = String(date.getHours()).padStart(2, "0");
+      const min = String(date.getMinutes()).padStart(2, "0");
+      const s = String(date.getSeconds()).padStart(2, "0");
+      return `${y} / ${m} / ${d}  ${h}:${min}:${s}`;
+    }
+
+    function updateTopDateTime() {
+      document.getElementById("topDateTime").textContent = formatDateTime(new Date());
+    }
+
+    function makeBadge(text, cls) {
+      return `<span class="badge ${cls}">${text}</span>`;
+    }
+
+    function updateTimeDisplay() {
+      const min = parseInt(document.getElementById("minutes").value || 0, 10);
+      const sec = parseInt(document.getElementById("seconds").value || 0, 10);
+      document.getElementById("timeDisplay").textContent =
+        `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+    }
+
+    function setBaseTimeByMenu(menu) {
+      const minInput = document.getElementById("minutes");
+      const secInput = document.getElementById("seconds");
+      const label = document.getElementById("timeBaseLabel");
+
+      if (menu === "gato1730") {
+        minInput.value = 1;
+        secInput.value = 50;
+        label.textContent = "기본값 1분 50초(110초)";
+      } else {
+        minInput.value = 10;
+        secInput.value = 0;
+        label.textContent = "기본값 10분(600초)";
+      }
+      updateTimeDisplay();
+    }
+
+    function getTotalSeconds() {
+      const min = parseInt(document.getElementById("minutes").value || 0, 10);
+      let sec = parseInt(document.getElementById("seconds").value || 0, 10);
+
+      if (sec > 59) sec = 59;
+      if (sec < 0) sec = 0;
+      document.getElementById("seconds").value = sec;
+
+      return Math.max(1, min * 60 + sec);
+    }
+
+    function fmt(n) {
+      return Number(n || 0).toLocaleString("ko-KR");
+    }
+
+    function toNum(v) {
+      if (v === undefined || v === null) return 0;
+      const s = String(v).replace(/,/g, "").replace(/"/g, "").trim();
+      const n = Number(s);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function parseCSVLine(line) {
+      const result = [];
+      let cur = "";
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') {
+            cur += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (ch === "," && !inQuotes) {
+          result.push(cur);
+          cur = "";
+        } else {
+          cur += ch;
+        }
+      }
+      result.push(cur);
+      return result;
+    }
+
+    function percentNum(v) {
+      const m = String(v || "").match(/(\d+)%/);
+      return m ? Number(m[1]) : null;
+    }
+
+    function getComboTabs(menu) {
+      if (menu === "serka") {
+        return [
+          { key: "normal_gate1", label: "노말", sub: "1관" },
+          { key: "normal_gate2", label: "노말", sub: "2관" },
+          { key: "hard_gate1", label: "하드", sub: "1관" },
+          { key: "hard_gate2", label: "하드", sub: "2관" },
+          { key: "nightmare_gate1", label: "나메", sub: "1관" },
+          { key: "nightmare_gate2", label: "나메", sub: "2관" }
+        ];
+      }
+
+      if (menu === "cathedral") {
+        return [
+          { key: "normal_gate1", label: "1단계", sub: "1관" },
+          { key: "normal_gate2", label: "1단계", sub: "2관" },
+          { key: "hard_gate1", label: "2단계", sub: "1관" },
+          { key: "hard_gate2", label: "2단계", sub: "2관" },
+          { key: "nightmare_gate1", label: "3단계", sub: "1관" },
+          { key: "nightmare_gate2", label: "3단계", sub: "2관" }
+        ];
+      }
+
+      return [];
+    }
+
+    function getContentName() {
+      if (currentMenu === "serka" || currentMenu === "cathedral") {
+        const meta = raidMeta[currentMenu][currentCombo];
+        const menuName = currentMenu === "serka" ? "세르카" : "성당";
+        return `${menuName} : ${meta.title.replace(/\s*\(.+\)/, "")} ${meta.gateName}`;
+      }
+      if (currentMenu === "gato1730") return `1730 가디언 토벌 : ${currentGatoBoss}`;
+      if (currentMenu === "gato1750") return "1750 가디언 토벌";
+      return "콘텐츠";
+    }
+
+    function getTableTitle() {
+      if (currentMenu === "serka" || currentMenu === "cathedral") {
+        const meta = raidMeta[currentMenu][currentCombo];
+        const levelMatch = meta.title.match(/\((\d+)\)/);
+        const level = levelMatch ? levelMatch[1] : "-";
+        return `입장레벨 : ${level}`;
+      }
+
+      if (currentMenu === "gato1730") return "잔영 1단계";
+      if (currentMenu === "gato1750") return "데이터 준비중";
+      return "";
+    }
+
+    function renderTitleMeta() {
+      const titleMeta = document.getElementById("titleMeta");
+
+      if (currentMenu === "serka" || currentMenu === "cathedral") {
+        const meta = raidMeta[currentMenu][currentCombo];
+        titleMeta.innerHTML = `
+          ${makeBadge(meta.type.text, meta.type.cls)}
+          ${makeBadge(meta.attr.text, meta.attr.cls)}
+        `;
+        return;
+      }
+
+      if (currentMenu === "gato1730") {
+        const meta = gatoMeta[currentGatoBoss];
+        titleMeta.innerHTML = `
+          ${makeBadge(meta.type.text, meta.type.cls)}
+          ${makeBadge(meta.attr.text, meta.attr.cls)}
+        `;
+        return;
+      }
+
+      titleMeta.innerHTML = "";
+    }
+
+    function renderTabs() {
+      const tabs = document.getElementById("tabs");
+
+      if (currentMenu === "gato1730") {
+        tabs.innerHTML = gato1730Bosses.map(name => {
+          const meta = gatoMeta[name];
+          return `
+            <button class="tab gato ${currentGatoBoss === name ? 'active' : ''}" data-boss="${name}">
+              <div class="tab-label">${name}</div>
+              <div class="tab-meta">
+                ${makeBadge(meta.type.text, meta.type.cls)}
+                ${makeBadge(meta.attr.text, meta.attr.cls)}
+              </div>
+            </button>
+          `;
+        }).join("");
+
+        tabs.querySelectorAll(".tab[data-boss]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            currentGatoBoss = btn.dataset.boss;
+            renderTabs();
+            renderTable();
+          });
+        });
+        return;
+      }
+
+      if (currentMenu === "gato1750") {
+        tabs.innerHTML = "";
+        return;
+      }
+
+      const comboTabs = getComboTabs(currentMenu);
+      tabs.innerHTML = comboTabs.map(item => {
+        const meta = raidMeta[currentMenu][item.key];
+        return `
+          <button class="tab combo ${meta.tierClass} ${currentCombo === item.key ? 'active' : ''}" data-combo="${item.key}">
+            <div class="tab-label">${item.label}</div>
+            <div class="tab-sub">${item.sub}</div>
+          </button>
+        `;
+      }).join("");
+
+      tabs.querySelectorAll(".tab[data-combo]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentCombo = btn.dataset.combo;
+          renderTabs();
+          renderTable();
+        });
+      });
+    }
+
+    function clearAllData() {
+      parsedData.serka = { normal: [], hard: [], nightmare: [] };
+      parsedData.cathedral = { normal: [], hard: [], nightmare: [] };
+      parsedData.gato1730 = {};
+      parsedData.gato1750 = {};
+    }
+
+    function parseBlock(lines, startRow, type) {
+      for (let r = startRow + 3; r < startRow + 29; r++) {
+        const cols = parseCSVLine(lines[r] || "");
+        const share = percentNum(cols[1]);
+        if (!share) continue;
+
+        parsedData[type].normal.push({
+          share,
+          g1: toNum(cols[3]),
+          g2: toNum(cols[6])
+        });
+
+        parsedData[type].hard.push({
+          share,
+          g1: toNum(cols[11]),
+          g2: toNum(cols[14])
+        });
+
+        parsedData[type].nightmare.push({
+          share,
+          g1: toNum(cols[19]),
+          g2: toNum(cols[22])
+        });
+      }
+    }
+
+    function parseCathedral(lines) {
+      for (let i = 0; i < lines.length; i++) {
+        if ((lines[i] || "").includes("지평의 성당 1~3단계 딜지분 상세")) {
+          parseBlock(lines, i + 1, "cathedral");
+          return;
+        }
+      }
+    }
+
+    function parseSerka(lines) {
+      for (let i = 0; i < lines.length; i++) {
+        if ((lines[i] || "").includes("세르카 딜지분 상세")) {
+          parseBlock(lines, i + 1, "serka");
+          return;
+        }
+      }
+    }
+
+    function parseGato1730(lines) {
+      gato1730Bosses.forEach(name => {
+        parsedData.gato1730[name] = [];
+      });
+
+      gato1730Layout.forEach(info => {
+        for (let r = info.startRow + 3; r <= info.startRow + 28; r++) {
+          const cols = parseCSVLine(lines[r] || "");
+          const share = percentNum(cols[info.shareCol]);
+          if (!share) continue;
+
+          parsedData.gato1730[info.boss].push({
+            share,
+            damage: toNum(cols[info.damageCol])
+          });
+        }
+      });
+    }
+
+    function renderShareCell(share) {
+      if (share === 30) {
+        return `
+          <td class="share-cell">
+            <div class="share-row">
+              <span class="share-label label-30">강투컷</span>
+              <span class="share-value">30%</span>
+            </div>
+          </td>
+        `;
+      }
+      if (share === 33) {
+        return `
+          <td class="share-cell">
+            <div class="share-row">
+              <span class="share-label label-33">1인분</span>
+              <span class="share-value">33%</span>
+            </div>
+          </td>
+        `;
+      }
+      if (share === 40) {
+        return `
+          <td class="share-cell">
+            <div class="share-row">
+              <span class="share-label label-40">잔혈컷</span>
+              <span class="share-value">40%</span>
+            </div>
+          </td>
+        `;
+      }
+
+      return `
+        <td class="share-cell">
+          <div class="share-row">
+            <span class="share-label"></span>
+            <span class="share-value">${share}%</span>
+          </div>
+        </td>
+      `;
+    }
+
+    function renderHead() {
+      const head = document.getElementById("tableHead");
+
+      if (currentMenu === "gato1730") {
+        head.innerHTML = `
+          <tr>
+            <th>딜지분</th>
+            <th>피해/억</th>
+            <th>DPS</th>
+          </tr>
+        `;
+        return;
+      }
+
+      if (currentMenu === "gato1750") {
+        head.innerHTML = "";
+        return;
+      }
+
+      head.innerHTML = `
+        <tr>
+          <th>딜지분</th>
+          <th>피해/억</th>
+          <th>DPS</th>
+        </tr>
+      `;
+    }
+
+    function renderComingSoon() {
+      const mainContent = document.getElementById("mainContent");
+      mainContent.innerHTML = `
+        <div class="coming-soon">
+          <h3>1750 가토 준비중</h3>
+          <p>해당 구간 데이터는 아직 시트에 반영되지 않았습니다.<br>데이터 추가 후 동일한 형식으로 연동됩니다.</p>
+        </div>
+      `;
+    }
+
+    function ensureTableWrap() {
+      const mainContent = document.getElementById("mainContent");
+      mainContent.innerHTML = `
+        <div class="table-wrap" id="tableWrap">
+          <table id="dataTable">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderTable() {
+      updateTimeDisplay();
+
+      document.getElementById("contentTitle").textContent = getContentName();
+      document.getElementById("tableTitle").textContent = getTableTitle();
+      renderTitleMeta();
+
+      if (currentMenu === "gato1750") {
+        renderComingSoon();
+        document.getElementById("infoHint").innerHTML =
+          "1750 가디언 토벌 데이터는 현재 준비중입니다.<br>시트 반영 후 자동으로 확장 가능합니다.";
+        return;
+      }
+
+      ensureTableWrap();
+      renderHead();
+
+      document.getElementById("infoHint").innerHTML =
+        "구글 시트 데이터를 읽어옵니다.<br>시간 변경 시 DPS는 자동 계산됩니다.";
+
+      const body = document.getElementById("tableBody");
+      const totalSeconds = getTotalSeconds();
+
+      if (currentMenu === "gato1730") {
+        const rows = parsedData.gato1730[currentGatoBoss] || [];
+
+        if (!rows.length) {
+          body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
+          return;
+        }
+
+        body.innerHTML = rows.map(row => {
+          let cls = "";
+          if (row.share === 30) cls = "row-30";
+          if (row.share === 33) cls = "row-33";
+          if (row.share === 40) cls = "row-40";
+
+          return `
+            <tr class="${cls}">
+              ${renderShareCell(row.share)}
+              <td>${fmt(row.damage)}</td>
+              <td class="dps-cell">${(row.damage / totalSeconds).toFixed(1)}</td>
+            </tr>
+          `;
+        }).join("");
+        return;
+      }
+
+      const meta = raidMeta[currentMenu][currentCombo];
+      const rows = parsedData[currentMenu]?.[meta.diffKey] || [];
+
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = rows.map(row => {
+        let cls = "";
+        if (row.share === 30) cls = "row-30";
+        if (row.share === 33) cls = "row-33";
+        if (row.share === 40) cls = "row-40";
+
+        const damage = meta.gateKey === "gate1" ? row.g1 : row.g2;
+        const dps = (damage / totalSeconds).toFixed(1);
+
+        return `
+          <tr class="${cls}">
+            ${renderShareCell(row.share)}
+            <td>${fmt(damage)}</td>
+            <td class="dps-cell">${dps}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadCSV() {
+      document.getElementById("status").textContent = "시트 불러오는 중...";
+      try {
+        const res = await fetch(CSV_URL);
+        const text = await res.text();
+        const lines = text.split(/\r?\n/);
+
+        clearAllData();
+        parseCathedral(lines);
+        parseSerka(lines);
+        parseGato1730(lines);
+
+        renderTabs();
+        renderTable();
+        document.getElementById("status").textContent = "연동 완료";
+      } catch (e) {
+        console.error(e);
+        document.getElementById("status").textContent = "불러오기 실패";
+      }
+    }
+
+    document.querySelectorAll(".menu-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".menu-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        currentMenu = btn.dataset.menu;
+
+        if (currentMenu === "serka") {
+          currentCombo = "hard_gate1";
+        } else if (currentMenu === "cathedral") {
+          currentCombo = "hard_gate1";
+        } else if (currentMenu === "gato1730") {
+          currentGatoBoss = "루멘칼리고";
+        }
+
+        setBaseTimeByMenu(currentMenu);
+        renderTabs();
+        renderTable();
+      });
+    });
+
+    document.getElementById("minutes").addEventListener("input", renderTable);
+    document.getElementById("seconds").addEventListener("input", renderTable);
+
+    updateTopDateTime();
+    setInterval(updateTopDateTime, 1000);
+
+    setBaseTimeByMenu("serka");
+    loadCSV();
+  </script>
+</body>
+</html>
