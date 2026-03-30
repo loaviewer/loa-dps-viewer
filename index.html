@@ -36,7 +36,9 @@
       justify-content: center;
       align-items: center;
       margin-bottom: 18px;
-      min-height: 50px;
+      min-height: 56px;
+      width: 100%;
+      text-align: center;
     }
 
     .top-title {
@@ -46,6 +48,7 @@
       letter-spacing: 1px;
       color: #f6d18b;
       text-shadow: 0 0 18px rgba(246, 209, 139, 0.18);
+      width: 100%;
     }
 
     .top-datetime {
@@ -83,6 +86,13 @@
 
     .left, .center, .right {
       padding: 18px;
+    }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-self: stretch;
     }
 
     .menu-title,
@@ -150,6 +160,7 @@
       font-size: 13px;
       color: #b9a98b;
       margin-top: 4px;
+      min-height: 18px;
     }
 
     .tabs {
@@ -334,7 +345,7 @@
       border-radius: 18px;
       border: 1px solid rgba(255,214,153,0.16);
       background: rgba(255,255,255,0.03);
-      margin-bottom: 16px;
+      margin-bottom: 0;
     }
 
     .time-view {
@@ -385,14 +396,6 @@
       font-size: 13px;
       color: #a9997e;
       line-height: 1.5;
-    }
-
-    .version {
-      margin-top: 12px;
-      font-size: 12px;
-      color: #cfae69;
-      text-align: right;
-      opacity: 0.85;
     }
 
     .badge {
@@ -457,18 +460,30 @@
       }
 
       .top-bar {
-        justify-content: center;
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
         gap: 10px;
+        text-align: center;
+      }
+
+      .top-title {
+        width: 100%;
+        text-align: center;
       }
 
       .top-datetime {
         position: static;
         transform: none;
+        margin: 0 auto;
       }
 
       .left, .center, .right {
         padding: 14px;
+      }
+
+      .right {
+        gap: 14px;
       }
 
       .menu-list {
@@ -514,13 +529,27 @@
         border-radius: 16px;
       }
 
+      .top-bar {
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
       .top-title {
-        font-size: 22px;
+        width: 100%;
+        font-size: 21px;
         line-height: 1.2;
+        text-align: center;
+        margin: 0 auto;
       }
 
       .top-datetime {
-        font-size: 13px;
+        display: inline-block;
+        position: static;
+        transform: none;
+        margin: 0 auto;
+        font-size: 12px;
         padding: 8px 10px;
       }
 
@@ -530,7 +559,7 @@
       }
 
       .content-title {
-        font-size: 20px;
+        font-size: 18px;
       }
 
       .content-sub {
@@ -631,7 +660,7 @@
       }
 
       .content-title {
-        font-size: 18px;
+        font-size: 17px;
       }
 
       .tab {
@@ -657,7 +686,7 @@
 <body>
   <div class="app">
     <div class="top-bar">
-      <div class="top-title">LOST ARK DPS VIEWER (v07)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v08)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
