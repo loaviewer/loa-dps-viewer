@@ -118,7 +118,6 @@
     .menu-btn:hover {
       transform: translateY(-2px);
       border-color: rgba(255,214,153,0.45);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.28);
     }
 
     .menu-btn.active {
@@ -201,9 +200,7 @@
       flex: 0 0 auto;
     }
 
-    .tab-label {
-      line-height: 1;
-    }
+    .tab-label { line-height: 1; }
 
     .tab.active .tab-label {
       color: #241700;
@@ -270,70 +267,10 @@
     .row-40 td { background: rgba(158, 107, 214, 0.22); }
 
     .share-cell {
-      width: 150px;
-      min-width: 150px;
-      padding: 8px 10px;
-    }
-
-    .share-box {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-width: 90px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.03);
-    }
-
-    .share-text {
       color: #ffe8b3 !important;
       font-weight: 900;
       font-size: 16px;
-      line-height: 1;
-      display: inline-block;
-      min-width: 46px;
-      text-align: left;
-    }
-
-    .cut-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 900;
-      border: 1px solid transparent;
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
-      flex: 0 0 22px;
-    }
-
-    .cut-placeholder {
-      width: 22px;
-      height: 22px;
-      display: inline-block;
-      flex: 0 0 22px;
-      opacity: 0;
-    }
-
-    .cut-30 {
-      background: rgba(245, 166, 35, 0.22);
-      color: #ffcf7a;
-      border-color: rgba(245, 166, 35, 0.45);
-    }
-
-    .cut-33 {
-      background: rgba(61, 195, 145, 0.20);
-      color: #8ef0c9;
-      border-color: rgba(61, 195, 145, 0.45);
-    }
-
-    .cut-40 {
-      background: rgba(158, 107, 214, 0.22);
-      color: #d8b2ff;
-      border-color: rgba(158, 107, 214, 0.45);
+      letter-spacing: 0.3px;
     }
 
     .dps-cell {
@@ -549,7 +486,7 @@
             구글 시트 데이터를 읽어옵니다.<br>
             시간 변경 시 DPS는 자동 계산됩니다.
           </div>
-          <div class="version">v03</div>
+          <div class="version">v04</div>
         </div>
       </div>
     </div>
@@ -914,13 +851,6 @@
       });
     }
 
-    function getCutIconHtml(share) {
-      if (share === 30) return `<span class="cut-icon cut-30">⚔</span>`;
-      if (share === 33) return `<span class="cut-icon cut-33">◆</span>`;
-      if (share === 40) return `<span class="cut-icon cut-40">✦</span>`;
-      return `<span class="cut-placeholder"></span>`;
-    }
-
     function renderHead() {
       const head = document.getElementById("tableHead");
 
@@ -977,14 +907,7 @@
     }
 
     function renderShareCell(share) {
-      return `
-        <td class="share-cell">
-          <div class="share-box">
-            ${getCutIconHtml(share)}
-            <span class="share-text">${share}%</span>
-          </div>
-        </td>
-      `;
+      return `<td class="share-cell">${share}%</td>`;
     }
 
     function renderTable() {
@@ -1006,8 +929,6 @@
         }
 
         body.innerHTML = rows.map(row => {
-          const dps = (row.damage / totalSeconds).toFixed(1);
-
           let cls = "";
           if (row.share === 30) cls = "row-30";
           if (row.share === 33) cls = "row-33";
@@ -1017,7 +938,7 @@
             <tr class="${cls}">
               ${renderShareCell(row.share)}
               <td>${fmt(row.damage)}</td>
-              <td class="dps-cell">${dps}</td>
+              <td class="dps-cell">${(row.damage / totalSeconds).toFixed(1)}</td>
             </tr>
           `;
         }).join("");
@@ -1032,9 +953,6 @@
       }
 
       body.innerHTML = rows.map(row => {
-        const dps1 = (row.g1 / totalSeconds).toFixed(1);
-        const dps2 = (row.g2 / totalSeconds).toFixed(1);
-
         let cls = "";
         if (row.share === 30) cls = "row-30";
         if (row.share === 33) cls = "row-33";
@@ -1044,9 +962,9 @@
           <tr class="${cls}">
             ${renderShareCell(row.share)}
             <td>${fmt(row.g1)}</td>
-            <td class="dps-cell gate-divider">${dps1}</td>
+            <td class="dps-cell gate-divider">${(row.g1 / totalSeconds).toFixed(1)}</td>
             <td>${fmt(row.g2)}</td>
-            <td class="dps-cell">${dps2}</td>
+            <td class="dps-cell">${(row.g2 / totalSeconds).toFixed(1)}</td>
           </tr>
         `;
       }).join("");
