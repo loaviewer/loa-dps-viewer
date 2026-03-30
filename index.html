@@ -18,8 +18,7 @@
     }
 
     .app {
-      width: 1360px;
-      max-width: calc(100% - 20px);
+      width: min(1380px, calc(100% - 20px));
       margin: 24px auto;
       padding: 22px 22px 40px;
       border: 1px solid rgba(255, 215, 140, 0.25);
@@ -29,36 +28,35 @@
         0 20px 60px rgba(0,0,0,0.45);
       border-radius: 24px;
       backdrop-filter: blur(8px);
-      overflow: visible;
+      overflow: hidden;
     }
 
     .top-bar {
-      position: relative;
-      display: flex;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
+      gap: 12px;
       margin-bottom: 18px;
       min-height: 56px;
-      width: 100%;
-      text-align: center;
+    }
+
+    .top-spacer {
+      min-width: 0;
     }
 
     .top-title {
-      width: 100%;
       text-align: center;
       font-size: 30px;
       font-weight: 800;
       letter-spacing: 1px;
       color: #f6d18b;
       text-shadow: 0 0 18px rgba(246, 209, 139, 0.18);
-      margin: 0 auto;
+      margin: 0;
+      white-space: nowrap;
     }
 
     .top-datetime {
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
+      justify-self: end;
       font-size: 15px;
       font-variant-numeric: tabular-nums;
       color: #e2d2a9;
@@ -73,12 +71,13 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 260px minmax(0, 1fr) 220px;
-      gap: 22px;
+      grid-template-columns: 240px minmax(0, 1fr) 240px;
+      gap: 18px;
       align-items: start;
     }
 
     .panel {
+      min-width: 0;
       background: linear-gradient(180deg, rgba(28,36,50,0.92), rgba(16,22,32,0.92));
       border: 1px solid rgba(255, 214, 153, 0.18);
       border-radius: 20px;
@@ -89,15 +88,6 @@
 
     .left, .center, .right {
       padding: 18px;
-    }
-
-    .right {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      align-self: start;
-      height: auto;
-      width: 100%;
     }
 
     .menu-title,
@@ -173,26 +163,18 @@
       flex-wrap: wrap;
       gap: 10px;
       justify-content: flex-end;
-      max-width: 860px;
-    }
-
-    .tab-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      width: 100%;
-      justify-content: flex-end;
+      max-width: 880px;
     }
 
     .tab {
-      min-width: 120px;
-      min-height: 46px;
+      min-width: 122px;
+      min-height: 52px;
       padding: 8px 14px;
       border-radius: 18px;
       border: 1px solid rgba(255,214,153,0.28);
       background: rgba(255,255,255,0.03);
       color: #e8dcc0;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
       transition: 0.18s ease;
@@ -201,6 +183,7 @@
       align-items: center;
       justify-content: center;
       gap: 5px;
+      text-align: center;
     }
 
     .tab:hover {
@@ -223,21 +206,26 @@
       min-height: 64px;
       padding: 9px 10px;
       font-size: 14px;
-      text-align: center;
       flex: 0 0 auto;
     }
 
-    .tab.gate {
-      min-width: 80px;
-      min-height: 40px;
-      padding: 6px 12px;
-      font-size: 14px;
-      border-radius: 12px;
+    .tab.combo {
+      min-width: 118px;
+      min-height: 60px;
+      padding: 8px 10px;
+      font-size: 13px;
     }
 
-    .tab-label { line-height: 1; }
+    .tab-label { line-height: 1.1; }
 
-    .tab.active .tab-label {
+    .tab-sub {
+      font-size: 11px;
+      opacity: 0.92;
+      line-height: 1;
+    }
+
+    .tab.active .tab-label,
+    .tab.active .tab-sub {
       color: #241700;
       text-shadow: 0 1px 0 rgba(255,255,255,0.35);
     }
@@ -252,7 +240,7 @@
     }
 
     .tab.active .tab-meta {
-      margin-top: 6px;
+      margin-top: 4px;
       padding: 3px 6px;
       border-radius: 999px;
       background: rgba(18, 24, 35, 0.18);
@@ -347,12 +335,21 @@
       color: #a7987d;
     }
 
+    .right {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+
     .side-box {
+      width: 100%;
       padding: 16px;
       border-radius: 18px;
       border: 1px solid rgba(255,214,153,0.16);
       background: rgba(255,255,255,0.03);
       margin-bottom: 0;
+      overflow: hidden;
     }
 
     .time-view {
@@ -369,6 +366,7 @@
       gap: 10px;
       justify-content: center;
       margin-bottom: 14px;
+      flex-wrap: wrap;
     }
 
     .time-inputs input {
@@ -456,9 +454,35 @@
       gap: 4px;
     }
 
-    @media (max-width: 1360px) {
-      .app {
-        width: calc(100% - 20px);
+    .coming-soon {
+      padding: 44px 20px;
+      text-align: center;
+      border-radius: 18px;
+      border: 1px dashed rgba(255,214,153,0.26);
+      background: rgba(255,255,255,0.03);
+      color: #e8dcc0;
+    }
+
+    .coming-soon h3 {
+      margin: 0 0 10px;
+      color: #f6d18b;
+      font-size: 24px;
+    }
+
+    .coming-soon p {
+      margin: 0;
+      color: #b9a98b;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 1180px) {
+      .layout {
+        grid-template-columns: 220px minmax(0, 1fr) 220px;
+      }
+
+      .tab.combo {
+        min-width: 110px;
       }
     }
 
@@ -468,33 +492,26 @@
       }
 
       .top-bar {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
+        grid-template-columns: 1fr;
+        justify-items: center;
         text-align: center;
+        gap: 10px;
+      }
+
+      .top-spacer {
+        display: none;
       }
 
       .top-title {
-        width: 100%;
-        text-align: center;
-        margin: 0 auto;
+        white-space: normal;
       }
 
       .top-datetime {
-        position: static;
-        transform: none;
-        display: inline-block;
-        margin: 0 auto;
+        justify-self: center;
       }
 
       .left, .center, .right {
         padding: 14px;
-      }
-
-      .right {
-        gap: 14px;
-        align-self: start;
       }
 
       .menu-list {
@@ -511,8 +528,7 @@
         font-size: 22px;
       }
 
-      .tabs,
-      .tab-row {
+      .tabs {
         justify-content: flex-start;
         max-width: 100%;
       }
@@ -528,6 +544,12 @@
         font-size: 13px;
       }
 
+      .tab.combo {
+        min-width: 104px;
+        min-height: 56px;
+        font-size: 12px;
+      }
+
       .time-view {
         font-size: 26px;
       }
@@ -541,30 +563,14 @@
         border-radius: 16px;
       }
 
-      .top-bar {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        text-align: center;
-      }
-
       .top-title {
-        display: block;
         width: 100%;
         font-size: 21px;
         line-height: 1.2;
         text-align: center;
-        margin: 0 auto;
       }
 
       .top-datetime {
-        display: block;
-        position: static;
-        transform: none;
-        margin: 0 auto;
         font-size: 12px;
         padding: 8px 10px;
         text-align: center;
@@ -596,16 +602,15 @@
         border-radius: 14px;
       }
 
-      .tabs,
-      .tab-row {
+      .tabs {
         gap: 8px;
       }
 
       .tab {
-        min-width: 96px;
+        min-width: 94px;
         min-height: 42px;
         padding: 6px 10px;
-        font-size: 13px;
+        font-size: 12px;
         border-radius: 14px;
       }
 
@@ -616,10 +621,15 @@
         padding: 6px 8px;
       }
 
-      .tab.gate {
-        min-width: 72px;
-        min-height: 36px;
-        font-size: 12px;
+      .tab.combo {
+        min-width: 92px;
+        min-height: 52px;
+        font-size: 11px;
+        padding: 6px 8px;
+      }
+
+      .tab-sub {
+        font-size: 10px;
       }
 
       .tab-meta {
@@ -675,7 +685,7 @@
 
     @media (max-width: 480px) {
       .top-title {
-        font-size: 19px;
+        font-size: 18px;
       }
 
       .content-title {
@@ -683,17 +693,26 @@
       }
 
       .tab {
-        min-width: 88px;
-        font-size: 12px;
+        min-width: 84px;
+        font-size: 11px;
       }
 
       .tab.gato {
-        min-width: 100px;
+        min-width: 96px;
         font-size: 11px;
+      }
+
+      .tab.combo {
+        min-width: 82px;
+        font-size: 10px;
       }
 
       table {
         min-width: 440px;
+      }
+
+      .coming-soon h3 {
+        font-size: 20px;
       }
     }
   </style>
@@ -701,7 +720,8 @@
 <body>
   <div class="app">
     <div class="top-bar">
-      <div class="top-title">LOST ARK DPS VIEWER (v11)</div>
+      <div class="top-spacer"></div>
+      <div class="top-title">LOST ARK DPS VIEWER (v12)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
@@ -719,18 +739,20 @@
       <div class="panel center">
         <div class="center-top">
           <div>
-            <div class="content-title" id="contentTitle">세르카</div>
-            <div class="content-sub" id="tableTitle">하드 (1730)</div>
+            <div class="content-title" id="contentTitle">세르카 : 하드 1관</div>
+            <div class="content-sub" id="tableTitle">하드 (1730) / 1관</div>
           </div>
 
           <div class="tabs" id="tabs"></div>
         </div>
 
-        <div class="table-wrap">
-          <table id="dataTable">
-            <thead id="tableHead"></thead>
-            <tbody id="tableBody"></tbody>
-          </table>
+        <div id="mainContent">
+          <div class="table-wrap" id="tableWrap">
+            <table id="dataTable">
+              <thead id="tableHead"></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
         </div>
 
         <div class="status" id="status">불러오는 중...</div>
@@ -753,7 +775,7 @@
 
         <div class="side-box">
           <div class="side-title" style="margin-bottom:10px;">INFO</div>
-          <div class="hint">
+          <div class="hint" id="infoHint">
             구글 시트 데이터를 읽어옵니다.<br>
             시간 변경 시 DPS는 자동 계산됩니다.
           </div>
@@ -766,8 +788,7 @@
     const CSV_URL = "https://docs.google.com/spreadsheets/d/1v4gfG-Lr0iFmiP0PXtVTsijdMziekQaZ-wBTWrobncY/export?format=csv&gid=0";
 
     let currentMenu = "serka";
-    let currentDiff = "hard";
-    let currentGate = "gate1";
+    let currentCombo = "hard_gate1";
     let currentGatoBoss = "루멘칼리고";
 
     const parsedData = {
@@ -834,38 +855,108 @@
       }
     };
 
-    function getGateMeta(menu) {
-      if (menu === "serka") {
-        return {
-          gate1: {
-            type: { text: "인간", cls: "type-human" },
-            attr: { text: "속성 없음", cls: "attr-none" }
-          },
-          gate2: {
-            type: { text: "고대", cls: "type-ancient" },
-            attr: { text: "성속성 취약", cls: "attr-holy" }
-          }
-        };
+    const raidMeta = {
+      serka: {
+        normal_gate1: {
+          diffKey: "normal",
+          gateKey: "gate1",
+          title: "노말 (1710)",
+          gateName: "1관",
+          type: { text: "인간", cls: "type-human" },
+          attr: { text: "속성 없음", cls: "attr-none" }
+        },
+        normal_gate2: {
+          diffKey: "normal",
+          gateKey: "gate2",
+          title: "노말 (1710)",
+          gateName: "2관",
+          type: { text: "고대", cls: "type-ancient" },
+          attr: { text: "성속성 취약", cls: "attr-holy" }
+        },
+        hard_gate1: {
+          diffKey: "hard",
+          gateKey: "gate1",
+          title: "하드 (1730)",
+          gateName: "1관",
+          type: { text: "인간", cls: "type-human" },
+          attr: { text: "속성 없음", cls: "attr-none" }
+        },
+        hard_gate2: {
+          diffKey: "hard",
+          gateKey: "gate2",
+          title: "하드 (1730)",
+          gateName: "2관",
+          type: { text: "고대", cls: "type-ancient" },
+          attr: { text: "성속성 취약", cls: "attr-holy" }
+        },
+        nightmare_gate1: {
+          diffKey: "nightmare",
+          gateKey: "gate1",
+          title: "나메 (1740)",
+          gateName: "1관",
+          type: { text: "인간", cls: "type-human" },
+          attr: { text: "속성 없음", cls: "attr-none" }
+        },
+        nightmare_gate2: {
+          diffKey: "nightmare",
+          gateKey: "gate2",
+          title: "나메 (1740)",
+          gateName: "2관",
+          type: { text: "고대", cls: "type-ancient" },
+          attr: { text: "성속성 취약", cls: "attr-holy" }
+        }
+      },
+      cathedral: {
+        normal_gate1: {
+          diffKey: "normal",
+          gateKey: "gate1",
+          title: "1단계 (1700)",
+          gateName: "1관",
+          type: { text: "인간", cls: "type-human" },
+          attr: { text: "암속성 취약", cls: "attr-dark" }
+        },
+        normal_gate2: {
+          diffKey: "normal",
+          gateKey: "gate2",
+          title: "1단계 (1700)",
+          gateName: "2관",
+          type: { text: "인간", cls: "type-human" },
+          attr: { text: "암속성 취약", cls: "attr-dark" }
+        },
+        hard_gate1: {
+          diffKey: "hard",
+          gateKey: "gate1",
+          title: "2단계 (1720)",
+          gateName: "1관",
+          type: { text: "인간", cls: "type-human" },
+          attr: { text: "암속성 취약", cls: "attr-dark" }
+        },
+        hard_gate2: {
+          diffKey: "hard",
+          gateKey: "gate2",
+          title: "2단계 (1720)",
+          gateName: "2관",
+          type: { text: "인간", cls: "type-human" },
+          attr: { text: "암속성 취약", cls: "attr-dark" }
+        },
+        nightmare_gate1: {
+          diffKey: "nightmare",
+          gateKey: "gate1",
+          title: "3단계 (1750)",
+          gateName: "1관",
+          type: { text: "인간", cls: "type-human" },
+          attr: { text: "암속성 취약", cls: "attr-dark" }
+        },
+        nightmare_gate2: {
+          diffKey: "nightmare",
+          gateKey: "gate2",
+          title: "3단계 (1750)",
+          gateName: "2관",
+          type: { text: "인간", cls: "type-human" },
+          attr: { text: "암속성 취약", cls: "attr-dark" }
+        }
       }
-
-      if (menu === "cathedral") {
-        return {
-          gate1: {
-            type: { text: "인간", cls: "type-human" },
-            attr: { text: "암속성 취약", cls: "attr-dark" }
-          },
-          gate2: {
-            type: { text: "인간", cls: "type-human" },
-            attr: { text: "암속성 취약", cls: "attr-dark" }
-          }
-        };
-      }
-
-      return {
-        gate1: null,
-        gate2: null
-      };
-    }
+    };
 
     function formatDateTime(date) {
       const y = date.getFullYear();
@@ -911,7 +1002,12 @@
 
     function getTotalSeconds() {
       const min = parseInt(document.getElementById("minutes").value || 0, 10);
-      const sec = parseInt(document.getElementById("seconds").value || 0, 10);
+      let sec = parseInt(document.getElementById("seconds").value || 0, 10);
+
+      if (sec > 59) sec = 59;
+      if (sec < 0) sec = 0;
+      document.getElementById("seconds").value = sec;
+
       return Math.max(1, min * 60 + sec);
     }
 
@@ -955,111 +1051,96 @@
       return m ? Number(m[1]) : null;
     }
 
-    function getTitle(menu, diff) {
+    function getComboTabs(menu) {
       if (menu === "serka") {
-        if (diff === "normal") return "노말 (1710)";
-        if (diff === "hard") return "하드 (1730)";
-        if (diff === "nightmare") return "나메 (1740)";
+        return [
+          { key: "normal_gate1", label: "노말", sub: "1관" },
+          { key: "normal_gate2", label: "노말", sub: "2관" },
+          { key: "hard_gate1", label: "하드", sub: "1관" },
+          { key: "hard_gate2", label: "하드", sub: "2관" },
+          { key: "nightmare_gate1", label: "나메", sub: "1관" },
+          { key: "nightmare_gate2", label: "나메", sub: "2관" }
+        ];
       }
+
       if (menu === "cathedral") {
-        if (diff === "normal") return "1단계 (1700)";
-        if (diff === "hard") return "2단계 (1720)";
-        if (diff === "nightmare") return "3단계 (1750)";
+        return [
+          { key: "normal_gate1", label: "1단계", sub: "1관" },
+          { key: "normal_gate2", label: "1단계", sub: "2관" },
+          { key: "hard_gate1", label: "2단계", sub: "1관" },
+          { key: "hard_gate2", label: "2단계", sub: "2관" },
+          { key: "nightmare_gate1", label: "3단계", sub: "1관" },
+          { key: "nightmare_gate2", label: "3단계", sub: "2관" }
+        ];
       }
-      return "";
+
+      return [];
     }
 
-    function getContentName(menu) {
-      if (menu === "serka") return `세르카 : ${currentGate === "gate1" ? "1관" : "2관"}`;
-      if (menu === "cathedral") return `지평의 성당 : ${currentGate === "gate1" ? "1관" : "2관"}`;
-      if (menu === "gato1730") return `1730 가디언 토벌 : ${currentGatoBoss}`;
-      if (menu === "gato1750") return "1750 가디언 토벌";
+    function getContentName() {
+      if (currentMenu === "serka" || currentMenu === "cathedral") {
+        const meta = raidMeta[currentMenu][currentCombo];
+        const menuName = currentMenu === "serka" ? "세르카" : "지평의 성당";
+        return `${menuName} : ${meta.title.replace(/\s*\(.+\)/, "")} ${meta.gateName}`;
+      }
+      if (currentMenu === "gato1730") return `1730 가디언 토벌 : ${currentGatoBoss}`;
+      if (currentMenu === "gato1750") return "1750 가디언 토벌";
       return "콘텐츠";
     }
 
-    function getTabList(menu) {
-      if (menu === "serka") {
-        return [
-          { key: "normal", label: "노말 (1710)" },
-          { key: "hard", label: "하드 (1730)" },
-          { key: "nightmare", label: "나메 (1740)" }
-        ];
+    function getTableTitle() {
+      if (currentMenu === "serka" || currentMenu === "cathedral") {
+        const meta = raidMeta[currentMenu][currentCombo];
+        return `${meta.title} / ${meta.gateName}`;
       }
-      if (menu === "cathedral") {
-        return [
-          { key: "normal", label: "1단계 (1700)" },
-          { key: "hard", label: "2단계 (1720)" },
-          { key: "nightmare", label: "3단계 (1750)" }
-        ];
-      }
-      if (menu === "gato1730") {
-        return gato1730Bosses.map(name => ({
-          key: name,
-          label: name,
-          gato: true
-        }));
-      }
-      return [];
+      if (currentMenu === "gato1730") return "보스별 단일 표";
+      if (currentMenu === "gato1750") return "데이터 준비중";
+      return "";
     }
 
     function renderTabs() {
       const tabs = document.getElementById("tabs");
-      const list = getTabList(currentMenu);
 
-      const topTabs = list.map(item => {
-        const isActive = currentMenu === "gato1730"
-          ? item.key === currentGatoBoss
-          : item.key === currentDiff;
-
-        let metaHtml = "";
-
-        if (currentMenu === "gato1730") {
-          const meta = gatoMeta[item.key];
-          if (meta) {
-            metaHtml = `
+      if (currentMenu === "gato1730") {
+        tabs.innerHTML = gato1730Bosses.map(name => {
+          const meta = gatoMeta[name];
+          return `
+            <button class="tab gato ${currentGatoBoss === name ? 'active' : ''}" data-boss="${name}">
+              <div class="tab-label">${name}</div>
               <div class="tab-meta">
                 ${makeBadge(meta.type.text, meta.type.cls)}
                 ${makeBadge(meta.attr.text, meta.attr.cls)}
               </div>
-            `;
-          }
-        }
+            </button>
+          `;
+        }).join("");
 
-        return `
-          <button class="tab ${item.gato ? 'gato' : ''} ${isActive ? 'active' : ''}" data-key="${item.key}">
-            <div class="tab-label">${item.label}</div>
-            ${metaHtml}
-          </button>
-        `;
-      }).join("");
-
-      let gateTabs = "";
-      if (currentMenu === "serka" || currentMenu === "cathedral") {
-        gateTabs = `
-          <div class="tab-row">
-            <button class="tab gate ${currentGate === 'gate1' ? 'active' : ''}" data-gate="gate1">1관</button>
-            <button class="tab gate ${currentGate === 'gate2' ? 'active' : ''}" data-gate="gate2">2관</button>
-          </div>
-        `;
+        tabs.querySelectorAll(".tab[data-boss]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            currentGatoBoss = btn.dataset.boss;
+            renderTabs();
+            renderTable();
+          });
+        });
+        return;
       }
 
-      tabs.innerHTML = `<div class="tab-row">${topTabs}</div>${gateTabs}`;
+      if (currentMenu === "gato1750") {
+        tabs.innerHTML = "";
+        return;
+      }
 
-      tabs.querySelectorAll(".tab[data-key]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          if (currentMenu === "gato1730") {
-            currentGatoBoss = btn.dataset.key;
-          } else {
-            currentDiff = btn.dataset.key;
-          }
-          renderTabs();
-          renderTable();
-        });
-      });
+      const comboTabs = getComboTabs(currentMenu);
+      tabs.innerHTML = comboTabs.map(item => `
+        <button class="tab combo ${currentCombo === item.key ? 'active' : ''}" data-combo="${item.key}">
+          <div class="tab-label">${item.label}</div>
+          <div class="tab-sub">${item.sub}</div>
+        </button>
+      `).join("");
 
-      tabs.querySelectorAll(".tab[data-gate]").forEach(btn => {
+      tabs.querySelectorAll(".tab[data-combo]").forEach(btn => {
         btn.addEventListener("click", () => {
-          currentGate = btn.dataset.gate;
+          currentCombo = btn.dataset.combo;
           renderTabs();
           renderTable();
         });
@@ -1180,12 +1261,8 @@
 
     function renderHead() {
       const head = document.getElementById("tableHead");
-      const table = document.getElementById("dataTable");
-
-      table.classList.remove("gato-mode");
 
       if (currentMenu === "gato1730") {
-        table.classList.add("gato-mode");
         head.innerHTML = `
           <tr>
             <th>딜지분</th>
@@ -1196,19 +1273,22 @@
         return;
       }
 
-      const gateMeta = getGateMeta(currentMenu);
-      const gate = currentGate === "gate1" ? gateMeta.gate1 : gateMeta.gate2;
-      const gateName = currentGate === "gate1" ? "1관" : "2관";
+      if (currentMenu === "gato1750") {
+        head.innerHTML = "";
+        return;
+      }
+
+      const meta = raidMeta[currentMenu][currentCombo];
 
       head.innerHTML = `
         <tr>
           <th>딜지분</th>
           <th>
             <div class="th-stack">
-              <div>${gateName}</div>
+              <div>${meta.gateName}</div>
               <div class="header-meta">
-                ${makeBadge(gate.type.text, gate.type.cls)}
-                ${makeBadge(gate.attr.text, gate.attr.cls)}
+                ${makeBadge(meta.type.text, meta.type.cls)}
+                ${makeBadge(meta.attr.text, meta.attr.cls)}
               </div>
             </div>
           </th>
@@ -1217,12 +1297,46 @@
       `;
     }
 
+    function renderComingSoon() {
+      const mainContent = document.getElementById("mainContent");
+      mainContent.innerHTML = `
+        <div class="coming-soon">
+          <h3>1750 가토 준비중</h3>
+          <p>해당 구간 데이터는 아직 시트에 반영되지 않았습니다.<br>데이터 추가 후 동일한 형식으로 연동됩니다.</p>
+        </div>
+      `;
+    }
+
+    function ensureTableWrap() {
+      const mainContent = document.getElementById("mainContent");
+      mainContent.innerHTML = `
+        <div class="table-wrap" id="tableWrap">
+          <table id="dataTable">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      `;
+    }
+
     function renderTable() {
       updateTimeDisplay();
+
+      document.getElementById("contentTitle").textContent = getContentName();
+      document.getElementById("tableTitle").textContent = getTableTitle();
+
+      if (currentMenu === "gato1750") {
+        renderComingSoon();
+        document.getElementById("infoHint").innerHTML =
+          "1750 가디언 토벌 데이터는 현재 준비중입니다.<br>시트 반영 후 자동으로 확장 가능합니다.";
+        return;
+      }
+
+      ensureTableWrap();
       renderHead();
 
-      document.getElementById("contentTitle").textContent = getContentName(currentMenu);
-      document.getElementById("tableTitle").textContent = getTitle(currentMenu, currentDiff);
+      document.getElementById("infoHint").innerHTML =
+        "구글 시트 데이터를 읽어옵니다.<br>시간 변경 시 DPS는 자동 계산됩니다.";
 
       const body = document.getElementById("tableBody");
       const totalSeconds = getTotalSeconds();
@@ -1252,7 +1366,8 @@
         return;
       }
 
-      const rows = parsedData[currentMenu]?.[currentDiff] || [];
+      const meta = raidMeta[currentMenu][currentCombo];
+      const rows = parsedData[currentMenu]?.[meta.diffKey] || [];
 
       if (!rows.length) {
         body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
@@ -1265,7 +1380,7 @@
         if (row.share === 33) cls = "row-33";
         if (row.share === 40) cls = "row-40";
 
-        const damage = currentGate === "gate1" ? row.g1 : row.g2;
+        const damage = meta.gateKey === "gate1" ? row.g1 : row.g2;
         const dps = (damage / totalSeconds).toFixed(1);
 
         return `
@@ -1306,17 +1421,15 @@
 
         currentMenu = btn.dataset.menu;
 
-        if (currentMenu === "gato1730") {
+        if (currentMenu === "serka") {
+          currentCombo = "hard_gate1";
+        } else if (currentMenu === "cathedral") {
+          currentCombo = "hard_gate1";
+        } else if (currentMenu === "gato1730") {
           currentGatoBoss = "루멘칼리고";
-          setBaseTimeByMenu(currentMenu);
-        } else if (currentMenu === "gato1750") {
-          setBaseTimeByMenu(currentMenu);
-        } else {
-          currentDiff = "hard";
-          currentGate = "gate1";
-          setBaseTimeByMenu(currentMenu);
         }
 
+        setBaseTimeByMenu(currentMenu);
         renderTabs();
         renderTable();
       });
