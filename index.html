@@ -19,8 +19,8 @@
 
     .app {
       width: min(1380px, calc(100% - 20px));
-      margin: 24px auto;
-      padding: 22px 22px 40px;
+      margin: 24px auto 10px;
+      padding: 22px 22px 28px;
       border: 1px solid rgba(255, 215, 140, 0.25);
       background: rgba(10, 14, 22, 0.88);
       box-shadow:
@@ -29,6 +29,34 @@
       border-radius: 24px;
       backdrop-filter: blur(8px);
       overflow: hidden;
+    }
+
+    .footer-signature {
+      width: min(1380px, calc(100% - 20px));
+      margin: 0 auto 18px;
+      text-align: center;
+      font-size: 18px;
+      letter-spacing: 1px;
+      color: rgba(255, 223, 170, 0.7);
+      font-family: "Segoe Script", "Brush Script MT", "Nanum Pen Script", cursive;
+      text-shadow:
+        0 0 2px rgba(255,255,255,0.25),
+        0 0 8px rgba(255,210,120,0.16),
+        0 0 18px rgba(255,180,80,0.10);
+      opacity: 0.88;
+      user-select: none;
+    }
+
+    .footer-signature span {
+      display: inline-block;
+      padding: 4px 14px;
+      border-top: 1px solid rgba(255, 214, 153, 0.16);
+      border-bottom: 1px solid rgba(255, 214, 153, 0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,210,120,0.02));
+      border-radius: 999px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.02) inset,
+        0 0 14px rgba(255,190,100,0.06);
     }
 
     .top-bar {
@@ -167,6 +195,7 @@
     }
 
     .tab {
+      position: relative;
       min-width: 122px;
       min-height: 52px;
       padding: 8px 14px;
@@ -184,6 +213,7 @@
       justify-content: center;
       gap: 5px;
       text-align: center;
+      overflow: hidden;
     }
 
     .tab:hover {
@@ -205,6 +235,69 @@
       padding: 9px 10px;
       font-size: 14px;
       flex: 0 0 auto;
+      color: #f4e7c9;
+      background:
+        linear-gradient(180deg, rgba(52, 63, 82, 0.75), rgba(25, 31, 43, 0.95));
+      border: 1px solid rgba(255, 209, 138, 0.3);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.02) inset,
+        0 6px 18px rgba(0,0,0,0.18);
+    }
+
+    .tab.gato .tab-label {
+      color: #f5e7c8;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.35);
+    }
+
+    .tab.gato.active {
+      color: #fff6e4;
+      border-color: rgba(255, 224, 170, 0.88);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255, 228, 165, 0.34), rgba(255,228,165,0.08) 42%, transparent 72%),
+        linear-gradient(180deg, rgba(118, 96, 61, 0.92), rgba(62, 50, 31, 0.96));
+      box-shadow:
+        0 0 0 1px rgba(255,248,220,0.22) inset,
+        0 0 10px rgba(255, 220, 150, 0.18),
+        0 0 22px rgba(255, 214, 140, 0.28),
+        0 0 42px rgba(255, 199, 112, 0.18);
+    }
+
+    .tab.gato.active::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 24%, rgba(255, 244, 210, 0.22), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,0.08), transparent 55%);
+      pointer-events: none;
+    }
+
+    .tab.gato.active::after {
+      content: "✓";
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 14px;
+      font-weight: 900;
+      color: #fff3d1;
+      text-shadow:
+        0 0 4px rgba(255,255,255,0.4),
+        0 0 10px rgba(255,214,153,0.45);
+      opacity: 0.92;
+      pointer-events: none;
+    }
+
+    .tab.gato.active .tab-label {
+      color: #fff6e9;
+      text-shadow:
+        0 0 4px rgba(255,255,255,0.18),
+        0 1px 0 rgba(0,0,0,0.28);
+    }
+
+    .tab.gato.active .tab-meta {
+      background: rgba(24, 20, 13, 0.28);
+      border-radius: 999px;
+      padding: 3px 6px;
     }
 
     .tab.combo {
@@ -226,6 +319,13 @@
     .tab.active .tab-sub {
       color: #241700;
       text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+    }
+
+    .tab.gato.active .tab-label {
+      color: #fff6e9 !important;
+      text-shadow:
+        0 0 4px rgba(255,255,255,0.18),
+        0 1px 0 rgba(0,0,0,0.28) !important;
     }
 
     .tab-meta {
@@ -487,6 +587,19 @@
       box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset;
     }
 
+    .tab.gato .badge {
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .tab.gato.active .badge {
+      background: rgba(49, 38, 21, 0.72) !important;
+      color: #fff5dd !important;
+      border-color: rgba(255,239,204,0.15) !important;
+      box-shadow:
+        0 1px 0 rgba(255,255,255,0.10) inset,
+        0 0 8px rgba(255,210,120,0.08);
+    }
+
     .header-meta {
       margin-top: 6px;
       display: flex;
@@ -607,9 +720,15 @@
     @media (max-width: 768px) {
       .app {
         width: calc(100% - 12px);
-        margin: 8px auto;
+        margin: 8px auto 8px;
         padding: 10px;
         border-radius: 16px;
+      }
+
+      .footer-signature {
+        width: calc(100% - 12px);
+        font-size: 16px;
+        margin-bottom: 14px;
       }
 
       .top-title {
@@ -833,6 +952,10 @@
     </div>
   </div>
 
+  <div class="footer-signature">
+    <span>만든이 : 인벤 Priest</span>
+  </div>
+
   <script>
     const CSV_URL = "https://docs.google.com/spreadsheets/d/1v4gfG-Lr0iFmiP0PXtVTsijdMziekQaZ-wBTWrobncY/export?format=csv&gid=0";
 
@@ -906,116 +1029,20 @@
 
     const raidMeta = {
       serka: {
-        normal_gate1: {
-          diffKey: "normal",
-          gateKey: "gate1",
-          title: "노말 (1710)",
-          gateName: "1관",
-          type: { text: "인간", cls: "type-human" },
-          attr: { text: "속성 없음", cls: "attr-none" },
-          tierClass: "tab-tier-normal"
-        },
-        normal_gate2: {
-          diffKey: "normal",
-          gateKey: "gate2",
-          title: "노말 (1710)",
-          gateName: "2관",
-          type: { text: "고대", cls: "type-ancient" },
-          attr: { text: "성속성 취약", cls: "attr-holy" },
-          tierClass: "tab-tier-normal"
-        },
-        hard_gate1: {
-          diffKey: "hard",
-          gateKey: "gate1",
-          title: "하드 (1730)",
-          gateName: "1관",
-          type: { text: "인간", cls: "type-human" },
-          attr: { text: "속성 없음", cls: "attr-none" },
-          tierClass: "tab-tier-hard"
-        },
-        hard_gate2: {
-          diffKey: "hard",
-          gateKey: "gate2",
-          title: "하드 (1730)",
-          gateName: "2관",
-          type: { text: "고대", cls: "type-ancient" },
-          attr: { text: "성속성 취약", cls: "attr-holy" },
-          tierClass: "tab-tier-hard"
-        },
-        nightmare_gate1: {
-          diffKey: "nightmare",
-          gateKey: "gate1",
-          title: "나메 (1740)",
-          gateName: "1관",
-          type: { text: "인간", cls: "type-human" },
-          attr: { text: "속성 없음", cls: "attr-none" },
-          tierClass: "tab-tier-nightmare"
-        },
-        nightmare_gate2: {
-          diffKey: "nightmare",
-          gateKey: "gate2",
-          title: "나메 (1740)",
-          gateName: "2관",
-          type: { text: "고대", cls: "type-ancient" },
-          attr: { text: "성속성 취약", cls: "attr-holy" },
-          tierClass: "tab-tier-nightmare"
-        }
+        normal_gate1: { diffKey: "normal", gateKey: "gate1", title: "노말 (1710)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "속성 없음", cls: "attr-none" }, tierClass: "tab-tier-normal" },
+        normal_gate2: { diffKey: "normal", gateKey: "gate2", title: "노말 (1710)", gateName: "2관", type: { text: "고대", cls: "type-ancient" }, attr: { text: "성속성 취약", cls: "attr-holy" }, tierClass: "tab-tier-normal" },
+        hard_gate1: { diffKey: "hard", gateKey: "gate1", title: "하드 (1730)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "속성 없음", cls: "attr-none" }, tierClass: "tab-tier-hard" },
+        hard_gate2: { diffKey: "hard", gateKey: "gate2", title: "하드 (1730)", gateName: "2관", type: { text: "고대", cls: "type-ancient" }, attr: { text: "성속성 취약", cls: "attr-holy" }, tierClass: "tab-tier-hard" },
+        nightmare_gate1: { diffKey: "nightmare", gateKey: "gate1", title: "나메 (1740)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "속성 없음", cls: "attr-none" }, tierClass: "tab-tier-nightmare" },
+        nightmare_gate2: { diffKey: "nightmare", gateKey: "gate2", title: "나메 (1740)", gateName: "2관", type: { text: "고대", cls: "type-ancient" }, attr: { text: "성속성 취약", cls: "attr-holy" }, tierClass: "tab-tier-nightmare" }
       },
       cathedral: {
-        normal_gate1: {
-          diffKey: "normal",
-          gateKey: "gate1",
-          title: "1단계 (1700)",
-          gateName: "1관",
-          type: { text: "인간", cls: "type-human" },
-          attr: { text: "암속성 취약", cls: "attr-dark" },
-          tierClass: "tab-tier-normal"
-        },
-        normal_gate2: {
-          diffKey: "normal",
-          gateKey: "gate2",
-          title: "1단계 (1700)",
-          gateName: "2관",
-          type: { text: "인간", cls: "type-human" },
-          attr: { text: "암속성 취약", cls: "attr-dark" },
-          tierClass: "tab-tier-normal"
-        },
-        hard_gate1: {
-          diffKey: "hard",
-          gateKey: "gate1",
-          title: "2단계 (1720)",
-          gateName: "1관",
-          type: { text: "인간", cls: "type-human" },
-          attr: { text: "암속성 취약", cls: "attr-dark" },
-          tierClass: "tab-tier-hard"
-        },
-        hard_gate2: {
-          diffKey: "hard",
-          gateKey: "gate2",
-          title: "2단계 (1720)",
-          gateName: "2관",
-          type: { text: "인간", cls: "type-human" },
-          attr: { text: "암속성 취약", cls: "attr-dark" },
-          tierClass: "tab-tier-hard"
-        },
-        nightmare_gate1: {
-          diffKey: "nightmare",
-          gateKey: "gate1",
-          title: "3단계 (1750)",
-          gateName: "1관",
-          type: { text: "인간", cls: "type-human" },
-          attr: { text: "암속성 취약", cls: "attr-dark" },
-          tierClass: "tab-tier-nightmare"
-        },
-        nightmare_gate2: {
-          diffKey: "nightmare",
-          gateKey: "gate2",
-          title: "3단계 (1750)",
-          gateName: "2관",
-          type: { text: "인간", cls: "type-human" },
-          attr: { text: "암속성 취약", cls: "attr-dark" },
-          tierClass: "tab-tier-nightmare"
-        }
+        normal_gate1: { diffKey: "normal", gateKey: "gate1", title: "1단계 (1700)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-normal" },
+        normal_gate2: { diffKey: "normal", gateKey: "gate2", title: "1단계 (1700)", gateName: "2관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-normal" },
+        hard_gate1: { diffKey: "hard", gateKey: "gate1", title: "2단계 (1720)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-hard" },
+        hard_gate2: { diffKey: "hard", gateKey: "gate2", title: "2단계 (1720)", gateName: "2관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-hard" },
+        nightmare_gate1: { diffKey: "nightmare", gateKey: "gate1", title: "3단계 (1750)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-nightmare" },
+        nightmare_gate2: { diffKey: "nightmare", gateKey: "gate2", title: "3단계 (1750)", gateName: "2관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-nightmare" }
       }
     };
 
