@@ -272,28 +272,28 @@
     .share-cell {
       width: 150px;
       min-width: 150px;
-      color: #ffe8b3;
-      font-weight: 800;
-      padding: 10px 8px;
+      padding: 8px 10px;
     }
 
-    .share-inner {
-      display: flex;
+    .share-box {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      width: 100%;
+      min-width: 90px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
     }
 
     .share-text {
-      display: inline-block;
-      min-width: 42px;
       color: #ffe8b3 !important;
-      font-weight: 800;
-      font-size: 15px;
+      font-weight: 900;
+      font-size: 16px;
       line-height: 1;
-      opacity: 1 !important;
-      visibility: visible !important;
+      display: inline-block;
+      min-width: 46px;
+      text-align: left;
     }
 
     .cut-icon {
@@ -315,6 +315,7 @@
       height: 22px;
       display: inline-block;
       flex: 0 0 22px;
+      opacity: 0;
     }
 
     .cut-30 {
@@ -548,7 +549,7 @@
             구글 시트 데이터를 읽어옵니다.<br>
             시간 변경 시 DPS는 자동 계산됩니다.
           </div>
-          <div class="version">v02</div>
+          <div class="version">v03</div>
         </div>
       </div>
     </div>
@@ -978,7 +979,7 @@
     function renderShareCell(share) {
       return `
         <td class="share-cell">
-          <div class="share-inner">
+          <div class="share-box">
             ${getCutIconHtml(share)}
             <span class="share-text">${share}%</span>
           </div>
