@@ -316,6 +316,55 @@
       padding: 3px 6px;
     }
 
+    .tab.gato.pending {
+      cursor: pointer;
+      color: #b3b3b3;
+      border-color: rgba(180,180,180,0.18);
+      background:
+        linear-gradient(180deg, rgba(86, 86, 86, 0.20), rgba(34, 34, 34, 0.92));
+      filter: grayscale(1);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.02) inset,
+        0 4px 12px rgba(0,0,0,0.18);
+    }
+
+    .tab.gato.pending .tab-label {
+      color: #c9c9c9;
+      text-shadow: none;
+    }
+
+    .tab.gato.pending .tab-meta {
+      opacity: 0.72;
+    }
+
+    .tab.gato.pending .tab-pending {
+      margin-top: 2px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #d5d5d5;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(220,220,220,0.14);
+      background: rgba(255,255,255,0.05);
+      letter-spacing: 0.3px;
+    }
+
+    .tab.gato.pending.active {
+      color: #f0f0f0;
+      border-color: rgba(210,210,210,0.35);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 42%, transparent 72%),
+        linear-gradient(180deg, rgba(110,110,110,0.55), rgba(52,52,52,0.94));
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.10) inset,
+        0 0 14px rgba(220,220,220,0.08);
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    .tab.gato.pending.active::after {
+      content: "";
+    }
+
     .tab.combo {
       min-width: 118px;
       min-height: 60px;
@@ -815,6 +864,10 @@
         padding: 0 5px;
       }
 
+      .tab.gato.pending .tab-pending {
+        font-size: 9px;
+      }
+
       .table-wrap {
         overflow-x: hidden;
       }
@@ -957,7 +1010,7 @@
   <div class="app">
     <div class="top-bar">
       <div class="top-spacer"></div>
-      <div class="top-title">LOST ARK DPS VIEWER (v14.1)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v15)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
@@ -1036,6 +1089,7 @@
     let currentMenu = "serka";
     let currentCombo = "hard_gate1";
     let currentGatoBoss = "루멘칼리고";
+    let currentGato1750Boss = "스콜라키아";
 
     const parsedData = {
       serka: { normal: [], hard: [], nightmare: [] },
@@ -1055,6 +1109,19 @@
       "베스칼"
     ];
 
+    const gato1750Bosses = [
+      "루멘칼리고",
+      "가르가디스",
+      "스콜라키아",
+      "크라티오스",
+      "아게오로스",
+      "드렉탈라스",
+      "소나벨",
+      "베스칼"
+    ];
+
+    const gato1750AvailableBosses = ["스콜라키아", "크라티오스"];
+
     const gato1730Layout = [
       { boss: "루멘칼리고", startRow: 66, shareCol: 1, damageCol: 3 },
       { boss: "가르가디스", startRow: 66, shareCol: 9, damageCol: 11 },
@@ -1064,6 +1131,17 @@
       { boss: "드렉탈라스", startRow: 98, shareCol: 17, damageCol: 19 },
       { boss: "소나벨", startRow: 130, shareCol: 1, damageCol: 3 },
       { boss: "베스칼", startRow: 130, shareCol: 9, damageCol: 11 }
+    ];
+
+    const gato1750Layout = [
+      { boss: "루멘칼리고", startRow: 167, shareCol: 1, damageCol: 3 },
+      { boss: "가르가디스", startRow: 167, shareCol: 9, damageCol: 11 },
+      { boss: "스콜라키아", startRow: 167, shareCol: 17, damageCol: 19 },
+      { boss: "크라티오스", startRow: 199, shareCol: 1, damageCol: 3 },
+      { boss: "아게오로스", startRow: 199, shareCol: 9, damageCol: 11 },
+      { boss: "드렉탈라스", startRow: 199, shareCol: 17, damageCol: 19 },
+      { boss: "소나벨", startRow: 231, shareCol: 1, damageCol: 3 },
+      { boss: "베스칼", startRow: 231, shareCol: 9, damageCol: 11 }
     ];
 
     const gatoMeta = {
@@ -1160,7 +1238,7 @@
       const secInput = document.getElementById("seconds");
       const label = document.getElementById("timeBaseLabel");
 
-      if (menu === "gato1730") {
+      if (menu === "gato1730" || menu === "gato1750") {
         minInput.value = 1;
         secInput.value = 50;
         label.textContent = "기본값 1분 50초(110초)";
@@ -1256,7 +1334,7 @@
         return `${menuName} : ${meta.title.replace(/\s*\(.+\)/, "")} ${meta.gateName}`;
       }
       if (currentMenu === "gato1730") return `1730 가디언 토벌 : ${currentGatoBoss}`;
-      if (currentMenu === "gato1750") return "1750 가디언 토벌";
+      if (currentMenu === "gato1750") return `1750 가디언 토벌 : ${currentGato1750Boss}`;
       return "콘텐츠";
     }
 
@@ -1269,7 +1347,7 @@
       }
 
       if (currentMenu === "gato1730") return "잔영 1단계";
-      if (currentMenu === "gato1750") return "데이터 준비중";
+      if (currentMenu === "gato1750") return "잔영 2단계";
       return "";
     }
 
@@ -1294,7 +1372,20 @@
         return;
       }
 
+      if (currentMenu === "gato1750") {
+        const meta = gatoMeta[currentGato1750Boss];
+        titleMeta.innerHTML = `
+          ${makeBadge(meta.type.text, meta.type.cls)}
+          ${makeBadge(meta.attr.text, meta.attr.cls)}
+        `;
+        return;
+      }
+
       titleMeta.innerHTML = "";
+    }
+
+    function isGato1750Available(boss) {
+      return gato1750AvailableBosses.includes(boss);
     }
 
     function renderTabs() {
@@ -1319,8 +1410,8 @@
             currentGatoBoss = btn.dataset.boss;
 
             trackEvent(
-              `/이벤트/가토/${currentGatoBoss}`,
-              `보스 클릭 - ${currentGatoBoss}`
+              `/이벤트/가토/잔영1단계/${currentGatoBoss}`,
+              `보스 클릭 - 잔영 1단계 ${currentGatoBoss}`
             );
 
             renderTabs();
@@ -1331,7 +1422,35 @@
       }
 
       if (currentMenu === "gato1750") {
-        tabs.innerHTML = "";
+        tabs.innerHTML = gato1750Bosses.map(name => {
+          const meta = gatoMeta[name];
+          const isAvailable = isGato1750Available(name);
+
+          return `
+            <button class="tab gato ${isAvailable ? '' : 'pending'} ${currentGato1750Boss === name ? 'active' : ''}" data-boss1750="${name}">
+              <div class="tab-label">${name}</div>
+              <div class="tab-meta">
+                ${makeBadge(meta.type.text, meta.type.cls)}
+                ${makeBadge(meta.attr.text, meta.attr.cls)}
+              </div>
+              ${isAvailable ? '' : '<div class="tab-pending">준비중</div>'}
+            </button>
+          `;
+        }).join("");
+
+        tabs.querySelectorAll(".tab[data-boss1750]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            currentGato1750Boss = btn.dataset.boss1750;
+
+            trackEvent(
+              `/이벤트/가토/잔영2단계/${currentGato1750Boss}`,
+              `보스 클릭 - 잔영 2단계 ${currentGato1750Boss}`
+            );
+
+            renderTabs();
+            renderTable();
+          });
+        });
         return;
       }
 
@@ -1435,6 +1554,25 @@
       });
     }
 
+    function parseGato1750(lines) {
+      gato1750Bosses.forEach(name => {
+        parsedData.gato1750[name] = [];
+      });
+
+      gato1750Layout.forEach(info => {
+        for (let r = info.startRow + 3; r <= info.startRow + 28; r++) {
+          const cols = parseCSVLine(lines[r] || "");
+          const share = percentNum(cols[info.shareCol]);
+          if (!share) continue;
+
+          parsedData.gato1750[info.boss].push({
+            share,
+            damage: toNum(cols[info.damageCol])
+          });
+        }
+      });
+    }
+
     function renderShareCell(share) {
       if (share === 30) {
         return `
@@ -1480,7 +1618,7 @@
     function renderHead() {
       const head = document.getElementById("tableHead");
 
-      if (currentMenu === "gato1730") {
+      if (currentMenu === "gato1730" || currentMenu === "gato1750") {
         head.innerHTML = `
           <tr>
             <th>딜지분</th>
@@ -1488,11 +1626,6 @@
             <th>DPS</th>
           </tr>
         `;
-        return;
-      }
-
-      if (currentMenu === "gato1750") {
-        head.innerHTML = "";
         return;
       }
 
@@ -1505,12 +1638,12 @@
       `;
     }
 
-    function renderComingSoon() {
+    function renderComingSoon(messageTitle, messageDesc) {
       const mainContent = document.getElementById("mainContent");
       mainContent.innerHTML = `
         <div class="coming-soon">
-          <h3>1750 가토 준비중</h3>
-          <p>해당 구간 데이터는 아직 시트에 반영되지 않았습니다.<br>데이터 추가 후 동일한 형식으로 연동됩니다.</p>
+          <h3>${messageTitle}</h3>
+          <p>${messageDesc}</p>
         </div>
       `;
     }
@@ -1534,10 +1667,13 @@
       document.getElementById("tableTitle").textContent = getTableTitle();
       renderTitleMeta();
 
-      if (currentMenu === "gato1750") {
-        renderComingSoon();
+      if (currentMenu === "gato1750" && !isGato1750Available(currentGato1750Boss)) {
+        renderComingSoon(
+          `${currentGato1750Boss} 준비중`,
+          `해당 보스의 잔영 2단계 데이터는 아직 준비중입니다.<br>현재는 스콜라키아, 크라티오스만 우선 공개되어 있습니다.`
+        );
         document.getElementById("infoHint").innerHTML =
-          "1750 가디언 토벌 데이터는 현재 준비중입니다.<br>시트 반영 후 자동으로 확장 가능합니다.";
+          "1750 가디언 토벌은 일부 보스만 공개되었습니다.<br>준비중 보스는 순차적으로 반영됩니다.";
         return;
       }
 
@@ -1552,6 +1688,31 @@
 
       if (currentMenu === "gato1730") {
         const rows = parsedData.gato1730[currentGatoBoss] || [];
+
+        if (!rows.length) {
+          body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
+          return;
+        }
+
+        body.innerHTML = rows.map(row => {
+          let cls = "";
+          if (row.share === 30) cls = "row-30";
+          if (row.share === 33) cls = "row-33";
+          if (row.share === 40) cls = "row-40";
+
+          return `
+            <tr class="${cls}">
+              ${renderShareCell(row.share)}
+              <td>${fmt(row.damage)}</td>
+              <td class="dps-cell">${(row.damage / totalSeconds).toFixed(1)}</td>
+            </tr>
+          `;
+        }).join("");
+        return;
+      }
+
+      if (currentMenu === "gato1750") {
+        const rows = parsedData.gato1750[currentGato1750Boss] || [];
 
         if (!rows.length) {
           body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
@@ -1613,6 +1774,7 @@
         parseCathedral(lines);
         parseSerka(lines);
         parseGato1730(lines);
+        parseGato1750(lines);
 
         renderTabs();
         renderTable();
@@ -1640,6 +1802,7 @@
           currentGatoBoss = "루멘칼리고";
           trackEvent("/이벤트/메뉴/1730가토", "메뉴 클릭 - 1730 가토");
         } else if (currentMenu === "gato1750") {
+          currentGato1750Boss = "스콜라키아";
           trackEvent("/이벤트/메뉴/1750가토", "메뉴 클릭 - 1750 가토");
         }
 
