@@ -18,7 +18,8 @@
     }
 
     .app {
-      width: 1280px;
+      width: 1360px;
+      max-width: calc(100% - 20px);
       margin: 24px auto;
       padding: 22px 22px 40px;
       border: 1px solid rgba(255, 215, 140, 0.25);
@@ -72,7 +73,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 260px 1fr 250px;
+      grid-template-columns: 260px minmax(0, 1fr) 220px;
       gap: 22px;
       align-items: start;
     }
@@ -96,6 +97,7 @@
       gap: 16px;
       align-self: start;
       height: auto;
+      width: 100%;
     }
 
     .menu-title,
@@ -368,8 +370,8 @@
     }
 
     .time-inputs input {
-      width: 76px;
-      height: 46px;
+      width: 70px;
+      height: 44px;
       border-radius: 12px;
       border: 1px solid rgba(255,214,153,0.22);
       background: rgba(0,0,0,0.24);
@@ -384,6 +386,7 @@
       font-size: 13px;
       color: #b6a483;
       margin-bottom: 10px;
+      word-break: keep-all;
     }
 
     .auto-refresh {
@@ -697,7 +700,7 @@
 <body>
   <div class="app">
     <div class="top-bar">
-      <div class="top-title">LOST ARK DPS VIEWER (v09)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v10)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
