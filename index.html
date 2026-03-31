@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>로아 딜지분</title>
+  <link rel="icon" href='data:image/svg+xml;utf8,
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="12" fill="%23141c28"/>
+    <rect x="4" y="4" width="56" height="56" rx="10" fill="none" stroke="%23f6d18b" stroke-width="2" opacity="0.5"/>
+    <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle"
+          font-size="24" font-weight="800" fill="%23f6d18b" font-family="Arial">DPS</text>
+  </svg>'>
   <style>
     * { box-sizing: border-box; }
 
@@ -208,6 +215,10 @@
       gap: 10px;
       justify-content: flex-end;
       max-width: 880px;
+    }
+
+    .tabs.gato-grid {
+      display: flex;
     }
 
     .tab {
@@ -836,13 +847,6 @@
         border-radius: 14px;
       }
 
-      .tab.gato {
-        min-width: 108px;
-        min-height: 54px;
-        font-size: 12px;
-        padding: 6px 8px;
-      }
-
       .tab.combo {
         min-width: 92px;
         min-height: 52px;
@@ -864,8 +868,42 @@
         padding: 0 5px;
       }
 
-      .tab.gato.pending .tab-pending {
+      .tabs.gato-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+        max-width: 100%;
+        justify-content: stretch;
+      }
+
+      .tabs.gato-grid .tab.gato {
+        width: 100%;
+        min-width: 0;
+        min-height: 78px;
+        padding: 8px 6px;
+        font-size: 11px;
+        border-radius: 16px;
+      }
+
+      .tabs.gato-grid .tab.gato .tab-label {
+        font-size: 11px;
+        line-height: 1.1;
+      }
+
+      .tabs.gato-grid .tab.gato .tab-meta {
+        gap: 3px;
+      }
+
+      .tabs.gato-grid .tab.gato .badge {
         font-size: 9px;
+        height: 16px;
+        padding: 0 5px;
+      }
+
+      .tabs.gato-grid .tab.gato.pending .tab-pending {
+        font-size: 9px;
+        padding: 2px 6px;
       }
 
       .table-wrap {
@@ -955,14 +993,34 @@
         font-size: 11px;
       }
 
-      .tab.gato {
-        min-width: 96px;
-        font-size: 11px;
-      }
-
       .tab.combo {
         min-width: 82px;
         font-size: 10px;
+      }
+
+      .tabs.gato-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .tabs.gato-grid .tab.gato {
+        min-height: 74px;
+        padding: 7px 5px;
+        font-size: 10px;
+      }
+
+      .tabs.gato-grid .tab.gato .tab-label {
+        font-size: 10px;
+      }
+
+      .tabs.gato-grid .tab.gato .badge {
+        font-size: 8px;
+        height: 15px;
+        padding: 0 4px;
+      }
+
+      .tabs.gato-grid .tab.gato.pending .tab-pending {
+        font-size: 8px;
       }
 
       .table-wrap {
@@ -1010,7 +1068,7 @@
   <div class="app">
     <div class="top-bar">
       <div class="top-spacer"></div>
-      <div class="top-title">LOST ARK DPS VIEWER (v15)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v15.1)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
@@ -1390,8 +1448,10 @@
 
     function renderTabs() {
       const tabs = document.getElementById("tabs");
+      tabs.classList.remove("gato-grid");
 
       if (currentMenu === "gato1730") {
+        tabs.classList.add("gato-grid");
         tabs.innerHTML = gato1730Bosses.map(name => {
           const meta = gatoMeta[name];
           return `
@@ -1422,6 +1482,7 @@
       }
 
       if (currentMenu === "gato1750") {
+        tabs.classList.add("gato-grid");
         tabs.innerHTML = gato1750Bosses.map(name => {
           const meta = gatoMeta[name];
           const isAvailable = isGato1750Available(name);
