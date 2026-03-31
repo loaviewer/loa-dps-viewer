@@ -258,9 +258,9 @@
 
     .tab.gato {
       min-width: 128px;
-      min-height: 64px;
-      padding: 9px 10px;
-      font-size: 14px;
+      min-height: 82px;
+      padding: 8px 8px;
+      font-size: 12px;
       flex: 0 0 auto;
       color: #f4e7c9;
       background:
@@ -274,6 +274,17 @@
     .tab.gato .tab-label {
       color: #f5e7c8;
       text-shadow: 0 1px 0 rgba(0,0,0,0.35);
+      font-size: 12px;
+      line-height: 1.1;
+    }
+
+    .tab.gato .tab-meta {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      min-height: 18px;
     }
 
     .tab.gato.active {
@@ -395,22 +406,6 @@
     .tab.active .tab-sub {
       color: #241700;
       text-shadow: 0 1px 0 rgba(255,255,255,0.35);
-    }
-
-    .tab-meta {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      min-height: 18px;
-    }
-
-    .tab.active .tab-meta {
-      margin-top: 4px;
-      padding: 3px 6px;
-      border-radius: 999px;
-      background: rgba(18, 24, 35, 0.18);
     }
 
     .tab-tier-normal {
@@ -755,8 +750,8 @@
 
       .tab.gato {
         min-width: 118px;
-        min-height: 58px;
-        font-size: 13px;
+        min-height: 78px;
+        font-size: 12px;
       }
 
       .tab.combo {
@@ -858,10 +853,6 @@
         font-size: 10px;
       }
 
-      .tab-meta {
-        gap: 3px;
-      }
-
       .badge {
         font-size: 9px;
         height: 16px;
@@ -881,7 +872,7 @@
         width: 100%;
         min-width: 0;
         min-height: 78px;
-        padding: 8px 6px;
+        padding: 7px 6px;
         font-size: 11px;
         border-radius: 16px;
       }
@@ -1068,7 +1059,7 @@
   <div class="app">
     <div class="top-bar">
       <div class="top-spacer"></div>
-      <div class="top-title">LOST ARK DPS VIEWER (v15.1)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v15.2)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
