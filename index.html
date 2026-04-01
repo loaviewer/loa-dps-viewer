@@ -1059,7 +1059,7 @@
   <div class="app">
     <div class="top-bar">
       <div class="top-spacer"></div>
-      <div class="top-title">LOST ARK DPS VIEWER (v15.2)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v16)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
@@ -1169,7 +1169,8 @@
       "베스칼"
     ];
 
-    const gato1750AvailableBosses = ["스콜라키아", "크라티오스"];
+    /* v16: 아게오로스 활성 추가 */
+    const gato1750AvailableBosses = ["스콜라키아", "크라티오스", "아게오로스"];
 
     const gato1730Layout = [
       { boss: "루멘칼리고", startRow: 66, shareCol: 1, damageCol: 3 },
@@ -1722,7 +1723,7 @@
       if (currentMenu === "gato1750" && !isGato1750Available(currentGato1750Boss)) {
         renderComingSoon(
           `${currentGato1750Boss} 준비중`,
-          `해당 보스의 잔영 2단계 데이터는 아직 준비중입니다.<br>현재는 스콜라키아, 크라티오스만 우선 공개되어 있습니다.`
+          `해당 보스의 잔영 2단계 데이터는 아직 준비중입니다.<br>현재는 스콜라키아, 크라티오스, 아게오로스가 우선 공개되어 있습니다.`
         );
         document.getElementById("infoHint").innerHTML =
           "1750 가디언 토벌은 일부 보스만 공개되었습니다.<br>준비중 보스는 순차적으로 반영됩니다.";
