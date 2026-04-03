@@ -4,15 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>로아 DPS 계산기</title>
-  <meta name="description" content="로스트아크 MVP 강투컷/잔혈컷 1인분 DPS 을 세밀하게 계산해주는 곳입니다." />
-  <meta name="keywords" content="로스트아크, 로아, DPS 계산기, 딜지분, 강투컷, 잔혈컷, 1인분, MVP, 세르카, 성당, 가토" />
+  <title>로아 DPS 계산기 | 1인분·강투컷·잔혈컷 세르카 성당 계산</title>
+  <meta name="description" content="로아 1인분, 강투컷, 잔혈컷을 세밀하게 계산할 수 있는 로스트아크 DPS 계산기입니다. 세르카 강투컷, 세르카 잔혈컷, 세르카 1인분, 성당 강투컷, 성당 잔혈컷, 성당 1인분과 가디언 토벌 딜지분/DPS를 확인할 수 있습니다." />
+  <meta name="keywords" content="로아 1인분, 로아 강투컷, 로아 잔혈컷, 세르카 강투컷, 세르카 잔혈컷, 세르카 1인분, 성당 강투컷, 성당 잔혈컷, 성당 1인분, 로아 DPS 계산기, 로스트아크 DPS 계산기, 로아 딜지분 계산기, 로아 MVP 계산기, 세르카 딜지분, 성당 딜지분, 로아 강투컷 계산기, 로아 잔혈컷 계산기, 로아 1인분 계산기, 로아 딜지분, 로아 dps, 로아 mvp, 로스트아크 강투컷, 로스트아크 잔혈컷, 로스트아크 1인분, 가디언 토벌 dps, 로아 딜 계산기" />
   <meta name="robots" content="index, follow" />
   <meta name="google-site-verification" content="OXexKwy54GyK_RP2qIzpKT-bkyj1KiTXipanMawmZNg" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="로아 DPS 계산기" />
-  <meta property="og:description" content="로스트아크 MVP 강투컷/잔혈컷 1인분 DPS 을 세밀하게 계산해주는 곳입니다." />
+  <meta property="og:title" content="로아 DPS 계산기 | 1인분·강투컷·잔혈컷 세르카 성당 계산" />
+  <meta property="og:description" content="로아 1인분, 강투컷, 잔혈컷을 세밀하게 계산할 수 있는 로스트아크 DPS 계산기입니다. 세르카 강투컷, 세르카 잔혈컷, 세르카 1인분, 성당 강투컷, 성당 잔혈컷, 성당 1인분과 가디언 토벌 딜지분/DPS를 확인할 수 있습니다." />
   <meta property="og:url" content="https://loaviewer.github.io/loa-dps-viewer/" />
   <meta property="og:site_name" content="로아 DPS 계산기" />
 
@@ -220,6 +220,15 @@
       color: #b9a98b;
       margin-top: 4px;
       min-height: 18px;
+    }
+
+    .seo-copy {
+      margin-top: 10px;
+      max-width: 680px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: #cbb896;
+      word-break: keep-all;
     }
 
     .tabs {
@@ -579,13 +588,19 @@
     }
 
     .time-box-emphasis {
-      border-color: rgba(255, 214, 153, 0.28);
+      border-color: rgba(255, 214, 153, 0.24);
       background:
-        radial-gradient(circle at top, rgba(255, 219, 153, 0.08), transparent 52%),
+        radial-gradient(circle at top, rgba(255, 219, 153, 0.05), transparent 54%),
         rgba(255,255,255,0.03);
       box-shadow:
-        0 0 0 1px rgba(255,214,153,0.06) inset,
-        0 0 20px rgba(255, 196, 92, 0.06);
+        0 0 0 1px rgba(255,214,153,0.05) inset,
+        0 0 16px rgba(255, 196, 92, 0.04);
+    }
+
+    .time-guide-badge-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
     }
 
     .time-guide-badge {
@@ -593,30 +608,35 @@
       align-items: center;
       justify-content: center;
       padding: 5px 10px;
-      margin: 0 auto 10px;
       border-radius: 999px;
       font-size: 11px;
       font-weight: 900;
       letter-spacing: 0.4px;
       color: #fff1d1;
-      border: 1px solid rgba(255,220,160,0.24);
-      background: linear-gradient(180deg, rgba(164, 125, 62, 0.34), rgba(90, 63, 26, 0.34));
+      border: 1px solid rgba(255,220,160,0.20);
+      background: linear-gradient(180deg, rgba(164, 125, 62, 0.28), rgba(90, 63, 26, 0.28));
       box-shadow:
-        0 0 0 1px rgba(255,255,255,0.04) inset,
-        0 0 14px rgba(255,196,92,0.08);
+        0 0 0 1px rgba(255,255,255,0.03) inset,
+        0 0 10px rgba(255,196,92,0.06);
     }
 
-    .time-guide-text {
+    .time-guide-main {
       text-align: center;
-      font-size: 13px;
-      line-height: 1.55;
+      font-size: 14px;
+      line-height: 1.5;
       color: #f2dfb8;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      font-weight: 700;
       word-break: keep-all;
     }
 
-    .time-guide-text strong {
-      color: #ffe6b0;
+    .time-guide-sub {
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #bfae8d;
+      margin-bottom: 12px;
+      word-break: keep-all;
     }
 
     .time-view {
@@ -640,23 +660,23 @@
       width: 70px;
       height: 44px;
       border-radius: 12px;
-      border: 1px solid rgba(255,214,153,0.30);
+      border: 1px solid rgba(255,214,153,0.26);
       background: rgba(0,0,0,0.24);
       color: #f8edd1;
       font-size: 20px;
       text-align: center;
       outline: none;
       box-shadow:
-        0 0 0 1px rgba(255,214,153,0.05) inset,
-        0 0 10px rgba(255, 196, 92, 0.04);
+        0 0 0 1px rgba(255,214,153,0.04) inset,
+        0 0 8px rgba(255, 196, 92, 0.03);
       transition: 0.18s ease;
     }
 
     .time-inputs input:focus {
-      border-color: rgba(255,224,177,0.7);
+      border-color: rgba(255,224,177,0.62);
       box-shadow:
-        0 0 0 1px rgba(255,224,177,0.12) inset,
-        0 0 16px rgba(255, 206, 122, 0.14);
+        0 0 0 1px rgba(255,224,177,0.10) inset,
+        0 0 14px rgba(255, 206, 122, 0.10);
       background: rgba(255,255,255,0.04);
     }
 
@@ -680,7 +700,7 @@
     .hint {
       font-size: 13px;
       color: #a9997e;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .badge {
@@ -883,6 +903,11 @@
         font-size: 12px;
       }
 
+      .seo-copy {
+        font-size: 12px;
+        margin-top: 8px;
+      }
+
       .menu-title,
       .side-title {
         font-size: 11px;
@@ -1020,12 +1045,15 @@
       .time-guide-badge {
         font-size: 10px;
         padding: 4px 9px;
-        margin-bottom: 8px;
       }
 
-      .time-guide-text {
-        font-size: 12px;
-        margin-bottom: 8px;
+      .time-guide-main {
+        font-size: 13px;
+      }
+
+      .time-guide-sub {
+        font-size: 11px;
+        margin-bottom: 10px;
       }
 
       .time-view {
@@ -1136,7 +1164,7 @@
   <div class="app">
     <div class="top-bar">
       <div class="top-spacer"></div>
-      <div class="top-title">LOST ARK DPS VIEWER (v16.2)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v16.3)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
@@ -1159,6 +1187,9 @@
               <div class="title-meta" id="titleMeta"></div>
             </div>
             <div class="content-sub" id="tableTitle">입장레벨 : 1730</div>
+            <div class="seo-copy">
+              로아 1인분, 강투컷, 잔혈컷 기준을 세르카, 성당, 가디언 토벌 기준으로 확인할 수 있습니다.
+            </div>
           </div>
 
           <div class="tabs" id="tabs"></div>
@@ -1180,11 +1211,11 @@
         <div class="side-title">CLEAR TIME</div>
 
         <div class="side-box time-box-emphasis">
-          <div class="time-guide-badge">실제 클리어 타임 입력</div>
-          <div class="time-guide-text">
-            <strong>정확한 DPS를 위해</strong><br>
-            아래 시간을 실제 클리어 타임으로 수정하세요
+          <div class="time-guide-badge-wrap">
+            <div class="time-guide-badge">실제 클리어 타임 입력</div>
           </div>
+          <div class="time-guide-main">실제 클리어 타임으로 수정하세요</div>
+          <div class="time-guide-sub">아래 시간 변경 시 DPS가 즉시 반영됩니다</div>
 
           <div class="time-view" id="timeDisplay">10:00</div>
 
@@ -1201,7 +1232,7 @@
           <div class="side-title" style="margin-bottom:10px;">INFO</div>
           <div class="hint" id="infoHint">
             구글 시트 데이터를 읽어옵니다.<br>
-            실제 클리어 시간으로 바꾸면 더 정확한 DPS를 확인할 수 있습니다.
+            세르카 강투컷, 세르카 잔혈컷, 세르카 1인분과 성당 강투컷, 성당 잔혈컷, 성당 1인분 DPS를 확인할 수 있습니다.
           </div>
         </div>
       </div>
@@ -1815,7 +1846,7 @@
       renderHead();
 
       document.getElementById("infoHint").innerHTML =
-        "구글 시트 데이터를 읽어옵니다.<br>실제 클리어 시간으로 바꾸면 더 정확한 DPS를 확인할 수 있습니다.";
+        "구글 시트 데이터를 읽어옵니다.<br>세르카 강투컷, 세르카 잔혈컷, 세르카 1인분과 성당 강투컷, 성당 잔혈컷, 성당 1인분 DPS를 확인할 수 있습니다.";
 
       const body = document.getElementById("tableBody");
       const totalSeconds = getTotalSeconds();
