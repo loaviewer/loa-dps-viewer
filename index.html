@@ -18,10 +18,10 @@
 
   <link rel="icon" href='data:image/svg+xml;utf8,
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-    <rect width="64" height="64" rx="12" fill="%23141c28"/>
-    <rect x="4" y="4" width="56" height="56" rx="10" fill="none" stroke="%23f6d18b" stroke-width="2" opacity="0.5"/>
-    <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle"
-          font-size="24" font-weight="800" fill="%23f6d18b" font-family="Arial">DPS</text>
+    <rect width="64" height="64" rx="12" fill="%23121925"/>
+    <circle cx="32" cy="32" r="24" fill="none" stroke="%23f6d18b" stroke-width="2"/>
+    <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle"
+          font-size="26" font-weight="900" fill="%23f6d18b" font-family="Arial">DP</text>
   </svg>'>
 
   <style>
@@ -578,6 +578,47 @@
       overflow: hidden;
     }
 
+    .time-box-emphasis {
+      border-color: rgba(255, 214, 153, 0.28);
+      background:
+        radial-gradient(circle at top, rgba(255, 219, 153, 0.08), transparent 52%),
+        rgba(255,255,255,0.03);
+      box-shadow:
+        0 0 0 1px rgba(255,214,153,0.06) inset,
+        0 0 20px rgba(255, 196, 92, 0.06);
+    }
+
+    .time-guide-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 10px;
+      margin: 0 auto 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      color: #fff1d1;
+      border: 1px solid rgba(255,220,160,0.24);
+      background: linear-gradient(180deg, rgba(164, 125, 62, 0.34), rgba(90, 63, 26, 0.34));
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04) inset,
+        0 0 14px rgba(255,196,92,0.08);
+    }
+
+    .time-guide-text {
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #f2dfb8;
+      margin-bottom: 10px;
+      word-break: keep-all;
+    }
+
+    .time-guide-text strong {
+      color: #ffe6b0;
+    }
+
     .time-view {
       text-align: center;
       font-size: 30px;
@@ -599,19 +640,31 @@
       width: 70px;
       height: 44px;
       border-radius: 12px;
-      border: 1px solid rgba(255,214,153,0.22);
+      border: 1px solid rgba(255,214,153,0.30);
       background: rgba(0,0,0,0.24);
       color: #f8edd1;
       font-size: 20px;
       text-align: center;
       outline: none;
+      box-shadow:
+        0 0 0 1px rgba(255,214,153,0.05) inset,
+        0 0 10px rgba(255, 196, 92, 0.04);
+      transition: 0.18s ease;
+    }
+
+    .time-inputs input:focus {
+      border-color: rgba(255,224,177,0.7);
+      box-shadow:
+        0 0 0 1px rgba(255,224,177,0.12) inset,
+        0 0 16px rgba(255, 206, 122, 0.14);
+      background: rgba(255,255,255,0.04);
     }
 
     .time-labels {
       text-align: center;
       font-size: 13px;
       color: #b6a483;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       word-break: keep-all;
     }
 
@@ -620,8 +673,8 @@
       font-size: 14px;
       color: #8ef0c9;
       font-weight: 700;
-      letter-spacing: 0.5px;
-      opacity: 0.92;
+      letter-spacing: 0.3px;
+      opacity: 0.95;
     }
 
     .hint {
@@ -964,6 +1017,17 @@
         font-weight: 800;
       }
 
+      .time-guide-badge {
+        font-size: 10px;
+        padding: 4px 9px;
+        margin-bottom: 8px;
+      }
+
+      .time-guide-text {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
       .time-view {
         font-size: 24px;
       }
@@ -1072,7 +1136,7 @@
   <div class="app">
     <div class="top-bar">
       <div class="top-spacer"></div>
-      <div class="top-title">LOST ARK DPS VIEWER (v16.1)</div>
+      <div class="top-title">LOST ARK DPS VIEWER (v16.2)</div>
       <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
     </div>
 
@@ -1115,7 +1179,13 @@
       <div class="panel right">
         <div class="side-title">CLEAR TIME</div>
 
-        <div class="side-box">
+        <div class="side-box time-box-emphasis">
+          <div class="time-guide-badge">실제 클리어 타임 입력</div>
+          <div class="time-guide-text">
+            <strong>정확한 DPS를 위해</strong><br>
+            아래 시간을 실제 클리어 타임으로 수정하세요
+          </div>
+
           <div class="time-view" id="timeDisplay">10:00</div>
 
           <div class="time-inputs">
@@ -1123,15 +1193,15 @@
             <input type="number" id="seconds" value="0" min="0" max="59" />
           </div>
 
-          <div class="time-labels" id="timeBaseLabel">기본값 10분(600초)</div>
-          <div class="auto-refresh">자동 갱신중</div>
+          <div class="time-labels" id="timeBaseLabel">기본값: 10분(600초)</div>
+          <div class="auto-refresh">시간 변경 시 즉시 반영</div>
         </div>
 
         <div class="side-box">
           <div class="side-title" style="margin-bottom:10px;">INFO</div>
           <div class="hint" id="infoHint">
             구글 시트 데이터를 읽어옵니다.<br>
-            시간 변경 시 DPS는 자동 계산됩니다.
+            실제 클리어 시간으로 바꾸면 더 정확한 DPS를 확인할 수 있습니다.
           </div>
         </div>
       </div>
@@ -1289,8 +1359,16 @@
     }
 
     function updateTimeDisplay() {
-      const min = parseInt(document.getElementById("minutes").value || 0, 10);
-      const sec = parseInt(document.getElementById("seconds").value || 0, 10);
+      let min = parseInt(document.getElementById("minutes").value || 0, 10);
+      let sec = parseInt(document.getElementById("seconds").value || 0, 10);
+
+      if (isNaN(min) || min < 0) min = 0;
+      if (isNaN(sec) || sec < 0) sec = 0;
+      if (sec > 59) sec = 59;
+
+      document.getElementById("minutes").value = min;
+      document.getElementById("seconds").value = sec;
+
       document.getElementById("timeDisplay").textContent =
         `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
     }
@@ -1303,21 +1381,24 @@
       if (menu === "gato1730" || menu === "gato1750") {
         minInput.value = 1;
         secInput.value = 50;
-        label.textContent = "기본값 1분 50초(110초)";
+        label.textContent = "기본값: 1분 50초(110초)";
       } else {
         minInput.value = 10;
         secInput.value = 0;
-        label.textContent = "기본값 10분(600초)";
+        label.textContent = "기본값: 10분(600초)";
       }
       updateTimeDisplay();
     }
 
     function getTotalSeconds() {
-      const min = parseInt(document.getElementById("minutes").value || 0, 10);
+      let min = parseInt(document.getElementById("minutes").value || 0, 10);
       let sec = parseInt(document.getElementById("seconds").value || 0, 10);
 
+      if (isNaN(min) || min < 0) min = 0;
+      if (isNaN(sec) || sec < 0) sec = 0;
       if (sec > 59) sec = 59;
-      if (sec < 0) sec = 0;
+
+      document.getElementById("minutes").value = min;
       document.getElementById("seconds").value = sec;
 
       return Math.max(1, min * 60 + sec);
@@ -1537,7 +1618,7 @@
           const meta = raidMeta[currentMenu][currentCombo];
           const menuName = currentMenu === "serka" ? "세르카" : "성당";
           const tabName = `${meta.title.replace(/\s*\(.+\)/, "")}_${meta.gateName}`;
-          
+
           trackEvent(
             `/이벤트/탭/${menuName}/${tabName}`,
             `탭 클릭 - ${menuName} ${meta.title.replace(/\s*\(.+\)/, "")} ${meta.gateName}`
@@ -1682,18 +1763,6 @@
 
     function renderHead() {
       const head = document.getElementById("tableHead");
-
-      if (currentMenu === "gato1730" || currentMenu === "gato1750") {
-        head.innerHTML = `
-          <tr>
-            <th>딜지분</th>
-            <th>피해/억</th>
-            <th>DPS</th>
-          </tr>
-        `;
-        return;
-      }
-
       head.innerHTML = `
         <tr>
           <th>딜지분</th>
@@ -1746,7 +1815,7 @@
       renderHead();
 
       document.getElementById("infoHint").innerHTML =
-        "구글 시트 데이터를 읽어옵니다.<br>시간 변경 시 DPS는 자동 계산됩니다.";
+        "구글 시트 데이터를 읽어옵니다.<br>실제 클리어 시간으로 바꾸면 더 정확한 DPS를 확인할 수 있습니다.";
 
       const body = document.getElementById("tableBody");
       const totalSeconds = getTotalSeconds();
