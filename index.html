@@ -497,7 +497,13 @@
       flex-wrap: wrap;
     }
 
-    .time-inputs input {
+    .time-input-group {
+      display: flex;
+      align-items: stretch;
+      gap: 6px;
+    }
+
+    .time-input-box {
       width: 72px;
       height: 48px;
       border-radius: 14px;
@@ -509,12 +515,71 @@
       text-align: center;
       outline: none;
       transition: 0.18s ease;
+      appearance: textfield;
+      -moz-appearance: textfield;
     }
 
-    .time-inputs input:focus {
+    .time-input-box::-webkit-outer-spin-button,
+    .time-input-box::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .time-input-box:focus {
       border-color: rgba(122,140,255,0.50);
       box-shadow: 0 0 0 1px rgba(122,140,255,0.14) inset, 0 0 14px rgba(106,172,255,0.12);
       background: rgba(255,255,255,0.07);
+    }
+
+    .time-stepper {
+      width: 26px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .time-step-btn {
+      flex: 1;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.045);
+      color: #dce7f8;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.18s ease;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .time-step-btn:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(122,140,255,0.35);
+      color: #ffffff;
+    }
+
+    .time-step-btn:active {
+      transform: scale(0.97);
+    }
+
+    .time-helper {
+      font-size: 11px;
+      color: #9db2cf;
+      margin-top: -2px;
+      margin-bottom: 10px;
+    }
+
+    .party-dps {
+      margin-top: 2px;
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: 900;
+      color: #ffe1a0;
+    }
+
+    .party-dps .party-dps-value {
+      color: #ffffff;
     }
 
     .time-labels {
@@ -706,10 +771,19 @@
         font-size: 32px;
       }
 
-      .time-inputs input {
+      .time-input-box {
         width: 64px;
         height: 44px;
         font-size: 18px;
+      }
+
+      .time-stepper {
+        height: 44px;
+        width: 24px;
+      }
+
+      .party-dps {
+        font-size: 14px;
       }
 
       table {
@@ -779,10 +853,22 @@
         font-size: 28px;
       }
 
-      .time-inputs input {
+      .time-input-box {
         width: 58px;
         height: 42px;
         font-size: 17px;
+      }
+
+      .time-stepper {
+        height: 42px;
+      }
+
+      .time-helper {
+        font-size: 10px;
+      }
+
+      .party-dps {
+        font-size: 13px;
       }
     }
   </style>
@@ -791,7 +877,7 @@
   <div class="app">
     <div class="workspace">
       <aside class="sidebar">
-        <div class="mini-label">lost ark tool v17.1</div>
+        <div class="mini-label">LOST ARK TOOL · v17.2</div>
         <div class="hero">로스트아크<br>DPS 계산기</div>
         <div class="muted">
           전분으로 세르카, 성당, 가디언 토벌의 딜지분과 DPS를
@@ -839,10 +925,25 @@
               <div class="time-main" id="timeDisplay">10:00</div>
 
               <div class="time-inputs">
-                <input type="number" id="minutes" value="10" min="0" />
-                <input type="number" id="seconds" value="0" min="0" max="59" />
+                <div class="time-input-group">
+                  <input type="number" id="minutes" class="time-input-box" value="10" min="0" />
+                  <div class="time-stepper">
+                    <button type="button" class="time-step-btn" data-step-target="minutes" data-step="1">▲</button>
+                    <button type="button" class="time-step-btn" data-step-target="minutes" data-step="-1">▼</button>
+                  </div>
+                </div>
+
+                <div class="time-input-group">
+                  <input type="number" id="seconds" class="time-input-box" value="0" min="0" max="59" />
+                  <div class="time-stepper">
+                    <button type="button" class="time-step-btn" data-step-target="seconds" data-step="1">▲</button>
+                    <button type="button" class="time-step-btn" data-step-target="seconds" data-step="-1">▼</button>
+                  </div>
+                </div>
               </div>
 
+              <div class="time-helper">분 / 초 숫자를 직접 입력하거나 화살표로 조정하세요</div>
+              <div class="party-dps" id="partyDpsDisplay">파티 DPS : <span class="party-dps-value">-</span></div>
               <div class="time-labels" id="timeBaseLabel">기본값: 10분(600초)</div>
               <div class="side-note">시간 변경 시 즉시 반영</div>
             </div>
@@ -1057,6 +1158,13 @@
 
     function fmt(n) {
       return Number(n || 0).toLocaleString("ko-KR");
+    }
+
+    function fmtPartyDps(n) {
+      return `${Number(n || 0).toLocaleString("ko-KR", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      })}억`;
     }
 
     function toNum(v) {
@@ -1445,6 +1553,75 @@
       `;
     }
 
+    function getCurrentRowsForPartyDps() {
+      if (currentMenu === "gato1730") {
+        return parsedData.gato1730[currentGatoBoss] || [];
+      }
+
+      if (currentMenu === "gato1750") {
+        if (!isGato1750Available(currentGato1750Boss)) return [];
+        return parsedData.gato1750[currentGato1750Boss] || [];
+      }
+
+      const meta = raidMeta[currentMenu][currentCombo];
+      return parsedData[currentMenu]?.[meta.diffKey] || [];
+    }
+
+    function getDamageFromRow(row) {
+      if (!row) return 0;
+
+      if (currentMenu === "gato1730" || currentMenu === "gato1750") {
+        return row.damage || 0;
+      }
+
+      const meta = raidMeta[currentMenu][currentCombo];
+      return meta.gateKey === "gate1" ? (row.g1 || 0) : (row.g2 || 0);
+    }
+
+    function getPartyDpsValue() {
+      const rows = getCurrentRowsForPartyDps();
+      if (!rows.length) return null;
+
+      const preferredShares = [33, 30, 40];
+      let baseRow = null;
+
+      for (const share of preferredShares) {
+        baseRow = rows.find(row => row.share === share && getDamageFromRow(row) > 0);
+        if (baseRow) break;
+      }
+
+      if (!baseRow) {
+        baseRow = rows.find(row => getDamageFromRow(row) > 0) || null;
+      }
+
+      if (!baseRow) return null;
+
+      const damage = getDamageFromRow(baseRow);
+      const shareRate = (baseRow.share || 0) / 100;
+      if (!damage || !shareRate) return null;
+
+      const totalDamage = damage / shareRate;
+      const totalSeconds = getTotalSeconds();
+      return totalDamage / totalSeconds;
+    }
+
+    function updatePartyDpsDisplay() {
+      const el = document.getElementById("partyDpsDisplay");
+
+      if (currentMenu === "gato1750" && !isGato1750Available(currentGato1750Boss)) {
+        el.innerHTML = `파티 DPS : <span class="party-dps-value">-</span>`;
+        return;
+      }
+
+      const partyDps = getPartyDpsValue();
+      if (partyDps === null) {
+        el.innerHTML = `파티 DPS : <span class="party-dps-value">-</span>`;
+        return;
+      }
+
+      el.innerHTML = `파티 DPS : <span class="party-dps-value">${fmtPartyDps(partyDps)}</span>`;
+    }
+
     function renderTable() {
       updateTimeDisplay();
 
@@ -1459,6 +1636,7 @@
         );
         document.getElementById("infoHint").innerHTML =
           "1750 가디언 토벌은 일부 보스만 공개되었습니다.<br>준비중 보스는 순차적으로 반영됩니다.";
+        updatePartyDpsDisplay();
         return;
       }
 
@@ -1476,6 +1654,7 @@
 
         if (!rows.length) {
           body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
+          updatePartyDpsDisplay();
           return;
         }
 
@@ -1493,6 +1672,8 @@
             </tr>
           `;
         }).join("");
+
+        updatePartyDpsDisplay();
         return;
       }
 
@@ -1501,6 +1682,7 @@
 
         if (!rows.length) {
           body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
+          updatePartyDpsDisplay();
           return;
         }
 
@@ -1518,6 +1700,8 @@
             </tr>
           `;
         }).join("");
+
+        updatePartyDpsDisplay();
         return;
       }
 
@@ -1526,6 +1710,7 @@
 
       if (!rows.length) {
         body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
+        updatePartyDpsDisplay();
         return;
       }
 
@@ -1546,6 +1731,8 @@
           </tr>
         `;
       }).join("");
+
+      updatePartyDpsDisplay();
     }
 
     async function loadCSV() {
@@ -1568,6 +1755,25 @@
         console.error(e);
         document.getElementById("status").textContent = "불러오기 실패";
       }
+    }
+
+    function changeTimeValue(targetId, delta) {
+      const input = document.getElementById(targetId);
+      let value = parseInt(input.value || 0, 10);
+
+      if (isNaN(value)) value = 0;
+      value += delta;
+
+      if (targetId === "minutes") {
+        value = Math.max(0, value);
+      }
+
+      if (targetId === "seconds") {
+        value = Math.max(0, Math.min(59, value));
+      }
+
+      input.value = value;
+      renderTable();
     }
 
     document.querySelectorAll(".menu-item").forEach(btn => {
@@ -1594,6 +1800,14 @@
         setBaseTimeByMenu(currentMenu);
         renderTabs();
         renderTable();
+      });
+    });
+
+    document.querySelectorAll(".time-step-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.dataset.stepTarget;
+        const step = parseInt(btn.dataset.step, 10);
+        changeTimeValue(targetId, step);
       });
     });
 
