@@ -32,27 +32,529 @@
       min-height: 100vh;
       font-family: "Segoe UI", "Malgun Gothic", sans-serif;
       background:
-        radial-gradient(circle at top, rgba(255,210,120,0.12), transparent 30%),
-        linear-gradient(180deg, #101722 0%, #0b1018 45%, #070b12 100%);
-      color: #f3e7c2;
+        radial-gradient(circle at top, rgba(120,170,255,0.10), transparent 26%),
+        linear-gradient(135deg, #0b1018 0%, #0d1320 45%, #121927 100%);
+      color: #f3ead6;
     }
 
     .app {
-      width: min(1380px, calc(100% - 20px));
-      margin: 24px auto 10px;
-      padding: 22px 22px 28px;
-      border: 1px solid rgba(255, 215, 140, 0.25);
-      background: rgba(10, 14, 22, 0.88);
-      box-shadow:
-        0 0 0 1px rgba(255,215,140,0.08) inset,
-        0 20px 60px rgba(0,0,0,0.45);
+      width: min(1440px, calc(100% - 20px));
+      margin: 20px auto 10px;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.07);
+      background:
+        linear-gradient(135deg, #111723 0%, #0b0f18 45%, #0d1320 100%);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.38);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 780px;
+    }
+
+    .sidebar {
+      padding: 24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .main {
+      padding: 22px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .mini-label {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #7fc6ff;
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    .hero {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.12;
+      color: #ffffff;
+      margin-bottom: 12px;
+      word-break: keep-all;
+    }
+
+    .muted {
+      font-size: 14px;
+      line-height: 1.65;
+      color: #b8c1d2;
+    }
+
+    .menu {
+      display: grid;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .menu-item {
+      border-radius: 18px;
+      padding: 15px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-weight: 800;
+      font-size: 16px;
+      color: #e6edf8;
+      transition: 0.2s ease;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .menu-item.active {
+      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
+      color: #08111e;
+      box-shadow: 0 0 18px rgba(106,172,255,0.24);
+      border-color: transparent;
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: 900;
+      color: #f7fbff;
+      line-height: 1.15;
+      word-break: keep-all;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #aeb8cb;
+    }
+
+    .date {
+      font-size: 13px;
+      color: #b9c4d8;
+      white-space: nowrap;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .panel {
+      padding: 18px;
       border-radius: 24px;
-      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.015);
+      min-width: 0;
+    }
+
+    .badge-row,
+    .title-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.10);
+      white-space: nowrap;
+    }
+
+    .type-human { background: rgba(100, 181, 246, 0.18); color: #bfe1ff; }
+    .type-ancient { background: rgba(186, 104, 200, 0.18); color: #edc6ff; }
+    .type-beast { background: rgba(141, 110, 99, 0.22); color: #e4c9bb; }
+    .type-insect { background: rgba(174, 213, 129, 0.20); color: #e2f5bf; }
+    .type-spirit { background: rgba(128, 222, 234, 0.18); color: #c6f7ff; }
+
+    .attr-dark { background: rgba(126, 87, 194, 0.22); color: #dab8ff; }
+    .attr-earth { background: rgba(121, 85, 72, 0.24); color: #e0c2a8; }
+    .attr-lightning { background: rgba(255, 214, 10, 0.22); color: #ffe98f; }
+    .attr-holy { background: rgba(255, 236, 179, 0.20); color: #fff2b0; }
+    .attr-fire { background: rgba(255, 112, 67, 0.22); color: #ffbfaa; }
+    .attr-none { background: rgba(255,255,255,0.08); color: #d1d5db; }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 0;
+    }
+
+    .tabs.gato-grid {
+      display: flex;
+    }
+
+    .tab {
+      position: relative;
+      min-width: 104px;
+      min-height: 54px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 900;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #e8eef7;
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: 0.18s ease;
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
       overflow: hidden;
     }
 
+    .tab:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .tab-label { line-height: 1.1; }
+    .tab-sub {
+      font-size: 11px;
+      opacity: 0.92;
+      line-height: 1;
+    }
+
+    .tab-tier-normal {
+      border-color: rgba(170, 235, 160, 0.30);
+      background: linear-gradient(180deg, rgba(124, 172, 112, 0.18), rgba(28, 42, 28, 0.88));
+      color: #dff5d9;
+    }
+
+    .tab-tier-hard {
+      border-color: rgba(255, 206, 140, 0.32);
+      background: linear-gradient(180deg, rgba(177, 124, 70, 0.18), rgba(46, 31, 18, 0.90));
+      color: #f5dfc2;
+    }
+
+    .tab-tier-nightmare {
+      border-color: rgba(214, 180, 255, 0.34);
+      background: linear-gradient(180deg, rgba(129, 91, 177, 0.18), rgba(36, 25, 49, 0.90));
+      color: #ead8ff;
+    }
+
+    .tab-tier-normal.active {
+      background: linear-gradient(180deg, #b9ef98, #79c96a);
+      color: #18240f;
+      box-shadow: 0 0 18px rgba(153, 230, 134, 0.30);
+      border-color: transparent;
+    }
+
+    .tab-tier-hard.active {
+      background: linear-gradient(180deg, #ffd79d, #e3a85a);
+      color: #241700;
+      box-shadow: 0 0 18px rgba(255, 193, 110, 0.30);
+      border-color: transparent;
+    }
+
+    .tab-tier-nightmare.active {
+      background: linear-gradient(180deg, #e5c0ff, #be89eb);
+      color: #241130;
+      box-shadow: 0 0 18px rgba(198, 141, 255, 0.30);
+      border-color: transparent;
+    }
+
+    .tab.gato {
+      min-width: 118px;
+      min-height: 78px;
+      padding: 10px 8px;
+      color: #eef4ff;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .tab.gato .tab-meta {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      min-height: 18px;
+    }
+
+    .tab.gato .badge {
+      height: 20px;
+      font-size: 10px;
+      padding: 0 7px;
+    }
+
+    .tab.gato.active {
+      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
+      color: #08111e;
+      box-shadow: 0 0 18px rgba(106,172,255,0.24);
+      border-color: transparent;
+    }
+
+    .tab.gato.active .badge {
+      background: rgba(8, 17, 30, 0.18) !important;
+      color: #0b1727 !important;
+      border-color: rgba(8,17,30,0.12) !important;
+    }
+
+    .tab.gato.pending {
+      filter: grayscale(1);
+      opacity: 0.74;
+      cursor: pointer;
+    }
+
+    .tab.gato.pending .tab-pending {
+      margin-top: 3px;
+      font-size: 10px;
+      font-weight: 900;
+      color: #e1e1e1;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 16px;
+      align-items: start;
+      min-width: 0;
+    }
+
+    .table-box {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      min-width: 520px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    thead th,
+    tbody td {
+      text-align: center;
+      padding: 14px 18px;
+    }
+
+    thead th {
+      font-weight: 900;
+      color: #fff6e4;
+      background: linear-gradient(180deg, rgba(157,115,58,0.95), rgba(107,72,34,0.95));
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    tbody td {
+      font-weight: 800;
+      color: #f2ead8;
+      background: rgba(255,255,255,0.015);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    tbody tr:hover td {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .row-30 td { background: rgba(245, 166, 35, 0.12); }
+    .row-33 td { background: rgba(61, 195, 145, 0.12); }
+    .row-40 td { background: rgba(158, 107, 214, 0.14); }
+
+    .share-cell {
+      color: #ffe8b3 !important;
+      font-weight: 900;
+      font-size: 15px;
+      text-align: left;
+      padding: 14px 18px;
+    }
+
+    .share-row {
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      align-items: center;
+      column-gap: 8px;
+    }
+
+    .share-label {
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+      opacity: 0.95;
+    }
+
+    .share-value {
+      font-size: 15px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .label-30 { color: #ffcf7a; }
+    .label-33 { color: #8ef0c9; }
+    .label-40 { color: #d8b2ff; }
+
+    .dps-cell {
+      color: #ffd58c;
+      font-weight: 900;
+    }
+
+    .side-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .side-title {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #9fb7d8;
+      margin-bottom: 12px;
+    }
+
+    .time-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      color: #fff1d1;
+      border: 1px solid rgba(255,220,160,0.20);
+      background: linear-gradient(180deg, rgba(164, 125, 62, 0.28), rgba(90, 63, 26, 0.28));
+      margin-bottom: 12px;
+    }
+
+    .time-main {
+      text-align: center;
+      font-size: 42px;
+      font-weight: 900;
+      color: #ffffff;
+      margin: 8px 0 14px;
+      letter-spacing: 1px;
+    }
+
+    .time-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .time-inputs input {
+      width: 72px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 800;
+      text-align: center;
+      outline: none;
+      transition: 0.18s ease;
+    }
+
+    .time-inputs input:focus {
+      border-color: rgba(122,140,255,0.50);
+      box-shadow: 0 0 0 1px rgba(122,140,255,0.14) inset, 0 0 14px rgba(106,172,255,0.12);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .time-labels {
+      text-align: center;
+      font-size: 12px;
+      color: #c1b39c;
+      margin-bottom: 8px;
+    }
+
+    .side-note {
+      text-align: center;
+      font-size: 12px;
+      color: #9decd9;
+      margin-bottom: 10px;
+    }
+
+    .info-box {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .info-text {
+      font-size: 13px;
+      color: #b6c0d0;
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+
+    .coming-soon {
+      padding: 44px 20px;
+      text-align: center;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.03);
+      border: 1px dashed rgba(255,255,255,0.10);
+      color: #e8dcc0;
+    }
+
+    .coming-soon h3 {
+      margin: 0 0 10px;
+      color: #f6d18b;
+      font-size: 24px;
+    }
+
+    .coming-soon p {
+      margin: 0;
+      color: #b9a98b;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .status {
+      text-align: right;
+      font-size: 13px;
+      color: #98a7bd;
+      padding-right: 2px;
+    }
+
     .footer-signature {
-      width: min(1380px, calc(100% - 20px));
+      width: min(1440px, calc(100% - 20px));
       margin: 0 auto 18px;
       text-align: center;
       user-select: none;
@@ -80,845 +582,78 @@
       opacity: 0.9;
     }
 
-    .top-bar {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-      min-height: 56px;
-    }
-
-    .top-spacer {
-      min-width: 0;
-    }
-
-    .top-title {
-      text-align: center;
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: #f6d18b;
-      text-shadow: 0 0 18px rgba(246, 209, 139, 0.18);
-      margin: 0;
-      white-space: nowrap;
-    }
-
-    .top-datetime {
-      justify-self: end;
-      font-size: 15px;
-      font-variant-numeric: tabular-nums;
-      color: #e2d2a9;
-      letter-spacing: 0.6px;
-      opacity: 0.95;
-      padding: 10px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,214,153,0.16);
-      background: rgba(255,255,255,0.04);
-      white-space: nowrap;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 240px minmax(0, 1fr) 240px;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .panel {
-      min-width: 0;
-      background: linear-gradient(180deg, rgba(28,36,50,0.92), rgba(16,22,32,0.92));
-      border: 1px solid rgba(255, 214, 153, 0.18);
-      border-radius: 20px;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.03) inset,
-        0 12px 30px rgba(0,0,0,0.35);
-    }
-
-    .left, .center, .right {
-      padding: 18px;
-    }
-
-    .menu-title,
-    .side-title {
-      font-size: 13px;
-      color: #cfae69;
-      letter-spacing: 2px;
-      margin-bottom: 14px;
-      opacity: 0.9;
-    }
-
-    .menu-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .menu-btn {
-      width: 100%;
-      border: 1px solid rgba(255,214,153,0.2);
-      background: linear-gradient(180deg, rgba(61, 76, 102, 0.28), rgba(21, 28, 39, 0.88));
-      color: #f5e7c5;
-      min-height: 72px;
-      border-radius: 16px;
-      font-size: 19px;
-      font-weight: 700;
-      text-align: left;
-      padding: 16px 18px;
-      cursor: pointer;
-      transition: 0.18s ease;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.22);
-    }
-
-    .menu-btn:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,214,153,0.45);
-    }
-
-    .menu-btn.active {
-      border-color: rgba(255, 214, 153, 0.8);
-      background: linear-gradient(180deg, rgba(138, 108, 51, 0.35), rgba(44, 34, 18, 0.95));
-      box-shadow:
-        0 0 0 1px rgba(255,220,160,0.12) inset,
-        0 0 18px rgba(255,196,92,0.14);
-    }
-
-    .center-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
-
-    .title-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .content-title {
-      font-size: 26px;
-      font-weight: 800;
-      color: #f4ddb0;
-      line-height: 1.2;
-      word-break: keep-all;
-    }
-
-    .title-meta {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      align-items: center;
-      min-height: 24px;
-    }
-
-    .content-sub {
-      font-size: 13px;
-      color: #b9a98b;
-      margin-top: 4px;
-      min-height: 18px;
-    }
-
-    .seo-copy {
-      margin-top: 10px;
-      max-width: 680px;
-      font-size: 13px;
-      line-height: 1.65;
-      color: #cbb896;
-      word-break: keep-all;
-    }
-
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: flex-end;
-      max-width: 880px;
-    }
-
-    .tabs.gato-grid {
-      display: flex;
-    }
-
-    .tab {
-      position: relative;
-      min-width: 122px;
-      min-height: 52px;
-      padding: 8px 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,214,153,0.28);
-      background: rgba(255,255,255,0.03);
-      color: #e8dcc0;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: 0.18s ease;
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      text-align: center;
-      overflow: hidden;
-    }
-
-    .tab:hover {
-      transform: translateY(-1px);
-      border-color: rgba(255,214,153,0.5);
-    }
-
-    .tab.active {
-      color: #1a140a;
-      transform: translateY(-1px) scale(1.03);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.25) inset,
-        0 0 18px rgba(255, 214, 153, 0.25);
-    }
-
-    .tab.gato {
-      min-width: 128px;
-      min-height: 82px;
-      padding: 8px 8px;
-      font-size: 12px;
-      flex: 0 0 auto;
-      color: #f4e7c9;
-      background:
-        linear-gradient(180deg, rgba(52, 63, 82, 0.75), rgba(25, 31, 43, 0.95));
-      border: 1px solid rgba(255, 209, 138, 0.3);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.02) inset,
-        0 6px 18px rgba(0,0,0,0.18);
-    }
-
-    .tab.gato .tab-label {
-      color: #f5e7c8;
-      text-shadow: 0 1px 0 rgba(0,0,0,0.35);
-      font-size: 12px;
-      line-height: 1.1;
-    }
-
-    .tab.gato .tab-meta {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      min-height: 18px;
-    }
-
-    .tab.gato.active {
-      color: #fff6e4;
-      border-color: rgba(255, 224, 170, 0.88);
-      background:
-        radial-gradient(circle at 50% 35%, rgba(255, 228, 165, 0.34), rgba(255,228,165,0.08) 42%, transparent 72%),
-        linear-gradient(180deg, rgba(118, 96, 61, 0.92), rgba(62, 50, 31, 0.96));
-      box-shadow:
-        0 0 0 1px rgba(255,248,220,0.22) inset,
-        0 0 10px rgba(255, 220, 150, 0.18),
-        0 0 22px rgba(255, 214, 140, 0.28),
-        0 0 42px rgba(255, 199, 112, 0.18);
-    }
-
-    .tab.gato.active::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 50% 24%, rgba(255, 244, 210, 0.22), transparent 34%),
-        linear-gradient(180deg, rgba(255,255,255,0.08), transparent 55%);
-      pointer-events: none;
-    }
-
-    .tab.gato.active::after {
-      content: "✓";
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      font-size: 14px;
-      font-weight: 900;
-      color: #fff3d1;
-      text-shadow:
-        0 0 4px rgba(255,255,255,0.4),
-        0 0 10px rgba(255,214,153,0.45);
-      opacity: 0.92;
-      pointer-events: none;
-    }
-
-    .tab.gato.active .tab-label {
-      color: #fff6e9 !important;
-      text-shadow:
-        0 0 4px rgba(255,255,255,0.18),
-        0 1px 0 rgba(0,0,0,0.28) !important;
-    }
-
-    .tab.gato.active .tab-meta {
-      background: rgba(24, 20, 13, 0.28);
-      border-radius: 999px;
-      padding: 3px 6px;
-    }
-
-    .tab.gato.pending {
-      cursor: pointer;
-      color: #b3b3b3;
-      border-color: rgba(180,180,180,0.18);
-      background:
-        linear-gradient(180deg, rgba(86, 86, 86, 0.20), rgba(34, 34, 34, 0.92));
-      filter: grayscale(1);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.02) inset,
-        0 4px 12px rgba(0,0,0,0.18);
-    }
-
-    .tab.gato.pending .tab-label {
-      color: #c9c9c9;
-      text-shadow: none;
-    }
-
-    .tab.gato.pending .tab-meta {
-      opacity: 0.72;
-    }
-
-    .tab.gato.pending .tab-pending {
-      margin-top: 2px;
-      font-size: 10px;
-      font-weight: 800;
-      color: #d5d5d5;
-      padding: 2px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(220,220,220,0.14);
-      background: rgba(255,255,255,0.05);
-      letter-spacing: 0.3px;
-    }
-
-    .tab.gato.pending.active {
-      color: #f0f0f0;
-      border-color: rgba(210,210,210,0.35);
-      background:
-        radial-gradient(circle at 50% 35%, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 42%, transparent 72%),
-        linear-gradient(180deg, rgba(110,110,110,0.55), rgba(52,52,52,0.94));
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.10) inset,
-        0 0 14px rgba(220,220,220,0.08);
-      transform: translateY(-1px) scale(1.02);
-    }
-
-    .tab.gato.pending.active::after {
-      content: "";
-    }
-
-    .tab.combo {
-      min-width: 118px;
-      min-height: 60px;
-      padding: 8px 10px;
-      font-size: 13px;
-    }
-
-    .tab-label { line-height: 1.1; }
-
-    .tab-sub {
-      font-size: 11px;
-      opacity: 0.92;
-      line-height: 1;
-    }
-
-    .tab.active .tab-label,
-    .tab.active .tab-sub {
-      color: #241700;
-      text-shadow: 0 1px 0 rgba(255,255,255,0.35);
-    }
-
-    .tab-tier-normal {
-      border-color: rgba(170, 235, 160, 0.32);
-      background: linear-gradient(180deg, rgba(124, 172, 112, 0.18), rgba(28, 42, 28, 0.88));
-    }
-
-    .tab-tier-normal:hover {
-      border-color: rgba(184, 255, 170, 0.6);
-    }
-
-    .tab-tier-normal.active {
-      background: linear-gradient(180deg, #b9ef98, #79c96a);
-      border-color: rgba(220, 255, 205, 0.95);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.25) inset,
-        0 0 18px rgba(153, 230, 134, 0.45);
-    }
-
-    .tab-tier-hard {
-      border-color: rgba(255, 206, 140, 0.34);
-      background: linear-gradient(180deg, rgba(177, 124, 70, 0.18), rgba(46, 31, 18, 0.9));
-    }
-
-    .tab-tier-hard:hover {
-      border-color: rgba(255, 216, 160, 0.62);
-    }
-
-    .tab-tier-hard.active {
-      background: linear-gradient(180deg, #ffd79d, #e3a85a);
-      border-color: rgba(255, 233, 196, 0.95);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.25) inset,
-        0 0 18px rgba(255, 193, 110, 0.45);
-    }
-
-    .tab-tier-nightmare {
-      border-color: rgba(214, 180, 255, 0.34);
-      background: linear-gradient(180deg, rgba(129, 91, 177, 0.18), rgba(36, 25, 49, 0.9));
-    }
-
-    .tab-tier-nightmare:hover {
-      border-color: rgba(228, 196, 255, 0.62);
-    }
-
-    .tab-tier-nightmare.active {
-      background: linear-gradient(180deg, #e5c0ff, #be89eb);
-      border-color: rgba(243, 224, 255, 0.95);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.25) inset,
-        0 0 18px rgba(198, 141, 255, 0.45);
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-      overflow-y: hidden;
-      border-radius: 18px;
-      border: 1px solid rgba(255,214,153,0.18);
-      background: rgba(9, 13, 20, 0.55);
-      -webkit-overflow-scrolling: touch;
-    }
-
-    table {
-      width: 100%;
-      min-width: 520px;
-      border-collapse: collapse;
-      font-size: 15px;
-      table-layout: fixed;
-    }
-
-    thead th {
-      background: linear-gradient(180deg, rgba(157,115,58,0.95), rgba(107,72,34,0.95));
-      color: #fff3d7;
-      padding: 12px 10px;
-      border-bottom: 1px solid rgba(255,224,177,0.18);
-    }
-
-    tbody td {
-      padding: 10px 10px;
-      text-align: center;
-      color: #f3ead8;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      background: rgba(255,255,255,0.015);
-      vertical-align: middle;
-    }
-
-    tbody tr:hover td {
-      background: rgba(255,255,255,0.05);
-    }
-
-    .row-30 td { background: rgba(245, 166, 35, 0.18); }
-    .row-33 td { background: rgba(61, 195, 145, 0.18); }
-    .row-40 td { background: rgba(158, 107, 214, 0.22); }
-
-    .share-cell {
-      color: #ffe8b3 !important;
-      font-weight: 900;
-      font-size: 15px;
-      letter-spacing: 0.2px;
-      text-align: left;
-      padding: 10px 12px;
-    }
-
-    .share-row {
-      display: grid;
-      grid-template-columns: 54px 1fr;
-      align-items: center;
-      column-gap: 8px;
-      min-height: 22px;
-    }
-
-    .share-label {
-      font-size: 12px;
-      font-weight: 800;
-      text-align: left;
-      white-space: nowrap;
-      opacity: 0.95;
-    }
-
-    .label-30 { color: #ffcf7a; }
-    .label-33 { color: #8ef0c9; }
-    .label-40 { color: #d8b2ff; }
-
-    .share-value {
-      font-size: 15px;
-      font-weight: 900;
-      text-align: left;
-      white-space: nowrap;
-    }
-
-    .dps-cell {
-      font-weight: 800;
-      color: #ffd58c;
-    }
-
-    .status {
-      text-align: right;
-      margin-top: 10px;
-      font-size: 13px;
-      color: #a7987d;
-    }
-
-    .right {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      min-width: 0;
-    }
-
-    .side-box {
-      width: 100%;
-      padding: 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,214,153,0.16);
-      background: rgba(255,255,255,0.03);
-      margin-bottom: 0;
-      overflow: hidden;
-    }
-
-    .time-box-emphasis {
-      border-color: rgba(255, 214, 153, 0.24);
-      background:
-        radial-gradient(circle at top, rgba(255, 219, 153, 0.05), transparent 54%),
-        rgba(255,255,255,0.03);
-      box-shadow:
-        0 0 0 1px rgba(255,214,153,0.05) inset,
-        0 0 16px rgba(255, 196, 92, 0.04);
-    }
-
-    .time-guide-badge-wrap {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 10px;
-    }
-
-    .time-guide-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 5px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 0.4px;
-      color: #fff1d1;
-      border: 1px solid rgba(255,220,160,0.20);
-      background: linear-gradient(180deg, rgba(164, 125, 62, 0.28), rgba(90, 63, 26, 0.28));
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.03) inset,
-        0 0 10px rgba(255,196,92,0.06);
-    }
-
-    .time-guide-main {
-      text-align: center;
-      font-size: 14px;
-      line-height: 1.5;
-      color: #f2dfb8;
-      margin-bottom: 8px;
-      font-weight: 700;
-      word-break: keep-all;
-    }
-
-    .time-guide-sub {
-      text-align: center;
-      font-size: 12px;
-      line-height: 1.5;
-      color: #bfae8d;
-      margin-bottom: 12px;
-      word-break: keep-all;
-    }
-
-    .time-view {
-      text-align: center;
-      font-size: 30px;
-      font-weight: 800;
-      color: #f4ddb0;
-      margin: 8px 0 16px;
-      letter-spacing: 1px;
-    }
-
-    .time-inputs {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-
-    .time-inputs input {
-      width: 70px;
-      height: 44px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,214,153,0.26);
-      background: rgba(0,0,0,0.24);
-      color: #f8edd1;
-      font-size: 20px;
-      text-align: center;
-      outline: none;
-      box-shadow:
-        0 0 0 1px rgba(255,214,153,0.04) inset,
-        0 0 8px rgba(255, 196, 92, 0.03);
-      transition: 0.18s ease;
-    }
-
-    .time-inputs input:focus {
-      border-color: rgba(255,224,177,0.62);
-      box-shadow:
-        0 0 0 1px rgba(255,224,177,0.10) inset,
-        0 0 14px rgba(255, 206, 122, 0.10);
-      background: rgba(255,255,255,0.04);
-    }
-
-    .time-labels {
-      text-align: center;
-      font-size: 13px;
-      color: #b6a483;
-      margin-bottom: 8px;
-      word-break: keep-all;
-    }
-
-    .auto-refresh {
-      text-align: center;
-      font-size: 14px;
-      color: #8ef0c9;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      opacity: 0.95;
-    }
-
-    .hint {
-      font-size: 13px;
-      color: #a9997e;
-      line-height: 1.6;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      height: 20px;
-      padding: 0 7px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      border: 1px solid rgba(255,255,255,0.12);
-      line-height: 1;
-      white-space: nowrap;
-    }
-
-    .attr-dark { background: rgba(126, 87, 194, 0.22); color: #dab8ff; }
-    .attr-earth { background: rgba(121, 85, 72, 0.24); color: #e0c2a8; }
-    .attr-lightning { background: rgba(255, 214, 10, 0.22); color: #ffe98f; }
-    .attr-holy { background: rgba(255, 236, 179, 0.20); color: #fff2b0; }
-    .attr-fire { background: rgba(255, 112, 67, 0.22); color: #ffbfaa; }
-    .attr-none { background: rgba(255,255,255,0.08); color: #d1d5db; }
-
-    .type-human { background: rgba(100, 181, 246, 0.18); color: #bfe1ff; }
-    .type-ancient { background: rgba(186, 104, 200, 0.18); color: #edc6ff; }
-    .type-beast { background: rgba(141, 110, 99, 0.22); color: #e4c9bb; }
-    .type-insect { background: rgba(174, 213, 129, 0.20); color: #e2f5bf; }
-    .type-spirit { background: rgba(128, 222, 234, 0.18); color: #c6f7ff; }
-
-    .tab.active .badge {
-      background: rgba(18, 24, 35, 0.72) !important;
-      color: #fff4de !important;
-      border-color: rgba(255,255,255,0.18) !important;
-      box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset;
-    }
-
-    .tab.gato .badge {
-      border-color: rgba(255,255,255,0.08);
-    }
-
-    .tab.gato.active .badge {
-      background: rgba(49, 38, 21, 0.72) !important;
-      color: #fff5dd !important;
-      border-color: rgba(255,239,204,0.15) !important;
-      box-shadow:
-        0 1px 0 rgba(255,255,255,0.10) inset,
-        0 0 8px rgba(255,210,120,0.08);
-    }
-
-    .coming-soon {
-      padding: 44px 20px;
-      text-align: center;
-      border-radius: 18px;
-      border: 1px dashed rgba(255,214,153,0.26);
-      background: rgba(255,255,255,0.03);
-      color: #e8dcc0;
-    }
-
-    .coming-soon h3 {
-      margin: 0 0 10px;
-      color: #f6d18b;
-      font-size: 24px;
-    }
-
-    .coming-soon p {
-      margin: 0;
-      color: #b9a98b;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
     @media (max-width: 1180px) {
-      .layout {
-        grid-template-columns: 220px minmax(0, 1fr) 220px;
+      .workspace {
+        grid-template-columns: 280px 1fr;
       }
 
-      .tab.combo {
-        min-width: 110px;
+      .content-grid {
+        grid-template-columns: 1fr 240px;
       }
     }
 
     @media (max-width: 1024px) {
-      .layout {
+      .workspace {
         grid-template-columns: 1fr;
       }
 
-      .top-bar {
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .content-grid {
         grid-template-columns: 1fr;
-        justify-items: center;
-        text-align: center;
-        gap: 10px;
       }
 
-      .top-spacer {
-        display: none;
+      .topline {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
-      .top-title {
-        white-space: normal;
-      }
-
-      .top-datetime {
-        justify-self: center;
-      }
-
-      .left, .center, .right {
-        padding: 14px;
-      }
-
-      .menu-list {
-        gap: 10px;
-      }
-
-      .menu-btn {
-        min-height: 58px;
-        font-size: 17px;
-        padding: 12px 14px;
-      }
-
-      .content-title {
-        font-size: 22px;
-      }
-
-      .tabs {
-        justify-content: flex-start;
-        max-width: 100%;
-      }
-
-      .tab {
-        min-width: 104px;
-        font-size: 14px;
-      }
-
-      .tab.gato {
-        min-width: 118px;
-        min-height: 78px;
-        font-size: 12px;
-      }
-
-      .tab.combo {
-        min-width: 104px;
-        min-height: 56px;
-        font-size: 12px;
-      }
-
-      .time-view {
-        font-size: 26px;
+      .date {
+        align-self: flex-start;
       }
     }
 
     @media (max-width: 768px) {
+      body {
+        padding: 8px;
+      }
+
       .app {
-        width: calc(100% - 12px);
-        margin: 8px auto 8px;
-        padding: 10px;
-        border-radius: 16px;
-      }
-
-      .footer-signature {
-        width: calc(100% - 12px);
-        margin-bottom: 14px;
-      }
-
-      .footer-signature span {
-        font-size: 17px;
-        padding: 6px 14px 7px;
-      }
-
-      .top-title {
         width: 100%;
-        font-size: 21px;
-        line-height: 1.2;
-        text-align: center;
+        margin: 0 auto 8px;
+        border-radius: 20px;
       }
 
-      .top-datetime {
-        font-size: 12px;
-        padding: 8px 10px;
-        text-align: center;
+      .sidebar {
+        padding: 16px;
       }
 
-      .center-top {
-        gap: 12px;
-        margin-bottom: 12px;
+      .main {
+        padding: 14px;
       }
 
-      .title-row {
-        gap: 8px;
+      .hero {
+        font-size: 26px;
       }
 
-      .title-meta {
-        gap: 4px;
+      .menu {
+        grid-template-columns: 1fr;
       }
 
-      .content-title {
-        font-size: 18px;
+      .menu-item {
+        font-size: 15px;
+        padding: 13px 14px;
       }
 
-      .content-sub {
-        font-size: 12px;
-      }
-
-      .seo-copy {
-        font-size: 12px;
-        margin-top: 8px;
-      }
-
-      .menu-title,
-      .side-title {
-        font-size: 11px;
-        margin-bottom: 10px;
-      }
-
-      .menu-btn {
-        min-height: 52px;
-        font-size: 16px;
-        padding: 10px 12px;
-        border-radius: 14px;
+      .title {
+        font-size: 22px;
       }
 
       .tabs {
@@ -926,107 +661,55 @@
       }
 
       .tab {
-        min-width: 94px;
-        min-height: 42px;
-        padding: 6px 10px;
-        font-size: 12px;
-        border-radius: 14px;
-      }
-
-      .tab.combo {
         min-width: 92px;
-        min-height: 52px;
-        font-size: 11px;
-        padding: 6px 8px;
+        min-height: 48px;
+        font-size: 12px;
+        padding: 10px 10px;
       }
 
       .tab-sub {
         font-size: 10px;
       }
 
-      .badge {
-        font-size: 9px;
-        height: 16px;
-        padding: 0 5px;
+      .tab.gato {
+        min-width: 0;
+        width: 100%;
       }
 
       .tabs.gato-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
         width: 100%;
-        max-width: 100%;
-        justify-content: stretch;
       }
 
-      .tabs.gato-grid .tab.gato {
-        width: 100%;
-        min-width: 0;
-        min-height: 78px;
-        padding: 7px 6px;
-        font-size: 11px;
-        border-radius: 16px;
+      .time-main {
+        font-size: 32px;
       }
 
-      .tabs.gato-grid .tab.gato .tab-label {
-        font-size: 11px;
-        line-height: 1.1;
-      }
-
-      .tabs.gato-grid .tab.gato .tab-meta {
-        gap: 3px;
-      }
-
-      .tabs.gato-grid .tab.gato .badge {
-        font-size: 9px;
-        height: 16px;
-        padding: 0 5px;
-      }
-
-      .tabs.gato-grid .tab.gato.pending .tab-pending {
-        font-size: 9px;
-        padding: 2px 6px;
-      }
-
-      .table-wrap {
-        overflow-x: hidden;
+      .time-inputs input {
+        width: 64px;
+        height: 44px;
+        font-size: 18px;
       }
 
       table {
         min-width: 100%;
-        width: 100%;
-        table-layout: fixed;
         font-size: 12px;
       }
 
       thead th,
       tbody td {
-        padding: 7px 4px;
-      }
-
-      thead th:nth-child(1),
-      tbody td:nth-child(1) {
-        width: 34%;
-      }
-
-      thead th:nth-child(2),
-      tbody td:nth-child(2) {
-        width: 33%;
-      }
-
-      thead th:nth-child(3),
-      tbody td:nth-child(3) {
-        width: 33%;
+        padding: 10px 8px;
       }
 
       .share-cell {
-        padding: 6px 6px;
-        font-size: 12px;
+        font-size: 13px;
+        padding: 10px 8px;
       }
 
       .share-row {
-        grid-template-columns: 42px 1fr;
-        column-gap: 4px;
+        grid-template-columns: 46px 1fr;
+        column-gap: 5px;
       }
 
       .share-label {
@@ -1034,54 +717,37 @@
       }
 
       .share-value {
-        font-size: 12px;
-      }
-
-      .dps-cell {
-        font-size: 12px;
-        font-weight: 800;
-      }
-
-      .time-guide-badge {
-        font-size: 10px;
-        padding: 4px 9px;
-      }
-
-      .time-guide-main {
         font-size: 13px;
       }
 
-      .time-guide-sub {
-        font-size: 11px;
-        margin-bottom: 10px;
+      .dps-cell {
+        font-size: 13px;
       }
 
-      .time-view {
-        font-size: 24px;
+      .footer-signature {
+        width: 100%;
+        margin-bottom: 12px;
       }
 
-      .time-inputs input {
-        width: 64px;
-        height: 40px;
-        font-size: 18px;
-      }
-
-      .hint {
-        font-size: 12px;
+      .footer-signature span {
+        font-size: 17px;
+        padding: 6px 14px 7px;
       }
     }
 
     @media (max-width: 480px) {
-      .top-title {
-        font-size: 18px;
+      .title {
+        font-size: 19px;
       }
 
-      .content-title {
-        font-size: 16px;
+      .hero {
+        font-size: 23px;
       }
 
-      .content-sub {
-        font-size: 11px;
+      .subtitle,
+      .info-text,
+      .muted {
+        font-size: 12px;
       }
 
       .tab {
@@ -1089,152 +755,85 @@
         font-size: 11px;
       }
 
-      .tab.combo {
-        min-width: 82px;
-        font-size: 10px;
+      .time-main {
+        font-size: 28px;
       }
 
-      .tabs.gato-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 7px;
-      }
-
-      .tabs.gato-grid .tab.gato {
-        min-height: 74px;
-        padding: 7px 5px;
-        font-size: 10px;
-      }
-
-      .tabs.gato-grid .tab.gato .tab-label {
-        font-size: 10px;
-      }
-
-      .tabs.gato-grid .tab.gato .badge {
-        font-size: 8px;
-        height: 15px;
-        padding: 0 4px;
-      }
-
-      .tabs.gato-grid .tab.gato.pending .tab-pending {
-        font-size: 8px;
-      }
-
-      .table-wrap {
-        overflow-x: hidden;
-      }
-
-      table {
-        min-width: 100%;
-        font-size: 11px;
-      }
-
-      thead th,
-      tbody td {
-        padding: 6px 3px;
-      }
-
-      .share-cell {
-        padding: 6px 4px;
-      }
-
-      .share-row {
-        grid-template-columns: 38px 1fr;
-        column-gap: 3px;
-      }
-
-      .share-label {
-        font-size: 9px;
-      }
-
-      .share-value {
-        font-size: 11px;
-      }
-
-      .dps-cell {
-        font-size: 11px;
-      }
-
-      .coming-soon h3 {
-        font-size: 20px;
+      .time-inputs input {
+        width: 58px;
+        height: 42px;
+        font-size: 17px;
       }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="top-bar">
-      <div class="top-spacer"></div>
-      <div class="top-title">로스트아크 DPS 계산기 (v16.4)</div>
-      <div class="top-datetime" id="topDateTime">0000 / 00 / 00 00:00:00</div>
-    </div>
-
-    <div class="layout">
-      <div class="panel left">
-        <div class="menu-title">CONTENT MENU</div>
-        <div class="menu-list">
-          <button class="menu-btn active" data-menu="serka">세르카 딜지분 보기</button>
-          <button class="menu-btn" data-menu="cathedral">성당 딜지분 보기</button>
-          <button class="menu-btn" data-menu="gato1730">1730 가토 딜지분</button>
-          <button class="menu-btn" data-menu="gato1750">1750 가토 딜지분</button>
+    <div class="workspace">
+      <aside class="sidebar">
+        <div class="mini-label">lost ark tool</div>
+        <div class="hero">로스트아크<br>DPS 계산기</div>
+        <div class="muted">
+          세르카, 성당, 가디언 토벌의 딜지분과 DPS를 확인하는
+          워크스페이스형 UI입니다.
         </div>
-      </div>
 
-      <div class="panel center">
-        <div class="center-top">
+        <div class="menu">
+          <button class="menu-item active" data-menu="serka">세르카 딜지분 보기</button>
+          <button class="menu-item" data-menu="cathedral">성당 딜지분 보기</button>
+          <button class="menu-item" data-menu="gato1730">1730 가토 딜지분</button>
+          <button class="menu-item" data-menu="gato1750">1750 가토 딜지분</button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="topline">
           <div>
-            <div class="title-row">
-              <div class="content-title" id="contentTitle">세르카 : 하드 1관</div>
-              <div class="title-meta" id="titleMeta"></div>
-            </div>
-            <div class="content-sub" id="tableTitle">입장레벨 : 1730</div>
-            <div class="seo-copy">
-              로아 1인분, 강투컷, 잔혈컷 기준을 세르카, 성당, 가디언 토벌 기준으로 확인할 수 있습니다.
-            </div>
+            <div class="title" id="contentTitle">세르카 : 하드 1관</div>
+            <div class="subtitle" id="tableTitle">입장레벨 : 1730</div>
+            <div class="title-meta" id="titleMeta"></div>
           </div>
+          <div class="date" id="topDateTime">0000 / 00 / 00 00:00:00</div>
+        </div>
 
+        <div class="panel">
           <div class="tabs" id="tabs"></div>
         </div>
 
-        <div id="mainContent">
-          <div class="table-wrap" id="tableWrap">
-            <table id="dataTable">
-              <thead id="tableHead"></thead>
-              <tbody id="tableBody"></tbody>
-            </table>
-          </div>
+        <div class="content-grid">
+          <section id="mainContent" class="panel table-box">
+            <div class="table-wrap" id="tableWrap">
+              <table id="dataTable">
+                <thead id="tableHead"></thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <aside>
+            <div class="side-card">
+              <div class="side-title">clear time</div>
+              <div class="time-badge">실제 클리어 타임 입력</div>
+              <div class="time-main" id="timeDisplay">10:00</div>
+
+              <div class="time-inputs">
+                <input type="number" id="minutes" value="10" min="0" />
+                <input type="number" id="seconds" value="0" min="0" max="59" />
+              </div>
+
+              <div class="time-labels" id="timeBaseLabel">기본값: 10분(600초)</div>
+              <div class="side-note">시간 변경 시 즉시 반영</div>
+            </div>
+
+            <div class="info-box">
+              <div class="side-title">info</div>
+              <div class="info-text" id="infoHint">구글 시트 데이터를 읽어 옵니다.</div>
+            </div>
+          </aside>
         </div>
 
         <div class="status" id="status">불러오는 중...</div>
-      </div>
-
-      <div class="panel right">
-        <div class="side-title">CLEAR TIME</div>
-
-        <div class="side-box time-box-emphasis">
-          <div class="time-guide-badge-wrap">
-            <div class="time-guide-badge">실제 클리어 타임 입력</div>
-          </div>
-          <div class="time-guide-main">실제 클리어 타임으로 수정하세요</div>
-          <div class="time-guide-sub">아래 시간 변경 시 DPS가 즉시 반영됩니다</div>
-
-          <div class="time-view" id="timeDisplay">10:00</div>
-
-          <div class="time-inputs">
-            <input type="number" id="minutes" value="10" min="0" />
-            <input type="number" id="seconds" value="0" min="0" max="59" />
-          </div>
-
-          <div class="time-labels" id="timeBaseLabel">기본값: 10분(600초)</div>
-          <div class="auto-refresh">시간 변경 시 즉시 반영</div>
-        </div>
-
-        <div class="side-box">
-          <div class="side-title" style="margin-bottom:10px;">INFO</div>
-          <div class="hint" id="infoHint">
-            구글 시트 데이터를 읽어 옵니다.
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   </div>
 
@@ -1634,7 +1233,7 @@
       tabs.innerHTML = comboTabs.map(item => {
         const meta = raidMeta[currentMenu][item.key];
         return `
-          <button class="tab combo ${meta.tierClass} ${currentCombo === item.key ? 'active' : ''}" data-combo="${item.key}">
+          <button class="tab ${meta.tierClass} ${currentCombo === item.key ? 'active' : ''}" data-combo="${item.key}">
             <div class="tab-label">${item.label}</div>
             <div class="tab-sub">${item.sub}</div>
           </button>
@@ -1949,9 +1548,9 @@
       }
     }
 
-    document.querySelectorAll(".menu-btn").forEach(btn => {
+    document.querySelectorAll(".menu-item").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".menu-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".menu-item").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
 
         currentMenu = btn.dataset.menu;
