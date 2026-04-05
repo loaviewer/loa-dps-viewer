@@ -102,11 +102,12 @@
       width: 100%;
       border: none;
       cursor: pointer;
-      padding: 16px 18px;
-      border-radius: 18px;
-      font-size: 15px;
+      padding: 20px 18px 18px;
+      border-radius: 20px;
+      font-size: 17px;
       font-weight: 900;
       color: #f2ede2;
+      text-align: left;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
       border: 1px solid rgba(255,255,255,0.08);
@@ -125,11 +126,22 @@
 
     .guide-trigger .small {
       display: block;
-      font-size: 11px;
-      letter-spacing: 1.4px;
+      font-size: 12px;
+      letter-spacing: 1.8px;
       color: #8ec7ff;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       text-transform: uppercase;
+    }
+
+    .guide-trigger .guide-text {
+      display: block;
+      line-height: 1.35;
+      word-break: keep-all;
+    }
+
+    .guide-trigger .guide-accent {
+      color: #ffd48a;
+      text-shadow: 0 0 10px rgba(255, 210, 130, 0.10);
     }
 
     .sidebar-divider {
@@ -731,7 +743,6 @@
       opacity: 0.9;
     }
 
-    /* 모달 */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -1055,8 +1066,8 @@
       }
 
       .guide-trigger {
-        font-size: 14px;
-        padding: 14px 14px;
+        font-size: 15px;
+        padding: 18px 16px 16px;
       }
 
       .modal-title {
@@ -1078,8 +1089,8 @@
 
         <div class="guide-trigger-wrap">
           <button class="guide-trigger" id="openGuideBtn" type="button">
-            <span class="small">Guide</span>
-            안내 : DPS 보는 방법
+            <span class="small">GUIDE</span>
+            <span class="guide-text"><span class="guide-accent">안내 :</span> DPS 보는 방법</span>
           </button>
         </div>
 
@@ -1167,7 +1178,6 @@
     <span>Crafted by Priest</span>
   </div>
 
-  <!-- 안내 모달 -->
   <div class="modal-backdrop" id="guideModal">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
       <button class="modal-close" id="closeGuideBtn" type="button" aria-label="닫기">×</button>
@@ -2065,7 +2075,6 @@
     document.getElementById("minutes").addEventListener("input", renderTable);
     document.getElementById("seconds").addEventListener("input", renderTable);
 
-    // 가이드 모달
     const guideModal = document.getElementById("guideModal");
     const openGuideBtn = document.getElementById("openGuideBtn");
     const closeGuideBtn = document.getElementById("closeGuideBtn");
@@ -2081,7 +2090,7 @@
     }
 
     openGuideBtn.addEventListener("click", () => {
-      trackEvent("/이벤트/안내/DPS보는방법", "안내 클릭 - DPS 보는 방법");
+      trackEvent("/이벤트/가이드/DPS보는방법", "가이드 클릭 - DPS 보는 방법");
       openGuideModal();
     });
 
