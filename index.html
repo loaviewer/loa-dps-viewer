@@ -464,7 +464,7 @@
     .time-badge-wrap {
       display: flex;
       justify-content: center;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .time-badge {
@@ -485,21 +485,28 @@
       font-size: 42px;
       font-weight: 900;
       color: #ffffff;
-      margin: 8px 0 14px;
+      margin: 0 0 6px;
       letter-spacing: 1px;
+    }
+
+    .time-labels {
+      text-align: center;
+      font-size: 12px;
+      color: #c1b39c;
+      margin-bottom: 14px;
     }
 
     .time-inputs {
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       flex-wrap: wrap;
     }
 
     .time-input-group {
       display: flex;
-      align-items: stretch;
+      align-items: center;
       gap: 6px;
     }
 
@@ -563,30 +570,21 @@
       transform: scale(0.97);
     }
 
-    .time-helper {
-      font-size: 11px;
-      color: #9db2cf;
-      margin-top: -2px;
-      margin-bottom: 10px;
-    }
-
     .party-dps {
-      margin-top: 2px;
-      margin-bottom: 8px;
+      margin: 0 0 12px;
+      padding: 10px 12px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      background: rgba(255,211,125,0.08);
+      border: 1px solid rgba(255,211,125,0.14);
       font-size: 15px;
       font-weight: 900;
-      color: #ffe1a0;
+      color: #ffd37d;
+      text-align: center;
     }
 
     .party-dps .party-dps-value {
       color: #ffffff;
-    }
-
-    .time-labels {
-      text-align: center;
-      font-size: 12px;
-      color: #c1b39c;
-      margin-bottom: 8px;
     }
 
     .side-note {
@@ -784,6 +782,7 @@
 
       .party-dps {
         font-size: 14px;
+        padding: 9px 10px;
       }
 
       table {
@@ -863,8 +862,8 @@
         height: 42px;
       }
 
-      .time-helper {
-        font-size: 10px;
+      .time-labels {
+        font-size: 11px;
       }
 
       .party-dps {
@@ -877,7 +876,7 @@
   <div class="app">
     <div class="workspace">
       <aside class="sidebar">
-        <div class="mini-label">LOST ARK TOOL · v17.2</div>
+        <div class="mini-label">LOST ARK TOOL · v17.3</div>
         <div class="hero">로스트아크<br>DPS 계산기</div>
         <div class="muted">
           전분으로 세르카, 성당, 가디언 토벌의 딜지분과 DPS를
@@ -922,7 +921,9 @@
               <div class="time-badge-wrap">
                 <div class="time-badge">실제 클리어 타임 입력</div>
               </div>
+
               <div class="time-main" id="timeDisplay">10:00</div>
+              <div class="time-labels" id="timeBaseLabel">기본값: 10분(600초)</div>
 
               <div class="time-inputs">
                 <div class="time-input-group">
@@ -942,9 +943,7 @@
                 </div>
               </div>
 
-              <div class="time-helper">분 / 초 숫자를 직접 입력하거나 화살표로 조정하세요</div>
               <div class="party-dps" id="partyDpsDisplay">파티 DPS : <span class="party-dps-value">-</span></div>
-              <div class="time-labels" id="timeBaseLabel">기본값: 10분(600초)</div>
               <div class="side-note">시간 변경 시 즉시 반영</div>
             </div>
 
