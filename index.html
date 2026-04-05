@@ -93,10 +93,63 @@
       color: #b8c1d2;
     }
 
+    .guide-trigger-wrap {
+      margin-top: 18px;
+      margin-bottom: 18px;
+    }
+
+    .guide-trigger {
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      padding: 16px 18px;
+      border-radius: 18px;
+      font-size: 15px;
+      font-weight: 900;
+      color: #f2ede2;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.02),
+        0 10px 24px rgba(0,0,0,0.18);
+      transition: 0.2s ease;
+    }
+
+    .guide-trigger:hover {
+      transform: translateY(-1px);
+      border-color: rgba(122,140,255,0.28);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05));
+    }
+
+    .guide-trigger .small {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.4px;
+      color: #8ec7ff;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-divider {
+      width: 100%;
+      height: 1px;
+      margin: 14px 0 18px;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0.12),
+        rgba(255,255,255,0.26),
+        rgba(255,255,255,0.12),
+        rgba(255,255,255,0)
+      );
+    }
+
     .menu {
       display: grid;
       gap: 10px;
-      margin-top: 24px;
+      margin-top: 0;
     }
 
     .menu-item {
@@ -678,6 +731,110 @@
       opacity: 0.9;
     }
 
+    /* 모달 */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 8, 16, 0.72);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(720px, 100%);
+      border-radius: 28px;
+      padding: 26px 24px 22px;
+      background:
+        linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow:
+        0 30px 80px rgba(0,0,0,0.45),
+        inset 0 0 0 1px rgba(255,255,255,0.02);
+      position: relative;
+    }
+
+    .modal-top-label {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #86c9ff;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 30px;
+      font-weight: 900;
+      color: #ffffff;
+      text-align: center;
+      margin: 0 0 10px;
+      line-height: 1.2;
+    }
+
+    .modal-divider {
+      width: 100%;
+      height: 1px;
+      margin: 16px 0 18px;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0.12),
+        rgba(255,255,255,0.24),
+        rgba(255,255,255,0.12),
+        rgba(255,255,255,0)
+      );
+    }
+
+    .modal-content {
+      color: #d8e0ef;
+      font-size: 15px;
+      line-height: 1.9;
+      word-break: keep-all;
+    }
+
+    .modal-content p {
+      margin: 0 0 14px;
+    }
+
+    .modal-content .point {
+      color: #ffd98b;
+      font-weight: 900;
+    }
+
+    .modal-content .subpoint {
+      color: #9decd9;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.10);
+      transform: rotate(90deg);
+    }
+
     @media (max-width: 1180px) {
       .workspace {
         grid-template-columns: 280px 1fr;
@@ -798,6 +955,20 @@
         padding: 9px 10px;
       }
 
+      .modal-card {
+        padding: 24px 18px 18px;
+        border-radius: 22px;
+      }
+
+      .modal-title {
+        font-size: 24px;
+      }
+
+      .modal-content {
+        font-size: 14px;
+        line-height: 1.8;
+      }
+
       table {
         min-width: 100%;
         font-size: 12px;
@@ -882,6 +1053,15 @@
       .party-dps {
         font-size: 13px;
       }
+
+      .guide-trigger {
+        font-size: 14px;
+        padding: 14px 14px;
+      }
+
+      .modal-title {
+        font-size: 22px;
+      }
     }
   </style>
 </head>
@@ -889,12 +1069,21 @@
   <div class="app">
     <div class="workspace">
       <aside class="sidebar">
-        <div class="mini-label">LOST ARK TOOL · v17.3</div>
+        <div class="mini-label">LOST ARK TOOL · v17.4</div>
         <div class="hero">로스트아크<br>DPS 계산기</div>
         <div class="muted">
           전분으로 세르카, 성당, 가디언 토벌의 딜지분과 DPS를
           확인할수 있습니다.
         </div>
+
+        <div class="guide-trigger-wrap">
+          <button class="guide-trigger" id="openGuideBtn" type="button">
+            <span class="small">Guide</span>
+            안내 : DPS 보는 방법
+          </button>
+        </div>
+
+        <div class="sidebar-divider"></div>
 
         <div class="menu">
           <button class="menu-item active" data-menu="serka">세르카 딜지분 보기</button>
@@ -976,6 +1165,54 @@
 
   <div class="footer-signature">
     <span>Crafted by Priest</span>
+  </div>
+
+  <!-- 안내 모달 -->
+  <div class="modal-backdrop" id="guideModal">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+      <button class="modal-close" id="closeGuideBtn" type="button" aria-label="닫기">×</button>
+      <div class="modal-top-label">DPS GUIDE</div>
+      <h2 class="modal-title" id="guideTitle">안내 : DPS 보는 방법</h2>
+      <div class="modal-divider"></div>
+
+      <div class="modal-content">
+        <p>
+          <span class="point">세르카</span>와 <span class="point">성당</span>의
+          <span class="subpoint">1관 / 2관</span>은 모두
+          <span class="point">광폭 시간 10분(600초)</span>을 기준으로 합니다.
+        </p>
+
+        <p>
+          그래서 현재 표시되는 기본값
+          <span class="point">10분(600초)</span>은 단순한 예시 시간이 아니라,
+          <span class="subpoint">광폭 전까지 클리어하기 위한 최소 DPS 기준선</span>에
+          가장 가까운 기본 설정이라고 보시면 됩니다.
+        </p>
+
+        <p>
+          만약 실제 전투에서 더 빠르게 클리어했다면,
+          우측 <span class="point">CLEAR TIME</span>에서 시간을 직접 조절해
+          <span class="subpoint">내가 낸 실제 DPS</span>와
+          <span class="subpoint">그 시간대의 딜지분 컷</span>을
+          더 정확하게 확인할 수 있습니다.
+        </p>
+
+        <p>
+          이번에 추가된 <span class="point">파티 DPS</span> 역시
+          입력한 클리어 타임에 맞춰 함께 변경됩니다.
+          즉, 파티가 빠르게 클리어할수록 파티 DPS도 높아지고,
+          여유 있게 클리어할수록 파티 DPS는 낮아집니다.
+        </p>
+
+        <p>
+          간단히 보면,
+          <span class="point">파티 DPS - 내 DPS</span>는
+          곧 <span class="subpoint">다른 딜러들이 만든 DPS의 합</span>에
+          가깝다고 이해하시면 됩니다.
+          그래서 자신의 위치를 비교할 때도 꽤 직관적으로 볼 수 있습니다.
+        </p>
+      </div>
+    </div>
   </div>
 
   <script data-goatcounter="https://loaviewer.goatcounter.com/count"
@@ -1827,6 +2064,38 @@
 
     document.getElementById("minutes").addEventListener("input", renderTable);
     document.getElementById("seconds").addEventListener("input", renderTable);
+
+    // 가이드 모달
+    const guideModal = document.getElementById("guideModal");
+    const openGuideBtn = document.getElementById("openGuideBtn");
+    const closeGuideBtn = document.getElementById("closeGuideBtn");
+
+    function openGuideModal() {
+      guideModal.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeGuideModal() {
+      guideModal.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    openGuideBtn.addEventListener("click", () => {
+      trackEvent("/이벤트/안내/DPS보는방법", "안내 클릭 - DPS 보는 방법");
+      openGuideModal();
+    });
+
+    closeGuideBtn.addEventListener("click", closeGuideModal);
+
+    guideModal.addEventListener("click", (e) => {
+      if (e.target === guideModal) closeGuideModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && guideModal.classList.contains("show")) {
+        closeGuideModal();
+      }
+    });
 
     updateTopDateTime();
     setInterval(updateTopDateTime, 1000);
