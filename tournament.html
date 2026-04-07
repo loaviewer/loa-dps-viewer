@@ -1747,6 +1747,17 @@
       return `${y.slice(2)} ${m} ${d}`;
     }
 
+    function formatUpdatedAt(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      const h = String(date.getHours()).padStart(2, "0");
+      const min = String(date.getMinutes()).padStart(2, "0");
+      return `${y}.${m}.${d} ${h}:${min}`;
+    }
+
     function sortRankingRows(rows) {
       return [...rows].sort((a, b) => {
         if (b.champion_count !== a.champion_count) return b.champion_count - a.champion_count;
@@ -1760,7 +1771,6 @@
       currentBoardMode = mode;
       rankingBoardTitle.textContent = mode === "op" ? "OP 직각 랭킹 보드" : "호감 직각 랭킹 보드";
       rankingBoardSub.textContent = "실제 ranking_overall 데이터 기준 전체 랭킹입니다. 전체 랭킹은 매시간 정각 집계됩니다.";
-      rankingFooterNote.textContent = "※ 전체 랭킹은 매시간 정각 집계됩니다.";
 
       modeOpBtn.classList.remove("active-op", "disabled");
       modeFavorBtn.classList.remove("active-favor", "disabled");
@@ -1783,6 +1793,9 @@
         });
 
       const rateTop = rateSorted[0] || championTop;
+      const latestUpdatedAt = rows.length > 0 ? rows[0].updated_at : null;
+
+      rankingFooterNote.textContent = `※ 전체 랭킹은 매시간 정각 집계됩니다. 최근 집계: ${formatUpdatedAt(latestUpdatedAt)}`;
 
       summaryCards.innerHTML = `
         <div class="summary-card">
@@ -2130,7 +2143,7 @@
 
       if (sessionError) {
         console.error("sessions 저장 실패", sessionError);
-        alert("sessions 저장 실패: " + error.message);
+        alert("sessions 저장 실패: " + sessionError.message);
         return;
       }
 
