@@ -190,7 +190,6 @@
       background:
         linear-gradient(180deg, rgba(30,37,55,0.96), rgba(18,23,37,0.98));
       border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 18px 36px rgba(0,0,0,0.20);
       display: flex;
       flex-direction: column;
       gap: 18px;
@@ -210,17 +209,19 @@
     }
 
     .op-card {
-      border-color: rgba(90,255,140,0.18);
+      border-color: rgba(62, 220, 125, 0.42);
       box-shadow:
-        0 18px 36px rgba(0,0,0,0.20),
-        0 0 24px rgba(90,255,140,0.08);
+        0 18px 36px rgba(0,0,0,0.22),
+        0 0 18px rgba(62,220,125,0.10),
+        0 0 48px rgba(62,220,125,0.08);
     }
 
     .favor-card {
-      border-color: rgba(255,194,90,0.18);
+      border-color: rgba(255, 196, 90, 0.44);
       box-shadow:
-        0 18px 36px rgba(0,0,0,0.20),
-        0 0 24px rgba(255,194,90,0.08);
+        0 18px 36px rgba(0,0,0,0.22),
+        0 0 18px rgba(255,196,90,0.10),
+        0 0 48px rgba(255,196,90,0.08);
     }
 
     .card-label {
@@ -361,6 +362,7 @@
       position: relative;
       overflow: hidden;
       z-index: 1;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
     }
 
     .ranking-board.locked .board-inner {
@@ -369,6 +371,22 @@
       transform: scale(0.995);
       pointer-events: none;
       user-select: none;
+    }
+
+    .ranking-board.board-op {
+      border-color: rgba(62, 220, 125, 0.42);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.015),
+        0 0 18px rgba(62,220,125,0.12),
+        0 0 44px rgba(62,220,125,0.08);
+    }
+
+    .ranking-board.board-favor {
+      border-color: rgba(255, 196, 90, 0.44);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.015),
+        0 0 18px rgba(255,196,90,0.12),
+        0 0 44px rgba(255,196,90,0.08);
     }
 
     .glass-lock {
@@ -631,6 +649,11 @@
       border: 1px solid rgba(255,255,255,0.06);
     }
 
+    .rank-row.dimmed {
+      opacity: 0.33;
+      filter: blur(2px);
+    }
+
     .rank-col {
       min-width: 0;
     }
@@ -703,6 +726,17 @@
       font-size: 13px;
       color: #98a7bd;
       text-align: right;
+    }
+
+    .hidden-note {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px dashed rgba(255,255,255,0.08);
+      color: #c7d1df;
+      font-size: 13px;
+      line-height: 1.7;
     }
 
     .flow-modal {
@@ -1490,7 +1524,6 @@
         letter-spacing: 3px;
       }
 
-      /* 핵심: 모바일에서도 2열 유지 */
       .battle-choice-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
@@ -2151,8 +2184,15 @@
       if (!completedState.op) modeOpBtn.classList.add("disabled");
       if (!completedState.favor) modeFavorBtn.classList.add("disabled");
 
-      if (mode === "op") modeOpBtn.classList.add("active-op");
-      else modeFavorBtn.classList.add("active-favor");
+      if (mode === "op") {
+        modeOpBtn.classList.add("active-op");
+        rankingBoard.classList.remove("board-favor");
+        rankingBoard.classList.add("board-op");
+      } else {
+        modeFavorBtn.classList.add("active-favor");
+        rankingBoard.classList.remove("board-op");
+        rankingBoard.classList.add("board-favor");
+      }
 
       const sorted = sortRankingRows(rows);
       const championTop = sorted[0] || null;
@@ -2211,29 +2251,43 @@
         return;
       }
 
-      rankingList.innerHTML = sorted.map((row, index) => `
-        <div class="rank-row">
-          <div class="rank-col"><div class="rank-num">${index + 1}위</div></div>
-          <div class="rank-col">
-            <div class="rank-name">${row.engraving_name}</div>
-            <div class="rank-job">${row.class_name}</div>
+      const revealLimit = (!completedState.op || !completedState.favor) ? 10 : Infinity;
+
+      rankingList.innerHTML = sorted.map((row, index) => {
+        const hidden = index >= revealLimit;
+        return `
+          <div class="rank-row ${hidden ? "dimmed" : ""}">
+            <div class="rank-col"><div class="rank-num">${index + 1}위</div></div>
+            <div class="rank-col">
+              <div class="rank-name">${row.engraving_name}</div>
+              <div class="rank-job">${row.class_name}</div>
+            </div>
+            <div class="rank-col metric-block">
+              <div class="metric-title">우승 횟수</div>
+              <div class="metric-main">${row.champion_count}회</div>
+              <div class="meter"><div class="meter-fill win" style="width:${Math.min(100, row.champion_count * 12)}%;"></div></div>
+            </div>
+            <div class="rank-col metric-block">
+              <div class="metric-title">1:1 승률</div>
+              <div class="metric-main">${Number(row.win_rate).toFixed(2)}%</div>
+              <div class="meter"><div class="meter-fill rate" style="width:${Math.min(100, Number(row.win_rate))}%;"></div></div>
+            </div>
+            <div class="rank-col metric-block">
+              <div class="metric-title">설명</div>
+              <div class="metric-sub">총 ${row.total_matches}전 · ${row.win_count}승 ${row.lose_count}패</div>
+            </div>
           </div>
-          <div class="rank-col metric-block">
-            <div class="metric-title">우승 횟수</div>
-            <div class="metric-main">${row.champion_count}회</div>
-            <div class="meter"><div class="meter-fill win" style="width:${Math.min(100, row.champion_count * 12)}%;"></div></div>
+        `;
+      }).join("");
+
+      if (revealLimit !== Infinity && sorted.length > revealLimit) {
+        rankingList.insertAdjacentHTML("beforeend", `
+          <div class="hidden-note">
+            OP / 호감 토너먼트 중 하나만 완료한 상태에서는 10위까지만 공개됩니다.<br>
+            두 토너먼트를 모두 완료하면 전체 랭킹이 공개됩니다.
           </div>
-          <div class="rank-col metric-block">
-            <div class="metric-title">1:1 승률</div>
-            <div class="metric-main">${Number(row.win_rate).toFixed(2)}%</div>
-            <div class="meter"><div class="meter-fill rate" style="width:${Math.min(100, Number(row.win_rate))}%;"></div></div>
-          </div>
-          <div class="rank-col metric-block">
-            <div class="metric-title">설명</div>
-            <div class="metric-sub">총 ${row.total_matches}전 · ${row.win_count}승 ${row.lose_count}패</div>
-          </div>
-        </div>
-      `).join("");
+        `);
+      }
     }
 
     async function loadRankingData(mode) {
@@ -2254,6 +2308,7 @@
     function updateRankingLockState() {
       if (!completedState.op && !completedState.favor) {
         rankingBoard.classList.add("locked");
+        rankingBoard.classList.remove("board-op", "board-favor");
         lockTitle.textContent = "토너먼트 완료 후 랭킹이 공개됩니다";
         lockDesc.textContent = "OP 직각 또는 호감 직각 토너먼트를 완료하면 해당 랭킹이 해제됩니다.";
         currentBoardMode = null;
