@@ -1552,6 +1552,34 @@
       return "";
     }
 
+    function applyMenuFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      const menu = params.get("menu");
+
+      if (!menu) return;
+
+      const validMenus = ["serka", "cathedral", "gato1730", "gato1750"];
+      if (!validMenus.includes(menu)) return;
+
+      currentMenu = menu;
+
+      if (currentMenu === "serka") {
+        currentCombo = "hard_gate1";
+      } else if (currentMenu === "cathedral") {
+        currentCombo = "hard_gate1";
+      } else if (currentMenu === "gato1730") {
+        currentGatoBoss = "루멘칼리고";
+      } else if (currentMenu === "gato1750") {
+        currentGato1750Boss = "스콜라키아";
+      }
+
+      document.querySelectorAll(".menu-item").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.menu === currentMenu);
+      });
+
+      setBaseTimeByMenu(currentMenu);
+    }
+
     function renderTitleMeta() {
       const titleMeta = document.getElementById("titleMeta");
 
@@ -2148,6 +2176,7 @@
     setInterval(updateTopDateTime, 1000);
 
     setBaseTimeByMenu("serka");
+    applyMenuFromQuery();
     loadCSV();
   </script>
 </body>
