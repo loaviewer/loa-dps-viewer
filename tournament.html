@@ -1951,6 +1951,10 @@
 
       if (error) {
         console.error("candidates 로드 실패", error);
+        opStartBtn.disabled = true;
+        favorStartBtn.disabled = true;
+        opRankBtn.disabled = true;
+        favorRankBtn.disabled = true;
         return;
       }
       allCandidates = data;
