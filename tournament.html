@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>로스트아크 직각 토너먼트</title>
+  <title>로아 직각 토너먼트</title>
   <meta name="description" content="로스트아크 OP 직각, 호감 직각 토너먼트 페이지입니다. 하루 1회 참여가 가능하며 완료 후 랭킹을 확인할 수 있습니다." />
 
   <link rel="icon" href='data:image/svg+xml;utf8,
@@ -75,41 +75,10 @@
       color: #b8c1d2;
     }
 
-    .menu {
-      display: grid;
-      gap: 10px;
-      margin-top: 24px;
-    }
-
-    .menu-link {
-      text-decoration: none;
-      display: block;
-    }
-
-    .menu-item {
-      border-radius: 18px;
-      padding: 15px 16px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      font-weight: 800;
-      font-size: 16px;
-      color: #e6edf8;
-      cursor: pointer;
-      text-align: left;
-      width: 100%;
-      transition: 0.18s ease;
-    }
-
-    .menu-item:hover {
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05);
-    }
-
     .sidebar-divider {
       width: 100%;
       height: 1px;
-      margin: 24px 0 18px;
+      margin: 14px 0 18px;
       background: linear-gradient(
         90deg,
         rgba(255,255,255,0),
@@ -120,22 +89,60 @@
       );
     }
 
+    .menu {
+      display: grid;
+      gap: 10px;
+      margin-top: 0;
+    }
+
+    .menu-link {
+      text-decoration: none;
+      display: block;
+    }
+
+    .menu-item {
+      border-radius: 18px;
+      padding: 15px 16px;
+      min-height: 58px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-weight: 800;
+      font-size: 16px;
+      color: #e6edf8;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      transition: 0.18s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+
     .tournament-entry {
       border-radius: 18px;
-      padding: 18px 16px;
+      padding: 15px 16px;
+      min-height: 112px;
       background: linear-gradient(135deg, #7a8cff, #4bd3ff);
       border: 1px solid transparent;
       box-shadow: 0 0 18px rgba(106,172,255,0.24);
       transition: 0.2s ease;
       cursor: default;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .tournament-entry-label {
-      font-size: 11px;
-      color: rgba(8, 17, 30, 0.78);
-      letter-spacing: 1.5px;
+      font-size: 12px;
+      color: rgba(8, 17, 30, 0.82);
+      letter-spacing: 1.7px;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-weight: 900;
     }
 
@@ -143,7 +150,7 @@
       font-size: 18px;
       font-weight: 900;
       color: #08111e;
-      line-height: 1.4;
+      line-height: 1.45;
       word-break: keep-all;
     }
 
@@ -1310,13 +1317,27 @@
 
       .menu {
         gap: 8px;
-        margin-top: 18px;
       }
 
       .menu-item {
         padding: 13px 14px;
+        min-height: 56px;
         font-size: 15px;
         border-radius: 16px;
+      }
+
+      .tournament-entry {
+        padding: 13px 14px;
+        min-height: 110px;
+        border-radius: 16px;
+      }
+
+      .tournament-entry-label {
+        font-size: 11px;
+      }
+
+      .tournament-entry-title {
+        font-size: 17px;
       }
 
       .intro-title {
@@ -1718,12 +1739,14 @@
   <div class="app">
     <div class="workspace">
       <aside class="sidebar">
-        <div class="mini-label">LOST ARK TOOL · v17.5</div>
-        <div class="hero">로스트아크<br>직각 토너먼트</div>
+        <div class="mini-label">LOST ARK TOOL · v17.6</div>
+        <div class="hero">로아<br>직각 토너먼트</div>
         <div class="muted">
           OP 직각과 호감 직각을 직접 선택하고,
           완료 후 전체 랭킹을 확인할 수 있습니다.
         </div>
+
+        <div class="sidebar-divider"></div>
 
         <div class="menu">
           <a class="menu-link" href="./index.html?menu=serka">
@@ -1750,7 +1773,7 @@
 
       <main class="main">
         <section class="panel intro-panel">
-          <h1 class="intro-title">로스트아크 직업 각인 토너먼트</h1>
+          <h1 class="intro-title">로아 직업 각인 토너먼트</h1>
           <div class="intro-desc">
             로스트아크 직업 각인의 <span class="accent-red">OP 직각</span>과
             <span class="accent-red">호감 직각</span>을 대결하는 페이지입니다.<br>
