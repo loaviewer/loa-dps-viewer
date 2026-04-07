@@ -72,10 +72,6 @@
       margin-top: 24px;
     }
 
-    .menu-link {
-      text-decoration: none;
-    }
-
     .menu-item {
       border-radius: 18px;
       padding: 15px 16px;
@@ -90,15 +86,9 @@
       transition: 0.18s ease;
     }
 
-    .menu-item.active {
-      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
-      color: #08111e;
-      box-shadow: 0 0 18px rgba(106,172,255,0.24);
-      border-color: transparent;
-    }
-
     .menu-item:hover {
       transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.12);
     }
 
     .sidebar-divider {
@@ -1271,7 +1261,7 @@
         </div>
 
         <div class="menu">
-          <button class="menu-item active">세르카 딜지분 보기</button>
+          <button class="menu-item">세르카 딜지분 보기</button>
           <button class="menu-item">성당 딜지분 보기</button>
           <button class="menu-item">1730 가토 딜지분</button>
           <button class="menu-item">1750 가토 딜지분</button>
@@ -1295,7 +1285,7 @@
             참여 데이터는 <span class="accent-green">전체 랭킹</span>으로 우선 누적됩니다.<br>
             <span class="accent-green">참여 완료한 사람만</span> 집계에 반영됩니다.
           </div>
-          <div class="status-line">현재 1차 실전 버전에서는 전체 랭킹을 우선 사용하며, 주간/월간은 추후 확장 예정입니다.</div>
+          <div class="status-line">전체 랭킹은 매시간 정각 기준으로 집계됩니다. (주간 / 월간은 현재 집계중)</div>
         </section>
 
         <div class="section-divider"></div>
@@ -1363,16 +1353,24 @@
             </div>
 
             <div class="period-tabs" style="margin-bottom:18px;">
+              <button class="mini-tab disabled">
+                <span>주간</span>
+                <span class="tab-date">집계중</span>
+              </button>
+              <button class="mini-tab disabled">
+                <span>월간</span>
+                <span class="tab-date">집계중</span>
+              </button>
               <button class="mini-tab active-period">
                 <span>전체</span>
-                <span class="tab-date">26.02.25 ~ 오늘</span>
+                <span class="tab-date">26.04.07 ~ 오늘</span>
               </button>
             </div>
 
             <div class="summary-cards" id="summaryCards"></div>
             <div class="ranking-list" id="rankingList"></div>
 
-            <div class="footer-note">※ 1차 버전에서는 전체 랭킹을 우선 사용합니다.</div>
+            <div class="footer-note" id="rankingFooterNote">※ 전체 랭킹은 매시간 정각 집계됩니다.</div>
           </div>
         </section>
       </main>
@@ -1518,6 +1516,7 @@
     const rankingBoard = document.getElementById("rankingBoard");
     const rankingBoardTitle = document.getElementById("rankingBoardTitle");
     const rankingBoardSub = document.getElementById("rankingBoardSub");
+    const rankingFooterNote = document.getElementById("rankingFooterNote");
     const summaryCards = document.getElementById("summaryCards");
     const rankingList = document.getElementById("rankingList");
 
@@ -1666,46 +1665,6 @@
       "가디언나이트": "engr-guardian"
     };
 
-    const opDummy = {
-      title: "OP 직각 랭킹 보드",
-      sub: "현재는 1차 버전으로 전체 랭킹 예시를 표시합니다.",
-      topCards: [
-        { icon: "🏆", label: "직각 우승 횟수", main: "체술", rank: "최다 우승 1위", meta: "인파이터 · 우승 162회" },
-        { icon: "⚔️", label: "직각 승률", main: "점화", rank: "최다 1:1 승률 1위", meta: "소서리스 · 1:1 승률 86%" }
-      ],
-      rows: [
-        { rank: "1위", engraving: "체술", job: "인파이터", wins: "162회", winWidth: "82%", rate: "86%", rateWidth: "86%", desc: "총 421전 · 362승 59패" },
-        { rank: "2위", engraving: "점화", job: "소서리스", wins: "151회", winWidth: "76%", rate: "81%", rateWidth: "81%", desc: "총 389전 · 315승 74패" },
-        { rank: "3위", engraving: "황후의 은총", job: "아르카나", wins: "142회", winWidth: "71%", rate: "77%", rateWidth: "77%", desc: "총 370전 · 285승 85패" },
-        { rank: "4위", engraving: "역천지체", job: "기공사", wins: "131회", winWidth: "65%", rate: "74%", rateWidth: "74%", desc: "총 352전 · 261승 91패" }
-      ]
-    };
-
-    const favorDummy = {
-      title: "호감 직각 랭킹 보드",
-      sub: "현재는 1차 버전으로 전체 랭킹 예시를 표시합니다.",
-      topCards: [
-        { icon: "🏆", label: "직각 우승 횟수", main: "버스트", rank: "최다 우승 1위", meta: "블레이드 · 우승 118회" },
-        { icon: "⚔️", label: "직각 승률", main: "질풍", rank: "최다 1:1 승률 1위", meta: "기상술사 · 1:1 승률 84%" }
-      ],
-      rows: [
-        { rank: "1위", engraving: "버스트", job: "블레이드", wins: "118회", winWidth: "78%", rate: "82%", rateWidth: "82%", desc: "총 340전 · 279승 61패" },
-        { rank: "2위", engraving: "질풍노도", job: "기상술사", wins: "111회", winWidth: "72%", rate: "84%", rateWidth: "84%", desc: "총 322전 · 270승 52패" },
-        { rank: "3위", engraving: "포식자", job: "슬레이어", wins: "105회", winWidth: "69%", rate: "79%", rateWidth: "79%", desc: "총 315전 · 249승 66패" },
-        { rank: "4위", engraving: "갈증", job: "리퍼", wins: "98회", winWidth: "63%", rate: "75%", rateWidth: "75%", desc: "총 298전 · 224승 74패" }
-      ]
-    };
-
-    const classGroups = {
-      "전사": ["워로드", "버서커", "디스트로이어", "홀리나이트", "슬레이어", "발키리"],
-      "무도가": ["배틀마스터", "인파이터", "기공사", "창술사", "스트라이커", "브레이커"],
-      "헌터": ["데빌헌터", "블래스터", "호크아이", "스카우터", "건슬링어"],
-      "마법사": ["서머너", "아르카나", "바드", "소서리스"],
-      "암살자": ["블레이드", "데모닉", "리퍼", "소울이터"],
-      "스페셜리스트": ["도화가", "기상술사", "환수사"],
-      "가디언나이트": ["가디언나이트"]
-    };
-
     function getShortName(full) {
       return fullToShortMap[full] || full;
     }
@@ -1759,10 +1718,21 @@
       return `${y.slice(2)} ${m} ${d}`;
     }
 
-    function renderBoard(data, mode) {
+    function sortRankingRows(rows) {
+      return [...rows].sort((a, b) => {
+        if (b.champion_count !== a.champion_count) return b.champion_count - a.champion_count;
+        if (b.win_rate !== a.win_rate) return Number(b.win_rate) - Number(a.win_rate);
+        if (b.win_count !== a.win_count) return b.win_count - a.win_count;
+        return a.engraving_name.localeCompare(b.engraving_name, "ko");
+      });
+    }
+
+    function renderBoardFromRows(rows, mode) {
       currentBoardMode = mode;
-      rankingBoardTitle.textContent = data.title;
-      rankingBoardSub.textContent = data.sub;
+      const modeLabel = mode === "op" ? "OP 직각 랭킹 보드" : "호감 직각 랭킹 보드";
+      rankingBoardTitle.textContent = modeLabel;
+      rankingBoardSub.textContent = "실제 ranking_overall 데이터 기준 전체 랭킹입니다. 전체 랭킹은 매시간 정각 집계됩니다.";
+      rankingFooterNote.textContent = "※ 전체 랭킹은 매시간 정각 집계됩니다.";
 
       modeOpBtn.classList.remove("active-op", "disabled");
       modeFavorBtn.classList.remove("active-favor", "disabled");
@@ -1773,43 +1743,83 @@
       if (mode === "op") modeOpBtn.classList.add("active-op");
       else modeFavorBtn.classList.add("active-favor");
 
-      summaryCards.innerHTML = data.topCards.map(card => `
+      const sorted = sortRankingRows(rows);
+      const championTop = sorted[0] || null;
+
+      const rateSorted = [...rows]
+        .filter(row => row.total_matches > 0)
+        .sort((a, b) => {
+          if (Number(b.win_rate) !== Number(a.win_rate)) return Number(b.win_rate) - Number(a.win_rate);
+          if (b.total_matches !== a.total_matches) return b.total_matches - a.total_matches;
+          return b.win_count - a.win_count;
+        });
+
+      const rateTop = rateSorted[0] || championTop;
+
+      summaryCards.innerHTML = `
         <div class="summary-card">
           <div class="summary-inner">
-            <div class="summary-icon">${card.icon}</div>
+            <div class="summary-icon">🏆</div>
             <div>
-              <div class="summary-label">${card.label}</div>
-              <div class="summary-main">${card.main}</div>
-              <div class="summary-rank">${card.rank}</div>
-              <div class="summary-meta">${card.meta}</div>
+              <div class="summary-label">직각 우승 횟수</div>
+              <div class="summary-main">${championTop ? getShortName(championTop.engraving_name) : "-"}</div>
+              <div class="summary-rank">최다 우승 1위</div>
+              <div class="summary-meta">${championTop ? `${championTop.class_name} · 우승 ${championTop.champion_count}회` : "데이터 없음"}</div>
             </div>
           </div>
         </div>
-      `).join("");
 
-      rankingList.innerHTML = data.rows.map(row => `
+        <div class="summary-card">
+          <div class="summary-inner">
+            <div class="summary-icon">⚔️</div>
+            <div>
+              <div class="summary-label">직각 승률</div>
+              <div class="summary-main">${rateTop ? getShortName(rateTop.engraving_name) : "-"}</div>
+              <div class="summary-rank">최다 1:1 승률 1위</div>
+              <div class="summary-meta">${rateTop ? `${rateTop.class_name} · 1:1 승률 ${Number(rateTop.win_rate).toFixed(2)}%` : "데이터 없음"}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      rankingList.innerHTML = sorted.map((row, index) => `
         <div class="rank-row">
-          <div class="rank-col"><div class="rank-num">${row.rank}</div></div>
+          <div class="rank-col"><div class="rank-num">${index + 1}위</div></div>
           <div class="rank-col">
-            <div class="rank-name">${row.engraving}</div>
-            <div class="rank-job">${row.job}</div>
+            <div class="rank-name">${row.engraving_name}</div>
+            <div class="rank-job">${row.class_name}</div>
           </div>
           <div class="rank-col metric-block">
             <div class="metric-title">우승 횟수</div>
-            <div class="metric-main">${row.wins}</div>
-            <div class="meter"><div class="meter-fill win" style="width:${row.winWidth};"></div></div>
+            <div class="metric-main">${row.champion_count}회</div>
+            <div class="meter"><div class="meter-fill win" style="width:${Math.min(100, row.champion_count * 8)}%;"></div></div>
           </div>
           <div class="rank-col metric-block">
             <div class="metric-title">1:1 승률</div>
-            <div class="metric-main">${row.rate}</div>
-            <div class="meter"><div class="meter-fill rate" style="width:${row.rateWidth};"></div></div>
+            <div class="metric-main">${Number(row.win_rate).toFixed(2)}%</div>
+            <div class="meter"><div class="meter-fill rate" style="width:${Math.min(100, Number(row.win_rate))}%;"></div></div>
           </div>
           <div class="rank-col metric-block">
             <div class="metric-title">설명</div>
-            <div class="metric-sub">${row.desc}</div>
+            <div class="metric-sub">총 ${row.total_matches}전 · ${row.win_count}승 ${row.lose_count}패</div>
           </div>
         </div>
       `).join("");
+    }
+
+    async function loadRankingData(mode) {
+      const { data, error } = await supabase
+        .from("ranking_overall")
+        .select("tournament_type, class_name, engraving_name, champion_count, win_count, lose_count, total_matches, win_rate, updated_at")
+        .eq("tournament_type", mode);
+
+      if (error) {
+        console.error("ranking_overall 조회 실패", error);
+        alert("랭킹 조회 실패: " + error.message);
+        return;
+      }
+
+      renderBoardFromRows(data, mode);
     }
 
     function updateRankingLockState() {
@@ -1824,17 +1834,17 @@
       rankingBoard.classList.remove("locked");
 
       if (completedState.op && !completedState.favor) {
-        renderBoard(opDummy, "op");
+        loadRankingData("op");
         return;
       }
 
       if (!completedState.op && completedState.favor) {
-        renderBoard(favorDummy, "favor");
+        loadRankingData("favor");
         return;
       }
 
-      if (!currentBoardMode) renderBoard(opDummy, "op");
-      else renderBoard(currentBoardMode === "op" ? opDummy : favorDummy, currentBoardMode);
+      if (!currentBoardMode) loadRankingData("op");
+      else loadRankingData(currentBoardMode);
     }
 
     function shuffle(arr) {
@@ -2133,7 +2143,7 @@
         favorStampDate.textContent = formatStampDate(getDateKey());
       }
 
-      updateRankingLockState();
+      await loadRankingData(currentTournamentType);
       winnerModal.classList.remove("show");
       rankingBoard.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -2178,34 +2188,34 @@
     opStartBtn.addEventListener("click", () => handleStart("op"));
     favorStartBtn.addEventListener("click", () => handleStart("favor"));
 
-    opRankBtn.addEventListener("click", () => {
+    opRankBtn.addEventListener("click", async () => {
       if (!completedState.op) {
         alert("OP 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다.");
         return;
       }
-      renderBoard(opDummy, "op");
+      await loadRankingData("op");
       rankingBoard.classList.remove("locked");
       rankingBoard.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    favorRankBtn.addEventListener("click", () => {
+    favorRankBtn.addEventListener("click", async () => {
       if (!completedState.favor) {
         alert("호감 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다.");
         return;
       }
-      renderBoard(favorDummy, "favor");
+      await loadRankingData("favor");
       rankingBoard.classList.remove("locked");
       rankingBoard.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    modeOpBtn.addEventListener("click", () => {
+    modeOpBtn.addEventListener("click", async () => {
       if (!completedState.op) return;
-      renderBoard(opDummy, "op");
+      await loadRankingData("op");
     });
 
-    modeFavorBtn.addEventListener("click", () => {
+    modeFavorBtn.addEventListener("click", async () => {
       if (!completedState.favor) return;
-      renderBoard(favorDummy, "favor");
+      await loadRankingData("favor");
     });
 
     closeClassModalBtn.addEventListener("click", closeClassModal);
