@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>로스트아크 직각 토너먼트</title>
   <meta name="description" content="로스트아크 OP 직각, 호감 직각 토너먼트 페이지입니다. 하루 1회 참여가 가능하며 완료 후 랭킹을 확인할 수 있습니다." />
+
+  <link rel="icon" href='data:image/svg+xml;utf8,
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="12" fill="%23121925"/>
+    <circle cx="32" cy="32" r="24" fill="none" stroke="%23f6d18b" stroke-width="2"/>
+    <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle"
+          font-size="26" font-weight="900" fill="%23f6d18b" font-family="Arial">DP</text>
+  </svg>'>
+
   <style>
     * { box-sizing: border-box; }
 
@@ -114,16 +123,16 @@
     .tournament-entry {
       border-radius: 18px;
       padding: 18px 16px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
-      border: 1px solid rgba(255,255,255,0.10);
+      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
+      border: 1px solid transparent;
+      box-shadow: 0 0 18px rgba(106,172,255,0.24);
       transition: 0.2s ease;
       cursor: default;
     }
 
     .tournament-entry-label {
       font-size: 11px;
-      color: #8ec7ff;
+      color: rgba(8, 17, 30, 0.78);
       letter-spacing: 1.5px;
       text-transform: uppercase;
       margin-bottom: 8px;
@@ -133,44 +142,8 @@
     .tournament-entry-title {
       font-size: 18px;
       font-weight: 900;
-      color: #ffffff;
+      color: #08111e;
       line-height: 1.4;
-      word-break: keep-all;
-    }
-
-    .tournament-self-card {
-      border-radius: 20px;
-      padding: 18px 16px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
-      border: 1px solid rgba(255,255,255,0.10);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.02),
-        0 10px 24px rgba(0,0,0,0.16);
-    }
-
-    .tournament-self-label {
-      font-size: 11px;
-      color: #8ec7ff;
-      letter-spacing: 1.6px;
-      text-transform: uppercase;
-      font-weight: 900;
-      margin-bottom: 8px;
-    }
-
-    .tournament-self-title {
-      font-size: 18px;
-      font-weight: 900;
-      line-height: 1.35;
-      color: #ffffff;
-      margin-bottom: 8px;
-      word-break: keep-all;
-    }
-
-    .tournament-self-sub {
-      font-size: 13px;
-      color: #b8c4d6;
-      line-height: 1.7;
       word-break: keep-all;
     }
 
@@ -233,6 +206,7 @@
       color: #9ecdf7;
       font-size: 13px;
       font-weight: 800;
+      line-height: 1.8;
     }
 
     .section-divider {
@@ -549,6 +523,7 @@
       margin-top: 8px;
       color: #aeb9cb;
       font-size: 13px;
+      line-height: 1.75;
     }
 
     .mode-tabs,
@@ -809,6 +784,7 @@
       font-size: 13px;
       color: #98a7bd;
       text-align: right;
+      line-height: 1.7;
     }
 
     .hidden-note {
@@ -909,10 +885,6 @@
       flex-wrap: wrap;
     }
 
-    .battle-card-wrap {
-      text-align: center;
-    }
-
     .battle-top-title {
       font-size: 38px;
       font-weight: 900;
@@ -1004,23 +976,6 @@
       filter: brightness(1.07);
     }
 
-    .battle-choice:hover .choice-gloss {
-      opacity: 1;
-      animation: waveFlow 1.6s linear infinite;
-    }
-
-    .battle-choice:hover .battle-choice-class {
-      transform: translateY(-2px);
-      text-shadow: 0 0 10px rgba(255,255,255,0.12);
-    }
-
-    .battle-choice:hover .battle-choice-name {
-      transform: scale(1.06);
-      text-shadow:
-        0 0 14px rgba(255,255,255,0.16),
-        0 0 28px rgba(255,255,255,0.08);
-    }
-
     .choice-gloss {
       position: absolute;
       top: -25%;
@@ -1040,6 +995,11 @@
           rgba(255,255,255,0) 78%
         );
       transform: rotate(-14deg);
+    }
+
+    .battle-choice:hover .choice-gloss {
+      opacity: 1;
+      animation: waveFlow 1.6s linear infinite;
     }
 
     .battle-choice .card-frame-svg {
@@ -1136,9 +1096,7 @@
       font-size: 18px;
       color: #8ac8ff;
       font-weight: 900;
-      letter-spacing: 0.2px;
       margin-bottom: 24px;
-      transition: 0.18s ease;
       line-height: 1.3;
       word-break: keep-all;
     }
@@ -1151,7 +1109,6 @@
       color: #ffffff;
       text-shadow: 0 0 10px rgba(255,255,255,0.10);
       padding: 0 12px;
-      transition: 0.18s ease;
     }
 
     .engr-warrior { color: #ffd77e; }
@@ -1376,7 +1333,7 @@
 
       .status-line {
         font-size: 12px;
-        line-height: 1.6;
+        line-height: 1.7;
         margin-top: 12px;
       }
 
@@ -1442,7 +1399,7 @@
 
       .ranking-sub {
         font-size: 12px;
-        line-height: 1.6;
+        line-height: 1.7;
       }
 
       .mode-tabs,
@@ -1535,7 +1492,7 @@
 
       .footer-note {
         font-size: 12px;
-        line-height: 1.6;
+        line-height: 1.7;
       }
 
       .flow-card {
@@ -1761,11 +1718,11 @@
   <div class="app">
     <div class="workspace">
       <aside class="sidebar">
-        <div class="mini-label">LOST ARK TOOL · v17.4</div>
-        <div class="hero">로스트아크<br>DPS 계산기</div>
+        <div class="mini-label">LOST ARK TOOL · v17.5</div>
+        <div class="hero">로스트아크<br>직각 토너먼트</div>
         <div class="muted">
-          전분으로 세르카, 성당, 가디언 토벌의 딜지분과 DPS를
-          확인할수 있습니다.
+          OP 직각과 호감 직각을 직접 선택하고,
+          완료 후 전체 랭킹을 확인할 수 있습니다.
         </div>
 
         <div class="menu">
@@ -1801,7 +1758,10 @@
             참여 데이터는 <span class="accent-green">전체 랭킹</span>으로 우선 누적됩니다.<br>
             <span class="accent-green">참여 완료한 사람만</span> 집계에 반영됩니다.
           </div>
-          <div class="status-line">전체 랭킹은 매시간 정각 기준으로 집계됩니다. (주간 / 월간은 현재 집계중)</div>
+          <div class="status-line">
+            전체 랭킹은 매시간 정각 기준으로 집계됩니다. (주간 / 월간은 현재 집계중)<br>
+            토너먼트 1개 완료 시 10위까지 공개되며, 2개 모두 완료 시 전체 랭킹이 공개됩니다.
+          </div>
         </section>
 
         <div class="section-divider"></div>
@@ -1859,7 +1819,9 @@
             <div class="ranking-topbar">
               <div class="ranking-title-wrap">
                 <div class="ranking-title" id="rankingBoardTitle">직각 랭킹 보드</div>
-                <div class="ranking-sub" id="rankingBoardSub">참여 후 현재 랭킹을 확인할 수 있습니다.</div>
+                <div class="ranking-sub" id="rankingBoardSub">
+                  토너먼트 1개 완료 시 10위까지 공개되고, 2개 모두 완료 시 전체 랭킹이 공개됩니다.
+                </div>
               </div>
 
               <div class="mode-tabs">
@@ -2269,7 +2231,7 @@
       rankingBoardTitle.classList.remove("ranking-title-op", "ranking-title-favor");
 
       rankingBoardTitle.textContent = mode === "op" ? "OP 직각 랭킹 보드" : "호감 직각 랭킹 보드";
-      rankingBoardSub.textContent = "실제 ranking_overall 데이터 기준 전체 랭킹입니다. 전체 랭킹은 매시간 정각 집계됩니다.";
+      rankingBoardSub.textContent = "토너먼트 1개 완료 시 10위까지 공개되고, 2개 모두 완료 시 전체 랭킹이 공개됩니다.";
 
       modeOpBtn.classList.remove("active-op", "disabled");
       modeFavorBtn.classList.remove("active-favor", "disabled");
