@@ -462,6 +462,20 @@
       word-break: keep-all;
     }
 
+    .ranking-title-op {
+      color: #86f0b8 !important;
+      text-shadow:
+        0 0 10px rgba(134,240,184,0.10),
+        0 0 22px rgba(80,220,150,0.08);
+    }
+
+    .ranking-title-favor {
+      color: #ffd48a !important;
+      text-shadow:
+        0 0 10px rgba(255,212,138,0.10),
+        0 0 22px rgba(255,180,90,0.08);
+    }
+
     .ranking-sub {
       margin-top: 8px;
       color: #aeb9cb;
@@ -2178,6 +2192,9 @@
       rankingBoardTitle.textContent = mode === "op" ? "OP 직각 랭킹 보드" : "호감 직각 랭킹 보드";
       rankingBoardSub.textContent = "실제 ranking_overall 데이터 기준 전체 랭킹입니다. 전체 랭킹은 매시간 정각 집계됩니다.";
 
+      rankingBoardTitle.classList.remove("ranking-title-op", "ranking-title-favor");
+      rankingBoard.classList.remove("board-op", "board-favor");
+
       modeOpBtn.classList.remove("active-op", "disabled");
       modeFavorBtn.classList.remove("active-favor", "disabled");
 
@@ -2186,11 +2203,11 @@
 
       if (mode === "op") {
         modeOpBtn.classList.add("active-op");
-        rankingBoard.classList.remove("board-favor");
+        rankingBoardTitle.classList.add("ranking-title-op");
         rankingBoard.classList.add("board-op");
       } else {
         modeFavorBtn.classList.add("active-favor");
-        rankingBoard.classList.remove("board-op");
+        rankingBoardTitle.classList.add("ranking-title-favor");
         rankingBoard.classList.add("board-favor");
       }
 
@@ -2309,6 +2326,7 @@
       if (!completedState.op && !completedState.favor) {
         rankingBoard.classList.add("locked");
         rankingBoard.classList.remove("board-op", "board-favor");
+        rankingBoardTitle.classList.remove("ranking-title-op", "ranking-title-favor");
         lockTitle.textContent = "토너먼트 완료 후 랭킹이 공개됩니다";
         lockDesc.textContent = "OP 직각 또는 호감 직각 토너먼트를 완료하면 해당 랭킹이 해제됩니다.";
         currentBoardMode = null;
