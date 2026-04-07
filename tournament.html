@@ -111,6 +111,33 @@
       );
     }
 
+    .tournament-entry {
+      border-radius: 18px;
+      padding: 18px 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.10);
+      transition: 0.2s ease;
+      cursor: default;
+    }
+
+    .tournament-entry-label {
+      font-size: 11px;
+      color: #8ec7ff;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-weight: 900;
+    }
+
+    .tournament-entry-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.4;
+      word-break: keep-all;
+    }
+
     .tournament-self-card {
       border-radius: 20px;
       padding: 18px 16px;
@@ -1742,25 +1769,25 @@
         </div>
 
         <div class="menu">
-  <a class="menu-link" href="./index.html">
-    <div class="menu-item">세르카 딜지분 보기</div>
-  </a>
-  <a class="menu-link" href="./index.html">
-    <div class="menu-item">성당 딜지분 보기</div>
-  </a>
-  <a class="menu-link" href="./index.html">
-    <div class="menu-item">1730 가토 딜지분</div>
-  </a>
-  <a class="menu-link" href="./index.html">
-    <div class="menu-item">1750 가토 딜지분</div>
-  </a>
-</div>
+          <a class="menu-link" href="./index.html?menu=serka">
+            <div class="menu-item">세르카 딜지분 보기</div>
+          </a>
+          <a class="menu-link" href="./index.html?menu=cathedral">
+            <div class="menu-item">성당 딜지분 보기</div>
+          </a>
+          <a class="menu-link" href="./index.html?menu=gato1730">
+            <div class="menu-item">1730 가토 딜지분</div>
+          </a>
+          <a class="menu-link" href="./index.html?menu=gato1750">
+            <div class="menu-item">1750 가토 딜지분</div>
+          </a>
+        </div>
 
         <div class="sidebar-divider"></div>
 
         <div class="tournament-entry">
           <div class="tournament-entry-label">TOURNAMENT</div>
-          <div class="tournament-entry-title">직각 토너먼트<br>페이지 이동</div>
+          <div class="tournament-entry-title">직각 토너먼트<br>현재 페이지</div>
         </div>
       </aside>
 
@@ -1866,7 +1893,6 @@
     </div>
   </div>
 
-  <!-- 클래스 선택 모달 -->
   <div class="flow-modal" id="classModal">
     <div class="flow-card">
       <div class="flow-label" id="classFlowLabel">TOURNAMENT</div>
@@ -1883,7 +1909,6 @@
     </div>
   </div>
 
-  <!-- 월드컵 진행 모달 -->
   <div class="flow-modal" id="battleModal">
     <div class="flow-card" style="width:min(980px, 100%); text-align:center;">
       <div class="flow-label" id="battleModeLabel">TOURNAMENT</div>
@@ -1957,7 +1982,6 @@
     </div>
   </div>
 
-  <!-- 우승 결과 모달 -->
   <div class="winner-modal" id="winnerModal">
     <div class="winner-card" id="winnerCard">
       <div class="winner-label" id="winnerModeLabel">TOURNAMENT COMPLETE</div>
@@ -2239,11 +2263,13 @@
 
     function renderBoardFromRows(rows, mode) {
       currentBoardMode = mode;
+
+      rankingBoard.classList.remove("locked");
+      rankingBoard.classList.remove("board-op", "board-favor");
+      rankingBoardTitle.classList.remove("ranking-title-op", "ranking-title-favor");
+
       rankingBoardTitle.textContent = mode === "op" ? "OP 직각 랭킹 보드" : "호감 직각 랭킹 보드";
       rankingBoardSub.textContent = "실제 ranking_overall 데이터 기준 전체 랭킹입니다. 전체 랭킹은 매시간 정각 집계됩니다.";
-
-      rankingBoardTitle.classList.remove("ranking-title-op", "ranking-title-favor");
-      rankingBoard.classList.remove("board-op", "board-favor");
 
       modeOpBtn.classList.remove("active-op", "disabled");
       modeFavorBtn.classList.remove("active-favor", "disabled");
@@ -2318,10 +2344,13 @@
         return;
       }
 
-      const revealLimit = (!completedState.op || !completedState.favor) ? 10 : Infinity;
+      const bothCompleted = completedState.op && completedState.favor;
+      const oneCompleted = completedState.op || completedState.favor;
+      const revealLimit = bothCompleted ? Infinity : (oneCompleted ? 10 : 0);
 
       rankingList.innerHTML = sorted.map((row, index) => {
         const hidden = index >= revealLimit;
+
         return `
           <div class="rank-row ${hidden ? "dimmed" : ""}">
             <div class="rank-col"><div class="rank-num">${index + 1}위</div></div>
@@ -2347,7 +2376,7 @@
         `;
       }).join("");
 
-      if (revealLimit !== Infinity && sorted.length > revealLimit) {
+      if (!bothCompleted && oneCompleted && sorted.length > 10) {
         rankingList.insertAdjacentHTML("beforeend", `
           <div class="hidden-note">
             OP / 호감 토너먼트 중 하나만 완료한 상태에서는 10위까지만 공개됩니다.<br>
@@ -2373,7 +2402,10 @@
     }
 
     function updateRankingLockState() {
-      if (!completedState.op && !completedState.favor) {
+      const bothCompleted = completedState.op && completedState.favor;
+      const oneCompleted = completedState.op || completedState.favor;
+
+      if (!oneCompleted) {
         rankingBoard.classList.add("locked");
         rankingBoard.classList.remove("board-op", "board-favor");
         rankingBoardTitle.classList.remove("ranking-title-op", "ranking-title-favor");
@@ -2386,17 +2418,21 @@
       rankingBoard.classList.remove("locked");
 
       if (completedState.op && !completedState.favor) {
+        currentBoardMode = "op";
         loadRankingData("op");
         return;
       }
 
       if (!completedState.op && completedState.favor) {
+        currentBoardMode = "favor";
         loadRankingData("favor");
         return;
       }
 
-      if (!currentBoardMode) loadRankingData("op");
-      else loadRankingData(currentBoardMode);
+      if (bothCompleted) {
+        if (!currentBoardMode) currentBoardMode = "op";
+        loadRankingData(currentBoardMode);
+      }
     }
 
     function shuffle(arr) {
@@ -2483,11 +2519,15 @@
       if (completedState.op) {
         opStamp.classList.add("show");
         opStampDate.textContent = formatStampDate(getDateKey());
+      } else {
+        opStamp.classList.remove("show");
       }
 
       if (completedState.favor) {
         favorStamp.classList.add("show");
         favorStampDate.textContent = formatStampDate(getDateKey());
+      } else {
+        favorStamp.classList.remove("show");
       }
 
       updateRankingLockState();
@@ -2699,8 +2739,10 @@
         favorStampDate.textContent = formatStampDate(getDateKey());
       }
 
-      await loadRankingData(currentTournamentType);
+      currentBoardMode = currentTournamentType;
       winnerModal.classList.remove("show");
+
+      updateRankingLockState();
       rankingBoard.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
@@ -2749,6 +2791,7 @@
         alert("OP 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다.");
         return;
       }
+      currentBoardMode = "op";
       await loadRankingData("op");
       rankingBoard.classList.remove("locked");
       rankingBoard.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -2759,6 +2802,7 @@
         alert("호감 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다.");
         return;
       }
+      currentBoardMode = "favor";
       await loadRankingData("favor");
       rankingBoard.classList.remove("locked");
       rankingBoard.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -2766,11 +2810,13 @@
 
     modeOpBtn.addEventListener("click", async () => {
       if (!completedState.op) return;
+      currentBoardMode = "op";
       await loadRankingData("op");
     });
 
     modeFavorBtn.addEventListener("click", async () => {
       if (!completedState.favor) return;
+      currentBoardMode = "favor";
       await loadRankingData("favor");
     });
 
