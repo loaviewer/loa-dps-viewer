@@ -2675,6 +2675,7 @@ async function getClientIP() {
 
     async function finalizeTournamentSave() {
       if (!pendingWinner) return;
+      const clientIP = await getClientIP();
 
       const sessionPayload = {
         visitor_key: visitorKey,
