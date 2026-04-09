@@ -2744,12 +2744,13 @@ async function getClientIP() {
     }
 
     async function handleStart(type) {
+      const clientIP = await getClientIP();
       const { data, error } = await supabase
         .from("sessions")
         .select("id")
-        .eq("visitor_key", visitorKey)
         .eq("date_key", getDateKey())
-        .eq("tournament_type", type);
+        .eq("tournament_type", type)
+        .or(`visitor_key.eq.${visitorKey},client_ip.eq.${clientIP}`);
 
       if (error) {
         console.error("참여 체크 실패", error);
