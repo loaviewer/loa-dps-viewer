@@ -1078,6 +1078,9 @@
     winnerAudio.volume = 1.0;
     flipAudio.volume = 1.0;
 
+    // ===== OP 랭킹에서 제외할 서폿각인 4개 =====
+    const SUPPORT_ENGRAVINGS = ["절실한 구원", "만개", "축복의 오라", "해방자"];
+
     // ===== 등급 시스템 (수정됨) =====
     const GRADE_TABLE = [
       { grade: "SS+", min: 51, max: 52 },
@@ -1352,6 +1355,13 @@
 
     function renderBoardFromRows(rows, mode) {
       currentBoardMode = mode;
+      
+      // ⭐ OP 모드일 때 서폿각인 4개 제외
+      let filteredRows = rows;
+      if (mode === "op") {
+        filteredRows = rows.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
+      }
+      
       rankingBoard.classList.remove("locked","board-op","board-favor");
       rankingBoardTitle.classList.remove("ranking-title-op","ranking-title-favor");
       rankingBoardTitle.textContent = mode === "op" ? "OP 직각 랭킹 보드" : "호감 직각 랭킹 보드";
@@ -1372,15 +1382,15 @@
         rankingBoard.classList.add("board-favor");
       }
 
-      const sorted = sortRankingRows(rows);
+      const sorted = sortRankingRows(filteredRows);
       const championTop = sorted[0] || null;
-      const rateSorted = [...rows].filter(r => r.total_matches > 0).sort((a,b) => {
+      const rateSorted = [...filteredRows].filter(r => r.total_matches > 0).sort((a,b) => {
         if (Number(b.win_rate) !== Number(a.win_rate)) return Number(b.win_rate) - Number(a.win_rate);
         if (b.total_matches !== a.total_matches) return b.total_matches - a.total_matches;
         return b.win_count - a.win_count;
       });
       const rateTop = rateSorted[0] || championTop;
-      const latestUpdatedAt = rows.length > 0 ? rows[0].updated_at : null;
+      const latestUpdatedAt = filteredRows.length > 0 ? filteredRows[0].updated_at : null;
 
       rankingFooterNote.textContent = `※ 전체 랭킹은 매시간 정각 집계됩니다. 최근 집계: ${formatUpdatedAt(latestUpdatedAt)}`;
 
@@ -1562,7 +1572,6 @@
 
     function closeClassModal() { classModal.classList.remove("show"); }
 
-    // ★★★ 버그 수정: disabled 속성도 초기화 ★★★
     function resetBattleCardEffects() {
       leftChoiceBtn.className  = "battle-choice";
       rightChoiceBtn.className = "battle-choice";
@@ -1571,7 +1580,6 @@
     }
 
     async function startBattle(type, selectedClassName) {
-      // 호감: enabled + FAVOR_ONLY_IDS 포함, OP: enabled만
       let pool;
       if (type === "favor") {
         pool = allCandidates.filter(item => item.enabled || FAVOR_ONLY_IDS.includes(item.id));
@@ -1660,7 +1668,6 @@
       const loseBtn= side === "left" ? rightChoiceBtn : leftChoiceBtn;
       const loseSide = side === "left" ? "right" : "left";
 
-      // OP 점수 계산
       if (currentTournamentType === "op") {
         const wrWin  = getWinRate(winner.engraving_name);
         const wrLose = getWinRate(loser.engraving_name);
@@ -1668,7 +1675,6 @@
         if (wrWin >= wrLose) opScore++;
       }
 
-      // 카드 애니메이션
       leftChoiceBtn.disabled  = true;
       rightChoiceBtn.disabled = true;
 
@@ -1702,7 +1708,6 @@
       winnerSubText.textContent   = `우승 직각 · ${winner.class_name}`;
       winnerDescText.textContent  = "토너먼트가 완료되었습니다. 확인을 누르면 저장 후 참여 완료 도장이 표시되고 랭킹이 해제됩니다.";
 
-      // OP만 등급 도장
       if (currentTournamentType === "op") {
         const grade   = calcGrade(opScore, opMaxScore);
         const comment = getRandomComment(grade);
@@ -1835,6 +1840,7 @@
 
     quitBattleBtn.addEventListener("click", () => {
       if (!confirm("진행 중인 토너먼트를 종료하시겠습니까?\n현재 진행은 저장되지 않습니다.")) return;
+      isChoosing = false;
       battleModal.classList.remove("show");
     });
 
