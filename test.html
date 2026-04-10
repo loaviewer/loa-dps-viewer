@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -18,14 +17,31 @@
   <style>
     * { box-sizing: border-box; }
 
-    body {
+    :root {
+      --bg1: #070b13;
+      --bg2: #0d1320;
+      --bg3: #111826;
+      --text: #f4eedf;
+      --muted: #aab4c4;
+      --line: rgba(255,255,255,.08);
+      --round-accent: #7ef0a0;
+      --round-soft: rgba(126,240,160,.24);
+      --round-soft2: rgba(126,240,160,.12);
+      --gold: #ffd88a;
+      --gold2: #ffbf59;
+      --red: #ff8f8f;
+    }
+
+    html, body {
       margin: 0;
-      min-height: 100vh;
-      font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+      min-height: 100%;
       background:
-        radial-gradient(circle at top, rgba(120,170,255,0.08), transparent 28%),
-        linear-gradient(135deg, #0b1018 0%, #0d1320 45%, #121927 100%);
-      color: #f3ead6;
+        radial-gradient(circle at top, rgba(120,170,255,.10), transparent 28%),
+        radial-gradient(circle at 80% 0%, rgba(100,255,220,.06), transparent 22%),
+        linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 45%, var(--bg3) 100%);
+      color: var(--text);
+      font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+      overflow-x: hidden;
     }
 
     .app {
@@ -34,8 +50,7 @@
       border-radius: 30px;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.07);
-      background:
-        linear-gradient(135deg, #111723 0%, #0b0f18 45%, #0d1320 100%);
+      background: linear-gradient(135deg, #111723 0%, #0b0f18 45%, #0d1320 100%);
       box-shadow: 0 24px 60px rgba(0,0,0,0.38);
     }
 
@@ -47,8 +62,7 @@
 
     .sidebar {
       padding: 24px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
       border-right: 1px solid rgba(255,255,255,0.06);
     }
 
@@ -80,14 +94,12 @@
       width: 100%;
       height: 1px;
       margin: 14px 0 18px;
-      background: linear-gradient(
-        90deg,
+      background: linear-gradient(90deg,
         rgba(255,255,255,0),
         rgba(255,255,255,0.12),
         rgba(255,255,255,0.26),
         rgba(255,255,255,0.12),
-        rgba(255,255,255,0)
-      );
+        rgba(255,255,255,0));
     }
 
     .menu {
@@ -174,8 +186,7 @@
     }
 
     .intro-panel {
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
       text-align: center;
     }
 
@@ -238,8 +249,7 @@
     .tournament-card {
       border-radius: 24px;
       padding: 24px;
-      background:
-        linear-gradient(180deg, rgba(30,37,55,0.96), rgba(18,23,37,0.98));
+      background: linear-gradient(180deg, rgba(30,37,55,0.96), rgba(18,23,37,0.98));
       border: 1px solid rgba(255,255,255,0.08);
       display: flex;
       flex-direction: column;
@@ -254,8 +264,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.0) 34%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.0) 34%);
       pointer-events: none;
     }
 
@@ -356,6 +365,7 @@
       transform: none !important;
     }
 
+    /* 도장 스타일 - 등급 포함 */
     .stamp {
       position: absolute;
       right: 18px;
@@ -377,8 +387,7 @@
         0 0 18px rgba(255, 80, 80, 0.22),
         0 0 34px rgba(255, 80, 80, 0.16),
         inset 0 0 0 2px rgba(255,255,255,0.03);
-      background:
-        radial-gradient(circle at center, rgba(255, 70, 70, 0.05), rgba(255, 70, 70, 0.01));
+      background: radial-gradient(circle at center, rgba(255, 70, 70, 0.05), rgba(255, 70, 70, 0.01));
       opacity: 0.92;
       filter: saturate(1.05);
       pointer-events: none;
@@ -398,414 +407,25 @@
     }
 
     .stamp .date {
-      font-size: 14px;
+      font-size: 12px;
       letter-spacing: 1px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
+    }
+
+    .stamp .grade {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 900;
+      margin-bottom: 2px;
     }
 
     .stamp .done {
-      font-size: 17px;
+      font-size: 13px;
       line-height: 1.2;
       word-break: keep-all;
     }
 
-    .ranking-board {
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    .ranking-board.locked .board-inner {
-      filter: blur(7px);
-      opacity: 0.55;
-      transform: scale(0.995);
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .ranking-board.board-op {
-      border-color: rgba(62, 220, 125, 0.42);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.015),
-        0 0 18px rgba(62,220,125,0.12),
-        0 0 44px rgba(62,220,125,0.08);
-    }
-
-    .ranking-board.board-favor {
-      border-color: rgba(255, 196, 90, 0.44);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.015),
-        0 0 18px rgba(255,196,90,0.12),
-        0 0 44px rgba(255,196,90,0.08);
-    }
-
-    .glass-lock {
-      position: absolute;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 3;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
-        rgba(10, 14, 22, 0.28);
-      backdrop-filter: blur(8px) saturate(0.9);
-      pointer-events: auto;
-    }
-
-    .ranking-board.locked .glass-lock {
-      display: flex;
-    }
-
-    .glass-lock-card {
-      text-align: center;
-      padding: 22px 24px;
-      border-radius: 22px;
-      background: rgba(12, 17, 28, 0.46);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow:
-        0 12px 30px rgba(0,0,0,0.22),
-        0 0 0 1px rgba(255,255,255,0.02) inset;
-      max-width: 420px;
-      pointer-events: none;
-    }
-
-    .glass-lock-icon {
-      font-size: 34px;
-      margin-bottom: 10px;
-    }
-
-    .glass-lock-title {
-      font-size: 22px;
-      font-weight: 900;
-      color: #ffffff;
-      line-height: 1.3;
-      margin-bottom: 10px;
-      word-break: keep-all;
-    }
-
-    .glass-lock-desc {
-      font-size: 14px;
-      line-height: 1.8;
-      color: #c6d0df;
-      word-break: keep-all;
-    }
-
-    .ranking-topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .ranking-title-wrap {
-      min-width: 0;
-    }
-
-    .ranking-title {
-      font-size: 28px;
-      font-weight: 900;
-      color: #ffffff;
-      line-height: 1.25;
-      word-break: keep-all;
-    }
-
-    .ranking-title-op {
-      color: #86f0b8 !important;
-      text-shadow:
-        0 0 10px rgba(134,240,184,0.10),
-        0 0 22px rgba(80,220,150,0.08);
-    }
-
-    .ranking-title-favor {
-      color: #ffd48a !important;
-      text-shadow:
-        0 0 10px rgba(255,212,138,0.10),
-        0 0 22px rgba(255,180,90,0.08);
-    }
-
-    .ranking-sub {
-      margin-top: 8px;
-      color: #aeb9cb;
-      font-size: 13px;
-      line-height: 1.75;
-    }
-
-    .mode-tabs,
-    .period-tabs {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .mini-tab {
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: #dce5f4;
-      border-radius: 14px;
-      padding: 11px 14px;
-      min-width: 118px;
-      min-height: 64px;
-      font-size: 14px;
-      font-weight: 900;
-      cursor: pointer;
-      transition: 0.18s ease;
-      text-align: center;
-      display: inline-flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .mini-tab.active-op {
-      background: linear-gradient(135deg, #6ff0b7, #35c77c);
-      color: #0c1a13;
-      border-color: transparent;
-    }
-
-    .mini-tab.active-favor {
-      background: linear-gradient(135deg, #ffd48a, #ffac55);
-      color: #2a1400;
-      border-color: transparent;
-    }
-
-    .mini-tab.disabled {
-      opacity: 0.36;
-      filter: grayscale(0.3);
-      cursor: not-allowed;
-    }
-
-    .mini-tab.active-period {
-      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
-      color: #08111e;
-      border-color: transparent;
-    }
-
-    .mini-tab .tab-date {
-      font-size: 12px;
-      font-weight: 800;
-      line-height: 1.2;
-      opacity: 0.95;
-    }
-
-    .summary-cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .summary-card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 22px;
-      padding: 22px 20px 20px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background:
-        linear-gradient(180deg, rgba(35,38,50,0.96), rgba(24,27,38,0.98));
-      box-shadow:
-        0 22px 42px rgba(0,0,0,0.28),
-        0 0 38px rgba(255,80,80,0.18),
-        0 0 86px rgba(255,80,80,0.14),
-        0 0 130px rgba(255,80,80,0.08);
-    }
-
-    .summary-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at top right, rgba(255,110,110,0.18), transparent 34%),
-        radial-gradient(circle at bottom left, rgba(255,70,70,0.10), transparent 36%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .summary-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.02) inset,
-        0 0 52px rgba(255,70,70,0.22),
-        0 0 110px rgba(255,70,70,0.12),
-        0 0 180px rgba(255,70,70,0.08);
-      border-radius: 22px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .summary-inner {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: 88px 1fr;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .summary-icon {
-      width: 88px;
-      height: 88px;
-      border-radius: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 50px;
-      font-weight: 900;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 45%),
-        linear-gradient(180deg, rgba(255,120,120,0.18), rgba(255,60,60,0.10));
-      border: 1px solid rgba(255,130,130,0.24);
-      box-shadow:
-        0 0 34px rgba(255,90,90,0.24),
-        0 0 68px rgba(255,90,90,0.10),
-        inset 0 0 0 1px rgba(255,255,255,0.04);
-      text-shadow: 0 0 14px rgba(255,255,255,0.22);
-    }
-
-    .summary-label {
-      font-size: 12px;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      color: #ffb1b1;
-      margin-bottom: 8px;
-      font-weight: 900;
-    }
-
-    .summary-main {
-      font-size: 34px;
-      font-weight: 900;
-      color: #ffffff;
-      line-height: 1.2;
-      word-break: keep-all;
-    }
-
-    .summary-rank {
-      margin-top: 6px;
-      font-size: 18px;
-      font-weight: 900;
-      color: #ffd5d5;
-    }
-
-    .summary-meta {
-      margin-top: 8px;
-      color: #e3c9c9;
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .ranking-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .rank-row {
-      display: grid;
-      grid-template-columns: 84px minmax(0, 1.4fr) 120px 160px 160px;
-      gap: 12px;
-      align-items: center;
-      border-radius: 18px;
-      padding: 16px 18px;
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .rank-row.dimmed {
-      opacity: 0.33;
-      filter: blur(2px);
-    }
-
-    .rank-col {
-      min-width: 0;
-    }
-
-    .rank-num {
-      font-size: 22px;
-      font-weight: 900;
-      color: #7fd2ff;
-    }
-
-    .rank-name {
-      font-size: 20px;
-      font-weight: 900;
-      color: #ffffff;
-      line-height: 1.3;
-      word-break: keep-all;
-    }
-
-    .rank-job {
-      margin-top: 4px;
-      font-size: 13px;
-      color: #aeb8cb;
-    }
-
-    .metric-title {
-      font-size: 12px;
-      color: #98a9c5;
-      margin-bottom: 6px;
-      font-weight: 800;
-    }
-
-    .metric-main {
-      font-size: 20px;
-      font-weight: 900;
-      color: #ffffff;
-    }
-
-    .metric-sub {
-      margin-top: 4px;
-      font-size: 12px;
-      color: #b6c2d6;
-      line-height: 1.6;
-    }
-
-    .meter {
-      margin-top: 8px;
-      width: 100%;
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .meter-fill {
-      height: 100%;
-      border-radius: 999px;
-    }
-
-    .meter-fill.win {
-      background: linear-gradient(90deg, #ff8ca5, #ff5f8f);
-    }
-
-    .meter-fill.rate {
-      background: linear-gradient(90deg, #6bc3ff, #3fa6ff);
-    }
-
-    .footer-note {
-      margin-top: 14px;
-      font-size: 13px;
-      color: #98a7bd;
-      text-align: right;
-      line-height: 1.7;
-    }
-
-    .hidden-note {
-      margin-top: 12px;
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.04);
-      border: 1px dashed rgba(255,255,255,0.08);
-      color: #c7d1df;
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
+    /* 배틀 모달 */
     .flow-modal {
       position: fixed;
       inset: 0;
@@ -823,14 +443,13 @@
     }
 
     .flow-card {
-      width: min(860px, 100%);
+      width: min(980px, 100%);
       border-radius: 26px;
       padding: 24px;
-      background:
-        linear-gradient(180deg, rgba(19,25,39,0.98), rgba(12,17,28,0.98));
+      background: linear-gradient(180deg, rgba(19,25,39,0.98), rgba(12,17,28,0.98));
       border: 1px solid rgba(255,255,255,0.10);
       box-shadow: 0 30px 80px rgba(0,0,0,0.42);
-      text-align: left;
+      text-align: center;
       position: relative;
     }
 
@@ -841,7 +460,6 @@
       color: #8dc9ff;
       margin-bottom: 10px;
       font-weight: 900;
-      text-align: center;
     }
 
     .flow-title {
@@ -850,7 +468,6 @@
       color: #ffffff;
       line-height: 1.3;
       word-break: keep-all;
-      text-align: center;
     }
 
     .flow-desc {
@@ -858,7 +475,6 @@
       color: #b9c4d6;
       line-height: 1.8;
       font-size: 14px;
-      text-align: center;
     }
 
     .flow-actions {
@@ -869,6 +485,428 @@
       margin-top: 20px;
     }
 
+    /* 진행 바 */
+    .battle-progress-wrap {
+      margin: 18px auto 12px;
+      width: min(760px, 100%);
+    }
+
+    .battle-progress-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #9ecdf7;
+      font-weight: 800;
+    }
+
+    .battle-progress-bar {
+      width: 100%;
+      height: 18px;
+      padding: 2px;
+      background: #06284a;
+      border: 2px solid #25a0ff;
+    }
+
+    .battle-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00d9ff 0%, #25b4ff 55%, #4fe3ff 100%);
+      transition: width 0.18s ease;
+    }
+
+    .battle-vs {
+      margin: 24px 0 18px;
+      font-size: 42px;
+      font-weight: 900;
+      color: #ffd68c;
+      letter-spacing: 6px;
+      text-shadow:
+        0 0 8px rgba(255,214,140,0.20),
+        0 0 18px rgba(255,187,70,0.14);
+    }
+
+    /* 배틀 카드 그리드 */
+    .battle-choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      justify-items: center;
+      align-items: start;
+      margin-top: 14px;
+    }
+
+    /* 배틀 카드 */
+    .battle-choice {
+      position: relative;
+      width: 280px;
+      height: 420px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: linear-gradient(180deg, #23283b 0%, #171c2e 52%, #111728 100%);
+      color: #ffffff;
+      cursor: pointer;
+      text-align: center;
+      transition:
+        transform 0.22s ease,
+        box-shadow 0.26s ease,
+        border-color 0.20s ease,
+        filter 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 26px 18px;
+      box-shadow:
+        0 18px 38px rgba(0,0,0,0.26),
+        0 0 34px rgba(90,150,255,0.12),
+        0 0 78px rgba(90,190,255,0.08);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .battle-choice:hover {
+      transform: translateY(-6px) scale(1.03);
+      filter: brightness(1.07);
+    }
+
+    /* 클릭 순간 효과 */
+    .battle-choice:active {
+      transform: scale(0.96) translateY(4px);
+      filter: brightness(0.92);
+      transition: transform 0.06s ease, filter 0.06s ease;
+    }
+
+    /* 선택됨 효과 */
+    .battle-choice.picked {
+      transform: translateY(-12px) scale(1.05);
+      filter: brightness(1.08);
+      border-color: var(--round-accent);
+      box-shadow:
+        0 0 0 3px var(--round-accent),
+        0 0 50px var(--round-soft),
+        0 0 100px var(--round-soft2),
+        0 24px 48px rgba(0,0,0,.30);
+    }
+
+    /* 선택 안됨 */
+    .battle-choice.not-picked {
+      transform: scale(0.88) translateX(-30px);
+      filter: grayscale(0.4) brightness(0.6);
+      opacity: 0.5;
+    }
+
+    .battle-choice.not-picked.right-card {
+      transform: scale(0.88) translateX(30px);
+    }
+
+    .battle-choice-class {
+      font-size: 18px;
+      color: #8ac8ff;
+      font-weight: 900;
+      margin-bottom: 24px;
+      line-height: 1.3;
+      word-break: keep-all;
+    }
+
+    .battle-choice-name {
+      font-size: 44px;
+      font-weight: 900;
+      line-height: 1.22;
+      word-break: keep-all;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255,255,255,0.10);
+      padding: 0 12px;
+    }
+
+    /* 직업 색 */
+    .engr-warrior { color: #ffd77e; }
+    .engr-fighter { color: #ff9f7a; }
+    .engr-hunter { color: #7bd6ff; }
+    .engr-mage { color: #c79cff; }
+    .engr-assassin { color: #ff8fc8; }
+    .engr-specialist { color: #9df0c8; }
+    .engr-guardian { color: #ff8b6a; }
+
+    /* 와일드카드 영역 */
+    .wildcard-zone {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wild-label {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #ffd88a;
+      font-weight: 900;
+    }
+
+    .wildcard-card {
+      position: relative;
+      width: 140px;
+      height: 200px;
+      border: none;
+      border-radius: 22px;
+      background: transparent;
+      padding: 0;
+      perspective: 1200px;
+      cursor: pointer;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .wildcard-inner {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      transition: transform 0.92s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .wildcard-card.revealed .wildcard-inner,
+    .wildcard-card.used .wildcard-inner {
+      transform: rotateY(180deg) rotateZ(720deg);
+    }
+
+    .wildcard-card.revealing .wildcard-inner {
+      animation: wildRevealSpin 0.95s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+
+    .wildcard-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      backface-visibility: hidden;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-direction: column;
+      padding: 16px;
+    }
+
+    .wildcard-back {
+      background: linear-gradient(180deg, rgba(28,35,52,.96), rgba(18,24,38,.98));
+      border: 1px solid rgba(255,255,255,.12);
+      color: #fff;
+    }
+
+    .wildcard-front {
+      transform: rotateY(180deg);
+      background: linear-gradient(180deg,
+        #fff6d0 0%,
+        #ffe082 14%,
+        #f0c05a 34%,
+        #c58a2d 60%,
+        #8e5d18 80%,
+        #4a2909 100%);
+      border: 1px solid rgba(255,245,210,.5);
+      color: #2b1700;
+      box-shadow:
+        0 0 24px rgba(255,214,120,.25),
+        0 0 60px rgba(255,183,74,.15);
+    }
+
+    .wild-text {
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.4;
+    }
+
+    .wildcard-back .wild-text {
+      color: rgba(255,255,255,.6);
+    }
+
+    .wildcard-front .wild-text {
+      color: #fff8de;
+      text-shadow: 0 0 10px rgba(255,255,255,.15);
+    }
+
+    .wildcard-card.revealed {
+      animation: wildPulse 1.5s ease-in-out infinite;
+    }
+
+    .wildcard-card.used {
+      filter: grayscale(0.3) brightness(0.7);
+      animation: none;
+      cursor: not-allowed;
+    }
+
+    .wildcard-card.locked {
+      cursor: not-allowed;
+    }
+
+    .wild-note {
+      font-size: 12px;
+      color: #9aa9bc;
+    }
+
+    /* 결과 모달 */
+    .result-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(4, 8, 16, 0.72);
+      backdrop-filter: blur(6px);
+      z-index: 1200;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .result-modal.show {
+      display: flex;
+    }
+
+    .result-dialog {
+      width: min(480px, 100%);
+      border-radius: 28px;
+      padding: 32px 28px;
+      background: linear-gradient(180deg, rgba(30,20,24,0.98), rgba(18,14,20,0.98));
+      border: 1px solid rgba(255,120,120,0.18);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,0.44),
+        0 0 52px rgba(255,80,80,0.22),
+        0 0 120px rgba(255,140,80,0.12);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+    }
+
+    .result-stamp {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 6px solid rgba(255, 90, 90, 0.96);
+      color: rgba(255, 100, 100, 0.96);
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.12), transparent 60%),
+        rgba(255,255,255,.03);
+      box-shadow:
+        0 0 22px rgba(255, 90, 90, 0.22),
+        0 0 54px rgba(255, 70, 70, 0.12),
+        inset 0 0 0 2px rgba(255,255,255,.05);
+      transform: rotate(-12deg);
+    }
+
+    .result-stamp::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255, 92, 92, 0.48);
+      pointer-events: none;
+    }
+
+    .result-stamp .stamp-date {
+      font-size: 13px;
+      letter-spacing: 2px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .result-stamp .stamp-grade {
+      font-size: 48px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-shadow:
+        0 0 10px rgba(255,110,110,.18),
+        0 0 20px rgba(255,110,110,.08);
+    }
+
+    .result-stamp .stamp-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .result-winner {
+      text-align: center;
+    }
+
+    .result-winner-label {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #ffb9b9;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .result-winner-name {
+      font-size: 32px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .result-winner-class {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #ffd3d3;
+    }
+
+    .result-message {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #d7deea;
+      text-align: center;
+      word-break: keep-all;
+      padding: 0 10px;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* 색종이 */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 18px;
+      top: -40px;
+      opacity: 0.9;
+      animation: fall 2.8s linear forwards;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes wildRevealSpin {
+      0%   { transform: rotateY(0deg) rotateZ(0deg) scale(1); }
+      50%  { transform: rotateY(90deg) rotateZ(360deg) scale(1.08); }
+      100% { transform: rotateY(180deg) rotateZ(720deg) scale(1); }
+    }
+
+    @keyframes wildPulse {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-5px) scale(1.03); }
+    }
+
+    /* 클래스 모달 */
     .class-row {
       display: grid;
       grid-template-columns: 140px 1fr;
@@ -893,405 +931,7 @@
       flex-wrap: wrap;
     }
 
-    .battle-top-title {
-      font-size: 38px;
-      font-weight: 900;
-      color: #ffffff;
-      line-height: 1.25;
-      margin-top: 6px;
-      word-break: keep-all;
-    }
-
-    .battle-progress-wrap {
-      margin: 18px auto 12px;
-      width: min(760px,100%);
-    }
-
-    .battle-progress-top {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 13px;
-      color: #9ecdf7;
-      font-weight: 800;
-    }
-
-    .battle-progress-bar {
-      width: 100%;
-      height: 18px;
-      padding: 2px;
-      background: #06284a;
-      border: 2px solid #25a0ff;
-    }
-
-    .battle-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg,#00d9ff 0%,#25b4ff 55%,#4fe3ff 100%);
-      transition: width 0.18s ease;
-    }
-
-    .battle-vs {
-      margin: 24px 0 18px;
-      font-size: 42px;
-      font-weight: 900;
-      color: #ffd68c;
-      letter-spacing: 6px;
-      text-shadow:
-        0 0 8px rgba(255,214,140,0.20),
-        0 0 18px rgba(255,187,70,0.14);
-    }
-
-    .battle-choice-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 24px;
-      justify-items: center;
-      align-items: start;
-      margin-top: 14px;
-    }
-
-    .battle-choice {
-      position: relative;
-      width: 280px;
-      height: 420px;
-      border-radius: 26px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background:
-        linear-gradient(180deg, #23283b 0%, #171c2e 52%, #111728 100%);
-      color: #ffffff;
-      cursor: pointer;
-      text-align: center;
-      transition:
-        transform 0.22s ease,
-        box-shadow 0.26s ease,
-        border-color 0.20s ease,
-        filter 0.18s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      padding: 26px 18px;
-      box-shadow:
-        0 18px 38px rgba(0,0,0,0.26),
-        0 0 34px rgba(90,150,255,0.12),
-        0 0 78px rgba(90,190,255,0.08);
-    }
-
-    .battle-choice:hover:not(:disabled) {
-      transform: translateY(-6px) scale(1.03) rotateX(2deg) rotateY(-2deg);
-      filter: brightness(1.07);
-    }
-
-    /* ✅ 수정됨: 비활성화 상태 스타일 추가 */
-    .battle-choice:disabled {
-      cursor: not-allowed;
-      opacity: 0.7;
-    }
-
-    .choice-gloss {
-      position: absolute;
-      top: -25%;
-      left: -90%;
-      width: 280%;
-      height: 58%;
-      opacity: 0;
-      z-index: 2;
-      pointer-events: none;
-      background:
-        linear-gradient(
-          115deg,
-          rgba(255,255,255,0) 22%,
-          rgba(255,255,255,0.08) 34%,
-          rgba(140,220,255,0.24) 48%,
-          rgba(255,255,255,0.08) 62%,
-          rgba(255,255,255,0) 78%
-        );
-      transform: rotate(-14deg);
-    }
-
-    .battle-choice:hover:not(:disabled) .choice-gloss {
-      opacity: 1;
-      animation: waveFlow 1.6s linear infinite;
-    }
-
-    .battle-choice .card-frame-svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .gold {
-      stroke: #d9b56f;
-      stroke-width: 1.6;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      opacity: 0.96;
-    }
-
-    .gold-thin {
-      stroke: rgba(217,181,111,0.88);
-      stroke-width: 1;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .gold-fill {
-      fill: #d9b56f;
-      opacity: 0.95;
-    }
-
-    @keyframes waveFlow {
-      0% { transform: translateX(-10%) rotate(-14deg); }
-      100% { transform: translateX(45%) rotate(-14deg); }
-    }
-
-    .battle-choice.stage-green {
-      box-shadow:
-        0 18px 38px rgba(0,0,0,0.26),
-        0 0 42px rgba(80,255,120,0.26),
-        0 0 100px rgba(80,255,120,0.14);
-      border-color: rgba(120,255,150,0.22);
-    }
-
-    .battle-choice.stage-blue {
-      box-shadow:
-        0 20px 42px rgba(0,0,0,0.28),
-        0 0 56px rgba(80,170,255,0.38),
-        0 0 126px rgba(60,210,255,0.22);
-      border-color: rgba(110,190,255,0.30);
-    }
-
-    .battle-choice.stage-purple {
-      box-shadow:
-        0 22px 46px rgba(0,0,0,0.28),
-        0 0 64px rgba(180,100,255,0.44),
-        0 0 146px rgba(120,110,255,0.28);
-      border-color: rgba(210,150,255,0.34);
-    }
-
-    .battle-choice.stage-yellow {
-      box-shadow:
-        0 24px 50px rgba(0,0,0,0.30),
-        0 0 74px rgba(255,220,100,0.52),
-        0 0 166px rgba(255,170,60,0.30),
-        0 0 210px rgba(90,230,255,0.14);
-      border-color: rgba(255,225,140,0.40);
-    }
-
-    .battle-choice.stage-red {
-      box-shadow:
-        0 28px 58px rgba(0,0,0,0.34),
-        0 0 92px rgba(255,70,70,0.68),
-        0 0 190px rgba(255,70,70,0.34),
-        0 0 250px rgba(255,180,60,0.28),
-        0 0 320px rgba(90,230,255,0.16);
-      border-color: rgba(255,120,120,0.50);
-    }
-
-    .battle-choice-content {
-      position: relative;
-      z-index: 3;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      padding: 30px 20px;
-    }
-
-    .battle-choice-class {
-      font-size: 18px;
-      color: #8ac8ff;
-      font-weight: 900;
-      margin-bottom: 24px;
-      line-height: 1.3;
-      word-break: keep-all;
-    }
-
-    .battle-choice-name {
-      font-size: 44px;
-      font-weight: 900;
-      line-height: 1.22;
-      word-break: keep-all;
-      color: #ffffff;
-      text-shadow: 0 0 10px rgba(255,255,255,0.10);
-      padding: 0 12px;
-    }
-
-    .engr-warrior { color: #ffd77e; }
-    .engr-fighter { color: #ff9f7a; }
-    .engr-hunter { color: #7bd6ff; }
-    .engr-mage { color: #c79cff; }
-    .engr-assassin { color: #ff8fc8; }
-    .engr-specialist { color: #9df0c8; }
-    .engr-guardian { color: #ff8b6a; }
-
-    .winner-modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(4, 8, 16, 0.72);
-      backdrop-filter: blur(6px);
-      z-index: 1200;
-      padding: 20px;
-      overflow: hidden;
-    }
-
-    .winner-modal.show {
-      display: flex;
-    }
-
-    .winner-card {
-      position: relative;
-      width: min(640px, 100%);
-      border-radius: 28px;
-      padding: 28px 24px 24px;
-      background:
-        linear-gradient(180deg, rgba(30,20,24,0.98), rgba(18,14,20,0.98));
-      border: 1px solid rgba(255,120,120,0.18);
-      box-shadow:
-        0 30px 90px rgba(0,0,0,0.44),
-        0 0 52px rgba(255,80,80,0.22),
-        0 0 120px rgba(255,140,80,0.12);
-      text-align: center;
-      overflow: hidden;
-    }
-
-    .winner-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at top center, rgba(255,120,120,0.18), transparent 36%),
-        radial-gradient(circle at bottom center, rgba(255,180,90,0.10), transparent 36%);
-      pointer-events: none;
-    }
-
-    .winner-label {
-      position: relative;
-      z-index: 1;
-      font-size: 12px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #ffb9b9;
-      margin-bottom: 10px;
-      font-weight: 900;
-    }
-
-    .winner-title {
-      position: relative;
-      z-index: 1;
-      font-size: 42px;
-      font-weight: 900;
-      color: #ffffff;
-      line-height: 1.18;
-      word-break: keep-all;
-    }
-
-    .winner-sub {
-      position: relative;
-      z-index: 1;
-      margin-top: 10px;
-      color: #ffd3d3;
-      font-size: 16px;
-      line-height: 1.8;
-    }
-
-    .winner-desc {
-      position: relative;
-      z-index: 1;
-      margin-top: 16px;
-      color: #f1dede;
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .winner-actions {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 18px;
-      top: -40px;
-      opacity: 0.9;
-      animation: fall 2.8s linear forwards;
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-      }
-    }
-
-    /* ✅ 수정됨: 포커스 스타일 추가 (접근성) */
-    .primary-btn:focus,
-    .ghost-btn:focus,
-    .secondary-btn:focus,
-    .mini-tab:focus,
-    .battle-choice:focus {
-      outline: 2px solid #7fc6ff;
-      outline-offset: 2px;
-    }
-
-    .primary-btn:focus:not(:focus-visible),
-    .ghost-btn:focus:not(:focus-visible),
-    .secondary-btn:focus:not(:focus-visible),
-    .mini-tab:focus:not(:focus-visible),
-    .battle-choice:focus:not(:focus-visible) {
-      outline: none;
-    }
-
-    /* ✅ 수정됨: 스크린리더 전용 클래스 */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    @media (max-width: 1180px) {
-      .workspace {
-        grid-template-columns: 280px 1fr;
-      }
-
-      .rank-row {
-        grid-template-columns: 72px minmax(0, 1fr);
-        gap: 10px;
-      }
-
-      .rank-row .metric-block {
-        grid-column: 2 / -1;
-      }
-    }
-
+    /* 반응형 */
     @media (max-width: 1024px) {
       .workspace {
         grid-template-columns: 1fr;
@@ -1302,8 +942,7 @@
         border-bottom: 1px solid rgba(255,255,255,0.06);
       }
 
-      .duo-grid,
-      .summary-cards {
+      .duo-grid {
         grid-template-columns: 1fr;
       }
 
@@ -1313,14 +952,10 @@
     }
 
     @media (max-width: 768px) {
-      body {
-        padding: 8px;
-      }
-
       .app {
         width: 100%;
-        margin: 0 auto;
-        border-radius: 20px;
+        margin: 0;
+        border-radius: 0;
       }
 
       .workspace {
@@ -1328,466 +963,113 @@
       }
 
       .sidebar {
-        border-right: none;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
         padding: 16px;
       }
 
       .main {
         padding: 14px;
-        gap: 14px;
-      }
-
-      .panel {
-        padding: 16px;
-        border-radius: 20px;
       }
 
       .hero {
         font-size: 26px;
-        margin-bottom: 10px;
-      }
-
-      .muted {
-        font-size: 13px;
-        line-height: 1.55;
-      }
-
-      .menu {
-        gap: 8px;
-      }
-
-      .menu-item {
-        padding: 13px 14px;
-        min-height: 56px;
-        font-size: 15px;
-        border-radius: 16px;
-      }
-
-      .tournament-entry {
-        padding: 13px 14px;
-        min-height: 110px;
-        border-radius: 16px;
-      }
-
-      .tournament-entry-label {
-        font-size: 11px;
-      }
-
-      .tournament-entry-title {
-        font-size: 17px;
       }
 
       .intro-title {
         font-size: 24px;
-        line-height: 1.28;
       }
 
-      .intro-desc {
-        font-size: 13px;
-        line-height: 1.75;
-        max-width: 100%;
-        margin-top: 12px;
+      .battle-choice {
+        width: 100%;
+        max-width: 260px;
+        height: 360px;
       }
 
-      .status-line {
-        font-size: 12px;
-        line-height: 1.7;
-        margin-top: 12px;
+      .battle-choice-name {
+        font-size: 36px;
       }
 
-      .duo-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
+      .battle-vs {
+        font-size: 32px;
       }
 
-      .tournament-card {
-        min-height: 208px;
-        padding: 18px;
-        gap: 14px;
-        border-radius: 20px;
+      .wildcard-card {
+        width: 120px;
+        height: 170px;
       }
 
-      .card-label {
-        font-size: 11px;
-        letter-spacing: 1.6px;
+      .result-stamp {
+        width: 140px;
+        height: 140px;
       }
 
-      .card-title {
-        font-size: 22px;
-      }
-
-      .card-desc {
-        font-size: 13px;
-        line-height: 1.7;
-        min-height: auto;
-        max-width: 100%;
-      }
-
-      .card-actions {
-        gap: 8px;
-      }
-
-      .primary-btn,
-      .ghost-btn,
-      .secondary-btn {
-        font-size: 14px;
-        padding: 11px 14px;
-        border-radius: 14px;
+      .result-stamp .stamp-grade {
+        font-size: 40px;
       }
 
       .stamp {
-        width: 92px;
-        height: 92px;
+        width: 110px;
+        height: 110px;
         right: 12px;
         bottom: 12px;
-        border-width: 4px;
+      }
+
+      .stamp .grade {
+        font-size: 22px;
       }
 
       .stamp .date {
-        font-size: 11px;
+        font-size: 10px;
       }
 
       .stamp .done {
-        font-size: 13px;
-      }
-
-      .ranking-title {
-        font-size: 22px;
-      }
-
-      .ranking-sub {
-        font-size: 12px;
-        line-height: 1.7;
-      }
-
-      .mode-tabs,
-      .period-tabs {
-        gap: 8px;
-      }
-
-      .mini-tab {
-        min-width: 96px;
-        min-height: 56px;
-        font-size: 13px;
-        padding: 10px 12px;
-        border-radius: 12px;
-      }
-
-      .mini-tab .tab-date {
         font-size: 11px;
-      }
-
-      .summary-cards {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        margin-bottom: 14px;
-      }
-
-      .summary-card {
-        padding: 16px;
-        border-radius: 18px;
-      }
-
-      .summary-inner {
-        grid-template-columns: 60px 1fr;
-        gap: 12px;
-      }
-
-      .summary-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 34px;
-        border-radius: 16px;
-      }
-
-      .summary-main {
-        font-size: 26px;
-      }
-
-      .summary-rank {
-        font-size: 16px;
-      }
-
-      .summary-meta {
-        font-size: 12px;
-        margin-top: 6px;
-      }
-
-      .rank-row {
-        grid-template-columns: 60px 1fr;
-        gap: 8px;
-        padding: 12px;
-        border-radius: 16px;
-      }
-
-      .rank-row .metric-block {
-        grid-column: 2 / -1;
-      }
-
-      .rank-num {
-        font-size: 18px;
-      }
-
-      .rank-name {
-        font-size: 17px;
-      }
-
-      .rank-job {
-        font-size: 12px;
-      }
-
-      .metric-title {
-        font-size: 11px;
-      }
-
-      .metric-main {
-        font-size: 18px;
-      }
-
-      .metric-sub {
-        font-size: 11px;
-      }
-
-      .footer-note {
-        font-size: 12px;
-        line-height: 1.7;
-      }
-
-      .flow-card {
-        width: 100%;
-        max-height: calc(100vh - 32px);
-        overflow-y: auto;
-        padding: 18px 14px;
-        border-radius: 20px;
-      }
-
-      .flow-label {
-        font-size: 11px;
-      }
-
-      .flow-title {
-        font-size: 22px;
-        line-height: 1.3;
-      }
-
-      .flow-desc {
-        font-size: 13px;
-        line-height: 1.7;
       }
 
       .class-row {
         grid-template-columns: 1fr;
         gap: 10px;
-        padding: 12px;
-        border-radius: 14px;
-      }
-
-      .class-group {
-        font-size: 16px;
-      }
-
-      .class-buttons {
-        gap: 6px;
-      }
-
-      .class-select-btn {
-        font-size: 13px !important;
-        padding: 9px 12px !important;
-        border-radius: 12px !important;
-      }
-
-      .battle-top-title {
-        font-size: 22px;
-        line-height: 1.22;
-        margin-top: 2px;
-      }
-
-      .battle-progress-wrap {
-        margin-top: 12px;
-        margin-bottom: 10px;
-      }
-
-      .battle-progress-top {
-        font-size: 12px;
-        gap: 8px;
-      }
-
-      .battle-progress-bar {
-        height: 14px;
-      }
-
-      .battle-vs {
-        margin: 12px 0 10px;
-        font-size: 26px;
-        letter-spacing: 3px;
-      }
-
-      .battle-choice-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-        align-items: start;
-        justify-items: center;
-        margin-top: 10px;
-      }
-
-      .battle-choice {
-        width: 100%;
-        max-width: 170px;
-        height: 250px;
-        padding: 12px 8px;
-        border-radius: 18px;
-      }
-
-      .battle-choice-content {
-        padding: 14px 8px;
-      }
-
-      .battle-choice-class {
-        font-size: 13px;
-        margin-bottom: 12px;
-      }
-
-      .battle-choice-name {
-        font-size: 24px;
-        line-height: 1.12;
-        padding: 0 4px;
-      }
-
-      .winner-card {
-        width: 100%;
-        padding: 22px 16px 20px;
-        border-radius: 22px;
-      }
-
-      .winner-label {
-        font-size: 11px;
-      }
-
-      .winner-title {
-        font-size: 28px;
-        line-height: 1.2;
-      }
-
-      .winner-sub {
-        font-size: 14px;
-        line-height: 1.6;
-      }
-
-      .winner-desc {
-        font-size: 13px;
-        line-height: 1.7;
-      }
-
-      .winner-actions {
-        margin-top: 16px;
       }
     }
 
     @media (max-width: 480px) {
-      body {
-        padding: 0;
-      }
-
-      .app {
-        width: 100%;
-        margin: 0;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-      }
-
-      .sidebar,
-      .main {
-        padding: 12px;
-      }
-
-      .hero {
-        font-size: 24px;
-      }
-
-      .intro-title {
-        font-size: 22px;
-      }
-
-      .intro-desc {
-        font-size: 12px;
-        line-height: 1.7;
-      }
-
-      .tournament-card {
-        padding: 16px;
-        min-height: 196px;
-      }
-
-      .card-title {
-        font-size: 21px;
-      }
-
-      .card-desc {
-        font-size: 12px;
-      }
-
-      .stamp {
-        width: 84px;
-        height: 84px;
-      }
-
-      .mini-tab {
-        min-width: 86px;
-        min-height: 52px;
-        font-size: 12px;
-      }
-
-      .summary-main {
-        font-size: 24px;
-      }
-
-      .battle-top-title {
-        font-size: 20px;
-      }
-
-      .battle-vs {
-        font-size: 22px;
-        margin: 10px 0 8px;
-      }
-
-      .battle-choice-grid {
-        gap: 8px;
-      }
-
       .battle-choice {
-        max-width: 148px;
-        height: 220px;
-        padding: 10px 6px;
-      }
-
-      .battle-choice-class {
-        font-size: 12px;
-        margin-bottom: 10px;
+        max-width: 220px;
+        height: 320px;
       }
 
       .battle-choice-name {
-        font-size: 21px;
+        font-size: 30px;
+      }
+
+      .battle-choice-class {
+        font-size: 15px;
+      }
+
+      .stamp {
+        width: 95px;
+        height: 95px;
+      }
+
+      .stamp .grade {
+        font-size: 20px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="app">
+    <div class="app">
     <div class="workspace">
-      <!-- ✅ 수정됨: nav role 추가 -->
-      <aside class="sidebar" role="navigation" aria-label="메인 네비게이션">
+      <aside class="sidebar">
         <div class="mini-label">LOST ARK TOOL · v17.6</div>
-        <h1 class="hero">로아<br>직각 토너먼트</h1>
+        <div class="hero">로아<br>직각 토너먼트</div>
         <div class="muted">
           OP 직각과 호감 직각을 직접 선택하고,
           완료 후 전체 랭킹을 확인할 수 있습니다.
         </div>
 
-        <div class="sidebar-divider" role="separator"></div>
+        <div class="sidebar-divider"></div>
 
-        <nav class="menu" aria-label="컨텐츠 메뉴">
+        <div class="menu">
           <a class="menu-link" href="./index.html?menu=serka">
             <div class="menu-item">세르카 딜지분 보기</div>
           </a>
@@ -1800,19 +1082,19 @@
           <a class="menu-link" href="./index.html?menu=gato1750">
             <div class="menu-item">1750 가토 딜지분</div>
           </a>
-        </nav>
+        </div>
 
-        <div class="sidebar-divider" role="separator"></div>
+        <div class="sidebar-divider"></div>
 
-        <div class="tournament-entry" aria-current="page">
+        <div class="tournament-entry">
           <div class="tournament-entry-label">TOURNAMENT</div>
           <div class="tournament-entry-title">직각 토너먼트<br>현재 페이지</div>
         </div>
       </aside>
 
-      <main class="main" role="main">
-        <section class="panel intro-panel" aria-labelledby="intro-heading">
-          <h2 class="intro-title" id="intro-heading">로아 직업 각인 토너먼트</h2>
+      <main class="main">
+        <section class="panel intro-panel">
+          <h1 class="intro-title">로아 직업 각인 토너먼트</h1>
           <div class="intro-desc">
             로스트아크 직업 각인의 <span class="accent-red">OP 직각</span>과
             <span class="accent-red">호감 직각</span>을 대결하는 페이지입니다.<br>
@@ -1820,404 +1102,258 @@
             참여 데이터는 <span class="accent-green">전체 랭킹</span>으로 우선 누적됩니다.<br>
             <span class="accent-green">참여 완료한 사람만</span> 집계에 반영됩니다.
           </div>
-          <div class="status-line" role="status" aria-live="polite">
+          <div class="status-line">
             전체 랭킹은 매시간 정각 기준으로 집계됩니다. (주간 / 월간은 현재 집계중)<br>
             토너먼트 1개 완료 시 10위까지 공개되며, 2개 모두 완료 시 전체 랭킹이 공개됩니다.
           </div>
         </section>
 
-        <div class="section-divider" role="separator"></div>
+        <div class="section-divider"></div>
 
-        <section class="duo-grid" aria-label="토너먼트 선택">
-          <!-- ✅ 수정됨: article role과 aria-labelledby 추가 -->
-          <article class="tournament-card op-card" aria-labelledby="op-card-title">
+        <section class="duo-grid">
+          <!-- OP 토너먼트 카드 -->
+          <div class="tournament-card op-card">
             <div class="card-label">OP TOURNAMENT</div>
-            <h3 class="card-title" id="op-card-title">OP 직각 토너먼트</h3>
+            <div class="card-title">OP 직각 토너먼트</div>
             <div class="card-desc">
               성능, 체감, 메타 기준으로 강하다고 느끼는 직업각인을 선택하는 토너먼트입니다.
             </div>
             <div class="card-actions">
-              <!-- ✅ 수정됨: aria-label 추가 -->
-              <button class="primary-btn" id="opStartBtn" aria-label="OP 직각 토너먼트 시작하기">시작하기</button>
-              <button class="ghost-btn" id="opRankBtn" aria-label="OP 직각 랭킹 보기">랭킹보기</button>
+              <button class="primary-btn" id="opStartBtn">시작하기</button>
+              <button class="ghost-btn" id="opRankBtn">랭킹보기</button>
             </div>
 
-            <!-- ✅ 수정됨: aria-hidden 추가 (장식 요소) -->
-            <div class="stamp" id="opStamp" aria-hidden="true">
+            <div class="stamp" id="opStamp">
               <div class="date" id="opStampDate">26 04 07</div>
+              <div class="grade" id="opStampGrade">SS</div>
               <div class="done">참여완료</div>
             </div>
-          </article>
+          </div>
 
-          <article class="tournament-card favor-card" aria-labelledby="favor-card-title">
+          <!-- 호감 토너먼트 카드 -->
+          <div class="tournament-card favor-card">
             <div class="card-label">FAVOR TOURNAMENT</div>
-            <h3 class="card-title" id="favor-card-title">호감 직각 토너먼트</h3>
+            <div class="card-title">호감 직각 토너먼트</div>
             <div class="card-desc">
               취향, 호감도, 애정 기준으로 마음에 드는 직업각인을 선택하는 토너먼트입니다.
             </div>
             <div class="card-actions">
-              <button class="primary-btn" id="favorStartBtn" aria-label="호감 직각 토너먼트 시작하기">시작하기</button>
-              <button class="ghost-btn" id="favorRankBtn" aria-label="호감 직각 랭킹 보기">랭킹보기</button>
+              <button class="primary-btn" id="favorStartBtn">시작하기</button>
+              <button class="ghost-btn" id="favorRankBtn">랭킹보기</button>
             </div>
 
-            <div class="stamp" id="favorStamp" aria-hidden="true">
+            <div class="stamp" id="favorStamp">
               <div class="date" id="favorStampDate">26 04 07</div>
+              <div class="grade" id="favorStampGrade">SS</div>
               <div class="done">참여완료</div>
             </div>
-          </article>
+          </div>
         </section>
 
-        <div class="section-divider" role="separator"></div>
+        <div class="section-divider"></div>
 
-        <!-- ✅ 수정됨: region role과 aria-labelledby 추가 -->
-        <section class="panel ranking-board locked" id="rankingBoard" role="region" aria-labelledby="ranking-board-heading">
-          <div class="glass-lock" id="glassLock" role="alert">
-            <div class="glass-lock-card">
-              <div class="glass-lock-icon" aria-hidden="true">🔒</div>
-              <div class="glass-lock-title" id="lockTitle">토너먼트 완료 후 랭킹이 공개됩니다</div>
-              <div class="glass-lock-desc" id="lockDesc">
-                OP 직각 또는 호감 직각 토너먼트를 완료하면 해당 랭킹이 해제됩니다.
-              </div>
-            </div>
-          </div>
-
-          <div class="board-inner">
-            <div class="ranking-topbar">
-              <div class="ranking-title-wrap">
-                <h2 class="ranking-title" id="rankingBoardTitle">직각 랭킹 보드</h2>
-                <div class="ranking-sub" id="rankingBoardSub">
-                  토너먼트 1개 완료 시 10위까지 공개되고, 2개 모두 완료 시 전체 랭킹이 공개됩니다.
-                </div>
-              </div>
-
-              <!-- ✅ 수정됨: role="tablist" 추가 -->
-              <div class="mode-tabs" role="tablist" aria-label="랭킹 모드 선택">
-                <button class="mini-tab disabled" id="modeOpBtn" role="tab" aria-selected="false" aria-label="OP 직각 랭킹">OP 직각</button>
-                <button class="mini-tab disabled" id="modeFavorBtn" role="tab" aria-selected="false" aria-label="호감 직각 랭킹">호감 직각</button>
-              </div>
-            </div>
-
-            <div class="period-tabs" style="margin-bottom:18px;" role="tablist" aria-label="기간 선택">
-              <button class="mini-tab disabled" role="tab" aria-selected="false" aria-disabled="true">
-                <span>주간</span>
-                <span class="tab-date">집계중</span>
-              </button>
-              <button class="mini-tab disabled" role="tab" aria-selected="false" aria-disabled="true">
-                <span>월간</span>
-                <span class="tab-date">집계중</span>
-              </button>
-              <button class="mini-tab active-period" role="tab" aria-selected="true">
-                <span>전체</span>
-                <span class="tab-date">26.04.07 ~ 오늘</span>
-              </button>
-            </div>
-
-            <div class="summary-cards" id="summaryCards" aria-label="랭킹 요약"></div>
-            <!-- ✅ 수정됨: role="list" 추가 -->
-            <div class="ranking-list" id="rankingList" role="list" aria-label="랭킹 목록"></div>
-
-            <div class="footer-note" id="rankingFooterNote">※ 전체 랭킹은 매시간 정각 집계됩니다.</div>
+        <section class="panel" id="rankingBoard">
+          <div style="text-align:center; padding:40px 20px; color:#9aa9bc;">
+            랭킹 보드는 토너먼트 완료 후 표시됩니다.
           </div>
         </section>
       </main>
     </div>
   </div>
 
-  <!-- ✅ 수정됨: 모달에 role="dialog", aria-modal, aria-labelledby 추가 -->
-  <div class="flow-modal" id="classModal" role="dialog" aria-modal="true" aria-labelledby="class-modal-title" aria-hidden="true">
-    <div class="flow-card">
+  <!-- 클래스 선택 모달 -->
+  <div class="flow-modal" id="classModal">
+    <div class="flow-card" style="max-width:860px;">
       <div class="flow-label" id="classFlowLabel">TOURNAMENT</div>
-      <h2 class="flow-title" id="class-modal-title">본인 클래스를 선택하시오</h2>
+      <div class="flow-title">본인 클래스를 선택하시오</div>
       <div class="flow-desc">
         선택한 클래스의 직업각인은 토너먼트 후보에서 제외됩니다.
       </div>
 
-      <div id="classTable" style="margin-top:20px; display:grid; gap:10px;" role="group" aria-label="클래스 선택"></div>
+      <div id="classTable" style="margin-top:20px; display:grid; gap:10px;"></div>
 
       <div class="flow-actions" style="justify-content:flex-end;">
-        <button class="ghost-btn" id="closeClassModalBtn" aria-label="클래스 선택 취소 및 닫기">닫기</button>
+        <button class="ghost-btn" id="closeClassModalBtn">닫기</button>
       </div>
     </div>
   </div>
 
-  <div class="flow-modal" id="battleModal" role="dialog" aria-modal="true" aria-labelledby="battle-modal-title" aria-hidden="true">
-    <div class="flow-card" style="width:min(980px, 100%); text-align:center;">
+  <!-- 배틀 모달 -->
+  <div class="flow-modal" id="battleModal">
+    <div class="flow-card">
       <div class="flow-label" id="battleModeLabel">TOURNAMENT</div>
-      <div class="battle-top-title" id="battleTopKorTitle">OP 직각 토너먼트</div>
-      <h2 class="flow-title" id="battleRoundTitle" style="margin-top:8px;">직각 월드컵</h2>
+      <div class="flow-title" id="battleTitle">OP 직각 토너먼트</div>
       <div class="flow-desc" id="battleSubText">대결을 준비 중입니다.</div>
 
-      <!-- ✅ 수정됨: progressbar role 추가 -->
       <div class="battle-progress-wrap">
         <div class="battle-progress-top">
           <span>진행 상황</span>
-          <span id="battleProgressText">0%</span>
+          <span id="battleProgressText">0 / 10</span>
         </div>
-        <div class="battle-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="토너먼트 진행률">
+        <div class="battle-progress-bar">
           <div class="battle-progress-fill" id="battleProgressFill"></div>
         </div>
       </div>
 
-      <div class="battle-vs" aria-hidden="true">VS</div>
+      <div class="battle-vs">VS</div>
 
-      <div class="battle-choice-grid" role="group" aria-label="직각 선택">
-        <!-- ✅ 수정됨: aria-label 동적으로 설정될 예정 -->
-        <button id="leftChoiceBtn" class="battle-choice" aria-label="왼쪽 직각 선택">
-          <svg class="card-frame-svg" viewBox="0 0 280 420" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect x="14" y="14" width="252" height="392" rx="20" class="gold"/>
-            <rect x="24" y="24" width="232" height="372" rx="16" class="gold-thin"/>
-            <path d="M38 58 Q38 34 62 34" class="gold"/>
-            <path d="M242 58 Q242 34 218 34" class="gold"/>
-            <path d="M38 362 Q38 386 62 386" class="gold"/>
-            <path d="M242 362 Q242 386 218 386" class="gold"/>
-            <rect x="126" y="20" width="28" height="28" transform="rotate(45 140 34)" class="gold-thin"/>
-            <rect x="126" y="372" width="28" height="28" transform="rotate(45 140 386)" class="gold-thin"/>
-            <circle cx="140" cy="34" r="4" class="gold-fill"/>
-            <path d="M140 60 L140 84" class="gold-thin"/>
-            <path d="M140 336 L140 360" class="gold-thin"/>
-            <path d="M54 210 L72 210" class="gold-thin"/>
-            <path d="M226 210 L208 210" class="gold-thin"/>
-          </svg>
-          <div class="choice-gloss" aria-hidden="true"></div>
-          <div class="battle-choice-content">
-            <div class="battle-choice-class" id="leftChoiceClass">직업명</div>
-            <div class="battle-choice-name" id="leftChoiceName">직각명</div>
+      <div class="battle-choice-grid">
+        <button class="battle-choice" id="leftChoiceBtn">
+          <div class="battle-choice-class" id="leftChoiceClass">직업명</div>
+          <div class="battle-choice-name" id="leftChoiceName">직각명</div>
+        </button>
+
+        <button class="battle-choice right-card" id="rightChoiceBtn">
+          <div class="battle-choice-class" id="rightChoiceClass">직업명</div>
+          <div class="battle-choice-name" id="rightChoiceName">직각명</div>
+        </button>
+      </div>
+
+      <!-- 와일드카드 영역 -->
+      <div class="wildcard-zone">
+        <div class="wild-label">WILD CARD</div>
+
+        <button class="wildcard-card locked" id="wildCard" disabled>
+          <div class="wildcard-inner">
+            <div class="wildcard-face wildcard-back">
+              <div class="wild-text">??<br>LOCKED</div>
+            </div>
+            <div class="wildcard-face wildcard-front">
+              <div class="wild-text">WILD<br>카드</div>
+            </div>
           </div>
         </button>
 
-        <button id="rightChoiceBtn" class="battle-choice" aria-label="오른쪽 직각 선택">
-          <svg class="card-frame-svg" viewBox="0 0 280 420" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect x="14" y="14" width="252" height="392" rx="20" class="gold"/>
-            <rect x="24" y="24" width="232" height="372" rx="16" class="gold-thin"/>
-            <path d="M38 58 Q38 34 62 34" class="gold"/>
-            <path d="M242 58 Q242 34 218 34" class="gold"/>
-            <path d="M38 362 Q38 386 62 386" class="gold"/>
-            <path d="M242 362 Q242 386 218 386" class="gold"/>
-            <rect x="126" y="20" width="28" height="28" transform="rotate(45 140 34)" class="gold-thin"/>
-            <rect x="126" y="372" width="28" height="28" transform="rotate(45 140 386)" class="gold-thin"/>
-            <circle cx="140" cy="34" r="4" class="gold-fill"/>
-            <path d="M140 60 L140 84" class="gold-thin"/>
-            <path d="M140 336 L140 360" class="gold-thin"/>
-            <path d="M54 210 L72 210" class="gold-thin"/>
-            <path d="M226 210 L208 210" class="gold-thin"/>
-          </svg>
-          <div class="choice-gloss" aria-hidden="true"></div>
-          <div class="battle-choice-content">
-            <div class="battle-choice-class" id="rightChoiceClass">직업명</div>
-            <div class="battle-choice-name" id="rightChoiceName">직각명</div>
-          </div>
-        </button>
+        <div class="wild-note" id="wildNote">5점 이상 시 30% 확률로 공개</div>
       </div>
 
       <div class="flow-actions">
-        <button class="ghost-btn" id="quitBattleBtn" aria-label="토너먼트 그만두기">그만두기</button>
+        <button class="ghost-btn" id="quitBattleBtn">그만두기</button>
       </div>
     </div>
   </div>
 
-  <div class="winner-modal" id="winnerModal" role="dialog" aria-modal="true" aria-labelledby="winner-modal-title" aria-hidden="true">
-    <div class="winner-card" id="winnerCard">
-      <div class="winner-label" id="winnerModeLabel">TOURNAMENT COMPLETE</div>
-      <h2 class="winner-title" id="winnerTitleText">우승 직각</h2>
-      <div class="winner-sub" id="winnerSubText">우승 직각 : -</div>
-      <div class="winner-desc" id="winnerDescText">
-        토너먼트가 완료되었습니다. 확인을 누르면 저장 후 참여 완료 도장이 표시되고 랭킹이 해제됩니다.
+  <!-- 결과 모달 -->
+  <div class="result-modal" id="resultModal">
+    <div class="result-dialog">
+      <div class="result-stamp">
+        <div class="stamp-date" id="resultStampDate">26 04 09</div>
+        <div class="stamp-grade" id="resultStampGrade">SS</div>
+        <div class="stamp-sub">참여완료</div>
       </div>
-      <div class="winner-actions">
-        <button class="primary-btn" id="winnerConfirmBtn" aria-label="토너먼트 완료 확인">확인</button>
+
+      <div class="result-winner">
+        <div class="result-winner-label">우승 직각</div>
+        <div class="result-winner-name" id="resultWinnerName">-</div>
+        <div class="result-winner-class" id="resultWinnerClass">-</div>
+      </div>
+
+      <div class="result-message" id="resultMessage">
+        토너먼트가 완료되었습니다.
+      </div>
+
+      <div class="result-actions">
+        <button class="primary-btn" id="resultConfirmBtn">확인</button>
       </div>
     </div>
   </div>
 
-  <audio id="winnerAudio" preload="auto">
-    <source src="https://loaviewer.github.io/loa-dps-viewer/sounds/winner2.mp3" type="audio/mpeg">
-  </audio>
-
-  <audio id="flipAudio" preload="auto">
-    <source src="https://loaviewer.github.io/loa-dps-viewer/sounds/Card%20Flip.wav" type="audio/wav">
-  </audio>
+  <!-- 사운드 -->
+  <audio id="sndPick" src="./sounds/Card Flip.wav" preload="auto"></audio>
+  <audio id="sndWild" src="./sounds/wild.mp3" preload="auto"></audio>
+  <audio id="sndWinner" src="./sounds/winner2.mp3" preload="auto"></audio>
 
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    const SUPABASE_REAL_URL = "https://khszfukekudyripouifm.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
-    const supabase = createClient(SUPABASE_REAL_URL, SUPABASE_PUBLISHABLE_KEY);
+    // ========== Supabase 설정 ==========
+    const SUPABASE_URL = "https://khszfukekudyripouifm.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const winnerAudio = document.getElementById("winnerAudio");
-    const flipAudio = document.getElementById("flipAudio");
-    winnerAudio.volume = 1.0;
-    flipAudio.volume = 1.0;
+    // ========== IP 가져오기 ==========
+    async function getClientIP() {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+      } catch (error) {
+        console.error('IP 조회 실패:', error);
+        return null;
+      }
+    }
 
-    const opStamp = document.getElementById("opStamp");
-    const favorStamp = document.getElementById("favorStamp");
-    const opStampDate = document.getElementById("opStampDate");
-    const favorStampDate = document.getElementById("favorStampDate");
-
-    const opStartBtn = document.getElementById("opStartBtn");
-    const favorStartBtn = document.getElementById("favorStartBtn");
-    const opRankBtn = document.getElementById("opRankBtn");
-    const favorRankBtn = document.getElementById("favorRankBtn");
-
-    const rankingBoard = document.getElementById("rankingBoard");
-    const rankingBoardTitle = document.getElementById("rankingBoardTitle");
-    const rankingBoardSub = document.getElementById("rankingBoardSub");
-    const rankingFooterNote = document.getElementById("rankingFooterNote");
-    const summaryCards = document.getElementById("summaryCards");
-    const rankingList = document.getElementById("rankingList");
-
-    const modeOpBtn = document.getElementById("modeOpBtn");
-    const modeFavorBtn = document.getElementById("modeFavorBtn");
-
-    const lockTitle = document.getElementById("lockTitle");
-    const lockDesc = document.getElementById("lockDesc");
-
-    const classModal = document.getElementById("classModal");
-    const classFlowLabel = document.getElementById("classFlowLabel");
-    const classTable = document.getElementById("classTable");
-    const closeClassModalBtn = document.getElementById("closeClassModalBtn");
-
-    const battleModal = document.getElementById("battleModal");
-    const battleModeLabel = document.getElementById("battleModeLabel");
-    const battleTopKorTitle = document.getElementById("battleTopKorTitle");
-    const battleRoundTitle = document.getElementById("battleRoundTitle");
-    const battleSubText = document.getElementById("battleSubText");
-    const battleProgressText = document.getElementById("battleProgressText");
-    const battleProgressFill = document.getElementById("battleProgressFill");
-    const battleProgressBar = battleProgressFill.parentElement; /* ✅ 수정됨: progressbar 참조 추가 */
-    const leftChoiceBtn = document.getElementById("leftChoiceBtn");
-    const rightChoiceBtn = document.getElementById("rightChoiceBtn");
-    const leftChoiceClass = document.getElementById("leftChoiceClass");
-    const rightChoiceClass = document.getElementById("rightChoiceClass");
-    const leftChoiceName = document.getElementById("leftChoiceName");
-    const rightChoiceName = document.getElementById("rightChoiceName");
-    const quitBattleBtn = document.getElementById("quitBattleBtn");
-
-    const winnerModal = document.getElementById("winnerModal");
-    const winnerModeLabel = document.getElementById("winnerModeLabel");
-    const winnerTitleText = document.getElementById("winnerTitleText");
-    const winnerSubText = document.getElementById("winnerSubText");
-    const winnerDescText = document.getElementById("winnerDescText");
-    const winnerConfirmBtn = document.getElementById("winnerConfirmBtn");
-
+    // ========== 전역 변수 ==========
     let visitorKey = null;
-    let completedState = { op: false, favor: false };
-    let currentBoardMode = null;
-
-    let allCandidates = [];
+    let clientIP = null;
+    let completedState = { op: null, favor: null }; // { grade, date } or null
     let currentTournamentType = null;
     let selectedClass = null;
 
+    let allCandidates = [];
     let workingCandidates = [];
     let currentRoundCandidates = [];
     let nextRoundCandidates = [];
     let currentIndex = 0;
     let currentLeft = null;
     let currentRight = null;
+
     let totalMatches = 0;
     let completedMatches = 0;
+    let score = 0;
+    let maxScore = 0;
+    let wildcardState = 'locked'; // locked, revealing, revealed, used
+    let wildcardUsed = false;
+    let wildcardBonus = 0;
     let battleLogs = [];
     let pendingWinner = null;
 
-    /* ✅ 수정됨: 동시 클릭 방지 플래그 */
-    let isProcessingChoice = false;
+    // ========== DOM 요소 ==========
+    const opStartBtn = document.getElementById('opStartBtn');
+    const favorStartBtn = document.getElementById('favorStartBtn');
+    const opRankBtn = document.getElementById('opRankBtn');
+    const favorRankBtn = document.getElementById('favorRankBtn');
 
-    /* ✅ 수정됨: 캐싱을 위한 변수 */
-    let candidateCache = {};
+    const opStamp = document.getElementById('opStamp');
+    const opStampDate = document.getElementById('opStampDate');
+    const opStampGrade = document.getElementById('opStampGrade');
 
-    const fullToShortMap = {
-      "고독한 기사": "고기",
-      "전투 태세": "전태",
-      "광기": "광기",
-      "광전사의 비기": "비기",
-      "분노의 망치": "분망",
-      "중력 수련": "중수",
-      "심판자": "심판자",
-      "축복의 오라": "축오",
-      "처단자": "처단자",
-      "포식자": "포식자",
-      "빛의 기사": "빛의 기사",
-      "해방자": "해방자",
-      "초심": "초심",
-      "오의 강화": "오의",
-      "충격 단련": "충단",
-      "체술": "체술",
-      "세맥타통": "세맥",
-      "역천지체": "역천",
-      "절정": "절정",
-      "절제": "절제",
-      "오의난무": "난무",
-      "일격필살": "일격",
-      "권왕파천무": "권왕",
-      "수라의 길": "수라",
-      "강화 무기": "강무",
-      "핸드거너": "핸드",
-      "화력 강화": "화강",
-      "포격 강화": "포강",
-      "죽음의 습격": "죽습",
-      "두 번째 동료": "두동",
-      "진화의 유산": "유산",
-      "아르데타인의 기술": "기술",
-      "피스메이커": "피메",
-      "사냥의 시간": "사시",
-      "상급 소환사": "상소",
-      "넘치는 교감": "교감",
-      "황제의 칙령": "황제",
-      "황후의 은총": "황후",
-      "진실된 용맹": "진용",
-      "절실한 구원": "절구",
-      "점화": "점화",
-      "환류": "환류",
-      "버스트": "버스트",
-      "잔재된 기운": "잔재",
-      "멈출 수 없는 충동": "충동",
-      "완벽한 억제": "억제",
-      "달의 소리": "달소",
-      "갈증": "갈증",
-      "만월의 집행자": "만월",
-      "그믐의 경계": "그믐",
-      "회귀": "회귀",
-      "만개": "만개",
-      "이슬비": "이슬비",
-      "질풍노도": "질풍",
-      "환수 각성": "환각",
-      "야성": "야성",
-      "업화": "업화",
-      "드레드 로어": "드드"
-    };
+    const favorStamp = document.getElementById('favorStamp');
+    const favorStampDate = document.getElementById('favorStampDate');
+    const favorStampGrade = document.getElementById('favorStampGrade');
 
-    const classColorMap = {
-      "워로드": "engr-warrior",
-      "버서커": "engr-warrior",
-      "디스트로이어": "engr-warrior",
-      "홀리나이트": "engr-warrior",
-      "슬레이어": "engr-warrior",
-      "발키리": "engr-warrior",
-      "배틀마스터": "engr-fighter",
-      "인파이터": "engr-fighter",
-      "기공사": "engr-fighter",
-      "창술사": "engr-fighter",
-      "스트라이커": "engr-fighter",
-      "브레이커": "engr-fighter",
-      "데빌헌터": "engr-hunter",
-      "블래스터": "engr-hunter",
-      "호크아이": "engr-hunter",
-      "스카우터": "engr-hunter",
-      "건슬링어": "engr-hunter",
-      "서머너": "engr-mage",
-      "아르카나": "engr-mage",
-      "바드": "engr-mage",
-      "소서리스": "engr-mage",
-      "블레이드": "engr-assassin",
-      "데모닉": "engr-assassin",
-      "리퍼": "engr-assassin",
-      "소울이터": "engr-assassin",
-      "도화가": "engr-specialist",
-      "기상술사": "engr-specialist",
-      "환수사": "engr-specialist",
-      "가디언나이트": "engr-guardian"
-    };
+    const classModal = document.getElementById('classModal');
+    const classFlowLabel = document.getElementById('classFlowLabel');
+    const classTable = document.getElementById('classTable');
+    const closeClassModalBtn = document.getElementById('closeClassModalBtn');
 
+    const battleModal = document.getElementById('battleModal');
+    const battleModeLabel = document.getElementById('battleModeLabel');
+    const battleTitle = document.getElementById('battleTitle');
+    const battleSubText = document.getElementById('battleSubText');
+    const battleProgressText = document.getElementById('battleProgressText');
+    const battleProgressFill = document.getElementById('battleProgressFill');
+
+    const leftChoiceBtn = document.getElementById('leftChoiceBtn');
+    const rightChoiceBtn = document.getElementById('rightChoiceBtn');
+    const leftChoiceClass = document.getElementById('leftChoiceClass');
+    const leftChoiceName = document.getElementById('leftChoiceName');
+    const rightChoiceClass = document.getElementById('rightChoiceClass');
+    const rightChoiceName = document.getElementById('rightChoiceName');
+
+    const wildCard = document.getElementById('wildCard');
+    const wildNote = document.getElementById('wildNote');
+    const quitBattleBtn = document.getElementById('quitBattleBtn');
+
+    const resultModal = document.getElementById('resultModal');
+    const resultStampDate = document.getElementById('resultStampDate');
+    const resultStampGrade = document.getElementById('resultStampGrade');
+    const resultWinnerName = document.getElementById('resultWinnerName');
+    const resultWinnerClass = document.getElementById('resultWinnerClass');
+    const resultMessage = document.getElementById('resultMessage');
+    const resultConfirmBtn = document.getElementById('resultConfirmBtn');
+
+    // ========== 클래스/직업 데이터 ==========
     const classGroups = {
       "전사": ["워로드", "버서커", "디스트로이어", "홀리나이트", "슬레이어", "발키리"],
       "무도가": ["배틀마스터", "인파이터", "기공사", "창술사", "스트라이커", "브레이커"],
@@ -2228,52 +1364,162 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb
       "가디언나이트": ["가디언나이트"]
     };
 
-    function getShortName(full) {
-      return fullToShortMap[full] || full;
-    }
+    const classColorMap = {
+      "워로드": "engr-warrior", "버서커": "engr-warrior", "디스트로이어": "engr-warrior",
+      "홀리나이트": "engr-warrior", "슬레이어": "engr-warrior", "발키리": "engr-warrior",
+      "배틀마스터": "engr-fighter", "인파이터": "engr-fighter", "기공사": "engr-fighter",
+      "창술사": "engr-fighter", "스트라이커": "engr-fighter", "브레이커": "engr-fighter",
+      "데빌헌터": "engr-hunter", "블래스터": "engr-hunter", "호크아이": "engr-hunter",
+      "스카우터": "engr-hunter", "건슬링어": "engr-hunter",
+      "서머너": "engr-mage", "아르카나": "engr-mage", "바드": "engr-mage", "소서리스": "engr-mage",
+      "블레이드": "engr-assassin", "데모닉": "engr-assassin", "리퍼": "engr-assassin", "소울이터": "engr-assassin",
+      "도화가": "engr-specialist", "기상술사": "engr-specialist", "환수사": "engr-specialist",
+      "가디언나이트": "engr-guardian"
+    };
 
-    function getColorClass(className) {
-      return classColorMap[className] || "";
-    }
+    const fullToShortMap = {
+      "고독한 기사": "고기", "전투 태세": "전태", "광기": "광기", "광전사의 비기": "비기",
+      "분노의 망치": "분망", "중력 수련": "중수", "심판자": "심판자", "축복의 오라": "축오",
+      "처단자": "처단자", "포식자": "포식자", "빛의 기사": "빛의 기사", "해방자": "해방자",
+      "초심": "초심", "오의 강화": "오의", "충격 단련": "충단", "체술": "체술",
+      "세맥타통": "세맥", "역천지체": "역천", "절정": "절정", "절제": "절제",
+      "오의난무": "난무", "일격필살": "일격", "권왕파천무": "권왕", "수라의 길": "수라",
+      "강화 무기": "강무", "핸드거너": "핸드", "화력 강화": "화강", "포격 강화": "포강",
+      "죽음의 습격": "죽습", "두 번째 동료": "두동", "진화의 유산": "유산", "아르데타인의 기술": "기술",
+      "피스메이커": "피메", "사냥의 시간": "사시", "상급 소환사": "상소", "넘치는 교감": "교감",
+      "황제의 칙령": "황제", "황후의 은총": "황후", "진실된 용맹": "진용", "절실한 구원": "절구",
+      "점화": "점화", "환류": "환류", "버스트": "버스트", "잔재된 기운": "잔재",
+      "멈출 수 없는 충동": "충동", "완벽한 억제": "억제", "달의 소리": "달소", "갈증": "갈증",
+      "만월의 집행자": "만월", "그믐의 경계": "그믐", "회귀": "회귀", "만개": "만개",
+      "이슬비": "이슬비", "질풍노도": "질풍", "환수 각성": "환각", "야성": "야성",
+      "업화": "업화", "드레드 로어": "드드"
+    };
 
-    function makeVisitorKey() {
-      return "loa_tournament_user_" + crypto.randomUUID();
-    }
+    // ========== 등급 메시지 ==========
+    const gradeMessages = {
+      "SS+": [
+        "최고점을 넘어선 완벽한 판단입니다.",
+        "전설급 결과입니다. 흔치 않은 상위 판정입니다.",
+        "+SS 달성! 정석을 넘어선 초월적인 선택이었습니다."
+      ],
+      "SS": [
+        "아주 훌륭한 결과입니다. 거의 완벽에 가까운 판단이었어요.",
+        "정석적인 최고의 선택들로 안정적으로 마무리했습니다.",
+        "상위권 판정입니다. 흐름을 잘 읽고 정확하게 골랐어요."
+      ],
+      "SS-": [
+        "거의 완벽한 수준입니다. 아주 강한 판단이었어요.",
+        "상위권 답게 잘 마무리했습니다.",
+        "좋은 흐름을 유지했습니다. 마지막까지 안정적이었어요."
+      ],
+      "S+": [
+        "매우 좋은 결과입니다. 판단력이 돋보였어요.",
+        "상당히 높은 완성도로 토너먼트를 잘 풀었습니다.",
+        "상위권 직전의 강한 판정입니다."
+      ],
+      "S": [
+        "무난하게 좋은 결과입니다.",
+        "판단이 꽤 괜찮았습니다. 큰 흔들림 없이 진행했네요.",
+        "실력 있는 선택으로 잘 마무리했습니다."
+      ],
+      "S-": [
+        "좋은 편의 결과입니다.",
+        "전반적으로 괜찮은 판단이었습니다.",
+        "상위권 진입 직전의 흐름이 보였습니다."
+      ],
+      "A+": [
+        "꽤 괜찮은 결과입니다. 감이 나쁘지 않았어요.",
+        "안정감은 있었지만, 조금만 더 정교하면 더 올라갈 수 있었습니다.",
+        "중상위권 판정입니다."
+      ],
+      "A": [
+        "평균 이상은 확실히 했습니다.",
+        "기본기는 잘 살렸습니다.",
+        "괜찮은 선택들이었습니다."
+      ],
+      "A-": [
+        "나쁘지 않은 결과입니다.",
+        "중간 이상은 확보했습니다.",
+        "무난한 편이지만 아쉬움이 조금 남는 결과입니다."
+      ],
+      "B+": [
+        "무난한 편이지만 조금 더 다듬을 여지는 있습니다.",
+        "기본 흐름은 괜찮았으나, 정확도는 조금 아쉬웠어요.",
+        "중간권 결과입니다."
+      ],
+      "B": [
+        "평범한 결과입니다.",
+        "무난하게 진행했지만, 인상적인 선택은 적었습니다.",
+        "보통 수준의 결과입니다."
+      ],
+      "B-": [
+        "아쉬움이 조금 남는 결과입니다.",
+        "기본은 했지만, 점수를 더 챙길 수 있는 구간이 있었습니다.",
+        "중하위권 판정입니다."
+      ],
+      "C+": [
+        "아쉽지만 아직 가능성은 충분합니다.",
+        "정확도는 낮았지만, 흐름을 익히기엔 괜찮은 결과예요.",
+        "조금 더 신중했다면 점수를 더 올릴 수 있었습니다."
+      ],
+      "C": [
+        "보통보다 낮은 결과입니다.",
+        "판단이 다소 흔들렸습니다.",
+        "아쉬운 편의 결과지만, 감각은 잡히고 있어요."
+      ],
+      "C-": [
+        "조금 어려운 결과입니다.",
+        "정확도가 많이 부족했습니다.",
+        "하위권 판정입니다."
+      ],
+      "F+": [
+        "조금 더 집중이 필요합니다.",
+        "아쉬운 결과입니다.",
+        "기본 흐름을 놓친 구간이 많았습니다."
+      ],
+      "F": [
+        "많이 아쉬운 결과입니다.",
+        "토너먼트 흐름을 따라가기가 어려웠던 판정입니다.",
+        "다음 도전이 기대되는 결과입니다."
+      ],
+      "F-": [
+        "가장 낮은 판정입니다.",
+        "많이 아쉬운 결과지만, 처음엔 이런 날도 있습니다.",
+        "다시 시작해볼 시간입니다."
+      ]
+    };
 
+    // ========== 유틸리티 함수 ==========
     function getVisitorKey() {
       let key = localStorage.getItem("loa_tournament_visitor_key");
       if (!key) {
-        key = makeVisitorKey();
+        key = "loa_tournament_user_" + crypto.randomUUID();
         localStorage.setItem("loa_tournament_visitor_key", key);
       }
       return key;
     }
 
-    function getNow() {
-      return new Date();
-    }
-
     function getDateKey() {
-      const now = getNow();
+      const now = new Date();
       const y = now.getFullYear();
       const m = String(now.getMonth() + 1).padStart(2, "0");
       const d = String(now.getDate()).padStart(2, "0");
       return `${y}-${m}-${d}`;
     }
 
-    function getMonthKey() {
-      const now = getNow();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, "0");
-      return `${y}-${m}`;
-    }
-
     function getWeekKey() {
-      const now = getNow();
+      const now = new Date();
       const firstDay = new Date(now.getFullYear(), 0, 1);
       const pastDays = Math.floor((now - firstDay) / 86400000);
       const week = Math.ceil((pastDays + firstDay.getDay() + 1) / 7);
       return `${now.getFullYear()}-W${String(week).padStart(2, "0")}`;
+    }
+
+    function getMonthKey() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, "0");
+      return `${y}-${m}`;
     }
 
     function formatStampDate(dateKey) {
@@ -2281,216 +1527,12 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb
       return `${y.slice(2)} ${m} ${d}`;
     }
 
-    function formatUpdatedAt(value) {
-      if (!value) return "-";
-      const date = new Date(value);
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, "0");
-      const d = String(date.getDate()).padStart(2, "0");
-      const h = String(date.getHours()).padStart(2, "0");
-      const min = String(date.getMinutes()).padStart(2, "0");
-      return `${y}.${m}.${d} ${h}:${min}`;
+    function getShortName(full) {
+      return fullToShortMap[full] || full;
     }
 
-    /* ✅ 수정됨: 엣지케이스 처리 강화 - total_matches 비교 추가 */
-    function sortRankingRows(rows) {
-      return [...rows].sort((a, b) => {
-        // 우승 횟수 비교
-        if (b.champion_count !== a.champion_count) return b.champion_count - a.champion_count;
-        // 승률 비교
-        const winRateA = Number(a.win_rate) || 0;
-        const winRateB = Number(b.win_rate) || 0;
-        if (winRateB !== winRateA) return winRateB - winRateA;
-        // 승리 횟수 비교
-        if (b.win_count !== a.win_count) return b.win_count - a.win_count;
-        // ✅ 추가: 총 경기 수 비교
-        if (b.total_matches !== a.total_matches) return b.total_matches - a.total_matches;
-        // 이름 정렬 (한글)
-        return a.engraving_name.localeCompare(b.engraving_name, "ko");
-      });
-    }
-
-    function renderBoardFromRows(rows, mode) {
-      currentBoardMode = mode;
-
-      rankingBoard.classList.remove("locked");
-      rankingBoard.classList.remove("board-op", "board-favor");
-      rankingBoardTitle.classList.remove("ranking-title-op", "ranking-title-favor");
-
-      rankingBoardTitle.textContent = mode === "op" ? "OP 직각 랭킹 보드" : "호감 직각 랭킹 보드";
-      rankingBoardSub.textContent = "토너먼트 1개 완료 시 10위까지 공개되고, 2개 모두 완료 시 전체 랭킹이 공개됩니다.";
-
-      modeOpBtn.classList.remove("active-op", "disabled");
-      modeFavorBtn.classList.remove("active-favor", "disabled");
-
-      /* ✅ 수정됨: aria-selected 업데이트 */
-      modeOpBtn.setAttribute("aria-selected", "false");
-      modeFavorBtn.setAttribute("aria-selected", "false");
-
-      if (!completedState.op) modeOpBtn.classList.add("disabled");
-      if (!completedState.favor) modeFavorBtn.classList.add("disabled");
-
-      if (mode === "op") {
-        modeOpBtn.classList.add("active-op");
-        modeOpBtn.setAttribute("aria-selected", "true");
-        rankingBoardTitle.classList.add("ranking-title-op");
-        rankingBoard.classList.add("board-op");
-      } else {
-        modeFavorBtn.classList.add("active-favor");
-        modeFavorBtn.setAttribute("aria-selected", "true");
-        rankingBoardTitle.classList.add("ranking-title-favor");
-        rankingBoard.classList.add("board-favor");
-      }
-
-      const sorted = sortRankingRows(rows);
-      const championTop = sorted[0] || null;
-
-      const rateSorted = [...rows]
-        .filter(row => row.total_matches > 0)
-        .sort((a, b) => {
-          const winRateA = Number(a.win_rate) || 0;
-          const winRateB = Number(b.win_rate) || 0;
-          if (winRateB !== winRateA) return winRateB - winRateA;
-          if (b.total_matches !== a.total_matches) return b.total_matches - a.total_matches;
-          return b.win_count - a.win_count;
-        });
-
-      const rateTop = rateSorted[0] || championTop;
-      const latestUpdatedAt = rows.length > 0 ? rows[0].updated_at : null;
-
-      rankingFooterNote.textContent = `※ 전체 랭킹은 매시간 정각 집계됩니다. 최근 집계: ${formatUpdatedAt(latestUpdatedAt)}`;
-
-      summaryCards.innerHTML = `
-        <div class="summary-card">
-          <div class="summary-inner">
-            <div class="summary-icon" aria-hidden="true">🏆</div>
-            <div>
-              <div class="summary-label">직각 우승 횟수</div>
-              <div class="summary-main">${championTop ? getShortName(championTop.engraving_name) : "-"}</div>
-              <div class="summary-rank">최다 우승 1위</div>
-              <div class="summary-meta">${championTop ? `${championTop.class_name} · 우승 ${championTop.champion_count}회` : "데이터 없음"}</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="summary-card">
-          <div class="summary-inner">
-            <div class="summary-icon" aria-hidden="true">⚔️</div>
-            <div>
-              <div class="summary-label">직각 승률</div>
-              <div class="summary-main">${rateTop ? getShortName(rateTop.engraving_name) : "-"}</div>
-              <div class="summary-rank">최다 1:1 승률 1위</div>
-              <div class="summary-meta">${rateTop ? `${rateTop.class_name} · 1:1 승률 ${Number(rateTop.win_rate).toFixed(2)}%` : "데이터 없음"}</div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      if (sorted.length === 0) {
-        rankingList.innerHTML = `
-          <div class="rank-row" role="listitem">
-            <div class="rank-col">
-              <div class="rank-num">-</div>
-            </div>
-            <div class="rank-col">
-              <div class="rank-name">데이터 없음</div>
-              <div class="rank-job">집계 이후 자동 반영됩니다.</div>
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      const bothCompleted = completedState.op && completedState.favor;
-      const oneCompleted = completedState.op || completedState.favor;
-      const revealLimit = bothCompleted ? Infinity : (oneCompleted ? 10 : 0);
-
-      /* ✅ 수정됨: role="listitem" 추가 */
-      rankingList.innerHTML = sorted.map((row, index) => {
-        const hidden = index >= revealLimit;
-
-        return `
-          <div class="rank-row ${hidden ? "dimmed" : ""}" role="listitem" ${hidden ? 'aria-hidden="true"' : ''}>
-            <div class="rank-col"><div class="rank-num">${index + 1}위</div></div>
-            <div class="rank-col">
-              <div class="rank-name">${row.engraving_name}</div>
-              <div class="rank-job">${row.class_name}</div>
-            </div>
-            <div class="rank-col metric-block">
-              <div class="metric-title">우승 횟수</div>
-              <div class="metric-main">${row.champion_count}회</div>
-              <div class="meter" role="img" aria-label="우승 횟수 ${row.champion_count}회"><div class="meter-fill win" style="width:${Math.min(100, row.champion_count * 12)}%;"></div></div>
-            </div>
-            <div class="rank-col metric-block">
-              <div class="metric-title">1:1 승률</div>
-              <div class="metric-main">${Number(row.win_rate).toFixed(2)}%</div>
-              <div class="meter" role="img" aria-label="승률 ${Number(row.win_rate).toFixed(2)}%"><div class="meter-fill rate" style="width:${Math.min(100, Number(row.win_rate))}%;"></div></div>
-            </div>
-            <div class="rank-col metric-block">
-              <div class="metric-title">설명</div>
-              <div class="metric-sub">총 ${row.total_matches}전 · ${row.win_count}승 ${row.lose_count}패</div>
-            </div>
-          </div>
-        `;
-      }).join("");
-
-      if (!bothCompleted && oneCompleted && sorted.length > 10) {
-        rankingList.insertAdjacentHTML("beforeend", `
-          <div class="hidden-note" role="note">
-            OP / 호감 토너먼트 중 하나만 완료한 상태에서는 10위까지만 공개됩니다.<br>
-            두 토너먼트를 모두 완료하면 전체 랭킹이 공개됩니다.
-          </div>
-        `);
-      }
-    }
-
-    async function loadRankingData(mode) {
-      const { data, error } = await supabase
-        .from("ranking_overall")
-        .select("tournament_type, class_name, engraving_name, champion_count, win_count, lose_count, total_matches, win_rate, updated_at")
-        .eq("tournament_type", mode);
-
-      if (error) {
-        console.error("ranking_overall 조회 실패", error);
-        alert("랭킹 조회 실패: " + error.message);
-        return;
-      }
-
-      renderBoardFromRows(data, mode);
-    }
-
-    function updateRankingLockState() {
-      const bothCompleted = completedState.op && completedState.favor;
-      const oneCompleted = completedState.op || completedState.favor;
-
-      if (!oneCompleted) {
-        rankingBoard.classList.add("locked");
-        rankingBoard.classList.remove("board-op", "board-favor");
-        rankingBoardTitle.classList.remove("ranking-title-op", "ranking-title-favor");
-        lockTitle.textContent = "토너먼트 완료 후 랭킹이 공개됩니다";
-        lockDesc.textContent = "OP 직각 또는 호감 직각 토너먼트를 완료하면 해당 랭킹이 해제됩니다.";
-        currentBoardMode = null;
-        return;
-      }
-
-      rankingBoard.classList.remove("locked");
-
-      if (completedState.op && !completedState.favor) {
-        currentBoardMode = "op";
-        loadRankingData("op");
-        return;
-      }
-
-      if (!completedState.op && completedState.favor) {
-        currentBoardMode = "favor";
-        loadRankingData("favor");
-        return;
-      }
-
-      if (bothCompleted) {
-        if (!currentBoardMode) currentBoardMode = "op";
-        loadRankingData(currentBoardMode);
-      }
+    function getColorClass(className) {
+      return classColorMap[className] || "";
     }
 
     function shuffle(arr) {
@@ -2502,58 +1544,116 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb
       return copied;
     }
 
-    function computeTotalMatches(candidateCount) {
-      return Math.max(1, candidateCount - 1);
+    // ========== 등급 계산 ==========
+    function calculateGrade(score, maxScore) {
+      if (maxScore === 0) return "F-";
+      const percent = (score / maxScore) * 100;
+
+      if (percent >= 105) return "SS+";
+      if (percent >= 100) return "SS";
+      if (percent >= 95) return "SS-";
+      if (percent >= 90) return "S+";
+      if (percent >= 85) return "S";
+      if (percent >= 80) return "S-";
+      if (percent >= 75) return "A+";
+      if (percent >= 70) return "A";
+      if (percent >= 65) return "A-";
+      if (percent >= 60) return "B+";
+      if (percent >= 55) return "B";
+      if (percent >= 50) return "B-";
+      if (percent >= 45) return "C+";
+      if (percent >= 40) return "C";
+      if (percent >= 35) return "C-";
+      if (percent >= 30) return "F+";
+      if (percent >= 20) return "F";
+      return "F-";
     }
 
-    function getRoundLabel(count) {
-      if (count <= 1) return "FINAL";
-      if (count === 2) return "FINAL";
-      if (count === 4) return "4강";
-      if (count === 8) return "8강";
-      if (count === 16) return "16강";
-      if (count === 32) return "32강";
-      if (count === 64) return "64강";
-      return `${count}강`;
+    function getRandomMessage(grade) {
+      const msgs = gradeMessages[grade] || gradeMessages["F"];
+      return msgs[Math.floor(Math.random() * msgs.length)];
     }
 
-    function getStageClass(count) {
-      if (count <= 2) return "stage-red";
-      if (count <= 7) return "stage-yellow";
-      if (count <= 16) return "stage-purple";
-      if (count <= 32) return "stage-blue";
-      return "stage-green";
-    }
-
-    function playFlipSound() {
-      try {
-        flipAudio.currentTime = 0;
-        flipAudio.play().catch(() => {});
-      } catch {}
-    }
-
-    function playWinnerSound() {
-      try {
-        winnerAudio.currentTime = 0;
-        winnerAudio.play().catch(() => {});
-      } catch {}
-    }
-
-    /* ✅ 수정됨: 캐시 초기화 함수 */
-    function clearCandidateCache() {
-      candidateCache = {};
-    }
-
-    /* ✅ 수정됨: 캐싱을 사용하는 필터 함수 */
-    function getCandidatesExcludingClass(className) {
-      if (candidateCache[className]) {
-        return candidateCache[className];
+    // ========== 사운드 ==========
+    function playSound(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.currentTime = 0;
+        el.play().catch(() => {});
       }
-      const filtered = allCandidates.filter(item => item.class_name !== className);
-      candidateCache[className] = filtered;
-      return filtered;
     }
 
+    // ========== 색종이 효과 ==========
+    function createConfetti() {
+      const colors = ["#ff7070", "#ffb36b", "#ffd76b", "#8bd0ff", "#c48bff"];
+      const container = resultModal;
+
+      for (let i = 0; i < 30; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti";
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = `${Math.random() * 0.5}s`;
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        container.appendChild(piece);
+
+        setTimeout(() => piece.remove(), 3500);
+      }
+    }
+
+    // ========== 도장 업데이트 ==========
+    function updateStamps() {
+      // OP 도장
+      if (completedState.op) {
+        opStamp.classList.add('show');
+        opStampDate.textContent = formatStampDate(completedState.op.date);
+        opStampGrade.textContent = completedState.op.grade;
+      } else {
+        opStamp.classList.remove('show');
+      }
+
+      // 호감 도장
+      if (completedState.favor) {
+        favorStamp.classList.add('show');
+        favorStampDate.textContent = formatStampDate(completedState.favor.date);
+        favorStampGrade.textContent = completedState.favor.grade;
+      } else {
+        favorStamp.classList.remove('show');
+      }
+    }
+
+    // ========== 참여 기록 로드 ==========
+    async function loadTodayParticipation() {
+      visitorKey = getVisitorKey();
+      clientIP = await getClientIP();
+
+      const { data, error } = await supabase
+        .from("sessions")
+        .select("tournament_type, date_key, grade")
+        .eq("date_key", getDateKey())
+        .or(`visitor_key.eq.${visitorKey},client_ip.eq.${clientIP}`);
+
+      if (error) {
+        console.error("참여 상태 조회 실패:", error);
+        return;
+      }
+
+      // OP 참여 기록
+      const opRecord = data.find(row => row.tournament_type === "op");
+      if (opRecord) {
+        completedState.op = { date: opRecord.date_key, grade: opRecord.grade || "?" };
+      }
+
+      // 호감 참여 기록
+      const favorRecord = data.find(row => row.tournament_type === "favor");
+      if (favorRecord) {
+        completedState.favor = { date: favorRecord.date_key, grade: favorRecord.grade || "?" };
+      }
+
+      updateStamps();
+    }
+
+    // ========== 후보 로드 ==========
     async function loadCandidates() {
       const { data, error } = await supabase
         .from("candidates")
@@ -2563,307 +1663,26 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb
 
       if (error) {
         console.error("candidates 로드 실패", error);
-        opStartBtn.disabled = true;
-        favorStartBtn.disabled = true;
-        opRankBtn.disabled = true;
-        favorRankBtn.disabled = true;
         return;
       }
       allCandidates = data;
-      clearCandidateCache(); /* ✅ 수정됨: 후보 로드 시 캐시 초기화 */
     }
 
-    async function loadTodayParticipation() {
-      visitorKey = getVisitorKey();
-
-      const { data, error } = await supabase
-        .from("sessions")
-        .select("tournament_type, date_key")
-        .eq("visitor_key", visitorKey)
-        .eq("date_key", getDateKey());
-
-      if (error) {
-        console.error("참여 상태 조회 실패:", error);
-        return;
-      }
-
-      completedState.op = !!data.find(row => row.tournament_type === "op");
-      completedState.favor = !!data.find(row => row.tournament_type === "favor");
-
-      if (completedState.op) {
-        opStamp.classList.add("show");
-        opStampDate.textContent = formatStampDate(getDateKey());
-      } else {
-        opStamp.classList.remove("show");
-      }
-
-      if (completedState.favor) {
-        favorStamp.classList.add("show");
-        favorStampDate.textContent = formatStampDate(getDateKey());
-      } else {
-        favorStamp.classList.remove("show");
-      }
-
-      updateRankingLockState();
-    }
-
-    /* ✅ 수정됨: 모달 aria-hidden 관리 함수 */
-    function setModalVisibility(modal, isVisible) {
-      if (isVisible) {
-        modal.classList.add("show");
-        modal.setAttribute("aria-hidden", "false");
-      } else {
-        modal.classList.remove("show");
-        modal.setAttribute("aria-hidden", "true");
-      }
-    }
-
-    function openClassModal(type) {
-      currentTournamentType = type;
-      classFlowLabel.textContent = type === "op" ? "OP TOURNAMENT" : "FAVOR TOURNAMENT";
-
-      classTable.innerHTML = Object.entries(classGroups).map(([groupName, classes]) => `
-        <div class="class-row">
-          <div class="class-group">${groupName}</div>
-          <div class="class-buttons" role="group" aria-label="${groupName} 클래스 목록">
-            ${classes.map(cls => `
-              <button class="secondary-btn class-select-btn" data-class="${cls}" style="padding:10px 14px;" aria-label="${cls} 클래스 선택">${cls}</button>
-            `).join("")}
-          </div>
-        </div>
-      `).join("");
-
-      setModalVisibility(classModal, true); /* ✅ 수정됨 */
-
-      classTable.querySelectorAll(".class-select-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          selectedClass = btn.dataset.class;
-          setModalVisibility(classModal, false); /* ✅ 수정됨 */
-          startBattle(type, selectedClass);
-        });
-      });
-    }
-
-    function closeClassModal() {
-      setModalVisibility(classModal, false); /* ✅ 수정됨 */
-    }
-
-    function resetBattleCardEffects() {
-      leftChoiceBtn.className = "battle-choice";
-      rightChoiceBtn.className = "battle-choice";
-    }
-
-    function startBattle(type, selectedClassName) {
-      /* ✅ 수정됨: 캐싱 사용 */
-      const filtered = getCandidatesExcludingClass(selectedClassName);
-
-      workingCandidates = shuffle(filtered);
-      currentRoundCandidates = [...workingCandidates];
-      nextRoundCandidates = [];
-      currentIndex = 0;
-      currentLeft = null;
-      currentRight = null;
-      totalMatches = computeTotalMatches(filtered.length);
-      completedMatches = 0;
-      battleLogs = [];
-      pendingWinner = null;
-      isProcessingChoice = false; /* ✅ 수정됨: 플래그 초기화 */
-
-      battleModeLabel.textContent = type === "op" ? "OP TOURNAMENT" : "FAVOR TOURNAMENT";
-      battleTopKorTitle.textContent = type === "op" ? "OP 직각 토너먼트" : "호감 직각 토너먼트";
-      setModalVisibility(battleModal, true); /* ✅ 수정됨 */
-      renderNextBattle();
-    }
-
-    function updateBattleProgress() {
-      const percent = totalMatches > 0 ? Math.floor((completedMatches / totalMatches) * 100) : 0;
-      battleProgressText.textContent = `${percent}%`;
-      battleProgressFill.style.width = `${percent}%`;
-      /* ✅ 수정됨: progressbar aria-valuenow 업데이트 */
-      battleProgressBar.setAttribute("aria-valuenow", percent);
-    }
-
-    function renderNextBattle() {
-      /* ✅ 수정됨: 버튼 활성화 */
-      leftChoiceBtn.disabled = false;
-      rightChoiceBtn.disabled = false;
-
-      if (currentRoundCandidates.length === 1) {
-        pendingWinner = currentRoundCandidates[0];
-        showWinnerModal(pendingWinner);
-        return;
-      }
-
-      if (currentIndex >= currentRoundCandidates.length) {
-        currentRoundCandidates = [...nextRoundCandidates];
-        nextRoundCandidates = [];
-        currentIndex = 0;
-      }
-
-      if (currentRoundCandidates.length === 1) {
-        pendingWinner = currentRoundCandidates[0];
-        showWinnerModal(pendingWinner);
-        return;
-      }
-
-      currentLeft = currentRoundCandidates[currentIndex];
-      currentRight = currentRoundCandidates[currentIndex + 1] || null;
-
-      if (!currentRight) {
-        nextRoundCandidates.push(currentLeft);
-        currentIndex += 1;
-        renderNextBattle();
-        return;
-      }
-
-      resetBattleCardEffects();
-      const stageClass = getStageClass(currentRoundCandidates.length);
-      leftChoiceBtn.classList.add(stageClass);
-      rightChoiceBtn.classList.add(stageClass);
-
-      battleRoundTitle.textContent = `${getShortName(currentLeft.engraving_name)} vs ${getShortName(currentRight.engraving_name)}`;
-      battleSubText.textContent = `${selectedClass} 제외 상태 · ${getRoundLabel(currentRoundCandidates.length)} 진행 중`;
-
-      leftChoiceClass.textContent = currentLeft.class_name;
-      leftChoiceName.textContent = getShortName(currentLeft.engraving_name);
-      leftChoiceName.className = `battle-choice-name ${getColorClass(currentLeft.class_name)}`;
-
-      rightChoiceClass.textContent = currentRight.class_name;
-      rightChoiceName.textContent = getShortName(currentRight.engraving_name);
-      rightChoiceName.className = `battle-choice-name ${getColorClass(currentRight.class_name)}`;
-
-      /* ✅ 수정됨: 동적 aria-label 업데이트 */
-      leftChoiceBtn.setAttribute("aria-label", `${currentLeft.class_name} ${getShortName(currentLeft.engraving_name)} 선택`);
-      rightChoiceBtn.setAttribute("aria-label", `${currentRight.class_name} ${getShortName(currentRight.engraving_name)} 선택`);
-
-      updateBattleProgress();
-    }
-
-    /* ✅ 수정됨: 동시 클릭 방지 로직 추가 */
-    function chooseBattleWinner(side) {
-      // 이미 처리 중이면 무시
-      if (isProcessingChoice) return;
-      if (!currentLeft || !currentRight) return;
-
-      // 처리 중 플래그 설정
-      isProcessingChoice = true;
-
-      // 버튼 비활성화
-      leftChoiceBtn.disabled = true;
-      rightChoiceBtn.disabled = true;
-
-      playFlipSound();
-
-      const winner = side === "left" ? currentLeft : currentRight;
-      const loser = side === "left" ? currentRight : currentLeft;
-
-      battleLogs.push({
-        left_engraving: currentLeft.engraving_name,
-        right_engraving: currentRight.engraving_name,
-        winner_engraving: winner.engraving_name,
-        loser_engraving: loser.engraving_name,
-        round_label: getRoundLabel(currentRoundCandidates.length)
-      });
-
-      nextRoundCandidates.push(winner);
-      completedMatches += 1;
-      currentIndex += 2;
-
-      setTimeout(() => {
-        // 플래그 해제
-        isProcessingChoice = false;
-        renderNextBattle();
-      }, 160);
-    }
-
-    function showWinnerModal(winner) {
-      setModalVisibility(battleModal, false); /* ✅ 수정됨 */
-      playWinnerSound();
-
-      winnerModeLabel.textContent = currentTournamentType === "op" ? "OP TOURNAMENT COMPLETE" : "FAVOR TOURNAMENT COMPLETE";
-      winnerTitleText.textContent = `${getShortName(winner.engraving_name)}`;
-      winnerSubText.textContent = `우승 직각 · ${winner.class_name}`;
-      winnerDescText.textContent = `토너먼트가 완료되었습니다. 확인을 누르면 저장 후 참여 완료 도장이 표시되고 랭킹이 해제됩니다.`;
-
-      setModalVisibility(winnerModal, true); /* ✅ 수정됨 */
-      createConfetti();
-    }
-
-    async function finalizeTournamentSave() {
-      if (!pendingWinner) return;
-
-      const sessionPayload = {
-        visitor_key: visitorKey,
-        selected_class: selectedClass,
-        winner_engraving: pendingWinner.engraving_name,
-        tournament_type: currentTournamentType,
-        date_key: getDateKey(),
-        week_key: getWeekKey(),
-        month_key: getMonthKey()
-      };
-
-      const { data: sessionData, error: sessionError } = await supabase
-        .from("sessions")
-        .insert([sessionPayload])
-        .select();
-
-      if (sessionError) {
-        console.error("sessions 저장 실패", sessionError);
-        alert("sessions 저장 실패: " + sessionError.message);
-        return;
-      }
-
-      const sessionId = sessionData[0].id;
-
-      if (battleLogs.length > 0) {
-        const matchPayload = battleLogs.map(log => ({
-          session_id: sessionId,
-          left_engraving: log.left_engraving,
-          right_engraving: log.right_engraving,
-          winner_engraving: log.winner_engraving,
-          loser_engraving: log.loser_engraving,
-          round_label: log.round_label,
-          tournament_type: currentTournamentType,
-          date_key: getDateKey(),
-          week_key: getWeekKey(),
-          month_key: getMonthKey()
-        }));
-
-        const { error: matchError } = await supabase
-          .from("match_logs")
-          .insert(matchPayload);
-
-        if (matchError) {
-          console.error("match_logs 저장 실패", matchError);
-          alert("match_logs 저장 실패: " + matchError.message);
-          return;
-        }
-      }
-
-      if (currentTournamentType === "op") {
-        completedState.op = true;
-        opStamp.classList.add("show");
-        opStampDate.textContent = formatStampDate(getDateKey());
-      } else {
-        completedState.favor = true;
-        favorStamp.classList.add("show");
-        favorStampDate.textContent = formatStampDate(getDateKey());
-      }
-
-      currentBoardMode = currentTournamentType;
-      setModalVisibility(winnerModal, false); /* ✅ 수정됨 */
-
-      updateRankingLockState();
-      rankingBoard.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
+    // ========== 시작 핸들러 ==========
     async function handleStart(type) {
+      clientIP = await getClientIP();
+
+      if (!clientIP) {
+        alert('네트워크 오류로 참여할 수 없습니다.');
+        return;
+      }
+
       const { data, error } = await supabase
         .from("sessions")
         .select("id")
-        .eq("visitor_key", visitorKey)
         .eq("date_key", getDateKey())
-        .eq("tournament_type", type);
+        .eq("tournament_type", type)
+        .or(`visitor_key.eq.${visitorKey},client_ip.eq.${clientIP}`);
 
       if (error) {
         console.error("참여 체크 실패", error);
@@ -2879,73 +1698,338 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb
       openClassModal(type);
     }
 
-    function createConfetti() {
-      const colors = ["#ff7070", "#ffb36b", "#ffd76b", "#8bd0ff", "#c48bff"];
-      for (let i = 0; i < 28; i++) {
-        const piece = document.createElement("div");
-        piece.className = "confetti";
-        piece.setAttribute("aria-hidden", "true"); /* ✅ 수정됨: 장식 요소 숨김 */
-        piece.style.left = `${Math.random() * 100}%`;
-        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-        piece.style.animationDelay = `${Math.random() * 0.4}s`;
-        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
-        winnerModal.appendChild(piece);
+    // ========== 클래스 선택 모달 ==========
+    function openClassModal(type) {
+      currentTournamentType = type;
+      classFlowLabel.textContent = type === "op" ? "OP TOURNAMENT" : "FAVOR TOURNAMENT";
 
-        setTimeout(() => piece.remove(), 3200);
+      classTable.innerHTML = Object.entries(classGroups).map(([groupName, classes]) => `
+        <div class="class-row">
+          <div class="class-group">${groupName}</div>
+          <div class="class-buttons">
+            ${classes.map(cls => `
+              <button class="secondary-btn class-select-btn" data-class="${cls}" style="padding:10px 14px;">${cls}</button>
+            `).join("")}
+          </div>
+        </div>
+      `).join("");
+
+      classModal.classList.add("show");
+
+      classTable.querySelectorAll(".class-select-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          selectedClass = btn.dataset.class;
+          classModal.classList.remove("show");
+          startBattle(type, selectedClass);
+        });
+      });
+    }
+
+    // ========== 배틀 시작 ==========
+    function startBattle(type, selectedClassName) {
+      const filtered = allCandidates.filter(item => item.class_name !== selectedClassName);
+
+      workingCandidates = shuffle(filtered);
+      currentRoundCandidates = [...workingCandidates];
+      nextRoundCandidates = [];
+      currentIndex = 0;
+      currentLeft = null;
+      currentRight = null;
+
+      totalMatches = Math.max(1, filtered.length - 1);
+      completedMatches = 0;
+      score = 0;
+      maxScore = totalMatches;
+      wildcardState = 'locked';
+      wildcardUsed = false;
+      wildcardBonus = 0;
+      battleLogs = [];
+      pendingWinner = null;
+
+      battleModeLabel.textContent = type === "op" ? "OP TOURNAMENT" : "FAVOR TOURNAMENT";
+      battleTitle.textContent = type === "op" ? "OP 직각 토너먼트" : "호감 직각 토너먼트";
+
+      updateWildcardUI();
+      battleModal.classList.add("show");
+      renderNextBattle();
+    }
+
+    // ========== 진행률 업데이트 ==========
+    function updateProgress() {
+      battleProgressText.textContent = `${completedMatches} / ${totalMatches}`;
+      battleProgressFill.style.width = `${Math.round((completedMatches / totalMatches) * 100)}%`;
+    }
+
+    // ========== 와일드카드 UI ==========
+    function updateWildcardUI() {
+      wildCard.classList.remove('locked', 'revealing', 'revealed', 'used');
+      wildCard.classList.add(wildcardState);
+
+      if (wildcardState === 'locked') {
+        wildCard.disabled = true;
+        wildNote.textContent = '5점 이상 시 30% 확률로 공개';
+      } else if (wildcardState === 'revealing') {
+        wildCard.disabled = true;
+        wildNote.textContent = '공개 중...';
+      } else if (wildcardState === 'revealed') {
+        wildCard.disabled = false;
+        wildNote.textContent = '클릭하면 둘 다 진출!';
+      } else if (wildcardState === 'used') {
+        wildCard.disabled = true;
+        wildNote.textContent = '사용 완료';
       }
     }
 
-    opStartBtn.addEventListener("click", () => handleStart("op"));
-    favorStartBtn.addEventListener("click", () => handleStart("favor"));
+    // ========== 와일드카드 공개 체크 ==========
+    function maybeRevealWildcard() {
+      if (wildcardState !== 'locked' || wildcardUsed) return;
+      if (score < 5) return;
+      if (completedMatches >= totalMatches - 3) return; // 4강 이후 불가
 
-    opRankBtn.addEventListener("click", async () => {
-      if (!completedState.op) {
-        alert("OP 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다.");
+      if (Math.random() < 0.3) {
+        wildcardState = 'revealing';
+        updateWildcardUI();
+        playSound('sndWild');
+
+        setTimeout(() => {
+          wildcardState = 'revealed';
+          updateWildcardUI();
+        }, 950);
+      }
+    }
+
+    // ========== 와일드카드 사용 ==========
+    function useWildcard() {
+      if (wildcardState !== 'revealed' || !currentLeft || !currentRight) return;
+
+      wildcardUsed = true;
+      wildcardState = 'used';
+      updateWildcardUI();
+
+      // 둘 다 다음 라운드로
+      nextRoundCandidates.push(currentLeft);
+      nextRoundCandidates.push(currentRight);
+
+      // 와일드카드 보너스 (간단하게 +3)
+      wildcardBonus = 3;
+      score += wildcardBonus;
+
+      completedMatches += 1;
+      currentIndex += 2;
+
+      playSound('sndWild');
+
+      setTimeout(renderNextBattle, 600);
+    }
+
+    // ========== 다음 배틀 렌더링 ==========
+    function renderNextBattle() {
+      // 리셋 카드 상태
+      leftChoiceBtn.classList.remove('picked', 'not-picked');
+      rightChoiceBtn.classList.remove('picked', 'not-picked');
+
+      // 한 명 남으면 우승
+      if (currentRoundCandidates.length === 1) {
+        pendingWinner = currentRoundCandidates[0];
+        showResult();
         return;
       }
-      currentBoardMode = "op";
-      await loadRankingData("op");
-      rankingBoard.classList.remove("locked");
-      rankingBoard.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
 
-    favorRankBtn.addEventListener("click", async () => {
-      if (!completedState.favor) {
-        alert("호감 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다.");
+      // 라운드 끝
+      if (currentIndex >= currentRoundCandidates.length) {
+        currentRoundCandidates = [...nextRoundCandidates];
+        nextRoundCandidates = [];
+        currentIndex = 0;
+      }
+
+      // 다시 체크
+      if (currentRoundCandidates.length === 1) {
+        pendingWinner = currentRoundCandidates[0];
+        showResult();
         return;
       }
-      currentBoardMode = "favor";
-      await loadRankingData("favor");
-      rankingBoard.classList.remove("locked");
-      rankingBoard.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      currentLeft = currentRoundCandidates[currentIndex];
+      currentRight = currentRoundCandidates[currentIndex + 1] || null;
+
+      // 부전승
+      if (!currentRight) {
+        nextRoundCandidates.push(currentLeft);
+        currentIndex += 1;
+        renderNextBattle();
+        return;
+      }
+
+      // 카드 렌더링
+      const leftColor = getColorClass(currentLeft.class_name);
+      const rightColor = getColorClass(currentRight.class_name);
+
+      leftChoiceClass.textContent = currentLeft.class_name;
+      leftChoiceName.textContent = getShortName(currentLeft.engraving_name);
+      leftChoiceName.className = `battle-choice-name ${leftColor}`;
+
+      rightChoiceClass.textContent = currentRight.class_name;
+      rightChoiceName.textContent = getShortName(currentRight.engraving_name);
+      rightChoiceName.className = `battle-choice-name ${rightColor}`;
+
+      battleSubText.textContent = `${selectedClass} 제외 · ${currentRoundCandidates.length}강`;
+
+      updateProgress();
+    }
+
+    // ========== 카드 선택 ==========
+    function chooseBattle(side) {
+      if (!currentLeft || !currentRight) return;
+
+      const winner = side === 'left' ? currentLeft : currentRight;
+      const loser = side === 'left' ? currentRight : currentLeft;
+      const pickedBtn = side === 'left' ? leftChoiceBtn : rightChoiceBtn;
+      const otherBtn = side === 'left' ? rightChoiceBtn : leftChoiceBtn;
+
+      // 점수 (간단하게 선택하면 +1)
+      score += 1;
+
+      // 로그 기록
+      battleLogs.push({
+        left_engraving: currentLeft.engraving_name,
+        right_engraving: currentRight.engraving_name,
+        winner_engraving: winner.engraving_name,
+        loser_engraving: loser.engraving_name,
+        round_label: `${currentRoundCandidates.length}강`
+      });
+
+      // 시각 효과
+      pickedBtn.classList.add('picked');
+      otherBtn.classList.add('not-picked');
+
+      playSound('sndPick');
+
+      // 다음 라운드로
+      nextRoundCandidates.push(winner);
+      completedMatches += 1;
+      currentIndex += 2;
+
+      setTimeout(() => {
+        maybeRevealWildcard();
+        renderNextBattle();
+      }, 500);
+    }
+
+    // ========== 결과 표시 ==========
+    function showResult() {
+      battleModal.classList.remove('show');
+
+      const finalScore = score + wildcardBonus;
+      const grade = calculateGrade(finalScore, maxScore);
+      const dateKey = getDateKey();
+
+      resultStampDate.textContent = formatStampDate(dateKey);
+      resultStampGrade.textContent = grade;
+      resultWinnerName.textContent = getShortName(pendingWinner.engraving_name);
+      resultWinnerClass.textContent = pendingWinner.class_name;
+      resultMessage.textContent = getRandomMessage(grade);
+
+      resultModal.classList.add('show');
+      playSound('sndWinner');
+      createConfetti();
+
+      // 저장 준비
+      pendingWinner.grade = grade;
+      pendingWinner.score = finalScore;
+      pendingWinner.maxScore = maxScore;
+    }
+
+    // ========== 결과 확인 (저장) ==========
+    async function confirmResult() {
+      const dateKey = getDateKey();
+      const grade = pendingWinner.grade;
+
+      const sessionPayload = {
+        visitor_key: visitorKey,
+        client_ip: clientIP,
+        selected_class: selectedClass,
+        winner_engraving: pendingWinner.engraving_name,
+        tournament_type: currentTournamentType,
+        date_key: dateKey,
+        week_key: getWeekKey(),
+        month_key: getMonthKey(),
+        grade: grade,
+        score: pendingWinner.score,
+        max_score: pendingWinner.maxScore
+      };
+
+      const { data: sessionData, error: sessionError } = await supabase
+        .from("sessions")
+        .insert([sessionPayload])
+        .select();
+
+      if (sessionError) {
+        console.error("sessions 저장 실패", sessionError);
+        alert("저장 실패: " + sessionError.message);
+        return;
+      }
+
+      // match_logs 저장
+      if (battleLogs.length > 0) {
+        const sessionId = sessionData[0].id;
+        const matchPayload = battleLogs.map(log => ({
+          session_id: sessionId,
+          left_engraving: log.left_engraving,
+          right_engraving: log.right_engraving,
+          winner_engraving: log.winner_engraving,
+          loser_engraving: log.loser_engraving,
+          round_label: log.round_label,
+          tournament_type: currentTournamentType,
+          date_key: dateKey,
+          week_key: getWeekKey(),
+          month_key: getMonthKey()
+        }));
+
+        await supabase.from("match_logs").insert(matchPayload);
+      }
+
+      // 상태 업데이트
+      if (currentTournamentType === "op") {
+        completedState.op = { date: dateKey, grade: grade };
+      } else {
+        completedState.favor = { date: dateKey, grade: grade };
+      }
+
+      updateStamps();
+      resultModal.classList.remove('show');
+    }
+
+    // ========== 이벤트 연결 ==========
+    opStartBtn.addEventListener('click', () => handleStart('op'));
+    favorStartBtn.addEventListener('click', () => handleStart('favor'));
+
+    closeClassModalBtn.addEventListener('click', () => {
+      classModal.classList.remove('show');
     });
 
-    modeOpBtn.addEventListener("click", async () => {
-      if (!completedState.op) return;
-      currentBoardMode = "op";
-      await loadRankingData("op");
+    leftChoiceBtn.addEventListener('click', () => chooseBattle('left'));
+    rightChoiceBtn.addEventListener('click', () => chooseBattle('right'));
+
+    wildCard.addEventListener('click', useWildcard);
+
+    quitBattleBtn.addEventListener('click', () => {
+      if (confirm('토너먼트를 종료하시겠습니까?\n진행 상황은 저장되지 않습니다.')) {
+        battleModal.classList.remove('show');
+      }
     });
 
-    modeFavorBtn.addEventListener("click", async () => {
-      if (!completedState.favor) return;
-      currentBoardMode = "favor";
-      await loadRankingData("favor");
+    resultConfirmBtn.addEventListener('click', confirmResult);
+
+    opRankBtn.addEventListener('click', () => {
+      alert('랭킹 기능은 토너먼트 완료 후 이용 가능합니다.');
     });
 
-    closeClassModalBtn.addEventListener("click", closeClassModal);
-
-    leftChoiceBtn.addEventListener("click", () => chooseBattleWinner("left"));
-    rightChoiceBtn.addEventListener("click", () => chooseBattleWinner("right"));
-
-    quitBattleBtn.addEventListener("click", () => {
-      if (!confirm("진행 중인 토너먼트를 종료하시겠습니까?\n현재 진행은 저장되지 않습니다.")) return;
-      setModalVisibility(battleModal, false); /* ✅ 수정됨 */
+    favorRankBtn.addEventListener('click', () => {
+      alert('랭킹 기능은 토너먼트 완료 후 이용 가능합니다.');
     });
 
-    winnerConfirmBtn.addEventListener("click", finalizeTournamentSave);
-
+    // ========== 초기화 ==========
     async function init() {
-      visitorKey = getVisitorKey();
       await loadCandidates();
       await loadTodayParticipation();
     }
