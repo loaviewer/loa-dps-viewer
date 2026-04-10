@@ -261,7 +261,6 @@
       z-index: 1;
     }
 
-    /* OP는 초록, 호감은 노랑 */
     .op-card .card-title { color: #8ef0c9; }
     .favor-card .card-title { color: #ffd48a; }
 
@@ -579,6 +578,10 @@
     .battle-choice:hover {
       transform: translateY(-6px) scale(1.03) rotateX(2deg) rotateY(-2deg);
       filter: brightness(1.07);
+    }
+
+    .battle-choice:disabled {
+      cursor: default;
     }
 
     .choice-gloss {
@@ -1560,9 +1563,12 @@
 
     function closeClassModal() { classModal.classList.remove("show"); }
 
+    // ★★★ 버그 수정: disabled 속성도 초기화 ★★★
     function resetBattleCardEffects() {
       leftChoiceBtn.className  = "battle-choice";
       rightChoiceBtn.className = "battle-choice";
+      leftChoiceBtn.disabled   = false;
+      rightChoiceBtn.disabled  = false;
     }
 
     async function startBattle(type, selectedClassName) {
