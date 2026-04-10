@@ -1084,7 +1084,7 @@
             </div>
           </div>
         </button>
-        <div class="wild-note" id="wildNote">5점 이상 시 30% 확률로 공개</div>
+        <div class="wild-note" id="wildNote">봉인된 카드입니다.</div>
       </div>
 
       <div class="flow-actions">
@@ -1630,7 +1630,7 @@
 
       if (wildcardState === 'locked') {
         wildCard.disabled = true;
-        wildNote.textContent = '5점 이상 시 30% 확률로 공개';
+        wildNote.textContent = '봉인된 카드입니다.';
       } else if (wildcardState === 'revealing') {
         wildCard.disabled = true;
         wildNote.textContent = '공개 중...';
