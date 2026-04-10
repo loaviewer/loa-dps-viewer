@@ -1080,24 +1080,24 @@
 
     // ===== 등급 시스템 =====
     const GRADE_TABLE = [
-      { grade: "SS+", min: 100, max: 100 },
-      { grade: "SS",  min: 96,  max: 99  },
-      { grade: "SS-", min: 90,  max: 95  },
-      { grade: "S+",  min: 85,  max: 89  },
-      { grade: "S",   min: 81,  max: 84  },
-      { grade: "S-",  min: 75,  max: 80  },
-      { grade: "A+",  min: 70,  max: 74  },
-      { grade: "A",   min: 65,  max: 69  },
-      { grade: "A-",  min: 60,  max: 64  },
-      { grade: "B+",  min: 55,  max: 59  },
-      { grade: "B",   min: 50,  max: 54  },
-      { grade: "B-",  min: 45,  max: 49  },
-      { grade: "C+",  min: 40,  max: 44  },
-      { grade: "C",   min: 35,  max: 39  },
-      { grade: "C-",  min: 30,  max: 34  },
-      { grade: "F+",  min: 25,  max: 29  },
-      { grade: "F",   min: 15,  max: 24  },
-      { grade: "F-",  min: 0,   max: 14  },
+      { grade: "SS+", min: 53, max: 53 },
+  { grade: "SS",  min: 52, max: 52 },
+  { grade: "SS-", min: 51, max: 51 },
+  { grade: "S+",  min: 50, max: 50 },
+  { grade: "S",   min: 49, max: 49 },
+  { grade: "S-",  min: 48, max: 48 },
+  { grade: "A+",  min: 45, max: 47 },
+  { grade: "A",   min: 42, max: 44 },
+  { grade: "A-",  min: 39, max: 41 },
+  { grade: "B+",  min: 36, max: 38 },
+  { grade: "B",   min: 33, max: 35 },
+  { grade: "B-",  min: 30, max: 32 },
+  { grade: "C+",  min: 27, max: 29 },
+  { grade: "C",   min: 24, max: 26 },
+  { grade: "C-",  min: 21, max: 23 },
+  { grade: "F+",  min: 16, max: 20 },
+  { grade: "F",   min: 8,  max: 15 },
+  { grade: "F-",  min: 0,  max: 7  },
     ];
 
     const GRADE_COMMENTS = {
@@ -1122,12 +1122,11 @@
     };
 
     function calcGrade(score, total) {
-      if (total === 0) return "F-";
-      const pct = Math.round((score / total) * 100);
-      for (const row of GRADE_TABLE) {
-        if (pct >= row.min && pct <= row.max) return row.grade;
-      }
-      return "F-";
+  if (total === 0) return "F-";
+  for (const row of GRADE_TABLE) {
+    if (score >= row.min && score <= row.max) return row.grade;
+  }
+  return "F-";
     }
 
     function getRandomComment(grade) {
