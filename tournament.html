@@ -1084,24 +1084,24 @@
 
     // ===== 등급 시스템 (수정됨) =====
     const GRADE_TABLE = [
-      { grade: "SS+", min: 51, max: 52 },
-      { grade: "SS",  min: 50, max: 50 },
-      { grade: "SS-", min: 49, max: 49 },
-      { grade: "S+",  min: 48, max: 48 },
-      { grade: "S",   min: 47, max: 47 },
-      { grade: "S-",  min: 46, max: 46 },
-      { grade: "A+",  min: 43, max: 45 },
-      { grade: "A",   min: 40, max: 42 },
-      { grade: "A-",  min: 37, max: 39 },
-      { grade: "B+",  min: 34, max: 36 },
-      { grade: "B",   min: 31, max: 33 },
-      { grade: "B-",  min: 28, max: 30 },
-      { grade: "C+",  min: 25, max: 27 },
-      { grade: "C",   min: 22, max: 24 },
-      { grade: "C-",  min: 19, max: 21 },
-      { grade: "F+",  min: 14, max: 18 },
-      { grade: "F",   min: 7,  max: 13 },
-      { grade: "F-",  min: 0,  max: 6 },
+  { grade: "SS+", min: 100, max: 100 },
+  { grade: "SS",  min: 98,  max: 99  },
+  { grade: "SS-", min: 96,  max: 97  },
+  { grade: "S+",  min: 94,  max: 95  },
+  { grade: "S",   min: 92,  max: 93  },
+  { grade: "S-",  min: 90,  max: 91  },
+  { grade: "A+",  min: 84,  max: 89  },
+  { grade: "A",   min: 78,  max: 83  },
+  { grade: "A-",  min: 72,  max: 77  },
+  { grade: "B+",  min: 67,  max: 71  },
+  { grade: "B",   min: 61,  max: 66  },
+  { grade: "B-",  min: 55,  max: 60  },
+  { grade: "C+",  min: 49,  max: 54  },
+  { grade: "C",   min: 43,  max: 48  },
+  { grade: "C-",  min: 37,  max: 42  },
+  { grade: "F+",  min: 27,  max: 36  },
+  { grade: "F",   min: 14,  max: 26  },
+  { grade: "F-",  min: 0,   max: 13  },
     ];
 
     const GRADE_COMMENTS = {
@@ -1126,11 +1126,12 @@
     };
 
     function calcGrade(score, total) {
-      if (total === 0) return "F-";
-      for (const row of GRADE_TABLE) {
-        if (score >= row.min && score <= row.max) return row.grade;
-      }
-      return "F-";
+  if (total === 0) return "F-";
+  const rate = Math.round((score / total) * 100); // ⭐ % 변환
+  for (const row of GRADE_TABLE) {
+    if (rate >= row.min && rate <= row.max) return row.grade;
+  }
+  return "F-";
     }
 
     function getRandomComment(grade) {
