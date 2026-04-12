@@ -2171,7 +2171,7 @@
       opTierModal.classList.add("show");
       document.getElementById("opTierContent").innerHTML=`<div class="loading-text">데이터 불러오는 중...</div>`;
       const entries=await loadTierData("op");
-      if (entries&&entries.length>0) { document.getElementById("opTierSub").textContent="전체 누적 승률 기준 · 5전 이상 직각만 포함 · 6티어 포함"; renderTierContent(calcTiers(entries),"opTierContent"); }
+      if (entries&&entries.length>0) { document.getElementById("opTierSub").textContent="최근 누적 1:1 승률 기준 · 5전 이상 직각만 포함"; renderTierContent(calcTiers(entries),"opTierContent"); }
       else { document.getElementById("opTierContent").innerHTML=`<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`; }
     });
 
@@ -2187,7 +2187,7 @@
       favorTierModal.classList.add("show");
       document.getElementById("favorTierContent").innerHTML=`<div class="loading-text">데이터 불러오는 중...</div>`;
       const entries=await loadTierData("favor");
-      if (entries&&entries.length>0) { document.getElementById("favorTierSub").textContent="전체 누적 승률 기준 · 5전 이상 직각만 포함 · 6티어 포함"; renderTierContent(calcTiers(entries),"favorTierContent"); }
+      if (entries&&entries.length>0) { document.getElementById("favorTierSub").textContent="최근 누적 1:1 승률 기준 · 5전 이상 직각만 포함"; renderTierContent(calcTiers(entries),"favorTierContent"); }
       else { document.getElementById("favorTierContent").innerHTML=`<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`; }
     });
 
