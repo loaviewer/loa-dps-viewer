@@ -51,12 +51,40 @@
             border-right: 1px solid rgba(255,255,255,0.06);
         }
 
-        .main {
-            padding: 22px;
-            display: grid;
-            grid-template-rows: auto auto 1fr auto;
-            gap: 16px;
-            min-width: 0;
+        /* ===== 캡슐 스위치 ===== */
+        .switch-wrap {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 999px;
+            padding: 4px;
+            gap: 2px;
+            margin-bottom: 20px;
+        }
+
+        .switch-wrap a {
+            flex: 1;
+            text-decoration: none;
+            text-align: center;
+            padding: 10px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+            transition: 0.2s ease;
+            color: #7a8da8;
+        }
+
+        .switch-wrap a.active {
+            background: linear-gradient(135deg, #7a8cff, #4bd3ff);
+            color: #08111e;
+            box-shadow: 0 4px 14px rgba(78,168,255,0.28);
+        }
+
+        .switch-wrap a:not(.active):hover {
+            color: #c6d4e8;
+            background: rgba(255,255,255,0.06);
         }
 
         .mini-label {
@@ -173,41 +201,106 @@
             border-color: transparent;
         }
 
-        .tournament-entry-link {
-            text-decoration: none;
-            display: block;
+        /* ===== 달력 ===== */
+        .sidebar-calendar {
+            border-radius: 20px;
+            padding: 16px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.07);
         }
 
-        .tournament-entry {
-            border-radius: 18px;
-            padding: 18px 16px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
-            border: 1px solid rgba(255,255,255,0.10);
+        .cal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .cal-month {
+            font-size: 14px;
+            font-weight: 900;
+            color: #c6d4e8;
+            letter-spacing: 0.5px;
+        }
+
+        .cal-nav {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            color: #7a8da8;
             cursor: pointer;
-            transition: 0.2s ease;
+            font-size: 13px;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.18s ease;
         }
 
-        .tournament-entry:hover {
-            transform: translateY(-1px);
-            border-color: rgba(122,140,255,0.28);
-            box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+        .cal-nav:hover {
+            background: rgba(255,255,255,0.07);
+            color: #c6d4e8;
         }
 
-        .tournament-entry-label {
-            font-size: 11px;
-            color: #8ec7ff;
-            letter-spacing: 1.5px;
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .cal-dow {
+            text-align: center;
+            font-size: 10px;
+            font-weight: 900;
+            color: #5a6a82;
+            padding: 4px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .cal-dow.sun { color: rgba(255,100,100,0.55); }
+        .cal-dow.sat { color: rgba(100,160,255,0.55); }
+
+        .cal-day {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #8a9ab5;
+            padding: 5px 0;
+            border-radius: 8px;
+            cursor: default;
+            transition: 0.15s ease;
+            line-height: 1;
+        }
+
+        .cal-day.other-month { color: rgba(255,255,255,0.12); }
+
+        .cal-day.today {
+            background: linear-gradient(135deg, #7a8cff, #4bd3ff);
+            color: #08111e;
+            font-weight: 900;
+        }
+
+        .cal-day.sun { color: rgba(255,120,120,0.75); }
+        .cal-day.sat { color: rgba(120,180,255,0.75); }
+        .cal-day.today.sun,
+        .cal-day.today.sat { color: #08111e; }
+
+        .main {
+            padding: 22px;
+            display: grid;
+            grid-template-rows: auto auto 1fr auto;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        .mini-label {
+            font-size: 12px;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            color: #7fc6ff;
+            opacity: 0.9;
             margin-bottom: 8px;
-            font-weight: 900;
-        }
-
-        .tournament-entry-title {
-            font-size: 18px;
-            font-weight: 900;
-            color: #ffffff;
-            line-height: 1.4;
-            word-break: keep-all;
         }
 
         .topline {
@@ -273,60 +366,17 @@
             align-items: center;
         }
 
-        .type-human {
-            background: rgba(100, 181, 246, 0.18);
-            color: #bfe1ff;
-        }
-
-        .type-ancient {
-            background: rgba(186, 104, 200, 0.18);
-            color: #edc6ff;
-        }
-
-        .type-beast {
-            background: rgba(141, 110, 99, 0.22);
-            color: #e4c9bb;
-        }
-
-        .type-insect {
-            background: rgba(174, 213, 129, 0.20);
-            color: #e2f5bf;
-        }
-
-        .type-spirit {
-            background: rgba(128, 222, 234, 0.18);
-            color: #c6f7ff;
-        }
-
-        .attr-dark {
-            background: rgba(126, 87, 194, 0.22);
-            color: #dab8ff;
-        }
-
-        .attr-earth {
-            background: rgba(121, 85, 72, 0.24);
-            color: #e0c2a8;
-        }
-
-        .attr-lightning {
-            background: rgba(255, 214, 10, 0.22);
-            color: #ffe98f;
-        }
-
-        .attr-holy {
-            background: rgba(255, 236, 179, 0.20);
-            color: #fff2b0;
-        }
-
-        .attr-fire {
-            background: rgba(255, 112, 67, 0.22);
-            color: #ffbfaa;
-        }
-
-        .attr-none {
-            background: rgba(255,255,255,0.08);
-            color: #d1d5db;
-        }
+        .type-human   { background: rgba(100,181,246,0.18); color: #bfe1ff; }
+        .type-ancient { background: rgba(186,104,200,0.18); color: #edc6ff; }
+        .type-beast   { background: rgba(141,110,99,0.22);  color: #e4c9bb; }
+        .type-insect  { background: rgba(174,213,129,0.20); color: #e2f5bf; }
+        .type-spirit  { background: rgba(128,222,234,0.18); color: #c6f7ff; }
+        .attr-dark      { background: rgba(126,87,194,0.22);  color: #dab8ff; }
+        .attr-earth     { background: rgba(121,85,72,0.24);   color: #e0c2a8; }
+        .attr-lightning { background: rgba(255,214,10,0.22);  color: #ffe98f; }
+        .attr-holy      { background: rgba(255,236,179,0.20); color: #fff2b0; }
+        .attr-fire      { background: rgba(255,112,67,0.22);  color: #ffbfaa; }
+        .attr-none      { background: rgba(255,255,255,0.08); color: #d1d5db; }
 
         .tabs {
             display: flex;
@@ -335,9 +385,7 @@
             margin-top: 0;
         }
 
-        .tabs.gato-grid {
-            display: flex;
-        }
+        .tabs.gato-grid { display: flex; }
 
         .tab {
             position: relative;
@@ -361,59 +409,18 @@
             overflow: hidden;
         }
 
-        .tab:hover {
-            transform: translateY(-1px);
-            border-color: rgba(255,255,255,0.14);
-        }
+        .tab:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.14); }
 
-        .tab-label {
-            line-height: 1.1;
-        }
+        .tab-label { line-height: 1.1; }
+        .tab-sub   { font-size: 11px; opacity: 0.92; line-height: 1; }
 
-        .tab-sub {
-            font-size: 11px;
-            opacity: 0.92;
-            line-height: 1;
-        }
+        .tab-tier-normal    { border-color: rgba(170,235,160,0.30); background: linear-gradient(180deg, rgba(124,172,112,0.18), rgba(28,42,28,0.88)); color: #dff5d9; }
+        .tab-tier-hard      { border-color: rgba(255,206,140,0.32); background: linear-gradient(180deg, rgba(177,124,70,0.18), rgba(46,31,18,0.90)); color: #f5dfc2; }
+        .tab-tier-nightmare { border-color: rgba(214,180,255,0.34); background: linear-gradient(180deg, rgba(129,91,177,0.18), rgba(36,25,49,0.90)); color: #ead8ff; }
 
-        .tab-tier-normal {
-            border-color: rgba(170, 235, 160, 0.30);
-            background: linear-gradient(180deg, rgba(124, 172, 112, 0.18), rgba(28, 42, 28, 0.88));
-            color: #dff5d9;
-        }
-
-        .tab-tier-hard {
-            border-color: rgba(255, 206, 140, 0.32);
-            background: linear-gradient(180deg, rgba(177, 124, 70, 0.18), rgba(46, 31, 18, 0.90));
-            color: #f5dfc2;
-        }
-
-        .tab-tier-nightmare {
-            border-color: rgba(214, 180, 255, 0.34);
-            background: linear-gradient(180deg, rgba(129, 91, 177, 0.18), rgba(36, 25, 49, 0.90));
-            color: #ead8ff;
-        }
-
-        .tab-tier-normal.active {
-            background: linear-gradient(180deg, #b9ef98, #79c96a);
-            color: #18240f;
-            box-shadow: 0 0 18px rgba(153, 230, 134, 0.30);
-            border-color: transparent;
-        }
-
-        .tab-tier-hard.active {
-            background: linear-gradient(180deg, #ffd79d, #e3a85a);
-            color: #241700;
-            box-shadow: 0 0 18px rgba(255, 193, 110, 0.30);
-            border-color: transparent;
-        }
-
-        .tab-tier-nightmare.active {
-            background: linear-gradient(180deg, #e5c0ff, #be89eb);
-            color: #241130;
-            box-shadow: 0 0 18px rgba(198, 141, 255, 0.30);
-            border-color: transparent;
-        }
+        .tab-tier-normal.active    { background: linear-gradient(180deg, #b9ef98, #79c96a); color: #18240f; box-shadow: 0 0 18px rgba(153,230,134,0.30); border-color: transparent; }
+        .tab-tier-hard.active      { background: linear-gradient(180deg, #ffd79d, #e3a85a); color: #241700; box-shadow: 0 0 18px rgba(255,193,110,0.30); border-color: transparent; }
+        .tab-tier-nightmare.active { background: linear-gradient(180deg, #e5c0ff, #be89eb); color: #241130; box-shadow: 0 0 18px rgba(198,141,255,0.30); border-color: transparent; }
 
         .tab.gato {
             min-width: 118px;
@@ -433,11 +440,7 @@
             min-height: 18px;
         }
 
-        .tab.gato .badge {
-            height: 20px;
-            font-size: 10px;
-            padding: 0 7px;
-        }
+        .tab.gato .badge { height: 20px; font-size: 10px; padding: 0 7px; }
 
         .tab.gato.active {
             background: linear-gradient(135deg, #7a8cff, #4bd3ff);
@@ -447,16 +450,12 @@
         }
 
         .tab.gato.active .badge {
-            background: rgba(8, 17, 30, 0.18) !important;
+            background: rgba(8,17,30,0.18) !important;
             color: #0b1727 !important;
             border-color: rgba(8,17,30,0.12) !important;
         }
 
-        .tab.gato.pending {
-            filter: grayscale(1);
-            opacity: 0.74;
-            cursor: pointer;
-        }
+        .tab.gato.pending { filter: grayscale(1); opacity: 0.74; cursor: pointer; }
 
         .tab.gato.pending .tab-pending {
             margin-top: 3px;
@@ -477,27 +476,13 @@
             min-width: 0;
         }
 
-        .table-box {
-            padding: 0;
-            overflow: hidden;
-        }
+        .table-box { padding: 0; overflow: hidden; }
 
-        .table-wrap {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-        table {
-            width: 100%;
-            min-width: 520px;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
+        table { width: 100%; min-width: 520px; border-collapse: collapse; table-layout: fixed; }
 
-        thead th, tbody td {
-            text-align: center;
-            padding: 14px 18px;
-        }
+        thead th, tbody td { text-align: center; padding: 14px 18px; }
 
         thead th {
             font-weight: 900;
@@ -513,21 +498,11 @@
             border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        tbody tr:hover td {
-            background: rgba(255,255,255,0.04);
-        }
+        tbody tr:hover td { background: rgba(255,255,255,0.04); }
 
-        .row-30 td {
-            background: rgba(245, 166, 35, 0.12);
-        }
-
-        .row-33 td {
-            background: rgba(61, 195, 145, 0.12);
-        }
-
-        .row-40 td {
-            background: rgba(158, 107, 214, 0.14);
-        }
+        .row-30 td { background: rgba(245,166,35,0.12); }
+        .row-33 td { background: rgba(61,195,145,0.12); }
+        .row-40 td { background: rgba(158,107,214,0.14); }
 
         .share-cell {
             color: #ffe8b3 !important;
@@ -537,48 +512,17 @@
             padding: 14px 18px;
         }
 
-        .share-row {
-            display: grid;
-            grid-template-columns: 58px 1fr;
-            align-items: center;
-            column-gap: 8px;
-        }
+        .share-row { display: grid; grid-template-columns: 58px 1fr; align-items: center; column-gap: 8px; }
+        .share-label { font-size: 12px; font-weight: 800; white-space: nowrap; opacity: 0.95; }
+        .share-value { font-size: 15px; font-weight: 900; white-space: nowrap; }
 
-        .share-label {
-            font-size: 12px;
-            font-weight: 800;
-            white-space: nowrap;
-            opacity: 0.95;
-        }
+        .label-30 { color: #ffcf7a; }
+        .label-33 { color: #8ef0c9; }
+        .label-40 { color: #d8b2ff; }
 
-        .share-value {
-            font-size: 15px;
-            font-weight: 900;
-            white-space: nowrap;
-        }
+        .dps-cell { color: #ffd58c; font-weight: 900; }
 
-        .label-30 {
-            color: #ffcf7a;
-        }
-
-        .label-33 {
-            color: #8ef0c9;
-        }
-
-        .label-40 {
-            color: #d8b2ff;
-        }
-
-        .dps-cell {
-            color: #ffd58c;
-            font-weight: 900;
-        }
-
-        .right-column {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
+        .right-column { display: flex; flex-direction: column; gap: 14px; }
 
         .side-card, .info-box {
             padding: 18px;
@@ -602,11 +546,7 @@
             box-shadow: inset 0 0 0 1px rgba(255,255,255,0.015), 0 0 20px rgba(106,172,255,0.05);
         }
 
-        .time-badge-wrap {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 14px;
-        }
+        .time-badge-wrap { display: flex; justify-content: center; margin-bottom: 14px; }
 
         .time-badge {
             display: inline-flex;
@@ -618,48 +558,23 @@
             font-weight: 900;
             color: #fff1d1;
             border: 1px solid rgba(255,220,160,0.20);
-            background: linear-gradient(180deg, rgba(164, 125, 62, 0.28), rgba(90, 63, 26, 0.28));
+            background: linear-gradient(180deg, rgba(164,125,62,0.28), rgba(90,63,26,0.28));
         }
 
-        .time-main {
-            text-align: center;
-            font-size: 42px;
-            font-weight: 900;
-            color: #ffffff;
-            margin: 0 0 6px;
-            letter-spacing: 1px;
-        }
+        .time-main { text-align: center; font-size: 42px; font-weight: 900; color: #ffffff; margin: 0 0 6px; letter-spacing: 1px; }
+        .time-labels { text-align: center; font-size: 12px; color: #c1b39c; margin-bottom: 16px; }
 
-        .time-labels {
-            text-align: center;
-            font-size: 12px;
-            color: #c1b39c;
-            margin-bottom: 16px;
-        }
+        .time-inputs { display: flex; justify-content: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
 
-        .time-inputs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-
-        .time-input-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .time-input-group { display: flex; align-items: center; gap: 6px; }
 
         .time-input-box {
-            width: 72px;
-            height: 48px;
+            width: 72px; height: 48px;
             border-radius: 14px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.06);
             color: #ffffff;
-            font-size: 20px;
-            font-weight: 800;
+            font-size: 20px; font-weight: 800;
             text-align: center;
             outline: none;
             transition: 0.18s ease;
@@ -668,10 +583,7 @@
         }
 
         .time-input-box::-webkit-outer-spin-button,
-        .time-input-box::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+        .time-input-box::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
         .time-input-box:focus {
             border-color: rgba(122,140,255,0.50);
@@ -679,13 +591,7 @@
             background: rgba(255,255,255,0.07);
         }
 
-        .time-stepper {
-            width: 26px;
-            height: 48px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+        .time-stepper { width: 26px; height: 48px; display: flex; flex-direction: column; gap: 4px; }
 
         .time-step-btn {
             flex: 1;
@@ -693,34 +599,18 @@
             background: rgba(255,255,255,0.045);
             color: #dce7f8;
             border-radius: 10px;
-            font-size: 11px;
-            font-weight: 900;
+            font-size: 11px; font-weight: 900;
             cursor: pointer;
             transition: 0.18s ease;
-            padding: 0;
-            line-height: 1;
+            padding: 0; line-height: 1;
         }
 
-        .time-step-btn:hover {
-            background: rgba(255,255,255,0.09);
-            border-color: rgba(122,140,255,0.35);
-            color: #ffffff;
-        }
-
-        .time-step-btn:active {
-            transform: scale(0.97);
-        }
+        .time-step-btn:hover { background: rgba(255,255,255,0.09); border-color: rgba(122,140,255,0.35); color: #ffffff; }
+        .time-step-btn:active { transform: scale(0.97); }
 
         .time-divider {
-            width: 100%;
-            height: 1px;
-            margin: 0 0 14px;
-            background: linear-gradient(90deg, 
-                rgba(255,255,255,0), 
-                rgba(255,255,255,0.10), 
-                rgba(255,255,255,0.18), 
-                rgba(255,255,255,0.10), 
-                rgba(255,255,255,0));
+            width: 100%; height: 1px; margin: 0 0 14px;
+            background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.10), rgba(255,255,255,0.18), rgba(255,255,255,0.10), rgba(255,255,255,0));
         }
 
         .party-dps {
@@ -729,64 +619,31 @@
             border-radius: 14px;
             background: rgba(255,211,125,0.08);
             border: 1px solid rgba(255,211,125,0.14);
-            font-size: 15px;
-            font-weight: 900;
+            font-size: 15px; font-weight: 900;
             color: #ffd37d;
             text-align: center;
         }
 
-        .party-dps .party-dps-value {
-            color: #ffffff;
-        }
+        .party-dps .party-dps-value { color: #ffffff; }
 
-        .side-note {
-            text-align: center;
-            font-size: 12px;
-            color: #9decd9;
-            margin-bottom: 0;
-        }
+        .side-note { text-align: center; font-size: 12px; color: #9decd9; margin-bottom: 0; }
 
-        .info-box {
-            padding-top: 16px;
-            padding-bottom: 16px;
-            text-align: center;
-        }
+        .info-box { padding-top: 16px; padding-bottom: 16px; text-align: center; }
 
-        .info-text {
-            font-size: 13px;
-            color: #b6c0d0;
-            line-height: 1.5;
-            margin-top: 4px;
-        }
+        .info-text { font-size: 13px; color: #b6c0d0; line-height: 1.5; margin-top: 4px; }
 
         .coming-soon {
-            padding: 44px 20px;
-            text-align: center;
+            padding: 44px 20px; text-align: center;
             border-radius: 24px;
             background: rgba(255,255,255,0.03);
             border: 1px dashed rgba(255,255,255,0.10);
             color: #e8dcc0;
         }
 
-        .coming-soon h3 {
-            margin: 0 0 10px;
-            color: #f6d18b;
-            font-size: 24px;
-        }
+        .coming-soon h3 { margin: 0 0 10px; color: #f6d18b; font-size: 24px; }
+        .coming-soon p  { margin: 0; color: #b9a98b; font-size: 14px; line-height: 1.6; }
 
-        .coming-soon p {
-            margin: 0;
-            color: #b9a98b;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .status {
-            text-align: right;
-            font-size: 13px;
-            color: #98a7bd;
-            padding-right: 2px;
-        }
+        .status { text-align: right; font-size: 13px; color: #98a7bd; padding-right: 2px; }
 
         .footer-signature {
             width: min(1440px, calc(100% - 20px));
@@ -803,290 +660,113 @@
             font-size: 20px;
             font-style: italic;
             letter-spacing: 0.8px;
-            color: rgba(255, 228, 188, 0.92);
+            color: rgba(255,228,188,0.92);
             border-top: 1px solid rgba(255,223,170,0.20);
             border-bottom: 1px solid rgba(255,223,170,0.08);
             background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,214,153,0.028));
-            text-shadow: 0 0 2px rgba(255,255,255,0.18), 
-                         0 0 8px rgba(255,210,120,0.12), 
-                         0 0 16px rgba(255,180,90,0.06);
-            box-shadow: 0 0 0 1px rgba(255,255,255,0.02) inset, 
-                        0 0 18px rgba(255,190,100,0.05);
+            text-shadow: 0 0 2px rgba(255,255,255,0.18), 0 0 8px rgba(255,210,120,0.12), 0 0 16px rgba(255,180,90,0.06);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.02) inset, 0 0 18px rgba(255,190,100,0.05);
             opacity: 0.9;
         }
 
         .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(4, 8, 16, 0.72);
+            position: fixed; inset: 0;
+            background: rgba(4,8,16,0.72);
             backdrop-filter: blur(6px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 1000;
+            display: none; align-items: center; justify-content: center;
+            padding: 20px; z-index: 1000;
         }
 
-        .modal-backdrop.show {
-            display: flex;
-        }
+        .modal-backdrop.show { display: flex; }
 
         .modal-card {
             width: min(720px, 100%);
-            border-radius: 28px;
-            padding: 26px 24px 22px;
+            border-radius: 28px; padding: 26px 24px 22px;
             background: linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
             border: 1px solid rgba(255,255,255,0.10);
             box-shadow: 0 30px 80px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.02);
             position: relative;
         }
 
-        .modal-top-label {
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #86c9ff;
-            margin-bottom: 10px;
-            text-align: center;
-        }
+        .modal-top-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #86c9ff; margin-bottom: 10px; text-align: center; }
+        .modal-title     { font-size: 30px; font-weight: 900; color: #ffffff; text-align: center; margin: 0 0 10px; line-height: 1.2; }
+        .modal-divider   { width: 100%; height: 1px; margin: 16px 0 18px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.12), rgba(255,255,255,0.24), rgba(255,255,255,0.12), rgba(255,255,255,0)); }
 
-        .modal-title {
-            font-size: 30px;
-            font-weight: 900;
-            color: #ffffff;
-            text-align: center;
-            margin: 0 0 10px;
-            line-height: 1.2;
-        }
-
-        .modal-divider {
-            width: 100%;
-            height: 1px;
-            margin: 16px 0 18px;
-            background: linear-gradient(90deg, 
-                rgba(255,255,255,0), 
-                rgba(255,255,255,0.12), 
-                rgba(255,255,255,0.24), 
-                rgba(255,255,255,0.12), 
-                rgba(255,255,255,0));
-        }
-
-        .modal-content {
-            color: #d8e0ef;
-            font-size: 15px;
-            line-height: 1.9;
-            word-break: keep-all;
-        }
-
-        .modal-content p {
-            margin: 0 0 14px;
-        }
-
-        .modal-content .point {
-            color: #ffd98b;
-            font-weight: 900;
-        }
-
-        .modal-content .subpoint {
-            color: #9decd9;
-            font-weight: 800;
-        }
+        .modal-content { color: #d8e0ef; font-size: 15px; line-height: 1.9; word-break: keep-all; }
+        .modal-content p { margin: 0 0 14px; }
+        .modal-content .point    { color: #ffd98b; font-weight: 900; }
+        .modal-content .subpoint { color: #9decd9; font-weight: 800; }
 
         .modal-close {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
+            position: absolute; top: 14px; right: 14px;
+            width: 38px; height: 38px; border-radius: 50%;
             border: 1px solid rgba(255,255,255,0.08);
             background: rgba(255,255,255,0.05);
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: 0.18s ease;
+            color: #ffffff; font-size: 18px; font-weight: 900;
+            cursor: pointer; transition: 0.18s ease;
         }
 
-        .modal-close:hover {
-            background: rgba(255,255,255,0.10);
-            transform: rotate(90deg);
-        }
+        .modal-close:hover { background: rgba(255,255,255,0.10); transform: rotate(90deg); }
 
         @media (max-width: 1180px) {
-            .workspace {
-                grid-template-columns: 280px 1fr;
-            }
-            .content-grid {
-                grid-template-columns: 1fr 260px;
-            }
+            .workspace { grid-template-columns: 280px 1fr; }
+            .content-grid { grid-template-columns: 1fr 260px; }
         }
 
         @media (max-width: 1024px) {
-            .workspace {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                border-right: none;
-                border-bottom: 1px solid rgba(255,255,255,0.06);
-            }
-            .menu {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-            .topline {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .date {
-                align-self: flex-start;
-            }
+            .workspace { grid-template-columns: 1fr; }
+            .sidebar { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+            .menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .content-grid { grid-template-columns: 1fr; }
+            .topline { flex-direction: column; align-items: flex-start; }
+            .date { align-self: flex-start; }
+            .sidebar-calendar { display: none; }
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 8px;
-            }
-            .app {
-                width: 100%;
-                margin: 0 auto 8px;
-                border-radius: 20px;
-            }
-            .sidebar {
-                padding: 16px;
-            }
-            .main {
-                padding: 14px;
-            }
-            .hero {
-                font-size: 26px;
-            }
-            .menu {
-                grid-template-columns: 1fr;
-            }
-            .menu-item {
-                font-size: 15px;
-                padding: 13px 14px;
-            }
-            .title {
-                font-size: 22px;
-            }
-            .tabs {
-                gap: 8px;
-            }
-            .tab {
-                min-width: 92px;
-                min-height: 48px;
-                font-size: 12px;
-                padding: 10px 10px;
-            }
-            .tab-sub {
-                font-size: 10px;
-            }
-            .tab.gato {
-                min-width: 0;
-                width: 100%;
-            }
-            .tabs.gato-grid {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                width: 100%;
-            }
-            .time-main {
-                font-size: 32px;
-            }
-            .time-input-box {
-                width: 64px;
-                height: 44px;
-                font-size: 18px;
-            }
-            .time-stepper {
-                height: 44px;
-                width: 24px;
-            }
-            .party-dps {
-                font-size: 14px;
-                padding: 9px 10px;
-            }
-            .modal-card {
-                padding: 24px 18px 18px;
-                border-radius: 22px;
-            }
-            .modal-title {
-                font-size: 24px;
-            }
-            .modal-content {
-                font-size: 14px;
-                line-height: 1.8;
-            }
-            table {
-                min-width: 100%;
-                font-size: 12px;
-            }
-            thead th, tbody td {
-                padding: 10px 8px;
-            }
-            .share-cell {
-                font-size: 13px;
-                padding: 10px 8px;
-            }
-            .share-row {
-                grid-template-columns: 46px 1fr;
-                column-gap: 5px;
-            }
-            .share-label {
-                font-size: 10px;
-            }
-            .share-value {
-                font-size: 13px;
-            }
-            .dps-cell {
-                font-size: 13px;
-            }
-            .footer-signature {
-                width: 100%;
-                margin-bottom: 12px;
-            }
-            .footer-signature span {
-                font-size: 17px;
-                padding: 6px 14px 7px;
-            }
+            body { padding: 8px; }
+            .app { width: 100%; margin: 0 auto 8px; border-radius: 20px; }
+            .sidebar { padding: 16px; }
+            .main { padding: 14px; }
+            .hero { font-size: 26px; }
+            .menu { grid-template-columns: 1fr; }
+            .menu-item { font-size: 15px; padding: 13px 14px; }
+            .title { font-size: 22px; }
+            .tabs { gap: 8px; }
+            .tab { min-width: 92px; min-height: 48px; font-size: 12px; padding: 10px 10px; }
+            .tab-sub { font-size: 10px; }
+            .tab.gato { min-width: 0; width: 100%; }
+            .tabs.gato-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+            .time-main { font-size: 32px; }
+            .time-input-box { width: 64px; height: 44px; font-size: 18px; }
+            .time-stepper { height: 44px; width: 24px; }
+            .party-dps { font-size: 14px; padding: 9px 10px; }
+            .modal-card { padding: 24px 18px 18px; border-radius: 22px; }
+            .modal-title { font-size: 24px; }
+            .modal-content { font-size: 14px; line-height: 1.8; }
+            table { min-width: 100%; font-size: 12px; }
+            thead th, tbody td { padding: 10px 8px; }
+            .share-cell { font-size: 13px; padding: 10px 8px; }
+            .share-row { grid-template-columns: 46px 1fr; column-gap: 5px; }
+            .share-label { font-size: 10px; }
+            .share-value { font-size: 13px; }
+            .dps-cell { font-size: 13px; }
+            .footer-signature { width: 100%; margin-bottom: 12px; }
+            .footer-signature span { font-size: 17px; padding: 6px 14px 7px; }
+            .sidebar-calendar { display: none; }
         }
 
         @media (max-width: 480px) {
-            .title {
-                font-size: 19px;
-            }
-            .hero {
-                font-size: 23px;
-            }
-            .subtitle, .info-text, .muted {
-                font-size: 12px;
-            }
-            .tab {
-                min-width: 84px;
-                font-size: 11px;
-            }
-            .time-main {
-                font-size: 28px;
-            }
-            .time-input-box {
-                width: 58px;
-                height: 42px;
-                font-size: 17px;
-            }
-            .time-stepper {
-                height: 42px;
-            }
-            .guide-trigger {
-                font-size: 15px;
-                padding: 18px 16px 16px;
-            }
-            .modal-title {
-                font-size: 22px;
-            }
+            .title { font-size: 19px; }
+            .hero { font-size: 23px; }
+            .subtitle, .info-text, .muted { font-size: 12px; }
+            .tab { min-width: 84px; font-size: 11px; }
+            .time-main { font-size: 28px; }
+            .time-input-box { width: 58px; height: 42px; font-size: 17px; }
+            .time-stepper { height: 42px; }
+            .guide-trigger { font-size: 15px; padding: 18px 16px 16px; }
+            .modal-title { font-size: 22px; }
+            .sidebar-calendar { display: none; }
         }
     </style>
 </head>
@@ -1095,6 +775,13 @@
     <div class="app">
         <div class="workspace">
             <aside class="sidebar">
+
+                <!-- 캡슐 스위치 -->
+                <div class="switch-wrap">
+                    <a href="#" class="active">DPS 계산기</a>
+                    <a href="./tournament.html">직각 토너먼트</a>
+                </div>
+
                 <div class="mini-label">LOST ARK TOOL · v18</div>
                 <div class="hero">로스트아크<br>DPS 계산기</div>
                 <div class="muted">
@@ -1119,12 +806,16 @@
 
                 <div class="sidebar-divider"></div>
 
-                <a class="tournament-entry-link" href="./tournament.html">
-                    <div class="tournament-entry">
-                        <div class="tournament-entry-label">TOURNAMENT</div>
-                        <div class="tournament-entry-title">직각 토너먼트<br>페이지 이동</div>
+                <!-- 달력 (모바일 숨김) -->
+                <div class="sidebar-calendar">
+                    <div class="cal-header">
+                        <button class="cal-nav" id="calPrev">‹</button>
+                        <div class="cal-month" id="calMonth"></div>
+                        <button class="cal-nav" id="calNext">›</button>
                     </div>
-                </a>
+                    <div class="cal-grid" id="calGrid"></div>
+                </div>
+
             </aside>
 
             <main class="main">
@@ -1204,21 +895,11 @@
             <h2 class="modal-title" id="guideTitle">안내 : DPS 보는 방법</h2>
             <div class="modal-divider"></div>
             <div class="modal-content">
-                <p>
-                    <span class="point">세르카</span>와 <span class="point">성당</span>의 <span class="subpoint">1관 / 2관</span>은 모두 <span class="point">광폭 시간 10분(600초)</span>을 기준으로 합니다.
-                </p>
-                <p>
-                    그래서 현재 표시되는 기본값 <span class="point">10분(600초)</span>은 단순한 예시 시간이 아니라, <span class="subpoint">광폭 전까지 클리어하기 위한 최소 DPS 기준선</span>에 가장 가까운 기본 설정이라고 보시면 됩니다.
-                </p>
-                <p>
-                    만약 실제 전투에서 더 빠르게 클리어했다면, 우측 <span class="point">CLEAR TIME</span>에서 시간을 직접 조절해 <span class="subpoint">내가 낸 실제 DPS</span>와 <span class="subpoint">그 시간대의 딜지분 컷</span>을 더 정확하게 확인할 수 있습니다.
-                </p>
-                <p>
-                    이번에 추가된 <span class="point">파티 DPS</span> 역시 입력한 클리어 타임에 맞춰 함께 변경됩니다. 즉, 파티가 빠르게 클리어할수록 파티 DPS도 높아지고, 여유 있게 클리어할수록 파티 DPS는 낮아집니다.
-                </p>
-                <p>
-                    간단히 보면, <span class="point">파티 DPS - 내 DPS</span>는 곧 <span class="subpoint">다른 딜러들이 만든 DPS의 합</span>에 가깝다고 이해하시면 됩니다.
-                </p>
+                <p><span class="point">세르카</span>와 <span class="point">성당</span>의 <span class="subpoint">1관 / 2관</span>은 모두 <span class="point">광폭 시간 10분(600초)</span>을 기준으로 합니다.</p>
+                <p>그래서 현재 표시되는 기본값 <span class="point">10분(600초)</span>은 단순한 예시 시간이 아니라, <span class="subpoint">광폭 전까지 클리어하기 위한 최소 DPS 기준선</span>에 가장 가까운 기본 설정이라고 보시면 됩니다.</p>
+                <p>만약 실제 전투에서 더 빠르게 클리어했다면, 우측 <span class="point">CLEAR TIME</span>에서 시간을 직접 조절해 <span class="subpoint">내가 낸 실제 DPS</span>와 <span class="subpoint">그 시간대의 딜지분 컷</span>을 더 정확하게 확인할 수 있습니다.</p>
+                <p>이번에 추가된 <span class="point">파티 DPS</span> 역시 입력한 클리어 타임에 맞춰 함께 변경됩니다. 즉, 파티가 빠르게 클리어할수록 파티 DPS도 높아지고, 여유 있게 클리어할수록 파티 DPS는 낮아집니다.</p>
+                <p>간단히 보면, <span class="point">파티 DPS - 내 DPS</span>는 곧 <span class="subpoint">다른 딜러들이 만든 DPS의 합</span>에 가깝다고 이해하시면 됩니다.</p>
             </div>
         </div>
     </div>
@@ -1228,79 +909,71 @@
     <script>
         const CSV_URL = "https://docs.google.com/spreadsheets/d/1v4gfG-Lr0iFmiP0PXtVTsijdMziekQaZ-wBTWrobncY/export?format=csv&gid=0";
         
-        let currentMenu = "serka";
+        let currentMenu  = "serka";
         let currentCombo = "hard_gate1";
-        let currentGatoBoss = "루멘칼리고";
+        let currentGatoBoss     = "루멘칼리고";
         let currentGato1750Boss = "스콜라키아";
         
         const parsedData = {
-            serka: { normal: [], hard: [], nightmare: [] },
+            serka:     { normal: [], hard: [], nightmare: [] },
             cathedral: { normal: [], hard: [], nightmare: [] },
             gato1730: {},
             gato1750: {}
         };
         
-        const gato1730Bosses = [
-            "루멘칼리고", "가르가디스", "스콜라키아", "크라티오스",
-            "아게오로스", "드렉탈라스", "소나벨", "베스칼"
-        ];
-        
-        const gato1750Bosses = [
-            "루멘칼리고", "가르가디스", "스콜라키아", "크라티오스",
-            "아게오로스", "드렉탈라스", "소나벨", "베스칼"
-        ];
-        
-        const gato1750AvailableBosses = ["스콜라키아", "크라티오스", "아게오로스", "드렉탈라스"];
+        const gato1730Bosses = ["루멘칼리고","가르가디스","스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
+        const gato1750Bosses = ["루멘칼리고","가르가디스","스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
+        const gato1750AvailableBosses = ["스콜라키아","크라티오스","아게오로스","드렉탈라스"];
         
         const gato1730Layout = [
-            { boss: "루멘칼리고", startRow: 66, shareCol: 1, damageCol: 3 },
-            { boss: "가르가디스", startRow: 66, shareCol: 9, damageCol: 11 },
-            { boss: "스콜라키아", startRow: 66, shareCol: 17, damageCol: 19 },
-            { boss: "크라티오스", startRow: 98, shareCol: 1, damageCol: 3 },
-            { boss: "아게오로스", startRow: 98, shareCol: 9, damageCol: 11 },
-            { boss: "드렉탈라스", startRow: 98, shareCol: 17, damageCol: 19 },
-            { boss: "소나벨", startRow: 130, shareCol: 1, damageCol: 3 },
-            { boss: "베스칼", startRow: 130, shareCol: 9, damageCol: 11 }
+            {boss:"루멘칼리고",startRow:66,shareCol:1,damageCol:3},
+            {boss:"가르가디스",startRow:66,shareCol:9,damageCol:11},
+            {boss:"스콜라키아",startRow:66,shareCol:17,damageCol:19},
+            {boss:"크라티오스",startRow:98,shareCol:1,damageCol:3},
+            {boss:"아게오로스",startRow:98,shareCol:9,damageCol:11},
+            {boss:"드렉탈라스",startRow:98,shareCol:17,damageCol:19},
+            {boss:"소나벨",startRow:130,shareCol:1,damageCol:3},
+            {boss:"베스칼",startRow:130,shareCol:9,damageCol:11}
         ];
         
         const gato1750Layout = [
-            { boss: "루멘칼리고", startRow: 167, shareCol: 1, damageCol: 3 },
-            { boss: "가르가디스", startRow: 167, shareCol: 9, damageCol: 11 },
-            { boss: "스콜라키아", startRow: 167, shareCol: 17, damageCol: 19 },
-            { boss: "크라티오스", startRow: 199, shareCol: 1, damageCol: 3 },
-            { boss: "아게오로스", startRow: 199, shareCol: 9, damageCol: 11 },
-            { boss: "드렉탈라스", startRow: 199, shareCol: 17, damageCol: 19 },
-            { boss: "소나벨", startRow: 231, shareCol: 1, damageCol: 3 },
-            { boss: "베스칼", startRow: 231, shareCol: 9, damageCol: 11 }
+            {boss:"루멘칼리고",startRow:167,shareCol:1,damageCol:3},
+            {boss:"가르가디스",startRow:167,shareCol:9,damageCol:11},
+            {boss:"스콜라키아",startRow:167,shareCol:17,damageCol:19},
+            {boss:"크라티오스",startRow:199,shareCol:1,damageCol:3},
+            {boss:"아게오로스",startRow:199,shareCol:9,damageCol:11},
+            {boss:"드렉탈라스",startRow:199,shareCol:17,damageCol:19},
+            {boss:"소나벨",startRow:231,shareCol:1,damageCol:3},
+            {boss:"베스칼",startRow:231,shareCol:9,damageCol:11}
         ];
         
         const gatoMeta = {
-            "루멘칼리고": { type: { text: "고대", cls: "type-ancient" }, attr: { text: "암속성 취약", cls: "attr-dark" } },
-            "가르가디스": { type: { text: "야수", cls: "type-beast" }, attr: { text: "토속성 취약", cls: "attr-earth" } },
-            "스콜라키아": { type: { text: "곤충", cls: "type-insect" }, attr: { text: "토속성 취약", cls: "attr-earth" } },
-            "크라티오스": { type: { text: "야수", cls: "type-beast" }, attr: { text: "뇌속성 취약", cls: "attr-lightning" } },
-            "아게오로스": { type: { text: "고대", cls: "type-ancient" }, attr: { text: "성속성 취약", cls: "attr-holy" } },
-            "드렉탈라스": { type: { text: "야수", cls: "type-beast" }, attr: { text: "화속성 취약", cls: "attr-fire" } },
-            "소나벨": { type: { text: "정령", cls: "type-spirit" }, attr: { text: "암속성 취약", cls: "attr-dark" } },
-            "베스칼": { type: { text: "야수", cls: "type-beast" }, attr: { text: "화속성 취약", cls: "attr-fire" } }
+            "루멘칼리고":{type:{text:"고대",cls:"type-ancient"},attr:{text:"암속성 취약",cls:"attr-dark"}},
+            "가르가디스":{type:{text:"야수",cls:"type-beast"},attr:{text:"토속성 취약",cls:"attr-earth"}},
+            "스콜라키아":{type:{text:"곤충",cls:"type-insect"},attr:{text:"토속성 취약",cls:"attr-earth"}},
+            "크라티오스":{type:{text:"야수",cls:"type-beast"},attr:{text:"뇌속성 취약",cls:"attr-lightning"}},
+            "아게오로스":{type:{text:"고대",cls:"type-ancient"},attr:{text:"성속성 취약",cls:"attr-holy"}},
+            "드렉탈라스":{type:{text:"야수",cls:"type-beast"},attr:{text:"화속성 취약",cls:"attr-fire"}},
+            "소나벨":{type:{text:"정령",cls:"type-spirit"},attr:{text:"암속성 취약",cls:"attr-dark"}},
+            "베스칼":{type:{text:"야수",cls:"type-beast"},attr:{text:"화속성 취약",cls:"attr-fire"}}
         };
         
         const raidMeta = {
             serka: {
-                normal_gate1: { diffKey: "normal", gateKey: "gate1", title: "노말 (1710)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "속성 없음", cls: "attr-none" }, tierClass: "tab-tier-normal" },
-                normal_gate2: { diffKey: "normal", gateKey: "gate2", title: "노말 (1710)", gateName: "2관", type: { text: "고대", cls: "type-ancient" }, attr: { text: "성속성 취약", cls: "attr-holy" }, tierClass: "tab-tier-normal" },
-                hard_gate1: { diffKey: "hard", gateKey: "gate1", title: "하드 (1730)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "속성 없음", cls: "attr-none" }, tierClass: "tab-tier-hard" },
-                hard_gate2: { diffKey: "hard", gateKey: "gate2", title: "하드 (1730)", gateName: "2관", type: { text: "고대", cls: "type-ancient" }, attr: { text: "성속성 취약", cls: "attr-holy" }, tierClass: "tab-tier-hard" },
-                nightmare_gate1: { diffKey: "nightmare", gateKey: "gate1", title: "나메 (1740)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "속성 없음", cls: "attr-none" }, tierClass: "tab-tier-nightmare" },
-                nightmare_gate2: { diffKey: "nightmare", gateKey: "gate2", title: "나메 (1740)", gateName: "2관", type: { text: "고대", cls: "type-ancient" }, attr: { text: "성속성 취약", cls: "attr-holy" }, tierClass: "tab-tier-nightmare" }
+                normal_gate1:    {diffKey:"normal",    gateKey:"gate1",title:"노말 (1710)",    gateName:"1관",type:{text:"인간",cls:"type-human"},  attr:{text:"속성 없음",cls:"attr-none"},   tierClass:"tab-tier-normal"},
+                normal_gate2:    {diffKey:"normal",    gateKey:"gate2",title:"노말 (1710)",    gateName:"2관",type:{text:"고대",cls:"type-ancient"}, attr:{text:"성속성 취약",cls:"attr-holy"}, tierClass:"tab-tier-normal"},
+                hard_gate1:      {diffKey:"hard",      gateKey:"gate1",title:"하드 (1730)",    gateName:"1관",type:{text:"인간",cls:"type-human"},  attr:{text:"속성 없음",cls:"attr-none"},   tierClass:"tab-tier-hard"},
+                hard_gate2:      {diffKey:"hard",      gateKey:"gate2",title:"하드 (1730)",    gateName:"2관",type:{text:"고대",cls:"type-ancient"}, attr:{text:"성속성 취약",cls:"attr-holy"}, tierClass:"tab-tier-hard"},
+                nightmare_gate1: {diffKey:"nightmare", gateKey:"gate1",title:"나메 (1740)",    gateName:"1관",type:{text:"인간",cls:"type-human"},  attr:{text:"속성 없음",cls:"attr-none"},   tierClass:"tab-tier-nightmare"},
+                nightmare_gate2: {diffKey:"nightmare", gateKey:"gate2",title:"나메 (1740)",    gateName:"2관",type:{text:"고대",cls:"type-ancient"}, attr:{text:"성속성 취약",cls:"attr-holy"}, tierClass:"tab-tier-nightmare"}
             },
             cathedral: {
-                normal_gate1: { diffKey: "normal", gateKey: "gate1", title: "1단계 (1700)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-normal" },
-                normal_gate2: { diffKey: "normal", gateKey: "gate2", title: "1단계 (1700)", gateName: "2관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-normal" },
-                hard_gate1: { diffKey: "hard", gateKey: "gate1", title: "2단계 (1720)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-hard" },
-                hard_gate2: { diffKey: "hard", gateKey: "gate2", title: "2단계 (1720)", gateName: "2관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-hard" },
-                nightmare_gate1: { diffKey: "nightmare", gateKey: "gate1", title: "3단계 (1750)", gateName: "1관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-nightmare" },
-                nightmare_gate2: { diffKey: "nightmare", gateKey: "gate2", title: "3단계 (1750)", gateName: "2관", type: { text: "인간", cls: "type-human" }, attr: { text: "암속성 취약", cls: "attr-dark" }, tierClass: "tab-tier-nightmare" }
+                normal_gate1:    {diffKey:"normal",    gateKey:"gate1",title:"1단계 (1700)", gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-normal"},
+                normal_gate2:    {diffKey:"normal",    gateKey:"gate2",title:"1단계 (1700)", gateName:"2관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-normal"},
+                hard_gate1:      {diffKey:"hard",      gateKey:"gate1",title:"2단계 (1720)", gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-hard"},
+                hard_gate2:      {diffKey:"hard",      gateKey:"gate2",title:"2단계 (1720)", gateName:"2관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-hard"},
+                nightmare_gate1: {diffKey:"nightmare", gateKey:"gate1",title:"3단계 (1750)", gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-nightmare"},
+                nightmare_gate2: {diffKey:"nightmare", gateKey:"gate2",title:"3단계 (1750)", gateName:"2관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-nightmare"}
             }
         };
         
@@ -1311,12 +984,8 @@
         }
         
         function formatDateTime(date) {
-            const y = date.getFullYear();
-            const m = String(date.getMonth() + 1).padStart(2, "0");
-            const d = String(date.getDate()).padStart(2, "0");
-            const h = String(date.getHours()).padStart(2, "0");
-            const min = String(date.getMinutes()).padStart(2, "0");
-            const s = String(date.getSeconds()).padStart(2, "0");
+            const y=date.getFullYear(), m=String(date.getMonth()+1).padStart(2,"0"), d=String(date.getDate()).padStart(2,"0");
+            const h=String(date.getHours()).padStart(2,"0"), min=String(date.getMinutes()).padStart(2,"0"), s=String(date.getSeconds()).padStart(2,"0");
             return `${y} / ${m} / ${d} ${h}:${min}:${s}`;
         }
         
@@ -1329,632 +998,479 @@
         }
         
         function updateTimeDisplay() {
-            let min = parseInt(document.getElementById("minutes").value || 0, 10);
-            let sec = parseInt(document.getElementById("seconds").value || 0, 10);
-            if (isNaN(min) || min < 0) min = 0;
-            if (isNaN(sec) || sec < 0) sec = 0;
-            if (sec > 59) sec = 59;
-            document.getElementById("minutes").value = min;
-            document.getElementById("seconds").value = sec;
-            document.getElementById("timeDisplay").textContent = `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+            let min = parseInt(document.getElementById("minutes").value||0, 10);
+            let sec = parseInt(document.getElementById("seconds").value||0, 10);
+            if (isNaN(min)||min<0) min=0;
+            if (isNaN(sec)||sec<0) sec=0;
+            if (sec>59) sec=59;
+            document.getElementById("minutes").value=min;
+            document.getElementById("seconds").value=sec;
+            document.getElementById("timeDisplay").textContent=`${String(min).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
         }
         
         function setBaseTimeByMenu(menu) {
-            const minInput = document.getElementById("minutes");
-            const secInput = document.getElementById("seconds");
-            const label = document.getElementById("timeBaseLabel");
-            if (menu === "gato1730" || menu === "gato1750") {
-                minInput.value = 1;
-                secInput.value = 50;
-                label.textContent = "기본값: 1분 50초(110초)";
+            const minInput=document.getElementById("minutes");
+            const secInput=document.getElementById("seconds");
+            const label=document.getElementById("timeBaseLabel");
+            if (menu==="gato1730"||menu==="gato1750") {
+                minInput.value=1; secInput.value=50;
+                label.textContent="기본값: 1분 50초(110초)";
             } else {
-                minInput.value = 10;
-                secInput.value = 0;
-                label.textContent = "기본값: 10분(600초)";
+                minInput.value=10; secInput.value=0;
+                label.textContent="기본값: 10분(600초)";
             }
             updateTimeDisplay();
         }
         
         function getTotalSeconds() {
-            let min = parseInt(document.getElementById("minutes").value || 0, 10);
-            let sec = parseInt(document.getElementById("seconds").value || 0, 10);
-            if (isNaN(min) || min < 0) min = 0;
-            if (isNaN(sec) || sec < 0) sec = 0;
-            if (sec > 59) sec = 59;
-            document.getElementById("minutes").value = min;
-            document.getElementById("seconds").value = sec;
-            return Math.max(1, min * 60 + sec);
+            let min=parseInt(document.getElementById("minutes").value||0,10);
+            let sec=parseInt(document.getElementById("seconds").value||0,10);
+            if (isNaN(min)||min<0) min=0;
+            if (isNaN(sec)||sec<0) sec=0;
+            if (sec>59) sec=59;
+            document.getElementById("minutes").value=min;
+            document.getElementById("seconds").value=sec;
+            return Math.max(1, min*60+sec);
         }
         
-        function fmt(n) {
-            return Number(n || 0).toLocaleString("ko-KR");
-        }
+        function fmt(n) { return Number(n||0).toLocaleString("ko-KR"); }
         
         function fmtPartyDps(n) {
-            return `${Number(n || 0).toLocaleString("ko-KR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}억`;
+            return `${Number(n||0).toLocaleString("ko-KR",{minimumFractionDigits:1,maximumFractionDigits:1})}억`;
         }
         
         function toNum(v) {
-            if (v === undefined || v === null) return 0;
-            const s = String(v).replace(/,/g, "").replace(/"/g, "").trim();
-            const n = Number(s);
-            return isNaN(n) ? 0 : n;
+            if (v===undefined||v===null) return 0;
+            const s=String(v).replace(/,/g,"").replace(/"/g,"").trim();
+            const n=Number(s);
+            return isNaN(n)?0:n;
         }
         
         function parseCSVLine(line) {
-            const result = [];
-            let cur = "";
-            let inQuotes = false;
-            for (let i = 0; i < line.length; i++) {
-                const ch = line[i];
-                if (ch === '"') {
-                    if (inQuotes && line[i + 1] === '"') {
-                        cur += '"';
-                        i++;
-                    } else {
-                        inQuotes = !inQuotes;
-                    }
-                } else if (ch === "," && !inQuotes) {
-                    result.push(cur);
-                    cur = "";
-                } else {
-                    cur += ch;
-                }
+            const result=[]; let cur=""; let inQuotes=false;
+            for (let i=0;i<line.length;i++) {
+                const ch=line[i];
+                if (ch==='"') { if(inQuotes&&line[i+1]==='"'){cur+='"';i++;}else{inQuotes=!inQuotes;} }
+                else if (ch===","&&!inQuotes) { result.push(cur); cur=""; }
+                else { cur+=ch; }
             }
             result.push(cur);
             return result;
         }
         
         function percentNum(v) {
-            const m = String(v || "").match(/(\d+)%/);
-            return m ? Number(m[1]) : null;
+            const m=String(v||"").match(/(\d+)%/);
+            return m?Number(m[1]):null;
         }
         
         function getComboTabs(menu) {
-            if (menu === "serka") {
-                return [
-                    { key: "normal_gate1", label: "노말", sub: "1관" },
-                    { key: "normal_gate2", label: "노말", sub: "2관" },
-                    { key: "hard_gate1", label: "하드", sub: "1관" },
-                    { key: "hard_gate2", label: "하드", sub: "2관" },
-                    { key: "nightmare_gate1", label: "나메", sub: "1관" },
-                    { key: "nightmare_gate2", label: "나메", sub: "2관" }
-                ];
-            }
-            if (menu === "cathedral") {
-                return [
-                    { key: "normal_gate1", label: "1단계", sub: "1관" },
-                    { key: "normal_gate2", label: "1단계", sub: "2관" },
-                    { key: "hard_gate1", label: "2단계", sub: "1관" },
-                    { key: "hard_gate2", label: "2단계", sub: "2관" },
-                    { key: "nightmare_gate1", label: "3단계", sub: "1관" },
-                    { key: "nightmare_gate2", label: "3단계", sub: "2관" }
-                ];
-            }
+            if (menu==="serka") return [
+                {key:"normal_gate1",label:"노말",sub:"1관"},{key:"normal_gate2",label:"노말",sub:"2관"},
+                {key:"hard_gate1",label:"하드",sub:"1관"},{key:"hard_gate2",label:"하드",sub:"2관"},
+                {key:"nightmare_gate1",label:"나메",sub:"1관"},{key:"nightmare_gate2",label:"나메",sub:"2관"}
+            ];
+            if (menu==="cathedral") return [
+                {key:"normal_gate1",label:"1단계",sub:"1관"},{key:"normal_gate2",label:"1단계",sub:"2관"},
+                {key:"hard_gate1",label:"2단계",sub:"1관"},{key:"hard_gate2",label:"2단계",sub:"2관"},
+                {key:"nightmare_gate1",label:"3단계",sub:"1관"},{key:"nightmare_gate2",label:"3단계",sub:"2관"}
+            ];
             return [];
         }
         
         function getContentName() {
-            if (currentMenu === "serka" || currentMenu === "cathedral") {
-                const meta = raidMeta[currentMenu][currentCombo];
-                const menuName = currentMenu === "serka" ? "세르카" : "성당";
-                return `${menuName} : ${meta.title.replace(/\s*\(.+\)/, "")} ${meta.gateName}`;
+            if (currentMenu==="serka"||currentMenu==="cathedral") {
+                const meta=raidMeta[currentMenu][currentCombo];
+                const menuName=currentMenu==="serka"?"세르카":"성당";
+                return `${menuName} : ${meta.title.replace(/\s*\(.+\)/,"")} ${meta.gateName}`;
             }
-            if (currentMenu === "gato1730") return `1730 가디언 토벌 : ${currentGatoBoss}`;
-            if (currentMenu === "gato1750") return `1750 가디언 토벌 : ${currentGato1750Boss}`;
+            if (currentMenu==="gato1730") return `1730 가디언 토벌 : ${currentGatoBoss}`;
+            if (currentMenu==="gato1750") return `1750 가디언 토벌 : ${currentGato1750Boss}`;
             return "콘텐츠";
         }
         
         function getTableTitle() {
-            if (currentMenu === "serka" || currentMenu === "cathedral") {
-                const meta = raidMeta[currentMenu][currentCombo];
-                const levelMatch = meta.title.match(/\((\d+)\)/);
-                const level = levelMatch ? levelMatch[1] : "-";
+            if (currentMenu==="serka"||currentMenu==="cathedral") {
+                const meta=raidMeta[currentMenu][currentCombo];
+                const levelMatch=meta.title.match(/\((\d+)\)/);
+                const level=levelMatch?levelMatch[1]:"-";
                 return `입장레벨 : ${level}`;
             }
-            if (currentMenu === "gato1730") return "잔영 1단계";
-            if (currentMenu === "gato1750") return "잔영 2단계";
+            if (currentMenu==="gato1730") return "잔영 1단계";
+            if (currentMenu==="gato1750") return "잔영 2단계";
             return "";
         }
         
         function applyMenuFromQuery() {
-            const params = new URLSearchParams(window.location.search);
-            const menu = params.get("menu");
+            const params=new URLSearchParams(window.location.search);
+            const menu=params.get("menu");
             if (!menu) return;
-            const validMenus = ["serka", "cathedral", "gato1730", "gato1750"];
+            const validMenus=["serka","cathedral","gato1730","gato1750"];
             if (!validMenus.includes(menu)) return;
-            currentMenu = menu;
-            if (currentMenu === "serka") {
-                currentCombo = "hard_gate1";
-            } else if (currentMenu === "cathedral") {
-                currentCombo = "hard_gate1";
-            } else if (currentMenu === "gato1730") {
-                currentGatoBoss = "루멘칼리고";
-            } else if (currentMenu === "gato1750") {
-                currentGato1750Boss = "스콜라키아";
-            }
-            document.querySelectorAll(".menu-item").forEach(btn => {
-                btn.classList.toggle("active", btn.dataset.menu === currentMenu);
+            currentMenu=menu;
+            if (currentMenu==="serka")    currentCombo="hard_gate1";
+            else if (currentMenu==="cathedral") currentCombo="hard_gate1";
+            else if (currentMenu==="gato1730") currentGatoBoss="루멘칼리고";
+            else if (currentMenu==="gato1750") currentGato1750Boss="스콜라키아";
+            document.querySelectorAll(".menu-item").forEach(btn=>{
+                btn.classList.toggle("active", btn.dataset.menu===currentMenu);
             });
             setBaseTimeByMenu(currentMenu);
         }
         
         function renderTitleMeta() {
-            const titleMeta = document.getElementById("titleMeta");
-            if (currentMenu === "serka" || currentMenu === "cathedral") {
-                const meta = raidMeta[currentMenu][currentCombo];
-                titleMeta.innerHTML = `${makeBadge(meta.type.text, meta.type.cls)} ${makeBadge(meta.attr.text, meta.attr.cls)}`;
+            const titleMeta=document.getElementById("titleMeta");
+            if (currentMenu==="serka"||currentMenu==="cathedral") {
+                const meta=raidMeta[currentMenu][currentCombo];
+                titleMeta.innerHTML=`${makeBadge(meta.type.text,meta.type.cls)} ${makeBadge(meta.attr.text,meta.attr.cls)}`;
                 return;
             }
-            if (currentMenu === "gato1730") {
-                const meta = gatoMeta[currentGatoBoss];
-                titleMeta.innerHTML = `${makeBadge(meta.type.text, meta.type.cls)} ${makeBadge(meta.attr.text, meta.attr.cls)}`;
+            if (currentMenu==="gato1730") {
+                const meta=gatoMeta[currentGatoBoss];
+                titleMeta.innerHTML=`${makeBadge(meta.type.text,meta.type.cls)} ${makeBadge(meta.attr.text,meta.attr.cls)}`;
                 return;
             }
-            if (currentMenu === "gato1750") {
-                const meta = gatoMeta[currentGato1750Boss];
-                titleMeta.innerHTML = `${makeBadge(meta.type.text, meta.type.cls)} ${makeBadge(meta.attr.text, meta.attr.cls)}`;
+            if (currentMenu==="gato1750") {
+                const meta=gatoMeta[currentGato1750Boss];
+                titleMeta.innerHTML=`${makeBadge(meta.type.text,meta.type.cls)} ${makeBadge(meta.attr.text,meta.attr.cls)}`;
                 return;
             }
-            titleMeta.innerHTML = "";
+            titleMeta.innerHTML="";
         }
         
-        function isGato1750Available(boss) {
-            return gato1750AvailableBosses.includes(boss);
-        }
+        function isGato1750Available(boss) { return gato1750AvailableBosses.includes(boss); }
         
         function renderTabs() {
-            const tabs = document.getElementById("tabs");
+            const tabs=document.getElementById("tabs");
             tabs.classList.remove("gato-grid");
             
-            if (currentMenu === "gato1730") {
+            if (currentMenu==="gato1730") {
                 tabs.classList.add("gato-grid");
-                tabs.innerHTML = gato1730Bosses.map(name => {
-                    const meta = gatoMeta[name];
-                    return `<button class="tab gato ${currentGatoBoss === name ? 'active' : ''}" data-boss="${name}">
+                tabs.innerHTML=gato1730Bosses.map(name=>{
+                    const meta=gatoMeta[name];
+                    return `<button class="tab gato ${currentGatoBoss===name?'active':''}" data-boss="${name}">
                         <div class="tab-label">${name}</div>
-                        <div class="tab-meta">
-                            ${makeBadge(meta.type.text, meta.type.cls)}
-                            ${makeBadge(meta.attr.text, meta.attr.cls)}
-                        </div>
+                        <div class="tab-meta">${makeBadge(meta.type.text,meta.type.cls)}${makeBadge(meta.attr.text,meta.attr.cls)}</div>
                     </button>`;
                 }).join("");
-                
-                tabs.querySelectorAll(".tab[data-boss]").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        currentGatoBoss = btn.dataset.boss;
-                        trackEvent(`/이벤트/가토/잔영1단계/${currentGatoBoss}`, `보스 클릭 - 잔영 1단계 ${currentGatoBoss}`);
-                        renderTabs();
-                        renderTable();
+                tabs.querySelectorAll(".tab[data-boss]").forEach(btn=>{
+                    btn.addEventListener("click",()=>{
+                        currentGatoBoss=btn.dataset.boss;
+                        trackEvent(`/이벤트/가토/잔영1단계/${currentGatoBoss}`,`보스 클릭 - 잔영 1단계 ${currentGatoBoss}`);
+                        renderTabs(); renderTable();
                     });
                 });
                 return;
             }
             
-            if (currentMenu === "gato1750") {
+            if (currentMenu==="gato1750") {
                 tabs.classList.add("gato-grid");
-                tabs.innerHTML = gato1750Bosses.map(name => {
-                    const meta = gatoMeta[name];
-                    const isAvailable = isGato1750Available(name);
-                    return `<button class="tab gato ${isAvailable ? '' : 'pending'} ${currentGato1750Boss === name ? 'active' : ''}" data-boss1750="${name}">
+                tabs.innerHTML=gato1750Bosses.map(name=>{
+                    const meta=gatoMeta[name];
+                    const isAvailable=isGato1750Available(name);
+                    return `<button class="tab gato ${isAvailable?'':'pending'} ${currentGato1750Boss===name?'active':''}" data-boss1750="${name}">
                         <div class="tab-label">${name}</div>
-                        <div class="tab-meta">
-                            ${makeBadge(meta.type.text, meta.type.cls)}
-                            ${makeBadge(meta.attr.text, meta.attr.cls)}
-                        </div>
-                        ${isAvailable ? '' : '<div class="tab-pending">준비중</div>'}
+                        <div class="tab-meta">${makeBadge(meta.type.text,meta.type.cls)}${makeBadge(meta.attr.text,meta.attr.cls)}</div>
+                        ${isAvailable?'':'<div class="tab-pending">준비중</div>'}
                     </button>`;
                 }).join("");
-                
-                tabs.querySelectorAll(".tab[data-boss1750]").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        currentGato1750Boss = btn.dataset.boss1750;
-                        trackEvent(`/이벤트/가토/잔영2단계/${currentGato1750Boss}`, `보스 클릭 - 잔영 2단계 ${currentGato1750Boss}`);
-                        renderTabs();
-                        renderTable();
+                tabs.querySelectorAll(".tab[data-boss1750]").forEach(btn=>{
+                    btn.addEventListener("click",()=>{
+                        currentGato1750Boss=btn.dataset.boss1750;
+                        trackEvent(`/이벤트/가토/잔영2단계/${currentGato1750Boss}`,`보스 클릭 - 잔영 2단계 ${currentGato1750Boss}`);
+                        renderTabs(); renderTable();
                     });
                 });
                 return;
             }
             
-            const comboTabs = getComboTabs(currentMenu);
-            tabs.innerHTML = comboTabs.map(item => {
-                const meta = raidMeta[currentMenu][item.key];
-                return `<button class="tab ${meta.tierClass} ${currentCombo === item.key ? 'active' : ''}" data-combo="${item.key}">
+            const comboTabs=getComboTabs(currentMenu);
+            tabs.innerHTML=comboTabs.map(item=>{
+                const meta=raidMeta[currentMenu][item.key];
+                return `<button class="tab ${meta.tierClass} ${currentCombo===item.key?'active':''}" data-combo="${item.key}">
                     <div class="tab-label">${item.label}</div>
                     <div class="tab-sub">${item.sub}</div>
                 </button>`;
             }).join("");
             
-            tabs.querySelectorAll(".tab[data-combo]").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    currentCombo = btn.dataset.combo;
-                    const meta = raidMeta[currentMenu][currentCombo];
-                    const menuName = currentMenu === "serka" ? "세르카" : "성당";
-                    const tabName = `${meta.title.replace(/\s*\(.+\)/, "")}_${meta.gateName}`;
-                    trackEvent(`/이벤트/탭/${menuName}/${tabName}`, `탭 클릭 - ${menuName} ${meta.title.replace(/\s*\(.+\)/, "")} ${meta.gateName}`);
-                    renderTabs();
-                    renderTable();
+            tabs.querySelectorAll(".tab[data-combo]").forEach(btn=>{
+                btn.addEventListener("click",()=>{
+                    currentCombo=btn.dataset.combo;
+                    const meta=raidMeta[currentMenu][currentCombo];
+                    const menuName=currentMenu==="serka"?"세르카":"성당";
+                    const tabName=`${meta.title.replace(/\s*\(.+\)/,"")}_${meta.gateName}`;
+                    trackEvent(`/이벤트/탭/${menuName}/${tabName}`,`탭 클릭 - ${menuName} ${meta.title.replace(/\s*\(.+\)/,"")} ${meta.gateName}`);
+                    renderTabs(); renderTable();
                 });
             });
         }
         
         function clearAllData() {
-            parsedData.serka = { normal: [], hard: [], nightmare: [] };
-            parsedData.cathedral = { normal: [], hard: [], nightmare: [] };
-            parsedData.gato1730 = {};
-            parsedData.gato1750 = {};
+            parsedData.serka={normal:[],hard:[],nightmare:[]};
+            parsedData.cathedral={normal:[],hard:[],nightmare:[]};
+            parsedData.gato1730={}; parsedData.gato1750={};
         }
         
         function parseBlock(lines, startRow, type) {
-            for (let r = startRow + 3; r < startRow + 29; r++) {
-                const cols = parseCSVLine(lines[r] || "");
-                const share = percentNum(cols[1]);
+            for (let r=startRow+3;r<startRow+29;r++) {
+                const cols=parseCSVLine(lines[r]||"");
+                const share=percentNum(cols[1]);
                 if (!share) continue;
-                parsedData[type].normal.push({ share, g1: toNum(cols[3]), g2: toNum(cols[6]) });
-                parsedData[type].hard.push({ share, g1: toNum(cols[11]), g2: toNum(cols[14]) });
-                parsedData[type].nightmare.push({ share, g1: toNum(cols[19]), g2: toNum(cols[22]) });
+                parsedData[type].normal.push({share,g1:toNum(cols[3]),g2:toNum(cols[6])});
+                parsedData[type].hard.push({share,g1:toNum(cols[11]),g2:toNum(cols[14])});
+                parsedData[type].nightmare.push({share,g1:toNum(cols[19]),g2:toNum(cols[22])});
             }
         }
         
         function parseCathedral(lines) {
-            for (let i = 0; i < lines.length; i++) {
-                if ((lines[i] || "").includes("지평의 성당 1~3단계 딜지분 상세")) {
-                    parseBlock(lines, i + 1, "cathedral");
-                    return;
-                }
+            for (let i=0;i<lines.length;i++) {
+                if ((lines[i]||"").includes("지평의 성당 1~3단계 딜지분 상세")) { parseBlock(lines,i+1,"cathedral"); return; }
             }
         }
         
         function parseSerka(lines) {
-            for (let i = 0; i < lines.length; i++) {
-                if ((lines[i] || "").includes("세르카 딜지분 상세")) {
-                    parseBlock(lines, i + 1, "serka");
-                    return;
-                }
+            for (let i=0;i<lines.length;i++) {
+                if ((lines[i]||"").includes("세르카 딜지분 상세")) { parseBlock(lines,i+1,"serka"); return; }
             }
         }
         
         function parseGato1730(lines) {
-            gato1730Bosses.forEach(name => { parsedData.gato1730[name] = []; });
-            gato1730Layout.forEach(info => {
-                for (let r = info.startRow + 3; r <= info.startRow + 28; r++) {
-                    const cols = parseCSVLine(lines[r] || "");
-                    const share = percentNum(cols[info.shareCol]);
+            gato1730Bosses.forEach(name=>{parsedData.gato1730[name]=[];});
+            gato1730Layout.forEach(info=>{
+                for (let r=info.startRow+3;r<=info.startRow+28;r++) {
+                    const cols=parseCSVLine(lines[r]||"");
+                    const share=percentNum(cols[info.shareCol]);
                     if (!share) continue;
-                    parsedData.gato1730[info.boss].push({ share, damage: toNum(cols[info.damageCol]) });
+                    parsedData.gato1730[info.boss].push({share,damage:toNum(cols[info.damageCol])});
                 }
             });
         }
         
         function parseGato1750(lines) {
-            gato1750Bosses.forEach(name => { parsedData.gato1750[name] = []; });
-            gato1750Layout.forEach(info => {
-                for (let r = info.startRow + 3; r <= info.startRow + 28; r++) {
-                    const cols = parseCSVLine(lines[r] || "");
-                    const share = percentNum(cols[info.shareCol]);
+            gato1750Bosses.forEach(name=>{parsedData.gato1750[name]=[];});
+            gato1750Layout.forEach(info=>{
+                for (let r=info.startRow+3;r<=info.startRow+28;r++) {
+                    const cols=parseCSVLine(lines[r]||"");
+                    const share=percentNum(cols[info.shareCol]);
                     if (!share) continue;
-                    parsedData.gato1750[info.boss].push({ share, damage: toNum(cols[info.damageCol]) });
+                    parsedData.gato1750[info.boss].push({share,damage:toNum(cols[info.damageCol])});
                 }
             });
         }
         
         function renderShareCell(share) {
-            if (share === 30) {
-                return `<td class="share-cell">
-                    <div class="share-row">
-                        <span class="share-label label-30">강투컷</span>
-                        <span class="share-value">30%</span>
-                    </div>
-                </td>`;
-            }
-            if (share === 33) {
-                return `<td class="share-cell">
-                    <div class="share-row">
-                        <span class="share-label label-33">1인분</span>
-                        <span class="share-value">33%</span>
-                    </div>
-                </td>`;
-            }
-            if (share === 40) {
-                return `<td class="share-cell">
-                    <div class="share-row">
-                        <span class="share-label label-40">잔혈컷</span>
-                        <span class="share-value">40%</span>
-                    </div>
-                </td>`;
-            }
-            return `<td class="share-cell">
-                <div class="share-row">
-                    <span class="share-label"></span>
-                    <span class="share-value">${share}%</span>
-                </div>
-            </td>`;
+            if (share===30) return `<td class="share-cell"><div class="share-row"><span class="share-label label-30">강투컷</span><span class="share-value">30%</span></div></td>`;
+            if (share===33) return `<td class="share-cell"><div class="share-row"><span class="share-label label-33">1인분</span><span class="share-value">33%</span></div></td>`;
+            if (share===40) return `<td class="share-cell"><div class="share-row"><span class="share-label label-40">잔혈컷</span><span class="share-value">40%</span></div></td>`;
+            return `<td class="share-cell"><div class="share-row"><span class="share-label"></span><span class="share-value">${share}%</span></div></td>`;
         }
         
         function renderHead() {
-            const head = document.getElementById("tableHead");
-            head.innerHTML = `<tr>
-                <th>딜지분</th>
-                <th>피해/억</th>
-                <th>DPS</th>
-            </tr>`;
+            document.getElementById("tableHead").innerHTML=`<tr><th>딜지분</th><th>피해/억</th><th>DPS</th></tr>`;
         }
         
         function renderComingSoon(messageTitle, messageDesc) {
-            const mainContent = document.getElementById("mainContent");
-            mainContent.innerHTML = `<div class="coming-soon">
-                <h3>${messageTitle}</h3>
-                <p>${messageDesc}</p>
-            </div>`;
+            document.getElementById("mainContent").innerHTML=`<div class="coming-soon"><h3>${messageTitle}</h3><p>${messageDesc}</p></div>`;
         }
         
         function ensureTableWrap() {
-            const mainContent = document.getElementById("mainContent");
-            mainContent.innerHTML = `<div class="table-wrap" id="tableWrap">
-                <table id="dataTable">
-                    <thead id="tableHead"></thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
-            </div>`;
+            document.getElementById("mainContent").innerHTML=`<div class="table-wrap" id="tableWrap"><table id="dataTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>`;
         }
         
         function getCurrentRowsForPartyDps() {
-            if (currentMenu === "gato1730") {
-                return parsedData.gato1730[currentGatoBoss] || [];
-            }
-            if (currentMenu === "gato1750") {
-                if (!isGato1750Available(currentGato1750Boss)) return [];
-                return parsedData.gato1750[currentGato1750Boss] || [];
-            }
-            const meta = raidMeta[currentMenu][currentCombo];
-            return parsedData[currentMenu]?.[meta.diffKey] || [];
+            if (currentMenu==="gato1730") return parsedData.gato1730[currentGatoBoss]||[];
+            if (currentMenu==="gato1750") { if(!isGato1750Available(currentGato1750Boss)) return []; return parsedData.gato1750[currentGato1750Boss]||[]; }
+            const meta=raidMeta[currentMenu][currentCombo];
+            return parsedData[currentMenu]?.[meta.diffKey]||[];
         }
         
         function getDamageFromRow(row) {
             if (!row) return 0;
-            if (currentMenu === "gato1730" || currentMenu === "gato1750") {
-                return row.damage || 0;
-            }
-            const meta = raidMeta[currentMenu][currentCombo];
-            return meta.gateKey === "gate1" ? (row.g1 || 0) : (row.g2 || 0);
+            if (currentMenu==="gato1730"||currentMenu==="gato1750") return row.damage||0;
+            const meta=raidMeta[currentMenu][currentCombo];
+            return meta.gateKey==="gate1"?(row.g1||0):(row.g2||0);
         }
         
         function getPartyDpsValue() {
-            const rows = getCurrentRowsForPartyDps();
+            const rows=getCurrentRowsForPartyDps();
             if (!rows.length) return null;
-            
-            const preferredShares = [33, 30, 40];
-            let baseRow = null;
+            const preferredShares=[33,30,40];
+            let baseRow=null;
             for (const share of preferredShares) {
-                baseRow = rows.find(row => row.share === share && getDamageFromRow(row) > 0);
+                baseRow=rows.find(row=>row.share===share&&getDamageFromRow(row)>0);
                 if (baseRow) break;
             }
-            if (!baseRow) {
-                baseRow = rows.find(row => getDamageFromRow(row) > 0) || null;
-            }
+            if (!baseRow) baseRow=rows.find(row=>getDamageFromRow(row)>0)||null;
             if (!baseRow) return null;
-            
-            const damage = getDamageFromRow(baseRow);
-            const shareRate = (baseRow.share || 0) / 100;
-            if (!damage || !shareRate) return null;
-            
-            const totalDamage = damage / shareRate;
-            const totalSeconds = getTotalSeconds();
-            return totalDamage / totalSeconds;
+            const damage=getDamageFromRow(baseRow);
+            const shareRate=(baseRow.share||0)/100;
+            if (!damage||!shareRate) return null;
+            return (damage/shareRate)/getTotalSeconds();
         }
         
         function updatePartyDpsDisplay() {
-            const el = document.getElementById("partyDpsDisplay");
-            if (currentMenu === "gato1750" && !isGato1750Available(currentGato1750Boss)) {
-                el.innerHTML = `파티 DPS : <span class="party-dps-value">-</span>`;
-                return;
+            const el=document.getElementById("partyDpsDisplay");
+            if (currentMenu==="gato1750"&&!isGato1750Available(currentGato1750Boss)) {
+                el.innerHTML=`파티 DPS : <span class="party-dps-value">-</span>`; return;
             }
-            const partyDps = getPartyDpsValue();
-            if (partyDps === null) {
-                el.innerHTML = `파티 DPS : <span class="party-dps-value">-</span>`;
-                return;
-            }
-            el.innerHTML = `파티 DPS : <span class="party-dps-value">${fmtPartyDps(partyDps)}</span>`;
+            const partyDps=getPartyDpsValue();
+            if (partyDps===null) { el.innerHTML=`파티 DPS : <span class="party-dps-value">-</span>`; return; }
+            el.innerHTML=`파티 DPS : <span class="party-dps-value">${fmtPartyDps(partyDps)}</span>`;
         }
         
         function renderTable() {
             updateTimeDisplay();
-            document.getElementById("contentTitle").textContent = getContentName();
-            document.getElementById("tableTitle").textContent = getTableTitle();
+            document.getElementById("contentTitle").textContent=getContentName();
+            document.getElementById("tableTitle").textContent=getTableTitle();
             renderTitleMeta();
             
-            if (currentMenu === "gato1750" && !isGato1750Available(currentGato1750Boss)) {
-                renderComingSoon(
-                    `${currentGato1750Boss} 준비중`,
-                    `해당 보스의 잔영 2단계 데이터는 아직 준비중입니다.<br>현재는 스콜라키아, 크라티오스, 아게오로스, 드렉탈라스가 우선 공개되어 있습니다.`
-                );
-                document.getElementById("infoHint").innerHTML = "1750 가디언 토벌은 일부 보스만 공개되었습니다.<br>준비중 보스는 순차적으로 반영됩니다.";
-                updatePartyDpsDisplay();
-                return;
+            if (currentMenu==="gato1750"&&!isGato1750Available(currentGato1750Boss)) {
+                renderComingSoon(`${currentGato1750Boss} 준비중`,`해당 보스의 잔영 2단계 데이터는 아직 준비중입니다.<br>현재는 스콜라키아, 크라티오스, 아게오로스, 드렉탈라스가 우선 공개되어 있습니다.`);
+                document.getElementById("infoHint").innerHTML="1750 가디언 토벌은 일부 보스만 공개되었습니다.<br>준비중 보스는 순차적으로 반영됩니다.";
+                updatePartyDpsDisplay(); return;
             }
             
-            ensureTableWrap();
-            renderHead();
-            document.getElementById("infoHint").innerHTML = "구글 시트 데이터를 읽어 옵니다.";
+            ensureTableWrap(); renderHead();
+            document.getElementById("infoHint").innerHTML="구글 시트 데이터를 읽어 옵니다.";
             
-            const body = document.getElementById("tableBody");
-            const totalSeconds = getTotalSeconds();
+            const body=document.getElementById("tableBody");
+            const totalSeconds=getTotalSeconds();
             
-            if (currentMenu === "gato1730") {
-                const rows = parsedData.gato1730[currentGatoBoss] || [];
-                if (!rows.length) {
-                    body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
-                    updatePartyDpsDisplay();
-                    return;
-                }
-                body.innerHTML = rows.map(row => {
-                    let cls = "";
-                    if (row.share === 30) cls = "row-30";
-                    if (row.share === 33) cls = "row-33";
-                    if (row.share === 40) cls = "row-40";
-                    return `<tr class="${cls}">
-                        ${renderShareCell(row.share)}
-                        <td>${fmt(row.damage)}</td>
-                        <td class="dps-cell">${(row.damage / totalSeconds).toFixed(1)}</td>
-                    </tr>`;
+            if (currentMenu==="gato1730") {
+                const rows=parsedData.gato1730[currentGatoBoss]||[];
+                if (!rows.length) { body.innerHTML=`<tr><td colspan="3">데이터 없음</td></tr>`; updatePartyDpsDisplay(); return; }
+                body.innerHTML=rows.map(row=>{
+                    let cls=""; if(row.share===30)cls="row-30"; if(row.share===33)cls="row-33"; if(row.share===40)cls="row-40";
+                    return `<tr class="${cls}">${renderShareCell(row.share)}<td>${fmt(row.damage)}</td><td class="dps-cell">${(row.damage/totalSeconds).toFixed(1)}</td></tr>`;
                 }).join("");
-                updatePartyDpsDisplay();
-                return;
+                updatePartyDpsDisplay(); return;
             }
             
-            if (currentMenu === "gato1750") {
-                const rows = parsedData.gato1750[currentGato1750Boss] || [];
-                if (!rows.length) {
-                    body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
-                    updatePartyDpsDisplay();
-                    return;
-                }
-                body.innerHTML = rows.map(row => {
-                    let cls = "";
-                    if (row.share === 30) cls = "row-30";
-                    if (row.share === 33) cls = "row-33";
-                    if (row.share === 40) cls = "row-40";
-                    return `<tr class="${cls}">
-                        ${renderShareCell(row.share)}
-                        <td>${fmt(row.damage)}</td>
-                        <td class="dps-cell">${(row.damage / totalSeconds).toFixed(1)}</td>
-                    </tr>`;
+            if (currentMenu==="gato1750") {
+                const rows=parsedData.gato1750[currentGato1750Boss]||[];
+                if (!rows.length) { body.innerHTML=`<tr><td colspan="3">데이터 없음</td></tr>`; updatePartyDpsDisplay(); return; }
+                body.innerHTML=rows.map(row=>{
+                    let cls=""; if(row.share===30)cls="row-30"; if(row.share===33)cls="row-33"; if(row.share===40)cls="row-40";
+                    return `<tr class="${cls}">${renderShareCell(row.share)}<td>${fmt(row.damage)}</td><td class="dps-cell">${(row.damage/totalSeconds).toFixed(1)}</td></tr>`;
                 }).join("");
-                updatePartyDpsDisplay();
-                return;
+                updatePartyDpsDisplay(); return;
             }
             
-            const meta = raidMeta[currentMenu][currentCombo];
-            const rows = parsedData[currentMenu]?.[meta.diffKey] || [];
-            if (!rows.length) {
-                body.innerHTML = `<tr><td colspan="3">데이터 없음</td></tr>`;
-                updatePartyDpsDisplay();
-                return;
-            }
+            const meta=raidMeta[currentMenu][currentCombo];
+            const rows=parsedData[currentMenu]?.[meta.diffKey]||[];
+            if (!rows.length) { body.innerHTML=`<tr><td colspan="3">데이터 없음</td></tr>`; updatePartyDpsDisplay(); return; }
             
-            body.innerHTML = rows.map(row => {
-                let cls = "";
-                if (row.share === 30) cls = "row-30";
-                if (row.share === 33) cls = "row-33";
-                if (row.share === 40) cls = "row-40";
-                const damage = meta.gateKey === "gate1" ? row.g1 : row.g2;
-                const dps = (damage / totalSeconds).toFixed(1);
-                return `<tr class="${cls}">
-                    ${renderShareCell(row.share)}
-                    <td>${fmt(damage)}</td>
-                    <td class="dps-cell">${dps}</td>
-                </tr>`;
+            body.innerHTML=rows.map(row=>{
+                let cls=""; if(row.share===30)cls="row-30"; if(row.share===33)cls="row-33"; if(row.share===40)cls="row-40";
+                const damage=meta.gateKey==="gate1"?row.g1:row.g2;
+                return `<tr class="${cls}">${renderShareCell(row.share)}<td>${fmt(damage)}</td><td class="dps-cell">${(damage/totalSeconds).toFixed(1)}</td></tr>`;
             }).join("");
             updatePartyDpsDisplay();
         }
         
         async function loadCSV() {
-            document.getElementById("status").textContent = "시트 불러오는 중...";
+            document.getElementById("status").textContent="시트 불러오는 중...";
             try {
-                const res = await fetch(CSV_URL);
-                const text = await res.text();
-                const lines = text.split(/\r?\n/);
+                const res=await fetch(CSV_URL);
+                const text=await res.text();
+                const lines=text.split(/\r?\n/);
                 clearAllData();
-                parseCathedral(lines);
-                parseSerka(lines);
-                parseGato1730(lines);
-                parseGato1750(lines);
-                renderTabs();
-                renderTable();
-                document.getElementById("status").textContent = "연동 완료";
-            } catch (e) {
+                parseCathedral(lines); parseSerka(lines); parseGato1730(lines); parseGato1750(lines);
+                renderTabs(); renderTable();
+                document.getElementById("status").textContent="연동 완료";
+            } catch(e) {
                 console.error(e);
-                document.getElementById("status").textContent = "불러오기 실패";
+                document.getElementById("status").textContent="불러오기 실패";
             }
         }
         
         function changeTimeValue(targetId, delta) {
-            const input = document.getElementById(targetId);
-            let value = parseInt(input.value || 0, 10);
-            if (isNaN(value)) value = 0;
-            value += delta;
-            if (targetId === "minutes") {
-                value = Math.max(0, value);
-            }
-            if (targetId === "seconds") {
-                value = Math.max(0, Math.min(59, value));
-            }
-            input.value = value;
+            const input=document.getElementById(targetId);
+            let value=parseInt(input.value||0,10);
+            if (isNaN(value)) value=0;
+            value+=delta;
+            if (targetId==="minutes") value=Math.max(0,value);
+            if (targetId==="seconds") value=Math.max(0,Math.min(59,value));
+            input.value=value;
             renderTable();
         }
+
+        // ===== 달력 =====
+        let calYear, calMonth;
+
+        function initCalendar() {
+            const now=new Date(); calYear=now.getFullYear(); calMonth=now.getMonth(); renderCalendar();
+        }
+
+        function renderCalendar() {
+            const now=new Date(), todayY=now.getFullYear(), todayM=now.getMonth(), todayD=now.getDate();
+            const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+            document.getElementById("calMonth").textContent=`${monthNames[calMonth]} ${calYear}`;
+            const grid=document.getElementById("calGrid");
+            const dows=["Su","Mo","Tu","We","Th","Fr","Sa"];
+            let html=dows.map((d,i)=>`<div class="cal-dow ${i===0?"sun":i===6?"sat":""}">${d}</div>`).join("");
+            const firstDay=new Date(calYear,calMonth,1).getDay();
+            const lastDate=new Date(calYear,calMonth+1,0).getDate();
+            const prevLast=new Date(calYear,calMonth,0).getDate();
+            for (let i=0;i<firstDay;i++) {
+                const d=prevLast-firstDay+1+i, dow=i;
+                html+=`<div class="cal-day other-month ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
+            }
+            for (let d=1;d<=lastDate;d++) {
+                const dow=(firstDay+d-1)%7;
+                const isToday=(d===todayD&&calMonth===todayM&&calYear===todayY);
+                html+=`<div class="cal-day ${isToday?"today":""} ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
+            }
+            const total=firstDay+lastDate, remain=total%7===0?0:7-(total%7);
+            for (let d=1;d<=remain;d++) {
+                const dow=(total+d-1)%7;
+                html+=`<div class="cal-day other-month ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
+            }
+            grid.innerHTML=html;
+        }
+
+        document.getElementById("calPrev").addEventListener("click",()=>{ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); });
+        document.getElementById("calNext").addEventListener("click",()=>{ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); });
         
-        document.querySelectorAll(".menu-item").forEach(btn => {
-            btn.addEventListener("click", () => {
-                document.querySelectorAll(".menu-item").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".menu-item").forEach(btn=>{
+            btn.addEventListener("click",()=>{
+                document.querySelectorAll(".menu-item").forEach(b=>b.classList.remove("active"));
                 btn.classList.add("active");
-                currentMenu = btn.dataset.menu;
-                if (currentMenu === "serka") {
-                    currentCombo = "hard_gate1";
-                    trackEvent("/이벤트/메뉴/세르카", "메뉴 클릭 - 세르카");
-                } else if (currentMenu === "cathedral") {
-                    currentCombo = "hard_gate1";
-                    trackEvent("/이벤트/메뉴/성당", "메뉴 클릭 - 성당");
-                } else if (currentMenu === "gato1730") {
-                    currentGatoBoss = "루멘칼리고";
-                    trackEvent("/이벤트/메뉴/1730가토", "메뉴 클릭 - 1730 가토");
-                } else if (currentMenu === "gato1750") {
-                    currentGato1750Boss = "스콜라키아";
-                    trackEvent("/이벤트/메뉴/1750가토", "메뉴 클릭 - 1750 가토");
-                }
+                currentMenu=btn.dataset.menu;
+                if (currentMenu==="serka")    { currentCombo="hard_gate1"; trackEvent("/이벤트/메뉴/세르카","메뉴 클릭 - 세르카"); }
+                else if (currentMenu==="cathedral") { currentCombo="hard_gate1"; trackEvent("/이벤트/메뉴/성당","메뉴 클릭 - 성당"); }
+                else if (currentMenu==="gato1730")  { currentGatoBoss="루멘칼리고"; trackEvent("/이벤트/메뉴/1730가토","메뉴 클릭 - 1730 가토"); }
+                else if (currentMenu==="gato1750")  { currentGato1750Boss="스콜라키아"; trackEvent("/이벤트/메뉴/1750가토","메뉴 클릭 - 1750 가토"); }
                 setBaseTimeByMenu(currentMenu);
-                renderTabs();
-                renderTable();
+                renderTabs(); renderTable();
             });
         });
         
-        document.querySelectorAll(".time-step-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const targetId = btn.dataset.stepTarget;
-                const step = parseInt(btn.dataset.step, 10);
-                changeTimeValue(targetId, step);
+        document.querySelectorAll(".time-step-btn").forEach(btn=>{
+            btn.addEventListener("click",()=>{
+                changeTimeValue(btn.dataset.stepTarget, parseInt(btn.dataset.step,10));
             });
         });
         
-        document.getElementById("minutes").addEventListener("input", renderTable);
-        document.getElementById("seconds").addEventListener("input", renderTable);
+        document.getElementById("minutes").addEventListener("input",renderTable);
+        document.getElementById("seconds").addEventListener("input",renderTable);
         
-        const guideModal = document.getElementById("guideModal");
-        const openGuideBtn = document.getElementById("openGuideBtn");
+        const guideModal  = document.getElementById("guideModal");
+        const openGuideBtn  = document.getElementById("openGuideBtn");
         const closeGuideBtn = document.getElementById("closeGuideBtn");
         
-        function openGuideModal() {
-            guideModal.classList.add("show");
-            document.body.style.overflow = "hidden";
-        }
+        function openGuideModal()  { guideModal.classList.add("show"); document.body.style.overflow="hidden"; }
+        function closeGuideModal() { guideModal.classList.remove("show"); document.body.style.overflow=""; }
         
-        function closeGuideModal() {
-            guideModal.classList.remove("show");
-            document.body.style.overflow = "";
-        }
-        
-        openGuideBtn.addEventListener("click", () => {
-            trackEvent("/이벤트/가이드/DPS보는방법", "가이드 클릭 - DPS 보는 방법");
-            openGuideModal();
-        });
-        
-        closeGuideBtn.addEventListener("click", closeGuideModal);
-        
-        guideModal.addEventListener("click", (e) => {
-            if (e.target === guideModal) closeGuideModal();
-        });
-        
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && guideModal.classList.contains("show")) {
-                closeGuideModal();
-            }
-        });
+        openGuideBtn.addEventListener("click",()=>{ trackEvent("/이벤트/가이드/DPS보는방법","가이드 클릭 - DPS 보는 방법"); openGuideModal(); });
+        closeGuideBtn.addEventListener("click",closeGuideModal);
+        guideModal.addEventListener("click",e=>{ if(e.target===guideModal) closeGuideModal(); });
+        document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&guideModal.classList.contains("show")) closeGuideModal(); });
         
         updateTopDateTime();
         setInterval(updateTopDateTime, 1000);
-        
         setBaseTimeByMenu("serka");
         applyMenuFromQuery();
+        initCalendar();
         loadCSV();
     </script>
 </body>
