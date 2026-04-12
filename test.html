@@ -49,7 +49,6 @@
       border-right: 1px solid rgba(255,255,255,0.06);
     }
 
-    /* ===== 캡슐 스위치 ===== */
     .switch-wrap {
       display: flex;
       align-items: center;
@@ -149,7 +148,6 @@
 
     .guide-accent { color: #ffd48a; }
 
-    /* ===== 티어 버튼 ===== */
     .tier-btn {
       width: 100%;
       border: none;
@@ -228,43 +226,44 @@
     /* ===== 미니 팝업 ===== */
     .mini-popup {
       position: fixed;
-      z-index: 2000;
-      background: linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
-      border: 1px solid rgba(255,255,255,0.12);
+      z-index: 9999;
+      background: linear-gradient(180deg, rgba(20,26,40,0.99), rgba(13,18,30,0.99));
+      border: 1px solid rgba(255,255,255,0.14);
       border-radius: 16px;
-      padding: 16px 18px;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-      min-width: 220px;
-      max-width: 260px;
-      display: none;
-      animation: popupFade 0.18s ease;
+      padding: 14px 16px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.03) inset;
+      min-width: 200px;
+      max-width: 240px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
     }
 
-    .mini-popup.show { display: block; }
-
-    @keyframes popupFade {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .mini-popup.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
     }
 
     .mini-popup-label {
-      font-size: 11px;
+      font-size: 10px;
       letter-spacing: 1.8px;
       text-transform: uppercase;
       color: #7fc6ff;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-weight: 900;
     }
 
     .mini-popup-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 900;
       color: #ffffff;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .mini-popup-desc {
-      font-size: 13px;
+      font-size: 12px;
       color: #b8c4d6;
       line-height: 1.6;
     }
@@ -352,16 +351,12 @@
       background: linear-gradient(135deg, #7a8cff, #4bd3ff);
       color: #08111e;
       font-weight: 900;
-      border-radius: 8px;
     }
 
     .cal-day.sun { color: rgba(255,120,120,0.75); }
     .cal-day.sat { color: rgba(120,180,255,0.75); }
+    .cal-day.today.sun, .cal-day.today.sat { color: #08111e; }
 
-    .cal-day.today.sun,
-    .cal-day.today.sat { color: #08111e; }
-
-    /* ===== 메인 영역 ===== */
     .main {
       padding: 24px;
       display: flex;
@@ -405,7 +400,7 @@
       margin-right: auto;
     }
 
-    .intro-desc .accent-red { color: #ff8f8f; font-weight: 900; }
+    .intro-desc .accent-red   { color: #ff8f8f; font-weight: 900; }
     .intro-desc .accent-green { color: #8ef0c9; font-weight: 900; }
 
     .status-line {
@@ -475,8 +470,8 @@
       z-index: 1;
     }
 
-    .op-card .card-label { color: #8ef0c9; }
-    .favor-card .card-label { color: #ffd48a; }
+    .op-card .card-label   { color: #8ef0c9; }
+    .favor-card .card-label{ color: #ffd48a; }
 
     .card-title {
       font-size: 28px;
@@ -486,8 +481,8 @@
       z-index: 1;
     }
 
-    .op-card .card-title { color: #8ef0c9; }
-    .favor-card .card-title { color: #ffd48a; }
+    .op-card .card-title   { color: #8ef0c9; }
+    .favor-card .card-title{ color: #ffd48a; }
 
     .card-desc {
       color: #b8c4d6;
@@ -539,10 +534,8 @@
 
     .stamp {
       position: absolute;
-      right: 18px;
-      bottom: 18px;
-      width: 132px;
-      height: 132px;
+      right: 18px; bottom: 18px;
+      width: 132px; height: 132px;
       border-radius: 50%;
       border: 5px solid rgba(255,88,88,0.95);
       color: rgba(255,118,118,0.95);
@@ -572,9 +565,9 @@
       pointer-events: none;
     }
 
-    .stamp .date { font-size: 12px; letter-spacing: 1px; margin-bottom: 2px; }
+    .stamp .date       { font-size: 12px; letter-spacing: 1px; margin-bottom: 2px; }
     .stamp .grade-text { font-size: 20px; font-weight: 900; line-height: 1.1; }
-    .stamp .done { font-size: 13px; line-height: 1.2; word-break: keep-all; }
+    .stamp .done       { font-size: 13px; line-height: 1.2; word-break: keep-all; }
 
     .ranking-board {
       position: relative;
@@ -602,8 +595,7 @@
     }
 
     .glass-lock {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       display: none;
       align-items: center;
       justify-content: center;
@@ -626,9 +618,9 @@
       pointer-events: none;
     }
 
-    .glass-lock-icon { font-size: 34px; margin-bottom: 10px; }
+    .glass-lock-icon  { font-size: 34px; margin-bottom: 10px; }
     .glass-lock-title { font-size: 22px; font-weight: 900; color: #ffffff; line-height: 1.3; margin-bottom: 10px; word-break: keep-all; }
-    .glass-lock-desc { font-size: 14px; line-height: 1.8; color: #c6d0df; word-break: keep-all; }
+    .glass-lock-desc  { font-size: 14px; line-height: 1.8; color: #c6d0df; word-break: keep-all; }
 
     .ranking-topbar {
       display: flex;
@@ -640,10 +632,10 @@
     }
 
     .ranking-title-wrap { min-width: 0; }
-    .ranking-title { font-size: 28px; font-weight: 900; color: #ffffff; line-height: 1.25; word-break: keep-all; }
-    .ranking-title-op { color: #86f0b8 !important; }
+    .ranking-title       { font-size: 28px; font-weight: 900; color: #ffffff; line-height: 1.25; word-break: keep-all; }
+    .ranking-title-op    { color: #86f0b8 !important; }
     .ranking-title-favor { color: #ffd48a !important; }
-    .ranking-sub { margin-top: 8px; color: #aeb9cb; font-size: 13px; line-height: 1.75; }
+    .ranking-sub         { margin-top: 8px; color: #aeb9cb; font-size: 13px; line-height: 1.75; }
 
     .mode-tabs, .period-tabs { display: flex; gap: 10px; flex-wrap: wrap; }
 
@@ -653,10 +645,8 @@
       color: #dce5f4;
       border-radius: 14px;
       padding: 11px 14px;
-      min-width: 118px;
-      min-height: 64px;
-      font-size: 14px;
-      font-weight: 900;
+      min-width: 118px; min-height: 64px;
+      font-size: 14px; font-weight: 900;
       cursor: pointer;
       transition: 0.18s ease;
       text-align: center;
@@ -667,31 +657,26 @@
       gap: 4px;
     }
 
-    .mini-tab.active-op { background: linear-gradient(135deg, #6ff0b7, #35c77c); color: #0c1a13; border-color: transparent; }
-    .mini-tab.active-favor { background: linear-gradient(135deg, #ffd48a, #ffac55); color: #2a1400; border-color: transparent; }
-    .mini-tab.disabled { opacity: 0.36; filter: grayscale(0.3); cursor: not-allowed; }
+    .mini-tab.active-op     { background: linear-gradient(135deg, #6ff0b7, #35c77c); color: #0c1a13; border-color: transparent; }
+    .mini-tab.active-favor  { background: linear-gradient(135deg, #ffd48a, #ffac55); color: #2a1400; border-color: transparent; }
+    .mini-tab.disabled      { opacity: 0.36; filter: grayscale(0.3); cursor: not-allowed; }
     .mini-tab.active-period { background: linear-gradient(135deg, #7a8cff, #4bd3ff); color: #08111e; border-color: transparent; }
-    .mini-tab .tab-date { font-size: 12px; font-weight: 800; line-height: 1.2; opacity: 0.95; }
+    .mini-tab .tab-date     { font-size: 12px; font-weight: 800; line-height: 1.2; opacity: 0.95; }
 
     .summary-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 18px; }
 
     .summary-card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 22px;
-      padding: 22px 20px 20px;
+      position: relative; overflow: hidden;
+      border-radius: 22px; padding: 22px 20px 20px;
       border: 1px solid rgba(255,255,255,0.10);
       background: linear-gradient(180deg, rgba(35,38,50,0.96), rgba(24,27,38,0.98));
       box-shadow: 0 22px 42px rgba(0,0,0,0.28), 0 0 38px rgba(255,80,80,0.18), 0 0 86px rgba(255,80,80,0.14);
     }
 
     .summary-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
+      content: ""; position: absolute; inset: 0;
       background: radial-gradient(circle at top right, rgba(255,110,110,0.18), transparent 34%), radial-gradient(circle at bottom left, rgba(255,70,70,0.10), transparent 36%);
-      pointer-events: none;
-      z-index: 0;
+      pointer-events: none; z-index: 0;
     }
 
     .summary-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 88px 1fr; gap: 16px; align-items: center; }
@@ -706,38 +691,36 @@
     }
 
     .summary-label { font-size: 12px; letter-spacing: 1.8px; text-transform: uppercase; color: #ffb1b1; margin-bottom: 8px; font-weight: 900; }
-    .summary-main { font-size: 34px; font-weight: 900; color: #ffffff; line-height: 1.2; word-break: keep-all; }
-    .summary-rank { margin-top: 6px; font-size: 18px; font-weight: 900; color: #ffd5d5; }
-    .summary-meta { margin-top: 8px; color: #e3c9c9; font-size: 13px; line-height: 1.7; }
+    .summary-main  { font-size: 34px; font-weight: 900; color: #ffffff; line-height: 1.2; word-break: keep-all; }
+    .summary-rank  { margin-top: 6px; font-size: 18px; font-weight: 900; color: #ffd5d5; }
+    .summary-meta  { margin-top: 8px; color: #e3c9c9; font-size: 13px; line-height: 1.7; }
 
     .ranking-list { display: grid; gap: 12px; }
 
     .rank-row {
       display: grid;
       grid-template-columns: 84px minmax(0, 1.4fr) 120px 160px 160px;
-      gap: 12px;
-      align-items: center;
-      border-radius: 18px;
-      padding: 16px 18px;
+      gap: 12px; align-items: center;
+      border-radius: 18px; padding: 16px 18px;
       background: rgba(255,255,255,0.035);
       border: 1px solid rgba(255,255,255,0.06);
     }
 
     .rank-row.dimmed { opacity: 0.33; filter: blur(2px); }
-    .rank-col { min-width: 0; }
-    .rank-num { font-size: 22px; font-weight: 900; color: #7fd2ff; }
-    .rank-name { font-size: 20px; font-weight: 900; color: #ffffff; line-height: 1.3; word-break: keep-all; }
-    .rank-job { margin-top: 4px; font-size: 13px; color: #aeb8cb; }
-    .metric-title { font-size: 12px; color: #98a9c5; margin-bottom: 6px; font-weight: 800; }
+    .rank-col    { min-width: 0; }
+    .rank-num    { font-size: 22px; font-weight: 900; color: #7fd2ff; }
+    .rank-name   { font-size: 20px; font-weight: 900; color: #ffffff; line-height: 1.3; word-break: keep-all; }
+    .rank-job    { margin-top: 4px; font-size: 13px; color: #aeb8cb; }
+    .metric-title{ font-size: 12px; color: #98a9c5; margin-bottom: 6px; font-weight: 800; }
     .metric-main { font-size: 20px; font-weight: 900; color: #ffffff; }
-    .metric-sub { margin-top: 4px; font-size: 12px; color: #b6c2d6; line-height: 1.6; }
+    .metric-sub  { margin-top: 4px; font-size: 12px; color: #b6c2d6; line-height: 1.6; }
 
-    .meter { margin-top: 8px; width: 100%; height: 12px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
-    .meter-fill { height: 100%; border-radius: 999px; }
-    .meter-fill.win { background: linear-gradient(90deg, #ff8ca5, #ff5f8f); }
+    .meter       { margin-top: 8px; width: 100%; height: 12px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+    .meter-fill  { height: 100%; border-radius: 999px; }
+    .meter-fill.win  { background: linear-gradient(90deg, #ff8ca5, #ff5f8f); }
     .meter-fill.rate { background: linear-gradient(90deg, #6bc3ff, #3fa6ff); }
 
-    .footer-note { margin-top: 14px; font-size: 13px; color: #98a7bd; text-align: right; line-height: 1.7; }
+    .footer-note  { margin-top: 14px; font-size: 13px; color: #98a7bd; text-align: right; line-height: 1.7; }
 
     .hidden-note {
       margin-top: 12px; padding: 12px 14px; border-radius: 16px;
@@ -760,25 +743,24 @@
       text-align: left; position: relative;
     }
 
-    .flow-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #8dc9ff; margin-bottom: 10px; font-weight: 900; text-align: center; }
-    .flow-title { font-size: 30px; font-weight: 900; color: #ffffff; line-height: 1.3; word-break: keep-all; text-align: center; }
-    .flow-desc { margin-top: 12px; color: #b9c4d6; line-height: 1.8; font-size: 14px; text-align: center; }
-    .flow-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .flow-label  { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #8dc9ff; margin-bottom: 10px; font-weight: 900; text-align: center; }
+    .flow-title  { font-size: 30px; font-weight: 900; color: #ffffff; line-height: 1.3; word-break: keep-all; text-align: center; }
+    .flow-desc   { margin-top: 12px; color: #b9c4d6; line-height: 1.8; font-size: 14px; text-align: center; }
+    .flow-actions{ display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
     .class-row {
       display: grid; grid-template-columns: 140px 1fr; gap: 12px; align-items: center;
       border-radius: 16px; padding: 12px 14px;
       background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); margin-top: 10px;
     }
-    .class-group { font-size: 18px; font-weight: 900; color: #dff3ff; }
+    .class-group   { font-size: 18px; font-weight: 900; color: #dff3ff; }
     .class-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
 
-    .battle-top-title { font-size: 38px; font-weight: 900; color: #ffffff; line-height: 1.25; margin-top: 6px; word-break: keep-all; }
-
-    .battle-progress-wrap { margin: 18px auto 12px; width: min(760px,100%); }
+    .battle-top-title    { font-size: 38px; font-weight: 900; color: #ffffff; line-height: 1.25; margin-top: 6px; word-break: keep-all; }
+    .battle-progress-wrap{ margin: 18px auto 12px; width: min(760px,100%); }
     .battle-progress-top { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; color: #9ecdf7; font-weight: 800; }
     .battle-progress-bar { width: 100%; height: 18px; padding: 2px; background: #06284a; border: 2px solid #25a0ff; }
-    .battle-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg,#00d9ff 0%,#25b4ff 55%,#4fe3ff 100%); transition: width 0.18s ease; }
+    .battle-progress-fill{ height: 100%; width: 0%; background: linear-gradient(90deg,#00d9ff 0%,#25b4ff 55%,#4fe3ff 100%); transition: width 0.18s ease; }
 
     .battle-vs { margin: 24px 0 18px; font-size: 42px; font-weight: 900; color: #ffd68c; letter-spacing: 6px; text-shadow: 0 0 8px rgba(255,214,140,0.20); }
 
@@ -800,11 +782,7 @@
       box-shadow: 0 18px 38px rgba(0,0,0,0.26), 0 0 34px rgba(90,150,255,0.12), 0 0 78px rgba(90,190,255,0.08);
     }
 
-    .battle-choice:hover {
-      transform: translateY(-6px) scale(1.03) rotateX(2deg) rotateY(-2deg);
-      filter: brightness(1.07);
-    }
-
+    .battle-choice:hover { transform: translateY(-6px) scale(1.03) rotateX(2deg) rotateY(-2deg); filter: brightness(1.07); }
     .battle-choice:disabled { cursor: default; }
 
     .choice-gloss {
@@ -816,24 +794,22 @@
 
     .battle-choice:hover .choice-gloss { opacity: 1; animation: waveFlow 1.6s linear infinite; }
 
-    .battle-choice .card-frame-svg {
-      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;
-    }
+    .battle-choice .card-frame-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
-    .gold { stroke: #d9b56f; stroke-width: 1.6; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.96; }
+    .gold      { stroke: #d9b56f; stroke-width: 1.6; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.96; }
     .gold-thin { stroke: rgba(217,181,111,0.88); stroke-width: 1; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .gold-fill { fill: #d9b56f; opacity: 0.95; }
 
     @keyframes waveFlow {
-      0% { transform: translateX(-10%) rotate(-14deg); }
-      100% { transform: translateX(45%) rotate(-14deg); }
+      0%   { transform: translateX(-10%) rotate(-14deg); }
+      100% { transform: translateX(45%)  rotate(-14deg); }
     }
 
-    .battle-choice.stage-green { box-shadow: 0 18px 38px rgba(0,0,0,0.26), 0 0 42px rgba(80,255,120,0.26), 0 0 100px rgba(80,255,120,0.14); border-color: rgba(120,255,150,0.22); }
-    .battle-choice.stage-blue  { box-shadow: 0 20px 42px rgba(0,0,0,0.28), 0 0 56px rgba(80,170,255,0.38), 0 0 126px rgba(60,210,255,0.22); border-color: rgba(110,190,255,0.30); }
-    .battle-choice.stage-purple{ box-shadow: 0 22px 46px rgba(0,0,0,0.28), 0 0 64px rgba(180,100,255,0.44), 0 0 146px rgba(120,110,255,0.28); border-color: rgba(210,150,255,0.34); }
-    .battle-choice.stage-yellow{ box-shadow: 0 24px 50px rgba(0,0,0,0.30), 0 0 74px rgba(255,220,100,0.52), 0 0 166px rgba(255,170,60,0.30), 0 0 210px rgba(90,230,255,0.14); border-color: rgba(255,225,140,0.40); }
-    .battle-choice.stage-red   { box-shadow: 0 28px 58px rgba(0,0,0,0.34), 0 0 92px rgba(255,70,70,0.68), 0 0 190px rgba(255,70,70,0.34), 0 0 250px rgba(255,180,60,0.28), 0 0 320px rgba(90,230,255,0.16); border-color: rgba(255,120,120,0.50); }
+    .battle-choice.stage-green  { box-shadow: 0 18px 38px rgba(0,0,0,0.26), 0 0 42px rgba(80,255,120,0.26),  0 0 100px rgba(80,255,120,0.14);  border-color: rgba(120,255,150,0.22); }
+    .battle-choice.stage-blue   { box-shadow: 0 20px 42px rgba(0,0,0,0.28), 0 0 56px rgba(80,170,255,0.38),  0 0 126px rgba(60,210,255,0.22);  border-color: rgba(110,190,255,0.30); }
+    .battle-choice.stage-purple { box-shadow: 0 22px 46px rgba(0,0,0,0.28), 0 0 64px rgba(180,100,255,0.44), 0 0 146px rgba(120,110,255,0.28); border-color: rgba(210,150,255,0.34); }
+    .battle-choice.stage-yellow { box-shadow: 0 24px 50px rgba(0,0,0,0.30), 0 0 74px rgba(255,220,100,0.52), 0 0 166px rgba(255,170,60,0.30),  0 0 210px rgba(90,230,255,0.14);  border-color: rgba(255,225,140,0.40); }
+    .battle-choice.stage-red    { box-shadow: 0 28px 58px rgba(0,0,0,0.34), 0 0 92px rgba(255,70,70,0.68),   0 0 190px rgba(255,70,70,0.34),   0 0 250px rgba(255,180,60,0.28),  0 0 320px rgba(90,230,255,0.16); border-color: rgba(255,120,120,0.50); }
 
     .battle-choice-content {
       position: relative; z-index: 3;
@@ -872,9 +848,9 @@
       100% { transform: translateX(-140%) rotate(-12deg) scale(0.85); opacity: 0; }
     }
 
-    .anim-win       { animation: winBoom 0.5s ease forwards, winGlow 0.5s ease forwards; border-color: rgba(100,255,120,0.65) !important; pointer-events: none; }
-    .anim-lose-right{ animation: loseSlideRight 0.45s ease forwards; pointer-events: none; }
-    .anim-lose-left { animation: loseSlideLeft  0.45s ease forwards; pointer-events: none; }
+    .anim-win        { animation: winBoom 0.5s ease forwards, winGlow 0.5s ease forwards; border-color: rgba(100,255,120,0.65) !important; pointer-events: none; }
+    .anim-lose-right { animation: loseSlideRight 0.45s ease forwards; pointer-events: none; }
+    .anim-lose-left  { animation: loseSlideLeft  0.45s ease forwards; pointer-events: none; }
 
     .winner-modal {
       position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
@@ -892,17 +868,16 @@
     }
 
     .winner-card::before {
-      content: "";
-      position: absolute; inset: 0;
+      content: ""; position: absolute; inset: 0;
       background: radial-gradient(circle at top center, rgba(255,120,120,0.18), transparent 36%), radial-gradient(circle at bottom center, rgba(255,180,90,0.10), transparent 36%);
       pointer-events: none;
     }
 
-    .winner-label  { position: relative; z-index: 1; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #ffb9b9; margin-bottom: 10px; font-weight: 900; }
-    .winner-title  { position: relative; z-index: 1; font-size: 42px; font-weight: 900; color: #ffffff; line-height: 1.18; word-break: keep-all; }
-    .winner-sub    { position: relative; z-index: 1; margin-top: 10px; color: #ffd3d3; font-size: 16px; line-height: 1.8; }
-    .winner-desc   { position: relative; z-index: 1; margin-top: 16px; color: #f1dede; font-size: 14px; line-height: 1.8; }
-    .winner-actions{ position: relative; z-index: 1; display: flex; justify-content: center; margin-top: 20px; }
+    .winner-label   { position: relative; z-index: 1; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #ffb9b9; margin-bottom: 10px; font-weight: 900; }
+    .winner-title   { position: relative; z-index: 1; font-size: 42px; font-weight: 900; color: #ffffff; line-height: 1.18; word-break: keep-all; }
+    .winner-sub     { position: relative; z-index: 1; margin-top: 10px; color: #ffd3d3; font-size: 16px; line-height: 1.8; }
+    .winner-desc    { position: relative; z-index: 1; margin-top: 16px; color: #f1dede; font-size: 14px; line-height: 1.8; }
+    .winner-actions { position: relative; z-index: 1; display: flex; justify-content: center; margin-top: 20px; }
 
     .grade-stamp-wrap { position: relative; z-index: 1; display: flex; justify-content: center; margin: 18px 0 10px; }
 
@@ -911,18 +886,13 @@
       border: 5px solid rgba(255,88,88,0.95);
       color: rgba(255,118,118,0.95);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      transform: rotate(-12deg);
-      text-align: center; font-weight: 900;
+      transform: rotate(-12deg); text-align: center; font-weight: 900;
       box-shadow: 0 0 22px rgba(255,80,80,0.30), 0 0 44px rgba(255,80,80,0.18), inset 0 0 0 2px rgba(255,255,255,0.03);
       background: radial-gradient(circle at center, rgba(255,70,70,0.06), rgba(255,70,70,0.01));
-      opacity: 0.95;
-      animation: stampAppear 0.4s ease 0.2s both;
+      opacity: 0.95; animation: stampAppear 0.4s ease 0.2s both;
     }
 
-    .grade-stamp::before {
-      content: ""; position: absolute; inset: 8px; border-radius: 50%;
-      border: 2px dashed rgba(255,92,92,0.40);
-    }
+    .grade-stamp::before { content: ""; position: absolute; inset: 8px; border-radius: 50%; border: 2px dashed rgba(255,92,92,0.40); }
 
     .grade-stamp .gs-date  { font-size: 13px; letter-spacing: 1px; position: relative; z-index: 1; }
     .grade-stamp .gs-grade { font-size: 26px; font-weight: 900; line-height: 1.1; position: relative; z-index: 1; }
@@ -931,7 +901,7 @@
     @keyframes stampAppear {
       0%   { transform: rotate(-12deg) scale(0.5); opacity: 0; }
       70%  { transform: rotate(-12deg) scale(1.1); opacity: 1; }
-      100% { transform: rotate(-12deg) scale(1); opacity: 0.95; }
+      100% { transform: rotate(-12deg) scale(1);   opacity: 0.95; }
     }
 
     .grade-comment { position: relative; z-index: 1; margin-top: 6px; font-size: 14px; color: #ffd3d3; line-height: 1.7; font-style: italic; }
@@ -944,7 +914,6 @@
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
 
-    /* ===== 사이드바 모달 ===== */
     .modal-backdrop {
       position: fixed; inset: 0;
       background: rgba(4,8,16,0.75); backdrop-filter: blur(6px);
@@ -985,88 +954,87 @@
     .engraving-chip  { padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 800; border: 1px solid rgba(255,255,255,0.12); }
 
     .tier-1 { background: linear-gradient(180deg, rgba(255,60,60,0.20), rgba(120,10,20,0.24)); border: 1px solid rgba(255,120,120,0.35); }
-    .tier-1::before { content: ""; position: absolute; inset: -40%; background: conic-gradient(from 180deg, #ff3b3b, #ff7a00, #ffe600, #45ff8a, #00d7ff, #7b61ff, #ff4fd8, #ff3b3b); opacity: 0.18; filter: blur(24px); animation: rainbowSpin 8s linear infinite; z-index: 0; pointer-events: none; }
+    .tier-1::before { content: ""; position: absolute; inset: -40%; background: conic-gradient(from 180deg,#ff3b3b,#ff7a00,#ffe600,#45ff8a,#00d7ff,#7b61ff,#ff4fd8,#ff3b3b); opacity: 0.18; filter: blur(24px); animation: rainbowSpin 8s linear infinite; z-index: 0; pointer-events: none; }
     .tier-1 > * { position: relative; z-index: 1; }
-    .tier-1 .tier-header { color: #ffd1d1; }
-    .tier-1 .tier-badge  { background: rgba(255,90,90,0.24); color: #fff1f1; }
+    .tier-1 .tier-header    { color: #ffd1d1; }
+    .tier-1 .tier-badge     { background: rgba(255,90,90,0.24); color: #fff1f1; }
     .tier-1 .engraving-chip { background: rgba(255,255,255,0.06); color: #ffe2e2; border-color: rgba(255,150,150,0.24); }
 
     .tier-2 { background: linear-gradient(180deg, rgba(255,220,90,0.18), rgba(120,95,10,0.20)); border: 1px solid rgba(255,220,90,0.30); }
-    .tier-2::before { content: ""; position: absolute; inset: -40%; background: conic-gradient(from 180deg, #ff3b3b, #ff7a00, #ffe600, #45ff8a, #00d7ff, #7b61ff, #ff4fd8, #ff3b3b); opacity: 0.09; filter: blur(24px); animation: rainbowSpin 12s linear infinite reverse; z-index: 0; pointer-events: none; }
+    .tier-2::before { content: ""; position: absolute; inset: -40%; background: conic-gradient(from 180deg,#ff3b3b,#ff7a00,#ffe600,#45ff8a,#00d7ff,#7b61ff,#ff4fd8,#ff3b3b); opacity: 0.09; filter: blur(24px); animation: rainbowSpin 12s linear infinite reverse; z-index: 0; pointer-events: none; }
     .tier-2 > * { position: relative; z-index: 1; }
-    .tier-2 .tier-header { color: #ffe58a; }
-    .tier-2 .tier-badge  { background: rgba(255,220,90,0.20); color: #ffe58a; }
+    .tier-2 .tier-header    { color: #ffe58a; }
+    .tier-2 .tier-badge     { background: rgba(255,220,90,0.20); color: #ffe58a; }
     .tier-2 .engraving-chip { background: rgba(255,220,90,0.10); color: #ffe58a; border-color: rgba(255,220,90,0.22); }
 
     .tier-3 { background: linear-gradient(180deg, rgba(170,120,255,0.18), rgba(70,30,120,0.20)); border: 1px solid rgba(170,120,255,0.30); }
-    .tier-3 .tier-header { color: #d1b3ff; }
-    .tier-3 .tier-badge  { background: rgba(170,120,255,0.20); color: #d1b3ff; }
+    .tier-3 .tier-header    { color: #d1b3ff; }
+    .tier-3 .tier-badge     { background: rgba(170,120,255,0.20); color: #d1b3ff; }
     .tier-3 .engraving-chip { background: rgba(170,120,255,0.10); color: #d1b3ff; border-color: rgba(170,120,255,0.22); }
 
     .tier-4 { background: linear-gradient(180deg, rgba(90,180,255,0.18), rgba(20,60,120,0.20)); border: 1px solid rgba(90,180,255,0.30); }
-    .tier-4 .tier-header { color: #a9dfff; }
-    .tier-4 .tier-badge  { background: rgba(90,180,255,0.20); color: #a9dfff; }
+    .tier-4 .tier-header    { color: #a9dfff; }
+    .tier-4 .tier-badge     { background: rgba(90,180,255,0.20); color: #a9dfff; }
     .tier-4 .engraving-chip { background: rgba(90,180,255,0.10); color: #a9dfff; border-color: rgba(90,180,255,0.22); }
 
     .tier-5 { background: linear-gradient(180deg, rgba(90,230,140,0.18), rgba(20,90,50,0.20)); border: 1px solid rgba(90,230,140,0.30); }
-    .tier-5 .tier-header { color: #bff7d0; }
-    .tier-5 .tier-badge  { background: rgba(90,230,140,0.20); color: #bff7d0; }
+    .tier-5 .tier-header    { color: #bff7d0; }
+    .tier-5 .tier-badge     { background: rgba(90,230,140,0.20); color: #bff7d0; }
     .tier-5 .engraving-chip { background: rgba(90,230,140,0.10); color: #bff7d0; border-color: rgba(90,230,140,0.22); }
 
     .tier-6 { background: linear-gradient(180deg, rgba(180,180,180,0.16), rgba(50,50,50,0.22)); border: 1px solid rgba(220,220,220,0.18); }
-    .tier-6 .tier-header { color: #d0d0d0; }
-    .tier-6 .tier-badge  { background: rgba(180,180,180,0.16); color: #efefef; }
+    .tier-6 .tier-header    { color: #d0d0d0; }
+    .tier-6 .tier-badge     { background: rgba(180,180,180,0.16); color: #efefef; }
     .tier-6 .engraving-chip { background: rgba(255,255,255,0.06); color: #d9d9d9; border-color: rgba(220,220,220,0.16); }
 
     .loading-text { text-align: center; color: #aeb9cb; font-size: 14px; padding: 30px 0; }
 
-    .grade-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
-    .grade-item { border-radius: 12px; padding: 10px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.08); position: relative; overflow: hidden; }
+    .grade-grid  { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+    .grade-item  { border-radius: 12px; padding: 10px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.08); position: relative; overflow: hidden; }
     .grade-item > * { position: relative; z-index: 1; }
     .grade-name  { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
     .grade-range { font-size: 11px; opacity: 0.75; color: #aeb9cb; }
 
-    .grade-ss-plus,.grade-ss,.grade-ss-minus { background: linear-gradient(135deg, rgba(255,60,60,0.15), rgba(255,180,60,0.15), rgba(80,220,140,0.13), rgba(90,160,255,0.13), rgba(180,100,255,0.13)); border-color: rgba(255,140,140,0.30); }
+    .grade-ss-plus,.grade-ss,.grade-ss-minus { background: linear-gradient(135deg,rgba(255,60,60,0.15),rgba(255,180,60,0.15),rgba(80,220,140,0.13),rgba(90,160,255,0.13),rgba(180,100,255,0.13)); border-color: rgba(255,140,140,0.30); }
     .grade-ss-plus::before,.grade-ss::before,.grade-ss-minus::before { content:""; position:absolute; inset:-35%; background:conic-gradient(from 180deg,#ff3b3b,#ff7a00,#ffe600,#45ff8a,#00d7ff,#7b61ff,#ff4fd8,#ff3b3b); opacity:0.30; filter:blur(16px); animation:rainbowSpin 7s linear infinite; pointer-events:none; z-index:0; }
     .grade-ss-plus .grade-name  { color: #ffe566; }
     .grade-ss .grade-name       { color: #ffcc66; }
     .grade-ss-minus .grade-name { color: #ffaa66; }
 
-    .grade-s-plus,.grade-s,.grade-s-minus { background: linear-gradient(135deg, rgba(150,220,255,0.12), rgba(255,180,90,0.08), rgba(120,120,255,0.08)); border-color: rgba(150,220,255,0.24); }
+    .grade-s-plus,.grade-s,.grade-s-minus { background: linear-gradient(135deg,rgba(150,220,255,0.12),rgba(255,180,90,0.08),rgba(120,120,255,0.08)); border-color: rgba(150,220,255,0.24); }
     .grade-s-plus::before,.grade-s::before,.grade-s-minus::before { content:""; position:absolute; inset:-35%; background:conic-gradient(from 180deg,#ff3b3b,#ff7a00,#ffe600,#45ff8a,#00d7ff,#7b61ff,#ff4fd8,#ff3b3b); opacity:0.10; filter:blur(16px); animation:rainbowSpin 12s linear infinite reverse; pointer-events:none; z-index:0; }
     .grade-s-plus .grade-name  { color: #96dcff; }
     .grade-s .grade-name       { color: #7bd6ff; }
     .grade-s-minus .grade-name { color: #64c8ff; }
 
-    .grade-a-plus  { background: rgba(255,80,80,0.14);  border-color: rgba(255,120,120,0.28); } .grade-a-plus .grade-name  { color: #ff8d8d; }
-    .grade-a       { background: rgba(220,60,60,0.12);  border-color: rgba(220,100,100,0.24); } .grade-a .grade-name       { color: #ee7070; }
-    .grade-a-minus { background: rgba(190,40,40,0.12);  border-color: rgba(190,80,80,0.22);  } .grade-a-minus .grade-name { color: #dd5555; }
-    .grade-b-plus  { background: rgba(255,160,60,0.14); border-color: rgba(255,160,60,0.28); } .grade-b-plus .grade-name  { color: #ffb060; }
-    .grade-b       { background: rgba(230,130,40,0.12); border-color: rgba(230,130,40,0.24); } .grade-b .grade-name       { color: #ee9944; }
-    .grade-b-minus { background: rgba(200,100,30,0.12); border-color: rgba(200,100,30,0.22); } .grade-b-minus .grade-name { color: #dd8833; }
-    .grade-c-plus  { background: rgba(180,120,255,0.14);border-color: rgba(180,120,255,0.28);} .grade-c-plus .grade-name  { color: #c79cff; }
-    .grade-c       { background: rgba(150,100,220,0.12);border-color: rgba(150,100,220,0.24);} .grade-c .grade-name       { color: #aa88ee; }
-    .grade-c-minus { background: rgba(120,80,190,0.12); border-color: rgba(120,80,190,0.22); } .grade-c-minus .grade-name { color: #9977dd; }
-    .grade-d-plus  { background: rgba(90,180,255,0.14); border-color: rgba(90,180,255,0.28); } .grade-d-plus .grade-name  { color: #a9dfff; }
-    .grade-d       { background: rgba(60,150,220,0.12); border-color: rgba(60,150,220,0.24); } .grade-d .grade-name       { color: #7bc8ee; }
-    .grade-d-minus { background: rgba(30,120,190,0.12); border-color: rgba(30,120,190,0.22); } .grade-d-minus .grade-name { color: #55aadd; }
-    .grade-e-plus  { background: rgba(90,230,140,0.14); border-color: rgba(90,230,140,0.28); } .grade-e-plus .grade-name  { color: #bff7d0; }
-    .grade-e       { background: rgba(60,190,100,0.12); border-color: rgba(60,190,100,0.24); } .grade-e .grade-name       { color: #8ee8b0; }
-    .grade-e-minus { background: rgba(30,150,70,0.12);  border-color: rgba(30,150,70,0.22);  } .grade-e-minus .grade-name { color: #66cc88; }
-    .grade-f-plus  { background: rgba(180,180,180,0.14);border-color: rgba(200,200,200,0.22);} .grade-f-plus .grade-name  { color: #d9d9d9; }
-    .grade-f       { background: rgba(140,140,140,0.12);border-color: rgba(170,170,170,0.18);} .grade-f .grade-name       { color: #bbbbbb; }
-    .grade-f-minus { background: rgba(100,100,100,0.12);border-color: rgba(140,140,140,0.16);} .grade-f-minus .grade-name { color: #999999; }
+    .grade-a-plus  { background:rgba(255,80,80,0.14);  border-color:rgba(255,120,120,0.28); } .grade-a-plus .grade-name  { color:#ff8d8d; }
+    .grade-a       { background:rgba(220,60,60,0.12);  border-color:rgba(220,100,100,0.24); } .grade-a .grade-name       { color:#ee7070; }
+    .grade-a-minus { background:rgba(190,40,40,0.12);  border-color:rgba(190,80,80,0.22);  } .grade-a-minus .grade-name { color:#dd5555; }
+    .grade-b-plus  { background:rgba(255,160,60,0.14); border-color:rgba(255,160,60,0.28); } .grade-b-plus .grade-name  { color:#ffb060; }
+    .grade-b       { background:rgba(230,130,40,0.12); border-color:rgba(230,130,40,0.24); } .grade-b .grade-name       { color:#ee9944; }
+    .grade-b-minus { background:rgba(200,100,30,0.12); border-color:rgba(200,100,30,0.22); } .grade-b-minus .grade-name { color:#dd8833; }
+    .grade-c-plus  { background:rgba(180,120,255,0.14);border-color:rgba(180,120,255,0.28);} .grade-c-plus .grade-name  { color:#c79cff; }
+    .grade-c       { background:rgba(150,100,220,0.12);border-color:rgba(150,100,220,0.24);} .grade-c .grade-name       { color:#aa88ee; }
+    .grade-c-minus { background:rgba(120,80,190,0.12); border-color:rgba(120,80,190,0.22); } .grade-c-minus .grade-name { color:#9977dd; }
+    .grade-d-plus  { background:rgba(90,180,255,0.14); border-color:rgba(90,180,255,0.28); } .grade-d-plus .grade-name  { color:#a9dfff; }
+    .grade-d       { background:rgba(60,150,220,0.12); border-color:rgba(60,150,220,0.24); } .grade-d .grade-name       { color:#7bc8ee; }
+    .grade-d-minus { background:rgba(30,120,190,0.12); border-color:rgba(30,120,190,0.22); } .grade-d-minus .grade-name { color:#55aadd; }
+    .grade-e-plus  { background:rgba(90,230,140,0.14); border-color:rgba(90,230,140,0.28); } .grade-e-plus .grade-name  { color:#bff7d0; }
+    .grade-e       { background:rgba(60,190,100,0.12); border-color:rgba(60,190,100,0.24); } .grade-e .grade-name       { color:#8ee8b0; }
+    .grade-e-minus { background:rgba(30,150,70,0.12);  border-color:rgba(30,150,70,0.22);  } .grade-e-minus .grade-name { color:#66cc88; }
+    .grade-f-plus  { background:rgba(180,180,180,0.14);border-color:rgba(200,200,200,0.22);} .grade-f-plus .grade-name  { color:#d9d9d9; }
+    .grade-f       { background:rgba(140,140,140,0.12);border-color:rgba(170,170,170,0.18);} .grade-f .grade-name       { color:#bbbbbb; }
+    .grade-f-minus { background:rgba(100,100,100,0.12);border-color:rgba(140,140,140,0.16);} .grade-f-minus .grade-name { color:#999999; }
 
-    .grade-note { font-size: 13px; color: #9ecdf7; text-align: center; padding: 12px 16px; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); line-height: 1.7; }
+    .grade-note { font-size:13px; color:#9ecdf7; text-align:center; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); line-height:1.7; }
 
     @keyframes rainbowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     @media (max-width: 1180px) {
       .workspace { grid-template-columns: 280px 1fr; }
-      .rank-row { grid-template-columns: 72px minmax(0, 1fr); gap: 10px; }
+      .rank-row { grid-template-columns: 72px minmax(0,1fr); gap: 10px; }
       .rank-row .metric-block { grid-column: 2 / -1; }
     }
-
     @media (max-width: 1024px) {
       .workspace { grid-template-columns: 1fr; }
       .sidebar { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -1074,16 +1042,14 @@
       .battle-choice-grid { grid-template-columns: 1fr; }
       .sidebar-calendar { display: none; }
     }
-
     @media (max-width: 768px) {
       body { padding: 8px; }
       .app { width: 100%; margin: 0 auto; border-radius: 20px; }
-      .workspace { grid-template-columns: 1fr; }
       .sidebar { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 16px; }
       .main { padding: 14px; gap: 14px; }
       .panel { padding: 16px; border-radius: 20px; }
       .hero { font-size: 26px; margin-bottom: 10px; }
-      .muted { font-size: 13px; line-height: 1.55; }
+      .muted { font-size: 13px; }
       .intro-title { font-size: 24px; }
       .intro-desc { font-size: 13px; max-width: 100%; margin-top: 12px; }
       .duo-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -1091,9 +1057,7 @@
       .card-title { font-size: 22px; }
       .card-desc { font-size: 13px; min-height: auto; max-width: 100%; }
       .stamp { width: 92px; height: 92px; right: 12px; bottom: 12px; border-width: 4px; }
-      .stamp .date { font-size: 10px; }
-      .stamp .grade-text { font-size: 16px; }
-      .stamp .done { font-size: 11px; }
+      .stamp .date { font-size: 10px; } .stamp .grade-text { font-size: 16px; } .stamp .done { font-size: 11px; }
       .ranking-title { font-size: 22px; }
       .mini-tab { min-width: 96px; min-height: 56px; font-size: 13px; padding: 10px 12px; border-radius: 12px; }
       .summary-cards { grid-template-columns: 1fr; gap: 12px; margin-bottom: 14px; }
@@ -1108,7 +1072,7 @@
       .class-row { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
       .battle-top-title { font-size: 22px; margin-top: 2px; }
       .battle-vs { margin: 12px 0 10px; font-size: 26px; letter-spacing: 3px; }
-      .battle-choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+      .battle-choice-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 10px; }
       .battle-choice { width: 100%; max-width: 170px; height: 250px; padding: 12px 8px; border-radius: 18px; }
       .battle-choice-content { padding: 14px 8px; }
       .battle-choice-class { font-size: 13px; margin-bottom: 12px; }
@@ -1119,7 +1083,6 @@
       .grade-stamp .gs-grade { font-size: 22px; }
       .sidebar-calendar { display: none; }
     }
-
     @media (max-width: 480px) {
       body { padding: 0; }
       .app { width: 100%; margin: 0; border-radius: 0; border-left: none; border-right: none; }
@@ -1141,8 +1104,6 @@
   <div class="app">
     <div class="workspace">
       <aside class="sidebar">
-
-        <!-- 캡슐 스위치 -->
         <div class="switch-wrap">
           <a href="./index.html">DPS 계산기</a>
           <a href="#" class="active">직각 토너먼트</a>
@@ -1159,7 +1120,6 @@
 
         <div class="sidebar-divider"></div>
 
-        <!-- OP 티어표 버튼 -->
         <button class="tier-btn tier-btn-op" id="openOpTierBtn">
           <div class="tier-lock-icon" id="opLockIcon" style="display:none;">🔒</div>
           <div class="tier-btn-content">
@@ -1169,7 +1129,6 @@
           </div>
         </button>
 
-        <!-- 호감 티어표 버튼 -->
         <button class="tier-btn tier-btn-favor" id="openFavorTierBtn">
           <div class="tier-lock-icon" id="favorLockIcon" style="display:none;">🔒</div>
           <div class="tier-btn-content">
@@ -1181,8 +1140,7 @@
 
         <div class="sidebar-divider"></div>
 
-        <!-- 달력 (모바일 숨김) -->
-        <div class="sidebar-calendar" id="sidebarCalendar">
+        <div class="sidebar-calendar">
           <div class="cal-header">
             <button class="cal-nav" id="calPrev">‹</button>
             <div class="cal-month" id="calMonth"></div>
@@ -1190,7 +1148,6 @@
           </div>
           <div class="cal-grid" id="calGrid"></div>
         </div>
-
       </aside>
 
       <main class="main">
@@ -1221,7 +1178,7 @@
               <button class="ghost-btn"   id="opRankBtn">랭킹보기</button>
             </div>
             <div class="stamp" id="opStamp">
-              <div class="date"       id="opStampDate">26 04 07</div>
+              <div class="date"       id="opStampDate"></div>
               <div class="grade-text" id="opStampGrade"></div>
               <div class="done">참여완료</div>
             </div>
@@ -1236,7 +1193,7 @@
               <button class="ghost-btn"   id="favorRankBtn">랭킹보기</button>
             </div>
             <div class="stamp" id="favorStamp">
-              <div class="date" id="favorStampDate">26 04 07</div>
+              <div class="date" id="favorStampDate"></div>
               <div class="done">참여완료</div>
             </div>
           </div>
@@ -1268,16 +1225,16 @@
               <button class="mini-tab disabled"><span>월간</span><span class="tab-date">집계중</span></button>
               <button class="mini-tab active-period"><span>전체</span><span class="tab-date">26.04.07 ~ 오늘</span></button>
             </div>
-            <div class="summary-cards"  id="summaryCards"></div>
-            <div class="ranking-list"   id="rankingList"></div>
-            <div class="footer-note"    id="rankingFooterNote">※ 전체 랭킹은 매시간 정각 집계됩니다.</div>
+            <div class="summary-cards" id="summaryCards"></div>
+            <div class="ranking-list"  id="rankingList"></div>
+            <div class="footer-note"   id="rankingFooterNote">※ 전체 랭킹은 매시간 정각 집계됩니다.</div>
           </div>
         </section>
       </main>
     </div>
   </div>
 
-  <!-- 미니 팝업 (자물쇠 클릭 시) -->
+  <!-- 미니 팝업 -->
   <div class="mini-popup" id="miniPopup">
     <div class="mini-popup-label">열람 조건</div>
     <div class="mini-popup-title" id="miniPopupTitle"></div>
@@ -1300,10 +1257,10 @@
   <!-- 배틀 모달 -->
   <div class="flow-modal" id="battleModal">
     <div class="flow-card" style="width:min(980px,100%); text-align:center;">
-      <div class="flow-label"      id="battleModeLabel">TOURNAMENT</div>
+      <div class="flow-label"       id="battleModeLabel">TOURNAMENT</div>
       <div class="battle-top-title" id="battleTopKorTitle">OP 직각 토너먼트</div>
-      <div class="flow-title"      id="battleRoundTitle" style="margin-top:8px;">직각 월드컵</div>
-      <div class="flow-desc"       id="battleSubText">대결을 준비 중입니다.</div>
+      <div class="flow-title"       id="battleRoundTitle" style="margin-top:8px;">직각 월드컵</div>
+      <div class="flow-desc"        id="battleSubText">대결을 준비 중입니다.</div>
       <div class="battle-progress-wrap">
         <div class="battle-progress-top">
           <span>진행 상황</span>
@@ -1455,11 +1412,8 @@
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
     async function getClientIP() {
-      try {
-        const res  = await fetch('https://api.ipify.org?format=json');
-        const data = await res.json();
-        return data.ip;
-      } catch { return null; }
+      try { const res=await fetch('https://api.ipify.org?format=json'); const data=await res.json(); return data.ip; }
+      catch { return null; }
     }
 
     const SUPABASE_URL = "https://khszfukekudyripouifm.supabase.co";
@@ -1471,23 +1425,18 @@
     winnerAudio.volume = 1.0;
     flipAudio.volume   = 1.0;
 
-    const SUPPORT_ENGRAVINGS  = ["절실한 구원", "만개", "축복의 오라", "해방자"];
-    const A_MINUS_AND_ABOVE   = ["SS+","SS","SS-","S+","S","S-","A+","A","A-"];
+    const SUPPORT_ENGRAVINGS = ["절실한 구원","만개","축복의 오라","해방자"];
+    const A_MINUS_AND_ABOVE  = ["SS+","SS","SS-","S+","S","S-","A+","A","A-"];
 
-    // ===== 등급 시스템 =====
     const GRADE_TABLE = [
-      { grade:"SS+", min:100, max:100 }, { grade:"SS",  min:98,  max:99  },
-      { grade:"SS-", min:96,  max:97  }, { grade:"S+",  min:94,  max:95  },
-      { grade:"S",   min:92,  max:93  }, { grade:"S-",  min:90,  max:91  },
-      { grade:"A+",  min:85,  max:89  }, { grade:"A",   min:80,  max:84  },
-      { grade:"A-",  min:75,  max:79  }, { grade:"B+",  min:70,  max:74  },
-      { grade:"B",   min:65,  max:69  }, { grade:"B-",  min:60,  max:64  },
-      { grade:"C+",  min:55,  max:59  }, { grade:"C",   min:50,  max:54  },
-      { grade:"C-",  min:45,  max:49  }, { grade:"D+",  min:40,  max:44  },
-      { grade:"D",   min:35,  max:39  }, { grade:"D-",  min:30,  max:34  },
-      { grade:"E+",  min:25,  max:29  }, { grade:"E",   min:20,  max:24  },
-      { grade:"E-",  min:15,  max:19  }, { grade:"F+",  min:10,  max:14  },
-      { grade:"F",   min:5,   max:9   }, { grade:"F-",  min:0,   max:4   },
+      {grade:"SS+",min:100,max:100},{grade:"SS",min:98,max:99},{grade:"SS-",min:96,max:97},
+      {grade:"S+",min:94,max:95},{grade:"S",min:92,max:93},{grade:"S-",min:90,max:91},
+      {grade:"A+",min:85,max:89},{grade:"A",min:80,max:84},{grade:"A-",min:75,max:79},
+      {grade:"B+",min:70,max:74},{grade:"B",min:65,max:69},{grade:"B-",min:60,max:64},
+      {grade:"C+",min:55,max:59},{grade:"C",min:50,max:54},{grade:"C-",min:45,max:49},
+      {grade:"D+",min:40,max:44},{grade:"D",min:35,max:39},{grade:"D-",min:30,max:34},
+      {grade:"E+",min:25,max:29},{grade:"E",min:20,max:24},{grade:"E-",min:15,max:19},
+      {grade:"F+",min:10,max:14},{grade:"F",min:5,max:9},{grade:"F-",min:0,max:4},
     ];
 
     const GRADE_COMMENTS = {
@@ -1518,48 +1467,39 @@
     };
 
     function calcGrade(score, total) {
-      if (total === 0) return "F-";
-      const rate = Math.round((score / total) * 100);
-      for (const row of GRADE_TABLE) { if (rate >= row.min && rate <= row.max) return row.grade; }
+      if (total===0) return "F-";
+      const rate=Math.round((score/total)*100);
+      for (const row of GRADE_TABLE) { if (rate>=row.min&&rate<=row.max) return row.grade; }
       return "F-";
     }
 
     function getRandomComment(grade) {
-      const list = GRADE_COMMENTS[grade] || ["잘 하셨습니다!"];
-      return list[Math.floor(Math.random() * list.length)];
+      const list=GRADE_COMMENTS[grade]||["잘 하셨습니다!"];
+      return list[Math.floor(Math.random()*list.length)];
     }
 
-    // ===== 최근 3일 승률 캐시 =====
-    let winRateCache = {};
+    let winRateCache={};
 
     async function loadRecentWinRates(type) {
-      winRateCache = {};
-      const today = new Date();
-      const dates = [];
-      for (let i = 0; i < 3; i++) {
-        const d = new Date(today); d.setDate(d.getDate() - i);
+      winRateCache={};
+      const today=new Date(), dates=[];
+      for (let i=0;i<3;i++) {
+        const d=new Date(today); d.setDate(d.getDate()-i);
         dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
       }
-      const { data, error } = await supabase.from("match_logs")
-        .select("winner_engraving, loser_engraving")
-        .eq("tournament_type", type).in("date_key", dates);
-      if (error || !data) return;
-      const stats = {};
+      const {data,error}=await supabase.from("match_logs").select("winner_engraving,loser_engraving").eq("tournament_type",type).in("date_key",dates);
+      if (error||!data) return;
+      const stats={};
       for (const row of data) {
-        if (!stats[row.winner_engraving]) stats[row.winner_engraving] = { w:0, l:0 };
-        if (!stats[row.loser_engraving])  stats[row.loser_engraving]  = { w:0, l:0 };
-        stats[row.winner_engraving].w++;
-        stats[row.loser_engraving].l++;
+        if (!stats[row.winner_engraving]) stats[row.winner_engraving]={w:0,l:0};
+        if (!stats[row.loser_engraving])  stats[row.loser_engraving]={w:0,l:0};
+        stats[row.winner_engraving].w++; stats[row.loser_engraving].l++;
       }
-      for (const [name, s] of Object.entries(stats)) {
-        const t = s.w + s.l;
-        winRateCache[name] = t > 0 ? s.w / t : 0.5;
-      }
+      for (const [name,s] of Object.entries(stats)) { const t=s.w+s.l; winRateCache[name]=t>0?s.w/t:0.5; }
     }
 
-    function getWinRate(name) { return winRateCache[name] !== undefined ? winRateCache[name] : 0.5; }
+    function getWinRate(name) { return winRateCache[name]!==undefined?winRateCache[name]:0.5; }
 
-    // ===== 티어표 =====
     const fullToShortMap = {
       "고독한 기사":"고기","전투 태세":"전태","광기":"광기","광전사의 비기":"비기",
       "분노의 망치":"분망","중력 수련":"중수","심판자":"심판자","축복의 오라":"축오",
@@ -1578,45 +1518,43 @@
       "질풍노도":"질풍","환수 각성":"환각","야성":"야성","업화":"업화","드레드 로어":"드드"
     };
 
-    function getShortName(full) { return fullToShortMap[full] || full; }
+    function getShortName(full) { return fullToShortMap[full]||full; }
 
     function shuffle(arr) {
-      const c = [...arr];
-      for (let i = c.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [c[i],c[j]]=[c[j],c[i]]; }
+      const c=[...arr];
+      for (let i=c.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [c[i],c[j]]=[c[j],c[i]]; }
       return c;
     }
 
     async function loadTierData(type) {
-      const { data, error } = await supabase.from("ranking_overall")
-        .select("engraving_name, win_rate, total_matches")
-        .eq("tournament_type", type).gte("total_matches", 5).order("win_rate", { ascending: false });
-      if (error || !data) return null;
-      let entries = data.map(r => ({ name: r.engraving_name, winRate: Number(r.win_rate), total: Number(r.total_matches) }));
-      if (type === "op") entries = entries.filter(e => !SUPPORT_ENGRAVINGS.includes(e.name));
+      const {data,error}=await supabase.from("ranking_overall").select("engraving_name,win_rate,total_matches").eq("tournament_type",type).gte("total_matches",5).order("win_rate",{ascending:false});
+      if (error||!data) return null;
+      let entries=data.map(r=>({name:r.engraving_name,winRate:Number(r.win_rate),total:Number(r.total_matches)}));
+      if (type==="op") entries=entries.filter(e=>!SUPPORT_ENGRAVINGS.includes(e.name));
       return entries;
     }
 
     function calcTiers(entries) {
       if (!entries.length) return [[],[],[],[],[],[]];
-      const sorted = [...entries].sort((a,b) => b.winRate - a.winRate);
-      const total  = sorted.length;
-      const tier6  = total > 10 ? sorted.slice(total-10) : [];
-      const rest   = total > 10 ? sorted.slice(0, total-10) : sorted;
-      const tier1  = rest.slice(0,6), tier2 = rest.slice(6,15), tier3 = rest.slice(15,27);
-      const rem    = rest.slice(27), half = Math.ceil(rem.length/2);
-      return [tier1, tier2, tier3, rem.slice(0,half), rem.slice(half), tier6];
+      const sorted=[...entries].sort((a,b)=>b.winRate-a.winRate);
+      const total=sorted.length;
+      const tier6=total>10?sorted.slice(total-10):[];
+      const rest=total>10?sorted.slice(0,total-10):sorted;
+      const tier1=rest.slice(0,6),tier2=rest.slice(6,15),tier3=rest.slice(15,27);
+      const rem=rest.slice(27),half=Math.ceil(rem.length/2);
+      return [tier1,tier2,tier3,rem.slice(0,half),rem.slice(half),tier6];
     }
 
-    function renderTierContent(tiers, containerId) {
-      const container = document.getElementById(containerId);
-      if (!tiers || tiers.every(t => t.length === 0)) {
-        container.innerHTML = `<div class="loading-text">데이터가 부족합니다 😢<br>토너먼트 참여자가 늘면 자동으로 반영됩니다!</div>`;
+    function renderTierContent(tiers,containerId) {
+      const container=document.getElementById(containerId);
+      if (!tiers||tiers.every(t=>t.length===0)) {
+        container.innerHTML=`<div class="loading-text">데이터가 부족합니다 😢<br>토너먼트 참여자가 늘면 자동으로 반영됩니다!</div>`;
         return;
       }
-      const names   = ["1티어","2티어","3티어","4티어","5티어","6티어"];
-      const classes = ["tier-1","tier-2","tier-3","tier-4","tier-5","tier-6"];
-      const emojis  = ["👑","⭐","💜","💙","💚","⚪"];
-      container.innerHTML = tiers.map((tier,i) => {
+      const names=["1티어","2티어","3티어","4티어","5티어","6티어"];
+      const classes=["tier-1","tier-2","tier-3","tier-4","tier-5","tier-6"];
+      const emojis=["👑","⭐","💜","💙","💚","⚪"];
+      container.innerHTML=tiers.map((tier,i)=>{
         if (!tier.length) return "";
         return `<div class="tier-block ${classes[i]}">
           <div class="tier-header"><span>${emojis[i]}</span><span class="tier-badge">${names[i]}</span><span class="tier-count">${tier.length}개</span></div>
@@ -1629,80 +1567,81 @@
     let calYear, calMonth;
 
     function initCalendar() {
-      const now = new Date();
-      calYear  = now.getFullYear();
-      calMonth = now.getMonth();
-      renderCalendar();
+      const now=new Date(); calYear=now.getFullYear(); calMonth=now.getMonth(); renderCalendar();
     }
 
     function renderCalendar() {
-      const now      = new Date();
-      const todayY   = now.getFullYear();
-      const todayM   = now.getMonth();
-      const todayD   = now.getDate();
-      const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-      document.getElementById("calMonth").textContent = `${monthNames[calMonth]} ${calYear}`;
-
-      const grid     = document.getElementById("calGrid");
-      const dows     = ["Su","Mo","Tu","We","Th","Fr","Sa"];
-      let html = dows.map((d,i) => `<div class="cal-dow ${i===0?"sun":i===6?"sat":""}">${d}</div>`).join("");
-
-      const firstDay = new Date(calYear, calMonth, 1).getDay();
-      const lastDate = new Date(calYear, calMonth+1, 0).getDate();
-      const prevLast = new Date(calYear, calMonth, 0).getDate();
-
-      for (let i = 0; i < firstDay; i++) {
-        const d = prevLast - firstDay + 1 + i;
-        const dow = i;
-        html += `<div class="cal-day other-month ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
+      const now=new Date(), todayY=now.getFullYear(), todayM=now.getMonth(), todayD=now.getDate();
+      const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+      document.getElementById("calMonth").textContent=`${monthNames[calMonth]} ${calYear}`;
+      const grid=document.getElementById("calGrid");
+      const dows=["Su","Mo","Tu","We","Th","Fr","Sa"];
+      let html=dows.map((d,i)=>`<div class="cal-dow ${i===0?"sun":i===6?"sat":""}">${d}</div>`).join("");
+      const firstDay=new Date(calYear,calMonth,1).getDay();
+      const lastDate=new Date(calYear,calMonth+1,0).getDate();
+      const prevLast=new Date(calYear,calMonth,0).getDate();
+      for (let i=0;i<firstDay;i++) {
+        const d=prevLast-firstDay+1+i, dow=i;
+        html+=`<div class="cal-day other-month ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
       }
-      for (let d = 1; d <= lastDate; d++) {
-        const dow = (firstDay + d - 1) % 7;
-        const isToday = (d === todayD && calMonth === todayM && calYear === todayY);
-        html += `<div class="cal-day ${isToday?"today":""} ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
+      for (let d=1;d<=lastDate;d++) {
+        const dow=(firstDay+d-1)%7;
+        const isToday=(d===todayD&&calMonth===todayM&&calYear===todayY);
+        html+=`<div class="cal-day ${isToday?"today":""} ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
       }
-      const total = firstDay + lastDate;
-      const remain = total % 7 === 0 ? 0 : 7 - (total % 7);
-      for (let d = 1; d <= remain; d++) {
-        const dow = (total + d - 1) % 7;
-        html += `<div class="cal-day other-month ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
+      const total=firstDay+lastDate, remain=total%7===0?0:7-(total%7);
+      for (let d=1;d<=remain;d++) {
+        const dow=(total+d-1)%7;
+        html+=`<div class="cal-day other-month ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
       }
-      grid.innerHTML = html;
+      grid.innerHTML=html;
     }
 
-    document.getElementById("calPrev").addEventListener("click", () => {
-      calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar();
-    });
-    document.getElementById("calNext").addEventListener("click", () => {
-      calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar();
-    });
+    document.getElementById("calPrev").addEventListener("click",()=>{ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); });
+    document.getElementById("calNext").addEventListener("click",()=>{ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); });
 
-    // ===== 미니 팝업 =====
+    // ===== 미니 팝업 (핵심 수정 부분) =====
     const miniPopup      = document.getElementById("miniPopup");
     const miniPopupTitle = document.getElementById("miniPopupTitle");
     const miniPopupDesc  = document.getElementById("miniPopupDesc");
-    let   popupTimeout   = null;
+    let popupTimeout = null;
 
     function showMiniPopup(btn, title, desc) {
       miniPopupTitle.textContent = title;
       miniPopupDesc.innerHTML    = desc;
+
+      // 먼저 show 없이 DOM에 올려서 크기 측정
+      miniPopup.style.visibility = "hidden";
+      miniPopup.style.display    = "block";
+
+      const btnRect  = btn.getBoundingClientRect();
+      const popW     = miniPopup.offsetWidth;
+      const popH     = miniPopup.offsetHeight;
+      const viewW    = window.innerWidth;
+      const viewH    = window.innerHeight;
+
+      let top  = btnRect.bottom + 8;
+      let left = btnRect.left;
+
+      // 화면 오른쪽 넘치면 왼쪽으로 조정
+      if (left + popW > viewW - 8) left = viewW - popW - 8;
+      // 화면 아래 넘치면 버튼 위로 표시
+      if (top + popH > viewH - 8) top = btnRect.top - popH - 8;
+
+      miniPopup.style.top        = top  + "px";
+      miniPopup.style.left       = left + "px";
+      miniPopup.style.visibility = "";
+      miniPopup.style.display    = "";
       miniPopup.classList.add("show");
-
-      const rect = btn.getBoundingClientRect();
-      let top    = rect.bottom + window.scrollY + 8;
-      let left   = rect.left   + window.scrollX;
-
-      miniPopup.style.top  = top  + "px";
-      miniPopup.style.left = left + "px";
 
       if (popupTimeout) clearTimeout(popupTimeout);
       popupTimeout = setTimeout(() => miniPopup.classList.remove("show"), 3000);
     }
 
     document.addEventListener("click", e => {
-      if (!miniPopup.contains(e.target) &&
-          e.target !== document.getElementById("openOpTierBtn") &&
-          e.target !== document.getElementById("openFavorTierBtn")) {
+      const opBtn    = document.getElementById("openOpTierBtn");
+      const favorBtn = document.getElementById("openFavorTierBtn");
+      if (!miniPopup.contains(e.target) && e.target !== opBtn && !opBtn.contains(e.target) && e.target !== favorBtn && !favorBtn.contains(e.target)) {
         miniPopup.classList.remove("show");
       }
     });
@@ -1762,13 +1701,8 @@
     const favorLockIcon      = document.getElementById("favorLockIcon");
 
     let visitorKey    = null;
-    let completedState= { op:false, favor:false };
-    let currentBoardMode = null;
-    let allCandidates    = [];
-    let currentTournamentType = null;
-    let selectedClass    = null;
-    let todayOpGrade     = null;
-
+    let completedState= {op:false,favor:false};
+    let currentBoardMode=null, allCandidates=[], currentTournamentType=null, selectedClass=null, todayOpGrade=null;
     let workingCandidates=[], currentRoundCandidates=[], nextRoundCandidates=[];
     let currentIndex=0, currentLeft=null, currentRight=null;
     let totalMatches=0, completedMatches=0, battleLogs=[], pendingWinner=null;
@@ -1782,6 +1716,7 @@
       "블레이드":"engr-assassin","데모닉":"engr-assassin","리퍼":"engr-assassin","소울이터":"engr-assassin",
       "도화가":"engr-specialist","기상술사":"engr-specialist","환수사":"engr-specialist","가디언나이트":"engr-guardian"
     };
+
     const classGroups = {
       "전사":["워로드","버서커","디스트로이어","홀리나이트","슬레이어","발키리"],
       "무도가":["배틀마스터","인파이터","기공사","창술사","스트라이커","브레이커"],
@@ -1792,18 +1727,20 @@
       "가디언나이트":["가디언나이트"]
     };
 
-    const FAVOR_ONLY_IDS = [8,12,40,52];
-    function getColorClass(cls) { return classColorMap[cls] || ""; }
+    const FAVOR_ONLY_IDS=[8,12,40,52];
+    function getColorClass(cls) { return classColorMap[cls]||""; }
+
     function getVisitorKey() {
-      let k = localStorage.getItem("loa_tournament_visitor_key");
-      if (!k) { k = "loa_tournament_user_" + crypto.randomUUID(); localStorage.setItem("loa_tournament_visitor_key", k); }
+      let k=localStorage.getItem("loa_tournament_visitor_key");
+      if (!k) { k="loa_tournament_user_"+crypto.randomUUID(); localStorage.setItem("loa_tournament_visitor_key",k); }
       return k;
     }
+
     function getNow() { return new Date(); }
-    function getDateKey() { const n=getNow(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`; }
+    function getDateKey()  { const n=getNow(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`; }
     function getMonthKey() { const n=getNow(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`; }
-    function getWeekKey() {
-      const n=getNow(), f=new Date(n.getFullYear(),0,1), p=Math.floor((n-f)/86400000);
+    function getWeekKey()  {
+      const n=getNow(),f=new Date(n.getFullYear(),0,1),p=Math.floor((n-f)/86400000);
       return `${n.getFullYear()}-W${String(Math.ceil((p+f.getDay()+1)/7)).padStart(2,"0")}`;
     }
     function formatStampDate(dk) { const [y,m,d]=dk.split("-"); return `${y.slice(2)} ${m} ${d}`; }
@@ -1813,7 +1750,6 @@
       return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
     }
 
-    // ===== 자물쇠 아이콘 업데이트 =====
     function updateLockIcons() {
       const opUnlocked    = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
       const favorUnlocked = completedState.op || completedState.favor;
@@ -1822,62 +1758,62 @@
     }
 
     function sortRankingRows(rows) {
-      return [...rows].sort((a,b) => {
-        if (b.champion_count !== a.champion_count) return b.champion_count - a.champion_count;
-        if (Number(b.win_rate) !== Number(a.win_rate)) return Number(b.win_rate) - Number(a.win_rate);
-        if (b.win_count !== a.win_count) return b.win_count - a.win_count;
+      return [...rows].sort((a,b)=>{
+        if (b.champion_count!==a.champion_count) return b.champion_count-a.champion_count;
+        if (Number(b.win_rate)!==Number(a.win_rate)) return Number(b.win_rate)-Number(a.win_rate);
+        if (b.win_count!==a.win_count) return b.win_count-a.win_count;
         return a.engraving_name.localeCompare(b.engraving_name,"ko");
       });
     }
 
-    function renderBoardFromRows(rows, mode) {
-      currentBoardMode = mode;
-      let filteredRows = rows;
-      if (mode === "op") filteredRows = rows.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
+    function renderBoardFromRows(rows,mode) {
+      currentBoardMode=mode;
+      let filteredRows=rows;
+      if (mode==="op") filteredRows=rows.filter(r=>!SUPPORT_ENGRAVINGS.includes(r.engraving_name));
       rankingBoard.classList.remove("locked","board-op","board-favor");
       rankingBoardTitle.classList.remove("ranking-title-op","ranking-title-favor");
-      rankingBoardTitle.textContent = mode === "op" ? "OP 직각 랭킹 보드" : "호감 직각 랭킹 보드";
-      rankingBoardSub.textContent   = "토너먼트 1개 완료 시 10위까지 공개되고, 2개 모두 완료 시 전체 랭킹이 공개됩니다.";
+      rankingBoardTitle.textContent=mode==="op"?"OP 직각 랭킹 보드":"호감 직각 랭킹 보드";
+      rankingBoardSub.textContent="토너먼트 1개 완료 시 10위까지 공개되고, 2개 모두 완료 시 전체 랭킹이 공개됩니다.";
       modeOpBtn.classList.remove("active-op","disabled");
       modeFavorBtn.classList.remove("active-favor","disabled");
       if (!completedState.op)    modeOpBtn.classList.add("disabled");
       if (!completedState.favor) modeFavorBtn.classList.add("disabled");
-      if (mode === "op")    { modeOpBtn.classList.add("active-op");    rankingBoardTitle.classList.add("ranking-title-op");    rankingBoard.classList.add("board-op");    }
-      else                  { modeFavorBtn.classList.add("active-favor"); rankingBoardTitle.classList.add("ranking-title-favor"); rankingBoard.classList.add("board-favor"); }
-      const sorted      = sortRankingRows(filteredRows);
-      const championTop = sorted[0] || null;
-      const rateSorted  = [...filteredRows].filter(r=>r.total_matches>0).sort((a,b)=>{
+      if (mode==="op") { modeOpBtn.classList.add("active-op"); rankingBoardTitle.classList.add("ranking-title-op"); rankingBoard.classList.add("board-op"); }
+      else             { modeFavorBtn.classList.add("active-favor"); rankingBoardTitle.classList.add("ranking-title-favor"); rankingBoard.classList.add("board-favor"); }
+      const sorted=sortRankingRows(filteredRows);
+      const championTop=sorted[0]||null;
+      const rateSorted=[...filteredRows].filter(r=>r.total_matches>0).sort((a,b)=>{
         if (Number(b.win_rate)!==Number(a.win_rate)) return Number(b.win_rate)-Number(a.win_rate);
         if (b.total_matches!==a.total_matches) return b.total_matches-a.total_matches;
         return b.win_count-a.win_count;
       });
-      const rateTop = rateSorted[0] || championTop;
-      const latestUpdatedAt = filteredRows.length > 0 ? filteredRows[0].updated_at : null;
-      rankingFooterNote.textContent = `※ 전체 랭킹은 매시간 정각 집계됩니다. 최근 집계: ${formatUpdatedAt(latestUpdatedAt)}`;
-      summaryCards.innerHTML = `
+      const rateTop=rateSorted[0]||championTop;
+      const latestUpdatedAt=filteredRows.length>0?filteredRows[0].updated_at:null;
+      rankingFooterNote.textContent=`※ 전체 랭킹은 매시간 정각 집계됩니다. 최근 집계: ${formatUpdatedAt(latestUpdatedAt)}`;
+      summaryCards.innerHTML=`
         <div class="summary-card"><div class="summary-inner">
           <div class="summary-icon">🏆</div>
           <div><div class="summary-label">직각 우승 횟수</div>
-          <div class="summary-main">${championTop ? getShortName(championTop.engraving_name) : "-"}</div>
+          <div class="summary-main">${championTop?getShortName(championTop.engraving_name):"-"}</div>
           <div class="summary-rank">최다 우승 1위</div>
-          <div class="summary-meta">${championTop ? `${championTop.class_name} · 우승 ${championTop.champion_count}회` : "데이터 없음"}</div></div>
+          <div class="summary-meta">${championTop?`${championTop.class_name} · 우승 ${championTop.champion_count}회`:"데이터 없음"}</div></div>
         </div></div>
         <div class="summary-card"><div class="summary-inner">
           <div class="summary-icon">⚔️</div>
           <div><div class="summary-label">직각 승률</div>
-          <div class="summary-main">${rateTop ? getShortName(rateTop.engraving_name) : "-"}</div>
+          <div class="summary-main">${rateTop?getShortName(rateTop.engraving_name):"-"}</div>
           <div class="summary-rank">최다 1:1 승률 1위</div>
-          <div class="summary-meta">${rateTop ? `${rateTop.class_name} · 1:1 승률 ${Number(rateTop.win_rate).toFixed(2)}%` : "데이터 없음"}</div></div>
+          <div class="summary-meta">${rateTop?`${rateTop.class_name} · 1:1 승률 ${Number(rateTop.win_rate).toFixed(2)}%`:"데이터 없음"}</div></div>
         </div></div>`;
-      if (sorted.length === 0) {
-        rankingList.innerHTML = `<div class="rank-row"><div class="rank-col"><div class="rank-num">-</div></div><div class="rank-col"><div class="rank-name">데이터 없음</div><div class="rank-job">집계 이후 자동 반영됩니다.</div></div></div>`;
+      if (sorted.length===0) {
+        rankingList.innerHTML=`<div class="rank-row"><div class="rank-col"><div class="rank-num">-</div></div><div class="rank-col"><div class="rank-name">데이터 없음</div><div class="rank-job">집계 이후 자동 반영됩니다.</div></div></div>`;
         return;
       }
-      const bothCompleted = completedState.op && completedState.favor;
-      const oneCompleted  = completedState.op || completedState.favor;
-      const revealLimit   = bothCompleted ? Infinity : (oneCompleted ? 10 : 0);
-      rankingList.innerHTML = sorted.map((row,index) => {
-        const hidden = index >= revealLimit;
+      const bothCompleted=completedState.op&&completedState.favor;
+      const oneCompleted=completedState.op||completedState.favor;
+      const revealLimit=bothCompleted?Infinity:(oneCompleted?10:0);
+      rankingList.innerHTML=sorted.map((row,index)=>{
+        const hidden=index>=revealLimit;
         return `<div class="rank-row ${hidden?"dimmed":""}">
           <div class="rank-col"><div class="rank-num">${index+1}위</div></div>
           <div class="rank-col"><div class="rank-name">${row.engraving_name}</div><div class="rank-job">${row.class_name}</div></div>
@@ -1886,37 +1822,34 @@
           <div class="rank-col metric-block"><div class="metric-title">설명</div><div class="metric-sub">총 ${row.total_matches}전 · ${row.win_count}승 ${row.lose_count}패</div></div>
         </div>`;
       }).join("");
-      if (!bothCompleted && oneCompleted && sorted.length > 10) {
+      if (!bothCompleted&&oneCompleted&&sorted.length>10) {
         rankingList.insertAdjacentHTML("beforeend",`<div class="hidden-note">OP / 호감 토너먼트 중 하나만 완료한 상태에서는 10위까지만 공개됩니다.<br>두 토너먼트를 모두 완료하면 전체 랭킹이 공개됩니다.</div>`);
       }
     }
 
     async function loadRankingData(mode) {
-      const { data, error } = await supabase.from("ranking_overall")
-        .select("tournament_type, class_name, engraving_name, champion_count, win_count, lose_count, total_matches, win_rate, updated_at")
-        .eq("tournament_type", mode);
-      if (error) { alert("랭킹 조회 실패: " + error.message); return; }
-      renderBoardFromRows(data, mode);
+      const {data,error}=await supabase.from("ranking_overall").select("tournament_type,class_name,engraving_name,champion_count,win_count,lose_count,total_matches,win_rate,updated_at").eq("tournament_type",mode);
+      if (error) { alert("랭킹 조회 실패: "+error.message); return; }
+      renderBoardFromRows(data,mode);
     }
 
     function updateRankingLockState() {
-      const bothCompleted = completedState.op && completedState.favor;
-      const oneCompleted  = completedState.op || completedState.favor;
+      const bothCompleted=completedState.op&&completedState.favor;
+      const oneCompleted=completedState.op||completedState.favor;
       if (!oneCompleted) {
-        rankingBoard.classList.add("locked");
-        rankingBoard.classList.remove("board-op","board-favor");
+        rankingBoard.classList.add("locked"); rankingBoard.classList.remove("board-op","board-favor");
         rankingBoardTitle.classList.remove("ranking-title-op","ranking-title-favor");
-        lockTitle.textContent = "토너먼트 완료 후 랭킹이 공개됩니다";
-        lockDesc.textContent  = "OP 직각 또는 호감 직각 토너먼트를 완료하면 해당 랭킹이 해제됩니다.";
-        currentBoardMode = null; return;
+        lockTitle.textContent="토너먼트 완료 후 랭킹이 공개됩니다";
+        lockDesc.textContent="OP 직각 또는 호감 직각 토너먼트를 완료하면 해당 랭킹이 해제됩니다.";
+        currentBoardMode=null; return;
       }
       rankingBoard.classList.remove("locked");
-      if (completedState.op && !completedState.favor) { currentBoardMode="op";    loadRankingData("op");    return; }
-      if (!completedState.op && completedState.favor) { currentBoardMode="favor"; loadRankingData("favor"); return; }
+      if (completedState.op&&!completedState.favor)  { currentBoardMode="op";    loadRankingData("op");    return; }
+      if (!completedState.op&&completedState.favor)  { currentBoardMode="favor"; loadRankingData("favor"); return; }
       if (bothCompleted) { if (!currentBoardMode) currentBoardMode="op"; loadRankingData(currentBoardMode); }
     }
 
-    function computeTotalMatches(n) { return Math.max(1, n-1); }
+    function computeTotalMatches(n) { return Math.max(1,n-1); }
     function getRoundLabel(count) {
       if (count<=2) return "FINAL"; if (count===4) return "4강"; if (count===8) return "8강";
       if (count===16) return "16강"; if (count===32) return "32강"; if (count===64) return "64강";
@@ -1930,43 +1863,39 @@
     function playWinnerSound() { try { winnerAudio.currentTime=0; winnerAudio.play().catch(()=>{}); } catch {} }
 
     async function loadCandidates() {
-      const { data, error } = await supabase.from("candidates")
-        .select("id, class_name, engraving_name, enabled").order("id", { ascending:true });
+      const {data,error}=await supabase.from("candidates").select("id,class_name,engraving_name,enabled").order("id",{ascending:true});
       if (error) { opStartBtn.disabled=favorStartBtn.disabled=opRankBtn.disabled=favorRankBtn.disabled=true; return; }
-      allCandidates = data;
+      allCandidates=data;
     }
 
     async function loadTodayParticipation() {
-      visitorKey = getVisitorKey();
-      const { data, error } = await supabase.from("sessions")
-        .select("tournament_type, date_key, grade")
-        .eq("visitor_key", visitorKey).eq("date_key", getDateKey());
+      visitorKey=getVisitorKey();
+      const {data,error}=await supabase.from("sessions").select("tournament_type,date_key,grade").eq("visitor_key",visitorKey).eq("date_key",getDateKey());
       if (error) return;
-      completedState.op    = !!data.find(r => r.tournament_type === "op");
-      completedState.favor = !!data.find(r => r.tournament_type === "favor");
+      completedState.op    =!!data.find(r=>r.tournament_type==="op");
+      completedState.favor =!!data.find(r=>r.tournament_type==="favor");
       if (completedState.op) {
-        opStamp.classList.add("show");
-        opStampDate.textContent = formatStampDate(getDateKey());
-        const opRow = data.find(r => r.tournament_type === "op");
-        if (opRow && opRow.grade) { opStampGrade.textContent = opRow.grade; todayOpGrade = opRow.grade; }
-      } else { opStamp.classList.remove("show"); todayOpGrade = null; }
-      if (completedState.favor) { favorStamp.classList.add("show"); favorStampDate.textContent = formatStampDate(getDateKey()); }
+        opStamp.classList.add("show"); opStampDate.textContent=formatStampDate(getDateKey());
+        const opRow=data.find(r=>r.tournament_type==="op");
+        if (opRow&&opRow.grade) { opStampGrade.textContent=opRow.grade; todayOpGrade=opRow.grade; }
+      } else { opStamp.classList.remove("show"); todayOpGrade=null; }
+      if (completedState.favor) { favorStamp.classList.add("show"); favorStampDate.textContent=formatStampDate(getDateKey()); }
       else { favorStamp.classList.remove("show"); }
       updateLockIcons();
       updateRankingLockState();
     }
 
     function openClassModal(type) {
-      currentTournamentType = type;
-      classFlowLabel.textContent = type === "op" ? "OP TOURNAMENT" : "FAVOR TOURNAMENT";
-      classTable.innerHTML = Object.entries(classGroups).map(([groupName,classes]) => `
+      currentTournamentType=type;
+      classFlowLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
+      classTable.innerHTML=Object.entries(classGroups).map(([groupName,classes])=>`
         <div class="class-row">
           <div class="class-group">${groupName}</div>
           <div class="class-buttons">${classes.map(cls=>`<button class="secondary-btn class-select-btn" data-class="${cls}" style="padding:10px 14px;">${cls}</button>`).join("")}</div>
         </div>`).join("");
       classModal.classList.add("show");
-      classTable.querySelectorAll(".class-select-btn").forEach(btn => {
-        btn.addEventListener("click", () => { selectedClass=btn.dataset.class; classModal.classList.remove("show"); startBattle(type,selectedClass); });
+      classTable.querySelectorAll(".class-select-btn").forEach(btn=>{
+        btn.addEventListener("click",()=>{ selectedClass=btn.dataset.class; classModal.classList.remove("show"); startBattle(type,selectedClass); });
       });
     }
 
@@ -1977,24 +1906,21 @@
       leftChoiceBtn.disabled=rightChoiceBtn.disabled=false;
     }
 
-    async function startBattle(type, selectedClassName) {
-      let pool = type==="favor"
-        ? allCandidates.filter(i=>i.enabled||FAVOR_ONLY_IDS.includes(i.id))
-        : allCandidates.filter(i=>i.enabled);
+    async function startBattle(type,selectedClassName) {
+      let pool=type==="favor"?allCandidates.filter(i=>i.enabled||FAVOR_ONLY_IDS.includes(i.id)):allCandidates.filter(i=>i.enabled);
       if (type==="op") await loadRecentWinRates("op");
-      const filtered = pool.filter(i=>i.class_name!==selectedClassName);
+      const filtered=pool.filter(i=>i.class_name!==selectedClassName);
       workingCandidates=shuffle(filtered); currentRoundCandidates=[...workingCandidates]; nextRoundCandidates=[];
       currentIndex=0; currentLeft=currentRight=null;
       totalMatches=computeTotalMatches(filtered.length); completedMatches=0;
       battleLogs=[]; pendingWinner=null; opScore=opMaxScore=0; isChoosing=false;
-      battleModeLabel.textContent   = type==="op" ? "OP TOURNAMENT"   : "FAVOR TOURNAMENT";
-      battleTopKorTitle.textContent = type==="op" ? "OP 직각 토너먼트" : "호감 직각 토너먼트";
-      battleModal.classList.add("show");
-      renderNextBattle();
+      battleModeLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
+      battleTopKorTitle.textContent=type==="op"?"OP 직각 토너먼트":"호감 직각 토너먼트";
+      battleModal.classList.add("show"); renderNextBattle();
     }
 
     function updateBattleProgress() {
-      const pct = totalMatches>0 ? Math.floor((completedMatches/totalMatches)*100) : 0;
+      const pct=totalMatches>0?Math.floor((completedMatches/totalMatches)*100):0;
       battleProgressText.textContent=`${pct}%`; battleProgressFill.style.width=`${pct}%`;
     }
 
@@ -2022,7 +1948,7 @@
       if (!currentLeft||!currentRight||isChoosing) return;
       isChoosing=true; playFlipSound();
       const winner=side==="left"?currentLeft:currentRight;
-      const loser =side==="left"?currentRight:currentLeft;
+      const loser=side==="left"?currentRight:currentLeft;
       const winBtn=side==="left"?leftChoiceBtn:rightChoiceBtn;
       const loseBtn=side==="left"?rightChoiceBtn:leftChoiceBtn;
       const loseSide=side==="left"?"right":"left";
@@ -2030,7 +1956,7 @@
       leftChoiceBtn.disabled=rightChoiceBtn.disabled=true;
       winBtn.classList.add("anim-win");
       loseBtn.classList.add(loseSide==="right"?"anim-lose-right":"anim-lose-left");
-      battleLogs.push({ left_engraving:currentLeft.engraving_name, right_engraving:currentRight.engraving_name, winner_engraving:winner.engraving_name, loser_engraving:loser.engraving_name, round_label:getRoundLabel(currentRoundCandidates.length) });
+      battleLogs.push({left_engraving:currentLeft.engraving_name,right_engraving:currentRight.engraving_name,winner_engraving:winner.engraving_name,loser_engraving:loser.engraving_name,round_label:getRoundLabel(currentRoundCandidates.length)});
       nextRoundCandidates.push(winner); completedMatches++; currentIndex+=2;
       setTimeout(()=>{ isChoosing=false; renderNextBattle(); },500);
     }
@@ -2052,16 +1978,16 @@
     async function finalizeTournamentSave() {
       if (!pendingWinner) return;
       const clientIP=await getClientIP();
-      const grade   =currentTournamentType==="op"?calcGrade(opScore,opMaxScore):null;
-      const score   =currentTournamentType==="op"?opScore:0;
+      const grade=currentTournamentType==="op"?calcGrade(opScore,opMaxScore):null;
+      const score=currentTournamentType==="op"?opScore:0;
       const maxScore=currentTournamentType==="op"?opMaxScore:0;
-      const sessionPayload={ visitor_key:visitorKey, client_ip:clientIP, selected_class:selectedClass, winner_engraving:pendingWinner.engraving_name, tournament_type:currentTournamentType, date_key:getDateKey(), week_key:getWeekKey(), month_key:getMonthKey(), grade, score, max_score:maxScore };
-      const { data:sessionData, error:sessionError } = await supabase.from("sessions").insert([sessionPayload]).select();
+      const sessionPayload={visitor_key:visitorKey,client_ip:clientIP,selected_class:selectedClass,winner_engraving:pendingWinner.engraving_name,tournament_type:currentTournamentType,date_key:getDateKey(),week_key:getWeekKey(),month_key:getMonthKey(),grade,score,max_score:maxScore};
+      const {data:sessionData,error:sessionError}=await supabase.from("sessions").insert([sessionPayload]).select();
       if (sessionError) { alert("sessions 저장 실패: "+sessionError.message); return; }
       const sessionId=sessionData[0].id;
       if (battleLogs.length>0) {
-        const matchPayload=battleLogs.map(log=>({ session_id:sessionId, left_engraving:log.left_engraving, right_engraving:log.right_engraving, winner_engraving:log.winner_engraving, loser_engraving:log.loser_engraving, round_label:log.round_label, tournament_type:currentTournamentType, date_key:getDateKey(), week_key:getWeekKey(), month_key:getMonthKey() }));
-        const { error:matchError }=await supabase.from("match_logs").insert(matchPayload);
+        const matchPayload=battleLogs.map(log=>({session_id:sessionId,left_engraving:log.left_engraving,right_engraving:log.right_engraving,winner_engraving:log.winner_engraving,loser_engraving:log.loser_engraving,round_label:log.round_label,tournament_type:currentTournamentType,date_key:getDateKey(),week_key:getWeekKey(),month_key:getMonthKey()}));
+        const {error:matchError}=await supabase.from("match_logs").insert(matchPayload);
         if (matchError) { alert("match_logs 저장 실패: "+matchError.message); return; }
       }
       if (currentTournamentType==="op") {
@@ -2074,12 +2000,12 @@
       winnerModal.classList.remove("show");
       updateLockIcons();
       updateRankingLockState();
-      rankingBoard.scrollIntoView({ behavior:"smooth", block:"start" });
+      rankingBoard.scrollIntoView({behavior:"smooth",block:"start"});
     }
 
     async function handleStart(type) {
       const clientIP=await getClientIP();
-      const { data, error }=await supabase.from("sessions").select("id").eq("date_key",getDateKey()).eq("tournament_type",type).or(`visitor_key.eq.${visitorKey},client_ip.eq.${clientIP}`);
+      const {data,error}=await supabase.from("sessions").select("id").eq("date_key",getDateKey()).eq("tournament_type",type).or(`visitor_key.eq.${visitorKey},client_ip.eq.${clientIP}`);
       if (error) { alert("참여 체크 실패: "+error.message); return; }
       if (data.length>0) { alert(`${type==="op"?"OP":"호감"} 토너먼트는 오늘 이미 완료했습니다.`); return; }
       openClassModal(type);
@@ -2095,43 +2021,43 @@
       }
     }
 
-    // ===== 이벤트 바인딩 =====
-    opStartBtn.addEventListener("click",    ()=>handleStart("op"));
-    favorStartBtn.addEventListener("click", ()=>handleStart("favor"));
+    // ===== 이벤트 =====
+    opStartBtn.addEventListener("click",()=>handleStart("op"));
+    favorStartBtn.addEventListener("click",()=>handleStart("favor"));
 
-    opRankBtn.addEventListener("click", async()=>{
+    opRankBtn.addEventListener("click",async()=>{
       if (!completedState.op) { alert("OP 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다."); return; }
       currentBoardMode="op"; await loadRankingData("op");
       rankingBoard.classList.remove("locked"); rankingBoard.scrollIntoView({behavior:"smooth",block:"start"});
     });
-    favorRankBtn.addEventListener("click", async()=>{
+    favorRankBtn.addEventListener("click",async()=>{
       if (!completedState.favor) { alert("호감 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다."); return; }
       currentBoardMode="favor"; await loadRankingData("favor");
       rankingBoard.classList.remove("locked"); rankingBoard.scrollIntoView({behavior:"smooth",block:"start"});
     });
 
-    modeOpBtn.addEventListener("click",    async()=>{ if(!completedState.op)    return; currentBoardMode="op";    await loadRankingData("op"); });
-    modeFavorBtn.addEventListener("click", async()=>{ if(!completedState.favor) return; currentBoardMode="favor"; await loadRankingData("favor"); });
+    modeOpBtn.addEventListener("click",async()=>{ if(!completedState.op) return; currentBoardMode="op"; await loadRankingData("op"); });
+    modeFavorBtn.addEventListener("click",async()=>{ if(!completedState.favor) return; currentBoardMode="favor"; await loadRankingData("favor"); });
 
-    closeClassModalBtn.addEventListener("click", closeClassModal);
-    leftChoiceBtn.addEventListener("click",  ()=>chooseBattleWinner("left"));
-    rightChoiceBtn.addEventListener("click", ()=>chooseBattleWinner("right"));
+    closeClassModalBtn.addEventListener("click",closeClassModal);
+    leftChoiceBtn.addEventListener("click",()=>chooseBattleWinner("left"));
+    rightChoiceBtn.addEventListener("click",()=>chooseBattleWinner("right"));
 
-    quitBattleBtn.addEventListener("click", ()=>{
+    quitBattleBtn.addEventListener("click",()=>{
       if (!confirm("진행 중인 토너먼트를 종료하시겠습니까?\n현재 진행은 저장되지 않습니다.")) return;
       isChoosing=false; battleModal.classList.remove("show");
     });
-    winnerConfirmBtn.addEventListener("click", finalizeTournamentSave);
 
-    // ===== 사이드바 모달 이벤트 =====
-    document.getElementById("openGuideBtn").addEventListener("click", ()=>{ guideModal.classList.add("show"); });
-    document.getElementById("closeGuideBtn").addEventListener("click", ()=>{ guideModal.classList.remove("show"); });
-    guideModal.addEventListener("click", e=>{ if(e.target===guideModal) guideModal.classList.remove("show"); });
+    winnerConfirmBtn.addEventListener("click",finalizeTournamentSave);
 
-    document.getElementById("openOpTierBtn").addEventListener("click", async(e)=>{
-      const opUnlocked = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
+    document.getElementById("openGuideBtn").addEventListener("click",()=>{ guideModal.classList.add("show"); });
+    document.getElementById("closeGuideBtn").addEventListener("click",()=>{ guideModal.classList.remove("show"); });
+    guideModal.addEventListener("click",e=>{ if(e.target===guideModal) guideModal.classList.remove("show"); });
+
+    document.getElementById("openOpTierBtn").addEventListener("click",async(e)=>{
+      const opUnlocked=completedState.op&&todayOpGrade&&A_MINUS_AND_ABOVE.includes(todayOpGrade);
       if (!opUnlocked) {
-        showMiniPopup(e.currentTarget, "OP직각 티어표", `열람 조건 : <span class="cond">A 도장 획득 필요</span>`);
+        showMiniPopup(e.currentTarget,"OP직각 티어표",`열람 조건 : <span class="cond">A 도장 획득 필요</span>`);
         return;
       }
       opTierModal.classList.add("show");
@@ -2141,13 +2067,13 @@
       else { document.getElementById("opTierContent").innerHTML=`<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`; }
     });
 
-    document.getElementById("closeOpTierBtn").addEventListener("click", ()=>{ opTierModal.classList.remove("show"); });
-    opTierModal.addEventListener("click", e=>{ if(e.target===opTierModal) opTierModal.classList.remove("show"); });
+    document.getElementById("closeOpTierBtn").addEventListener("click",()=>{ opTierModal.classList.remove("show"); });
+    opTierModal.addEventListener("click",e=>{ if(e.target===opTierModal) opTierModal.classList.remove("show"); });
 
-    document.getElementById("openFavorTierBtn").addEventListener("click", async(e)=>{
-      const favorUnlocked = completedState.op || completedState.favor;
+    document.getElementById("openFavorTierBtn").addEventListener("click",async(e)=>{
+      const favorUnlocked=completedState.op||completedState.favor;
       if (!favorUnlocked) {
-        showMiniPopup(e.currentTarget, "호감직각 티어표", `열람 조건 : <span class="cond">아무 도장 1개 획득 필요</span>`);
+        showMiniPopup(e.currentTarget,"호감직각 티어표",`열람 조건 : <span class="cond">아무 도장 1개 획득 필요</span>`);
         return;
       }
       favorTierModal.classList.add("show");
@@ -2157,16 +2083,15 @@
       else { document.getElementById("favorTierContent").innerHTML=`<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`; }
     });
 
-    document.getElementById("closeFavorTierBtn").addEventListener("click", ()=>{ favorTierModal.classList.remove("show"); });
-    favorTierModal.addEventListener("click", e=>{ if(e.target===favorTierModal) favorTierModal.classList.remove("show"); });
+    document.getElementById("closeFavorTierBtn").addEventListener("click",()=>{ favorTierModal.classList.remove("show"); });
+    favorTierModal.addEventListener("click",e=>{ if(e.target===favorTierModal) favorTierModal.classList.remove("show"); });
 
-    document.addEventListener("keydown", e=>{
+    document.addEventListener("keydown",e=>{
       if (e.key==="Escape") { guideModal.classList.remove("show"); opTierModal.classList.remove("show"); favorTierModal.classList.remove("show"); }
     });
 
-    // ===== 초기화 =====
     async function init() {
-      visitorKey = getVisitorKey();
+      visitorKey=getVisitorKey();
       initCalendar();
       await loadCandidates();
       await loadTodayParticipation();
