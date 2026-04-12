@@ -822,6 +822,24 @@
 .rate-10 { color: #7fc6ff; }
 .bar-10  { background: linear-gradient(90deg, #7a8cff, #4bd3ff); }
 @media (max-width: 1024px) { .auction-calc { display: none; } }
+    
+    
+    .footer-loiter {
+  text-align: center;
+  padding: 12px 0 8px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  user-select: none;
+}
+
+.footer-loiter p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  line-height: 1.9;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+    
+    
     </style>
 </head>
 
@@ -992,10 +1010,7 @@
             </main>
         </div>
     </div>
-
-    <div class="footer-signature">
-        <span>Crafted by Priest</span>
-    </div>
+    
 
     <!-- 안내 모달 -->
     <div class="modal-backdrop" id="guideModal">
@@ -1633,5 +1648,15 @@ document.getElementById("ac-price").addEventListener("input", e => {
 acUpdate();
 
     </script>
+
+<div class="footer-loiter">
+  <p>
+    © 2026 LOITER BASE · All Rights Reserved.<br>
+    Not associated with Smilegate RPG & Smilegate Stove.<br>
+    Data based on Google Sheets · Powered by Supabase · GitHub Pages · GoatCounter
+  </p>
+</div>
+
+    
 </body>
 </html>
