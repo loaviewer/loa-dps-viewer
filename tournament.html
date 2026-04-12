@@ -1098,6 +1098,60 @@
       .battle-choice-name { font-size: 21px; }
       .sidebar-calendar { display: none; }
     }
+    .auction-calc {
+      border-radius: 18px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(20,26,38,0.98), rgba(13,18,28,0.98));
+      border: 1px solid rgba(200,165,90,0.30);
+      box-shadow: 0 0 24px rgba(200,165,90,0.07), 0 0 0 1px rgba(255,255,255,0.02) inset, 0 14px 32px rgba(0,0,0,0.36);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .auction-calc::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(200,165,90,0.06), transparent 55%), radial-gradient(circle at bottom left, rgba(122,140,255,0.04), transparent 50%);
+      pointer-events: none;
+    }
+    .ac-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; position: relative; z-index: 1; }
+    .ac-label { font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; color: #c8a55a; font-weight: 900; margin-bottom: 2px; }
+    .ac-title { font-size: 14px; font-weight: 900; color: #ffffff; }
+    .ac-toggle { display: flex; background: rgba(255,255,255,0.04); border: 1px solid rgba(200,165,90,0.16); border-radius: 8px; padding: 2px; gap: 2px; }
+    .ac-toggle-btn { padding: 4px 9px; border-radius: 6px; border: none; background: none; color: #5a6a82; font-size: 11px; font-weight: 900; cursor: pointer; transition: 0.15s ease; }
+    .ac-toggle-btn:hover { color: #c6d4e8; }
+    .ac-toggle-btn.active { background: linear-gradient(135deg, #c8a55a, #a8843a); color: #1a1000; box-shadow: 0 0 10px rgba(200,165,90,0.22); }
+    .ac-input-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #7fc6ff; font-weight: 900; margin-bottom: 5px; position: relative; z-index: 1; }
+    .ac-input-wrap { position: relative; z-index: 1; margin-bottom: 12px; }
+    .ac-input { width: 100%; padding: 9px 36px 9px 12px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(122,140,255,0.30); color: #ffffff; font-size: 16px; font-weight: 900; text-align: right; outline: none; transition: 0.15s ease; }
+    .ac-input:focus { border-color: rgba(122,140,255,0.60); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 2px rgba(122,140,255,0.12); }
+    .ac-input::placeholder { color: rgba(255,255,255,0.22); font-size: 13px; }
+    .ac-input-suffix { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 11px; font-weight: 900; color: #7a8da8; pointer-events: none; }
+    .ac-breakeven { position: relative; z-index: 1; border-radius: 10px; padding: 10px 12px; background: linear-gradient(135deg, rgba(200,165,90,0.10), rgba(160,125,60,0.06)); border: 1px solid rgba(200,165,90,0.20); margin-bottom: 10px; }
+    .ac-breakeven-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+    .ac-breakeven-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: #c8a55a; font-weight: 900; }
+    .ac-breakeven-sub   { font-size: 10px; color: #5a6a82; }
+    .ac-breakeven-value { font-size: 20px; font-weight: 900; color: #fff6e4; }
+    .ac-breakeven-desc  { font-size: 10px; color: #7a8da8; margin-top: 2px; }
+    .ac-sep { display: flex; align-items: center; gap: 8px; margin: 8px 0; position: relative; z-index: 1; }
+    .ac-sep-line { flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+    .ac-sep-text { font-size: 10px; color: #5a6a82; font-weight: 900; letter-spacing: 1px; white-space: nowrap; }
+    .ac-rates { position: relative; z-index: 1; display: grid; gap: 5px; }
+    .ac-rate-row { border-radius: 9px; padding: 8px 10px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.05); transition: 0.15s ease; }
+    .ac-rate-row:hover { background: rgba(255,255,255,0.045); border-color: rgba(255,255,255,0.09); }
+    .ac-rate-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    .ac-rate-left { display: flex; flex-direction: column; gap: 1px; }
+    .ac-rate-pct  { font-size: 11px; font-weight: 900; }
+    .ac-rate-desc { font-size: 10px; color: #5a6a82; }
+    .ac-rate-val  { font-size: 15px; font-weight: 900; color: #ffffff; }
+    .ac-bar-wrap { height: 3px; border-radius: 999px; background: rgba(255,255,255,0.05); overflow: hidden; }
+    .ac-bar { height: 100%; border-radius: 999px; transition: width 0.35s ease; }
+    .rate-5  { color: #8ef0c9; }
+    .bar-5   { background: linear-gradient(90deg, #4bd3ff, #8ef0c9); }
+    .rate-10 { color: #7fc6ff; }
+    .bar-10  { background: linear-gradient(90deg, #7a8cff, #4bd3ff); }
+    @media (max-width: 1024px) { .auction-calc { display: none; } }
   </style>
 </head>
 <body>
@@ -1139,7 +1193,61 @@
         </button>
 
         <div class="sidebar-divider"></div>
-
+        <!-- 경매 계산기 -->
+        <div class="auction-calc">
+          <div class="ac-header">
+            <div>
+              <div class="ac-label">AUCTION CALC</div>
+              <div class="ac-title">경매 계산기 🔨</div>
+            </div>
+            <div class="ac-toggle">
+              <button class="ac-toggle-btn active" data-m="4">4인</button>
+              <button class="ac-toggle-btn" data-m="8">8인</button>
+              <button class="ac-toggle-btn" data-m="16">16인</button>
+            </div>
+          </div>
+          <div class="ac-input-label">거래소 가격</div>
+          <div class="ac-input-wrap">
+            <input class="ac-input" type="text" id="ac-price" placeholder="골드 입력" />
+            <span class="ac-input-suffix">G</span>
+          </div>
+          <div class="ac-breakeven">
+            <div class="ac-breakeven-top">
+              <div class="ac-breakeven-label">손익 분기점</div>
+              <div class="ac-breakeven-sub">균등 분배 기준</div>
+            </div>
+            <div class="ac-breakeven-value" id="ac-be">-</div>
+            <div class="ac-breakeven-desc" id="ac-be-desc">거래소 가격을 입력하세요</div>
+          </div>
+          <div class="ac-sep">
+            <div class="ac-sep-line"></div>
+            <div class="ac-sep-text">입찰 추천가</div>
+            <div class="ac-sep-line"></div>
+          </div>
+          <div class="ac-rates">
+            <div class="ac-rate-row">
+              <div class="ac-rate-top">
+                <div class="ac-rate-left">
+                  <span class="ac-rate-pct rate-5">+5% 이득</span>
+                  <span class="ac-rate-desc" id="ac-d5">가격 입력 시 표시</span>
+                </div>
+                <span class="ac-rate-val" id="ac-v5">-</span>
+              </div>
+              <div class="ac-bar-wrap"><div class="ac-bar bar-5" id="ac-bar5" style="width:0%"></div></div>
+            </div>
+            <div class="ac-rate-row">
+              <div class="ac-rate-top">
+                <div class="ac-rate-left">
+                  <span class="ac-rate-pct rate-10">+10% 이득</span>
+                  <span class="ac-rate-desc" id="ac-d10">가격 입력 시 표시</span>
+                </div>
+                <span class="ac-rate-val" id="ac-v10">-</span>
+              </div>
+              <div class="ac-bar-wrap"><div class="ac-bar bar-10" id="ac-bar10" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-divider"></div>
         <div class="sidebar-calendar">
           <div class="cal-header">
             <button class="cal-nav" id="calPrev">‹</button>
@@ -2096,7 +2204,55 @@
       await loadCandidates();
       await loadTodayParticipation();
     }
+    // ===== 경매 계산기 =====
+    function acFmt(n) { return Math.round(n).toLocaleString("ko-KR"); }
+    function calcBreakeven(price, members) { return price * 0.95 * (members - 1) / members; }
+    function calcRecommend(be, rate) { return be / (1 + rate); }
 
+    let acMembers = 4;
+
+    function acUpdate() {
+      const raw = (document.getElementById("ac-price").value||"").replace(/,/g,"");
+      const price = parseInt(raw) || 0;
+      if (!price) {
+        document.getElementById("ac-be").textContent = "-";
+        document.getElementById("ac-be-desc").textContent = "거래소 가격을 입력하세요";
+        [5,10].forEach(r => {
+          document.getElementById(`ac-v${r}`).textContent = "-";
+          document.getElementById(`ac-d${r}`).textContent = "가격 입력 시 표시";
+          document.getElementById(`ac-bar${r}`).style.width = "0%";
+        });
+        return;
+      }
+      const be = calcBreakeven(price, acMembers);
+      document.getElementById("ac-be").textContent = acFmt(be);
+      document.getElementById("ac-be-desc").textContent = "이 금액 이하로 입찰하면 이득";
+      const rec5 = calcRecommend(be, 0.05);
+      const rec10 = calcRecommend(be, 0.10);
+      document.getElementById("ac-v5").textContent = acFmt(rec5);
+      document.getElementById("ac-d5").textContent = `${acFmt(rec5)} 입찰 시 ${acFmt(be - rec5)} 이득`;
+      document.getElementById("ac-bar5").style.width = "60%";
+      document.getElementById("ac-v10").textContent = acFmt(rec10);
+      document.getElementById("ac-d10").textContent = `${acFmt(rec10)} 입찰 시 ${acFmt(be - rec10)} 이득`;
+      document.getElementById("ac-bar10").style.width = "100%";
+    }
+
+    document.querySelectorAll(".ac-toggle-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".ac-toggle-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        acMembers = parseInt(btn.dataset.m);
+        acUpdate();
+      });
+    });
+
+    document.getElementById("ac-price").addEventListener("input", e => {
+      let v = e.target.value.replace(/,/g,"").replace(/[^0-9]/g,"");
+      e.target.value = v ? Number(v).toLocaleString("ko-KR") : "";
+      acUpdate();
+    });
+
+    acUpdate();
     init();
   </script>
 </body>
