@@ -49,6 +49,42 @@
       border-right: 1px solid rgba(255,255,255,0.06);
     }
 
+    /* ===== 캡슐 스위치 ===== */
+    .switch-wrap {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px;
+      padding: 4px;
+      gap: 2px;
+      margin-bottom: 20px;
+    }
+
+    .switch-wrap a {
+      flex: 1;
+      text-decoration: none;
+      text-align: center;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      transition: 0.2s ease;
+      color: #7a8da8;
+    }
+
+    .switch-wrap a.active {
+      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
+      color: #08111e;
+      box-shadow: 0 4px 14px rgba(78,168,255,0.28);
+    }
+
+    .switch-wrap a:not(.active):hover {
+      color: #c6d4e8;
+      background: rgba(255,255,255,0.06);
+    }
+
     .mini-label {
       font-size: 12px;
       letter-spacing: 2px;
@@ -71,40 +107,107 @@
       font-size: 14px;
       line-height: 1.65;
       color: #b8c1d2;
+      margin-bottom: 18px;
     }
 
     .sidebar-divider {
       width: 100%;
       height: 1px;
       margin: 14px 0 18px;
-      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.12), rgba(255,255,255,0.26), rgba(255,255,255,0.12), rgba(255,255,255,0));
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.26), rgba(255,255,255,0));
     }
 
-    .menu { display: grid; gap: 10px; margin-top: 0; }
-
-    .menu-link { text-decoration: none; display: block; }
-
-    .menu-item {
-      border-radius: 18px;
-      padding: 15px 16px;
-      min-height: 58px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      font-weight: 800;
-      font-size: 16px;
-      color: #e6edf8;
-      cursor: pointer;
-      text-align: left;
+    .guide-trigger {
       width: 100%;
-      transition: 0.18s ease;
-      display: flex;
-      align-items: center;
+      border: none;
+      cursor: pointer;
+      padding: 16px 18px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 900;
+      color: #f2ede2;
+      text-align: left;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: 0.2s ease;
+      margin-bottom: 10px;
     }
 
-    .menu-item:hover {
+    .guide-trigger:hover {
       transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05);
+      border-color: rgba(122,140,255,0.28);
+    }
+
+    .guide-small {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.8px;
+      color: #8ec7ff;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .guide-accent { color: #ffd48a; }
+
+    .tier-btn {
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      padding: 18px 18px;
+      border-radius: 18px;
+      font-size: 16px;
+      font-weight: 900;
+      text-align: left;
+      transition: 0.2s ease;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+    }
+
+    .tier-btn-small {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    .tier-btn-tiny {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+
+    .tier-btn-op {
+      background: linear-gradient(135deg, rgba(62,220,125,0.18), rgba(30,80,50,0.6));
+      border: 1px solid rgba(62,220,125,0.35);
+      color: #8ef0c9;
+    }
+
+    .tier-btn-op:hover {
+      transform: translateY(-1px);
+      border-color: rgba(62,220,125,0.6);
+      box-shadow: 0 0 18px rgba(62,220,125,0.15);
+    }
+
+    .tier-btn-favor {
+      background: linear-gradient(135deg, rgba(255,196,90,0.18), rgba(80,50,20,0.6));
+      border: 1px solid rgba(255,196,90,0.35);
+      color: #ffd48a;
+    }
+
+    .tier-btn-favor:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,196,90,0.6);
+      box-shadow: 0 0 18px rgba(255,196,90,0.15);
+    }
+
+    .tier-btn-lock-icon {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-size: 18px;
     }
 
     .tournament-entry {
@@ -580,9 +683,7 @@
       filter: brightness(1.07);
     }
 
-    .battle-choice:disabled {
-      cursor: default;
-    }
+    .battle-choice:disabled { cursor: default; }
 
     .choice-gloss {
       position: absolute; top: -25%; left: -90%; width: 280%; height: 58%;
@@ -644,7 +745,6 @@
     .engr-specialist { color: #9df0c8; }
     .engr-guardian { color: #ff8b6a; }
 
-    /* ===== 카드 선택 애니메이션 ===== */
     @keyframes winBoom {
       0%   { transform: scale(1); filter: brightness(1); }
       25%  { transform: scale(1.13) translateY(-8px); filter: brightness(1.25); }
@@ -679,7 +779,6 @@
       pointer-events: none;
     }
 
-    /* ===== 우승 모달 ===== */
     .winner-modal {
       position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
       background: rgba(4,8,16,0.72); backdrop-filter: blur(6px); z-index: 1200; padding: 20px; overflow: hidden;
@@ -708,7 +807,6 @@
     .winner-desc { position: relative; z-index: 1; margin-top: 16px; color: #f1dede; font-size: 14px; line-height: 1.8; }
     .winner-actions { position: relative; z-index: 1; display: flex; justify-content: center; margin-top: 20px; }
 
-    /* ===== 등급 도장 (우승 모달) ===== */
     .grade-stamp-wrap {
       position: relative; z-index: 1;
       display: flex; justify-content: center;
@@ -767,6 +865,143 @@
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
 
+    /* ===== 사이드바 모달 (티어표 / 등급 안내) ===== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4,8,16,0.75);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+      padding: 20px;
+    }
+
+    .modal-backdrop.show { display: flex; }
+
+    .modal-card {
+      width: min(680px, 100%);
+      border-radius: 26px;
+      padding: 26px 24px 22px;
+      background: linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      position: relative;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .modal-close:hover {
+      transform: rotate(90deg);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .modal-top-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #86c9ff; margin-bottom: 8px; text-align: center; }
+    .modal-title { font-size: 26px; font-weight: 900; color: #ffffff; text-align: center; margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: #aeb9cb; text-align: center; margin-bottom: 18px; }
+    .modal-divider { width: 100%; height: 1px; margin: 14px 0 18px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.20), rgba(255,255,255,0)); }
+
+    .tier-block { margin-bottom: 16px; border-radius: 16px; overflow: hidden; position: relative; isolation: isolate; }
+    .tier-header { display: flex; align-items: center; gap: 10px; padding: 10px 16px; font-weight: 900; font-size: 14px; }
+    .tier-badge { font-size: 13px; font-weight: 900; padding: 3px 10px; border-radius: 999px; }
+    .tier-count { font-size: 12px; opacity: 0.7; margin-left: auto; }
+    .tier-engravings { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 14px 14px; }
+    .engraving-chip { padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 800; border: 1px solid rgba(255,255,255,0.12); }
+
+    .tier-1 { background: linear-gradient(180deg, rgba(255,60,60,0.20), rgba(120,10,20,0.24)); border: 1px solid rgba(255,120,120,0.35); }
+    .tier-1::before { content: ""; position: absolute; inset: -40%; background: conic-gradient(from 180deg, #ff3b3b, #ff7a00, #ffe600, #45ff8a, #00d7ff, #7b61ff, #ff4fd8, #ff3b3b); opacity: 0.18; filter: blur(24px); animation: rainbowSpin 8s linear infinite; z-index: 0; pointer-events: none; }
+    .tier-1 > * { position: relative; z-index: 1; }
+    .tier-1 .tier-header { color: #ffd1d1; }
+    .tier-1 .tier-badge { background: rgba(255,90,90,0.24); color: #fff1f1; }
+    .tier-1 .engraving-chip { background: rgba(255,255,255,0.06); color: #ffe2e2; border-color: rgba(255,150,150,0.24); }
+
+    .tier-2 { background: linear-gradient(180deg, rgba(255,220,90,0.18), rgba(120,95,10,0.20)); border: 1px solid rgba(255,220,90,0.30); }
+    .tier-2::before { content: ""; position: absolute; inset: -40%; background: conic-gradient(from 180deg, #ff3b3b, #ff7a00, #ffe600, #45ff8a, #00d7ff, #7b61ff, #ff4fd8, #ff3b3b); opacity: 0.09; filter: blur(24px); animation: rainbowSpin 12s linear infinite reverse; z-index: 0; pointer-events: none; }
+    .tier-2 > * { position: relative; z-index: 1; }
+    .tier-2 .tier-header { color: #ffe58a; }
+    .tier-2 .tier-badge { background: rgba(255,220,90,0.20); color: #ffe58a; }
+    .tier-2 .engraving-chip { background: rgba(255,220,90,0.10); color: #ffe58a; border-color: rgba(255,220,90,0.22); }
+
+    .tier-3 { background: linear-gradient(180deg, rgba(170,120,255,0.18), rgba(70,30,120,0.20)); border: 1px solid rgba(170,120,255,0.30); }
+    .tier-3 .tier-header { color: #d1b3ff; }
+    .tier-3 .tier-badge { background: rgba(170,120,255,0.20); color: #d1b3ff; }
+    .tier-3 .engraving-chip { background: rgba(170,120,255,0.10); color: #d1b3ff; border-color: rgba(170,120,255,0.22); }
+
+    .tier-4 { background: linear-gradient(180deg, rgba(90,180,255,0.18), rgba(20,60,120,0.20)); border: 1px solid rgba(90,180,255,0.30); }
+    .tier-4 .tier-header { color: #a9dfff; }
+    .tier-4 .tier-badge { background: rgba(90,180,255,0.20); color: #a9dfff; }
+    .tier-4 .engraving-chip { background: rgba(90,180,255,0.10); color: #a9dfff; border-color: rgba(90,180,255,0.22); }
+
+    .tier-5 { background: linear-gradient(180deg, rgba(90,230,140,0.18), rgba(20,90,50,0.20)); border: 1px solid rgba(90,230,140,0.30); }
+    .tier-5 .tier-header { color: #bff7d0; }
+    .tier-5 .tier-badge { background: rgba(90,230,140,0.20); color: #bff7d0; }
+    .tier-5 .engraving-chip { background: rgba(90,230,140,0.10); color: #bff7d0; border-color: rgba(90,230,140,0.22); }
+
+    .tier-6 { background: linear-gradient(180deg, rgba(180,180,180,0.16), rgba(50,50,50,0.22)); border: 1px solid rgba(220,220,220,0.18); }
+    .tier-6 .tier-header { color: #d0d0d0; }
+    .tier-6 .tier-badge { background: rgba(180,180,180,0.16); color: #efefef; }
+    .tier-6 .engraving-chip { background: rgba(255,255,255,0.06); color: #d9d9d9; border-color: rgba(220,220,220,0.16); }
+
+    .loading-text { text-align: center; color: #aeb9cb; font-size: 14px; padding: 30px 0; }
+
+    .grade-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+    .grade-item { border-radius: 12px; padding: 10px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.08); position: relative; overflow: hidden; }
+    .grade-item > * { position: relative; z-index: 1; }
+    .grade-name { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+    .grade-range { font-size: 11px; opacity: 0.75; color: #aeb9cb; }
+
+    .grade-ss-plus, .grade-ss, .grade-ss-minus { background: linear-gradient(135deg, rgba(255,60,60,0.15), rgba(255,180,60,0.15), rgba(80,220,140,0.13), rgba(90,160,255,0.13), rgba(180,100,255,0.13)); border-color: rgba(255,140,140,0.30); }
+    .grade-ss-plus::before, .grade-ss::before, .grade-ss-minus::before { content: ""; position: absolute; inset: -35%; background: conic-gradient(from 180deg, #ff3b3b, #ff7a00, #ffe600, #45ff8a, #00d7ff, #7b61ff, #ff4fd8, #ff3b3b); opacity: 0.30; filter: blur(16px); animation: rainbowSpin 7s linear infinite; pointer-events: none; z-index: 0; }
+    .grade-ss-plus .grade-name { color: #ffe566; }
+    .grade-ss .grade-name { color: #ffcc66; }
+    .grade-ss-minus .grade-name { color: #ffaa66; }
+
+    .grade-s-plus, .grade-s, .grade-s-minus { background: linear-gradient(135deg, rgba(150,220,255,0.12), rgba(255,180,90,0.08), rgba(120,120,255,0.08)); border-color: rgba(150,220,255,0.24); }
+    .grade-s-plus::before, .grade-s::before, .grade-s-minus::before { content: ""; position: absolute; inset: -35%; background: conic-gradient(from 180deg, #ff3b3b, #ff7a00, #ffe600, #45ff8a, #00d7ff, #7b61ff, #ff4fd8, #ff3b3b); opacity: 0.10; filter: blur(16px); animation: rainbowSpin 12s linear infinite reverse; pointer-events: none; z-index: 0; }
+    .grade-s-plus .grade-name { color: #96dcff; }
+    .grade-s .grade-name { color: #7bd6ff; }
+    .grade-s-minus .grade-name { color: #64c8ff; }
+
+    .grade-a-plus { background: rgba(255,80,80,0.14); border-color: rgba(255,120,120,0.28); } .grade-a-plus .grade-name { color: #ff8d8d; }
+    .grade-a { background: rgba(220,60,60,0.12); border-color: rgba(220,100,100,0.24); } .grade-a .grade-name { color: #ee7070; }
+    .grade-a-minus { background: rgba(190,40,40,0.12); border-color: rgba(190,80,80,0.22); } .grade-a-minus .grade-name { color: #dd5555; }
+    .grade-b-plus { background: rgba(255,160,60,0.14); border-color: rgba(255,160,60,0.28); } .grade-b-plus .grade-name { color: #ffb060; }
+    .grade-b { background: rgba(230,130,40,0.12); border-color: rgba(230,130,40,0.24); } .grade-b .grade-name { color: #ee9944; }
+    .grade-b-minus { background: rgba(200,100,30,0.12); border-color: rgba(200,100,30,0.22); } .grade-b-minus .grade-name { color: #dd8833; }
+    .grade-c-plus { background: rgba(180,120,255,0.14); border-color: rgba(180,120,255,0.28); } .grade-c-plus .grade-name { color: #c79cff; }
+    .grade-c { background: rgba(150,100,220,0.12); border-color: rgba(150,100,220,0.24); } .grade-c .grade-name { color: #aa88ee; }
+    .grade-c-minus { background: rgba(120,80,190,0.12); border-color: rgba(120,80,190,0.22); } .grade-c-minus .grade-name { color: #9977dd; }
+    .grade-d-plus { background: rgba(90,180,255,0.14); border-color: rgba(90,180,255,0.28); } .grade-d-plus .grade-name { color: #a9dfff; }
+    .grade-d { background: rgba(60,150,220,0.12); border-color: rgba(60,150,220,0.24); } .grade-d .grade-name { color: #7bc8ee; }
+    .grade-d-minus { background: rgba(30,120,190,0.12); border-color: rgba(30,120,190,0.22); } .grade-d-minus .grade-name { color: #55aadd; }
+    .grade-e-plus { background: rgba(90,230,140,0.14); border-color: rgba(90,230,140,0.28); } .grade-e-plus .grade-name { color: #bff7d0; }
+    .grade-e { background: rgba(60,190,100,0.12); border-color: rgba(60,190,100,0.24); } .grade-e .grade-name { color: #8ee8b0; }
+    .grade-e-minus { background: rgba(30,150,70,0.12); border-color: rgba(30,150,70,0.22); } .grade-e-minus .grade-name { color: #66cc88; }
+    .grade-f-plus { background: rgba(180,180,180,0.14); border-color: rgba(200,200,200,0.22); } .grade-f-plus .grade-name { color: #d9d9d9; }
+    .grade-f { background: rgba(140,140,140,0.12); border-color: rgba(170,170,170,0.18); } .grade-f .grade-name { color: #bbbbbb; }
+    .grade-f-minus { background: rgba(100,100,100,0.12); border-color: rgba(140,140,140,0.16); } .grade-f-minus .grade-name { color: #999999; }
+
+    .grade-note { font-size: 13px; color: #9ecdf7; text-align: center; padding: 12px 16px; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); line-height: 1.7; }
+
+    @keyframes rainbowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
     @media (max-width: 1180px) {
       .workspace { grid-template-columns: 280px 1fr; }
       .rank-row { grid-template-columns: 72px minmax(0, 1fr); gap: 10px; }
@@ -789,9 +1024,6 @@
       .panel { padding: 16px; border-radius: 20px; }
       .hero { font-size: 26px; margin-bottom: 10px; }
       .muted { font-size: 13px; line-height: 1.55; }
-      .menu { gap: 8px; }
-      .menu-item { padding: 13px 14px; min-height: 56px; font-size: 15px; border-radius: 16px; }
-      .tournament-entry { padding: 13px 14px; min-height: 110px; border-radius: 16px; }
       .intro-title { font-size: 24px; }
       .intro-desc { font-size: 13px; max-width: 100%; margin-top: 12px; }
       .duo-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -847,21 +1079,43 @@
   <div class="app">
     <div class="workspace">
       <aside class="sidebar">
-        <div class="mini-label">LOST ARK TOOL · v17.6</div>
+
+        <!-- 캡슐 스위치 -->
+        <div class="switch-wrap">
+          <a href="./index.html">DPS 계산기</a>
+          <a href="#" class="active">직각 토너먼트</a>
+        </div>
+
+        <div class="mini-label">LOST ARK TOOL · v18</div>
         <div class="hero">로아<br>직각 토너먼트</div>
         <div class="muted">OP 직각과 호감 직각을 직접 선택하고, 완료 후 전체 랭킹을 확인할 수 있습니다.</div>
+
+        <button class="guide-trigger" id="openGuideBtn">
+          <span class="guide-small">안내</span>
+          <span>랭크 도장 <span class="guide-accent">점수 기준</span> 보기</span>
+        </button>
+
         <div class="sidebar-divider"></div>
-        <div class="menu">
-          <a class="menu-link" href="./index.html?menu=serka"><div class="menu-item">세르카 딜지분 보기</div></a>
-          <a class="menu-link" href="./index.html?menu=cathedral"><div class="menu-item">성당 딜지분 보기</div></a>
-          <a class="menu-link" href="./index.html?menu=gato1730"><div class="menu-item">1730 가토 딜지분</div></a>
-          <a class="menu-link" href="./index.html?menu=gato1750"><div class="menu-item">1750 가토 딜지분</div></a>
-        </div>
+
+        <button class="tier-btn tier-btn-op" id="openOpTierBtn">
+          <span class="tier-btn-small">OP TOURNAMENT</span>
+          <span>OP직각 티어표 📊 <span class="tier-btn-lock-icon" id="opTierLockIcon" style="display:none;">🔒</span></span>
+          <span class="tier-btn-tiny">A 도장 이상 열람 가능</span>
+        </button>
+
+        <button class="tier-btn tier-btn-favor" id="openFavorTierBtn">
+          <span class="tier-btn-small">FAVOR TOURNAMENT</span>
+          <span>호감직각 티어표 💗 <span class="tier-btn-lock-icon" id="favorTierLockIcon" style="display:none;">🔒</span></span>
+          <span class="tier-btn-tiny">도장 1개 이상 열람 가능</span>
+        </button>
+
         <div class="sidebar-divider"></div>
+
         <div class="tournament-entry">
           <div class="tournament-entry-label">TOURNAMENT</div>
           <div class="tournament-entry-title">직각 토너먼트<br>현재 페이지</div>
         </div>
+
       </aside>
 
       <main class="main">
@@ -885,8 +1139,9 @@
         <section class="duo-grid">
           <div class="tournament-card op-card">
             <div class="card-label">OP TOURNAMENT</div>
-            <div class="card-title">OP 직각 토너먼트</div>
-            <div class="card-desc">성능, 체감, 메타 기준으로 강하다고 느끼는 직업각인을 선택하는 토너먼트입니다.</div>
+            <div class="card-title">OP 직각 토너먼트 📙​</div>
+            <div class="card-desc">현 시점에 보다 강한 직업각인을 선택하세요.
+최근 승률 기반 등급 측정! 높은 등급의 랭크 도장을 획득해보세요.</div>
             <div class="card-actions">
               <button class="primary-btn" id="opStartBtn">시작하기</button>
               <button class="ghost-btn" id="opRankBtn">랭킹보기</button>
@@ -900,7 +1155,7 @@
 
           <div class="tournament-card favor-card">
             <div class="card-label">FAVOR TOURNAMENT</div>
-            <div class="card-title">호감 직각 토너먼트</div>
+            <div class="card-title">호감 직각 토너먼트 💗​</div>
             <div class="card-desc">취향, 호감도, 애정 기준으로 마음에 드는 직업각인을 선택하는 토너먼트입니다.</div>
             <div class="card-actions">
               <button class="primary-btn" id="favorStartBtn">시작하기</button>
@@ -1051,6 +1306,71 @@
     </div>
   </div>
 
+  <!-- 등급 안내 모달 -->
+  <div class="modal-backdrop" id="guideModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeGuideBtn">×</button>
+      <div class="modal-top-label">RANK GUIDE</div>
+      <div class="modal-title">랭크 도장 점수 기준</div>
+      <div class="modal-sub">OP 직각 토너먼트 참여 완료 후 정답률에 따라 도장이 부여됩니다</div>
+      <div class="modal-divider"></div>
+      <div class="grade-grid">
+        <div class="grade-item grade-ss-plus"><div class="grade-name">SS+</div><div class="grade-range">100%</div></div>
+        <div class="grade-item grade-ss"><div class="grade-name">SS</div><div class="grade-range">98~99%</div></div>
+        <div class="grade-item grade-ss-minus"><div class="grade-name">SS-</div><div class="grade-range">96~97%</div></div>
+        <div class="grade-item grade-s-plus"><div class="grade-name">S+</div><div class="grade-range">94~95%</div></div>
+        <div class="grade-item grade-s"><div class="grade-name">S</div><div class="grade-range">92~93%</div></div>
+        <div class="grade-item grade-s-minus"><div class="grade-name">S-</div><div class="grade-range">90~91%</div></div>
+        <div class="grade-item grade-a-plus"><div class="grade-name">A+</div><div class="grade-range">85~89%</div></div>
+        <div class="grade-item grade-a"><div class="grade-name">A</div><div class="grade-range">80~84%</div></div>
+        <div class="grade-item grade-a-minus"><div class="grade-name">A-</div><div class="grade-range">75~79%</div></div>
+        <div class="grade-item grade-b-plus"><div class="grade-name">B+</div><div class="grade-range">70~74%</div></div>
+        <div class="grade-item grade-b"><div class="grade-name">B</div><div class="grade-range">65~69%</div></div>
+        <div class="grade-item grade-b-minus"><div class="grade-name">B-</div><div class="grade-range">60~64%</div></div>
+        <div class="grade-item grade-c-plus"><div class="grade-name">C+</div><div class="grade-range">55~59%</div></div>
+        <div class="grade-item grade-c"><div class="grade-name">C</div><div class="grade-range">50~54%</div></div>
+        <div class="grade-item grade-c-minus"><div class="grade-name">C-</div><div class="grade-range">45~49%</div></div>
+        <div class="grade-item grade-d-plus"><div class="grade-name">D+</div><div class="grade-range">40~44%</div></div>
+        <div class="grade-item grade-d"><div class="grade-name">D</div><div class="grade-range">35~39%</div></div>
+        <div class="grade-item grade-d-minus"><div class="grade-name">D-</div><div class="grade-range">30~34%</div></div>
+        <div class="grade-item grade-e-plus"><div class="grade-name">E+</div><div class="grade-range">25~29%</div></div>
+        <div class="grade-item grade-e"><div class="grade-name">E</div><div class="grade-range">20~24%</div></div>
+        <div class="grade-item grade-e-minus"><div class="grade-name">E-</div><div class="grade-range">15~19%</div></div>
+        <div class="grade-item grade-f-plus"><div class="grade-name">F+</div><div class="grade-range">10~14%</div></div>
+        <div class="grade-item grade-f"><div class="grade-name">F</div><div class="grade-range">5~9%</div></div>
+        <div class="grade-item grade-f-minus"><div class="grade-name">F-</div><div class="grade-range">0~4%</div></div>
+      </div>
+      <div class="grade-note">
+        🕛 도장은 매일 자정(00:00) 기준으로 갱신됩니다<br>
+        오늘의 선택이 내일의 도장을 결정합니다, 신중하게 고르세요!
+      </div>
+    </div>
+  </div>
+
+  <!-- OP 티어표 모달 -->
+  <div class="modal-backdrop" id="opTierModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeOpTierBtn">×</button>
+      <div class="modal-top-label">OP TOURNAMENT</div>
+      <div class="modal-title" style="color:#8ef0c9;">OP직각 티어표</div>
+      <div class="modal-sub" id="opTierSub">전체 누적 승률 기준 · 6티어 포함</div>
+      <div class="modal-divider"></div>
+      <div id="opTierContent"><div class="loading-text">데이터 불러오는 중...</div></div>
+    </div>
+  </div>
+
+  <!-- 호감 티어표 모달 -->
+  <div class="modal-backdrop" id="favorTierModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeFavorTierBtn">×</button>
+      <div class="modal-top-label">FAVOR TOURNAMENT</div>
+      <div class="modal-title" style="color:#ffd48a;">호감직각 티어표 💗</div>
+      <div class="modal-sub" id="favorTierSub">전체 누적 승률 기준 · 6티어 포함</div>
+      <div class="modal-divider"></div>
+      <div id="favorTierContent"><div class="loading-text">데이터 불러오는 중...</div></div>
+    </div>
+  </div>
+
   <audio id="winnerAudio" preload="auto">
     <source src="https://loaviewer.github.io/loa-dps-viewer/sounds/winner2.mp3" type="audio/mpeg">
   </audio>
@@ -1074,34 +1394,45 @@
     const supabase = createClient(SUPABASE_REAL_URL, SUPABASE_PUBLISHABLE_KEY);
 
     const winnerAudio = document.getElementById("winnerAudio");
-    const flipAudio = document.getElementById("flipAudio");
+    const flipAudio   = document.getElementById("flipAudio");
     winnerAudio.volume = 1.0;
-    flipAudio.volume = 1.0;
+    flipAudio.volume   = 1.0;
+
+    const SUPPORT_ENGRAVINGS = ["절실한 구원", "만개", "축복의 오라", "해방자"];
 
     // ===== 등급 시스템 =====
     const GRADE_TABLE = [
       { grade: "SS+", min: 100, max: 100 },
-      { grade: "SS",  min: 96,  max: 99  },
-      { grade: "SS-", min: 90,  max: 95  },
-      { grade: "S+",  min: 85,  max: 89  },
-      { grade: "S",   min: 81,  max: 84  },
-      { grade: "S-",  min: 75,  max: 80  },
-      { grade: "A+",  min: 70,  max: 74  },
-      { grade: "A",   min: 65,  max: 69  },
-      { grade: "A-",  min: 60,  max: 64  },
-      { grade: "B+",  min: 55,  max: 59  },
-      { grade: "B",   min: 50,  max: 54  },
-      { grade: "B-",  min: 45,  max: 49  },
-      { grade: "C+",  min: 40,  max: 44  },
-      { grade: "C",   min: 35,  max: 39  },
-      { grade: "C-",  min: 30,  max: 34  },
-      { grade: "F+",  min: 25,  max: 29  },
-      { grade: "F",   min: 15,  max: 24  },
-      { grade: "F-",  min: 0,   max: 14  },
+      { grade: "SS",  min: 98,  max: 99  },
+      { grade: "SS-", min: 96,  max: 97  },
+      { grade: "S+",  min: 94,  max: 95  },
+      { grade: "S",   min: 92,  max: 93  },
+      { grade: "S-",  min: 90,  max: 91  },
+      { grade: "A+",  min: 85,  max: 89  },
+      { grade: "A",   min: 80,  max: 84  },
+      { grade: "A-",  min: 75,  max: 79  },
+      { grade: "B+",  min: 70,  max: 74  },
+      { grade: "B",   min: 65,  max: 69  },
+      { grade: "B-",  min: 60,  max: 64  },
+      { grade: "C+",  min: 55,  max: 59  },
+      { grade: "C",   min: 50,  max: 54  },
+      { grade: "C-",  min: 45,  max: 49  },
+      { grade: "D+",  min: 40,  max: 44  },
+      { grade: "D",   min: 35,  max: 39  },
+      { grade: "D-",  min: 30,  max: 34  },
+      { grade: "E+",  min: 25,  max: 29  },
+      { grade: "E",   min: 20,  max: 24  },
+      { grade: "E-",  min: 15,  max: 19  },
+      { grade: "F+",  min: 10,  max: 14  },
+      { grade: "F",   min: 5,   max: 9   },
+      { grade: "F-",  min: 0,   max: 4   },
     ];
 
+    // A- 이상 판별
+    const A_MINUS_AND_ABOVE = ["SS+","SS","SS-","S+","S","S-","A+","A","A-"];
+
     const GRADE_COMMENTS = {
-      "SS+": ["최고점을 넘어선 완벽한 판단입니다. 전설급 결과예요.", "전설급 결과입니다. 이 선택은 흔치 않은 최상위 판정입니다.", "+SS 달성! 정석을 넘어선 초월적인 선택이었습니다."],
+      "SS+": ["완벽한 판단입니다! 모든 선택이 정확했어요. 전설급 결과!", "100% 달성! 이 선택은 흔치 않은 최상위 판정입니다.", "완벽 그 자체! 정석을 넘어선 초월적인 선택이었습니다."],
       "SS":  ["아주 훌륭한 결과입니다. 거의 완벽에 가까운 판단이었어요.", "정석적인 최고의 선택들로 안정적으로 마무리했습니다.", "상위권 판정입니다. 흐름을 잘 읽고 정확하게 골랐어요."],
       "SS-": ["거의 완벽한 수준입니다. 아주 강한 판단이었어요.", "상위권답게 잘 마무리했습니다. 충분히 인상적인 결과입니다.", "좋은 흐름을 유지했습니다. 마지막까지 안정적이었어요."],
       "S+":  ["매우 좋은 결과입니다. 판단력이 확실히 돋보였어요.", "상당히 높은 완성도로 토너먼트를 잘 풀었습니다.", "상위권 직전의 강한 판정입니다. 흐름이 좋았어요."],
@@ -1116,6 +1447,12 @@
       "C+":  ["아쉽지만 아직 가능성은 충분합니다.", "정확도는 낮았지만, 흐름을 익히기엔 괜찮은 결과예요.", "조금 더 신중했다면 점수를 더 올릴 수 있었습니다."],
       "C":   ["보통보다 낮은 결과입니다. 선택이 많이 갈렸어요.", "판단이 다소 흔들렸습니다. 다음엔 더 안정적으로 가보죠.", "아쉬운 편의 결과지만, 토너먼트 감각은 잡히고 있어요."],
       "C-":  ["조금 어려운 결과입니다. 선택이 자주 빗나갔어요.", "정확도가 많이 부족했습니다. 다음엔 흐름을 더 읽어보세요.", "하위권 판정입니다. 다시 도전할 여지는 충분합니다."],
+      "D+":  ["절반을 조금 밑도는 결과입니다. 선택이 많이 엇갈렸어요.", "흐름을 잡기 어려웠던 것 같습니다. 다음엔 더 집중해보세요.", "아쉬운 결과지만 다음 도전에서 충분히 올라갈 수 있어요."],
+      "D":   ["많이 아쉬운 결과입니다. 판단이 자주 빗나갔어요.", "선택의 절반 이상이 엇갈렸습니다. 다시 도전해보세요.", "쉽지 않은 결과였지만, 경험이 쌓이면 달라질 거예요."],
+      "D-":  ["판단이 많이 흔들렸습니다. 다음엔 더 신중하게 골라보세요.", "결과가 많이 아쉽습니다. 승률 데이터를 참고해보면 도움이 될 거예요.", "낮은 정답률이지만 포기하지 마세요. 다음엔 더 나아질 수 있어요."],
+      "E+":  ["많이 어려운 결과입니다. 선택이 대부분 빗나갔어요.", "흐름을 따라가기 힘들었던 것 같습니다. 다시 도전해보세요.", "쉽지 않은 판정이었지만, 다음엔 더 좋은 결과를 기대할게요."],
+      "E":   ["거의 대부분의 선택이 엇갈렸습니다. 많이 어려우셨나요?", "결과가 많이 아쉽습니다. 메타를 다시 한번 살펴보세요.", "낮은 결과지만 괜찮아요. 다음 도전이 더 기대됩니다."],
+      "E-":  ["선택이 대부분 빗나간 결과입니다. 많이 어려우셨죠?", "메타 파악이 조금 더 필요한 것 같습니다. 다시 도전해보세요.", "결과가 아쉽지만, 경험을 쌓으면 분명 달라질 거예요."],
       "F+":  ["조금 더 집중이 필요합니다. 결과가 많이 흔들렸어요.", "아쉬운 결과입니다. 판단 기준을 다시 잡아보면 좋아요.", "기본 흐름을 놓친 구간이 많았습니다. 다음엔 더 나아질 수 있어요."],
       "F":   ["많이 아쉬운 결과입니다. 선택이 꽤 엇갈렸어요.", "토너먼트 흐름을 따라가기가 어려웠던 판정입니다.", "다음 도전이 기대되는 결과입니다. 지금은 감을 다시 잡아야 해요."],
       "F-":  ["가장 낮은 판정입니다. 이번엔 흐름이 전혀 맞지 않았어요.", "많이 아쉬운 결과지만, 처음엔 이런 날도 있습니다.", "다시 시작해볼 시간입니다. 다음엔 더 좋은 선택을 기대할게요."],
@@ -1123,9 +1460,9 @@
 
     function calcGrade(score, total) {
       if (total === 0) return "F-";
-      const pct = Math.round((score / total) * 100);
+      const rate = Math.round((score / total) * 100);
       for (const row of GRADE_TABLE) {
-        if (pct >= row.min && pct <= row.max) return row.grade;
+        if (rate >= row.min && rate <= row.max) return row.grade;
       }
       return "F-";
     }
@@ -1177,12 +1514,108 @@
       return winRateCache[name] !== undefined ? winRateCache[name] : 0.5;
     }
 
+    // ===== 티어표 관련 =====
+    const fullToShortMap = {
+      "고독한 기사":"고기","전투 태세":"전태","광기":"광기","광전사의 비기":"비기",
+      "분노의 망치":"분망","중력 수련":"중수","심판자":"심판자","축복의 오라":"축오",
+      "처단자":"처단자","포식자":"포식자","빛의 기사":"빛의 기사","해방자":"해방자",
+      "초심":"초심","오의 강화":"오의","충격 단련":"충단","체술":"체술",
+      "세맥타통":"세맥","역천지체":"역천","절정":"절정","절제":"절제",
+      "오의난무":"난무","일격필살":"일격","권왕파천무":"권왕","수라의 길":"수라",
+      "강화 무기":"강무","핸드거너":"핸드","화력 강화":"화강","포격 강화":"포강",
+      "죽음의 습격":"죽습","두 번째 동료":"두동","진화의 유산":"유산",
+      "아르데타인의 기술":"기술","피스메이커":"피메","사냥의 시간":"사시",
+      "상급 소환사":"상소","넘치는 교감":"교감","황제의 칙령":"황제","황후의 은총":"황후",
+      "진실된 용맹":"진용","절실한 구원":"절구","점화":"점화","환류":"환류",
+      "버스트":"버스트","잔재된 기운":"잔재","멈출 수 없는 충동":"충동",
+      "완벽한 억제":"억제","달의 소리":"달소","갈증":"갈증",
+      "만월의 집행자":"만월","만개":"만개","그믐의 경계":"그믐","회귀":"회귀","이슬비":"이슬비",
+      "질풍노도":"질풍","환수 각성":"환각","야성":"야성","업화":"업화","드레드 로어":"드드"
+    };
+
+    function getShortName(full) { return fullToShortMap[full] || full; }
+
+    function shuffle(arr) {
+      const c = [...arr];
+      for (let i = c.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [c[i], c[j]] = [c[j], c[i]];
+      }
+      return c;
+    }
+
+    async function loadTierData(tournamentType) {
+      const { data, error } = await supabase
+        .from("ranking_overall")
+        .select("engraving_name, win_rate, total_matches")
+        .eq("tournament_type", tournamentType)
+        .gte("total_matches", 5)
+        .order("win_rate", { ascending: false });
+
+      if (error || !data) return null;
+
+      let entries = data.map(row => ({
+        name: row.engraving_name,
+        winRate: Number(row.win_rate),
+        total: Number(row.total_matches)
+      }));
+
+      if (tournamentType === "op") {
+        entries = entries.filter(e => !SUPPORT_ENGRAVINGS.includes(e.name));
+      }
+
+      return entries;
+    }
+
+    function calcTiers(entries) {
+      if (!entries.length) return [[], [], [], [], [], []];
+      const sorted = [...entries].sort((a, b) => b.winRate - a.winRate);
+      const total  = sorted.length;
+      const tier6  = total > 10 ? sorted.slice(total - 10) : [];
+      const rest   = total > 10 ? sorted.slice(0, total - 10) : sorted;
+      const tier1  = rest.slice(0, 6);
+      const tier2  = rest.slice(6, 15);
+      const tier3  = rest.slice(15, 27);
+      const remaining = rest.slice(27);
+      const half   = Math.ceil(remaining.length / 2);
+      const tier4  = remaining.slice(0, half);
+      const tier5  = remaining.slice(half);
+      return [tier1, tier2, tier3, tier4, tier5, tier6];
+    }
+
+    function renderTierContent(tiers, containerId) {
+      const container = document.getElementById(containerId);
+      if (!tiers || tiers.every(t => t.length === 0)) {
+        container.innerHTML = `<div class="loading-text">데이터가 부족합니다 😢<br>토너먼트 참여자가 늘면 자동으로 반영됩니다!</div>`;
+        return;
+      }
+      const tierNames   = ["1티어", "2티어", "3티어", "4티어", "5티어", "6티어"];
+      const tierClasses = ["tier-1", "tier-2", "tier-3", "tier-4", "tier-5", "tier-6"];
+      const tierEmojis  = ["👑", "⭐", "💜", "💙", "💚", "⚪"];
+      container.innerHTML = tiers.map((tier, i) => {
+        if (!tier.length) return "";
+        const shuffled = shuffle(tier);
+        return `
+          <div class="tier-block ${tierClasses[i]}">
+            <div class="tier-header">
+              <span>${tierEmojis[i]}</span>
+              <span class="tier-badge">${tierNames[i]}</span>
+              <span class="tier-count">${tier.length}개</span>
+            </div>
+            <div class="tier-engravings">
+              ${shuffled.map(e => `<span class="engraving-chip">${getShortName(e.name)}</span>`).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
     // ===== DOM =====
-    const opStamp       = document.getElementById("opStamp");
-    const favorStamp    = document.getElementById("favorStamp");
-    const opStampDate   = document.getElementById("opStampDate");
-    const favorStampDate= document.getElementById("favorStampDate");
-    const opStampGrade  = document.getElementById("opStampGrade");
+    const opStamp        = document.getElementById("opStamp");
+    const favorStamp     = document.getElementById("favorStamp");
+    const opStampDate    = document.getElementById("opStampDate");
+    const favorStampDate = document.getElementById("favorStampDate");
+    const opStampGrade   = document.getElementById("opStampGrade");
 
     const opStartBtn    = document.getElementById("opStartBtn");
     const favorStartBtn = document.getElementById("favorStartBtn");
@@ -1200,25 +1633,25 @@
     const lockTitle         = document.getElementById("lockTitle");
     const lockDesc          = document.getElementById("lockDesc");
 
-    const classModal        = document.getElementById("classModal");
-    const classFlowLabel    = document.getElementById("classFlowLabel");
-    const classTable        = document.getElementById("classTable");
-    const closeClassModalBtn= document.getElementById("closeClassModalBtn");
+    const classModal         = document.getElementById("classModal");
+    const classFlowLabel     = document.getElementById("classFlowLabel");
+    const classTable         = document.getElementById("classTable");
+    const closeClassModalBtn = document.getElementById("closeClassModalBtn");
 
-    const battleModal       = document.getElementById("battleModal");
-    const battleModeLabel   = document.getElementById("battleModeLabel");
-    const battleTopKorTitle = document.getElementById("battleTopKorTitle");
-    const battleRoundTitle  = document.getElementById("battleRoundTitle");
-    const battleSubText     = document.getElementById("battleSubText");
-    const battleProgressText= document.getElementById("battleProgressText");
-    const battleProgressFill= document.getElementById("battleProgressFill");
-    const leftChoiceBtn     = document.getElementById("leftChoiceBtn");
-    const rightChoiceBtn    = document.getElementById("rightChoiceBtn");
-    const leftChoiceClass   = document.getElementById("leftChoiceClass");
-    const rightChoiceClass  = document.getElementById("rightChoiceClass");
-    const leftChoiceName    = document.getElementById("leftChoiceName");
-    const rightChoiceName   = document.getElementById("rightChoiceName");
-    const quitBattleBtn     = document.getElementById("quitBattleBtn");
+    const battleModal        = document.getElementById("battleModal");
+    const battleModeLabel    = document.getElementById("battleModeLabel");
+    const battleTopKorTitle  = document.getElementById("battleTopKorTitle");
+    const battleRoundTitle   = document.getElementById("battleRoundTitle");
+    const battleSubText      = document.getElementById("battleSubText");
+    const battleProgressText = document.getElementById("battleProgressText");
+    const battleProgressFill = document.getElementById("battleProgressFill");
+    const leftChoiceBtn      = document.getElementById("leftChoiceBtn");
+    const rightChoiceBtn     = document.getElementById("rightChoiceBtn");
+    const leftChoiceClass    = document.getElementById("leftChoiceClass");
+    const rightChoiceClass   = document.getElementById("rightChoiceClass");
+    const leftChoiceName     = document.getElementById("leftChoiceName");
+    const rightChoiceName    = document.getElementById("rightChoiceName");
+    const quitBattleBtn      = document.getElementById("quitBattleBtn");
 
     const winnerModal       = document.getElementById("winnerModal");
     const winnerModeLabel   = document.getElementById("winnerModeLabel");
@@ -1232,16 +1665,23 @@
     const gsGrade           = document.getElementById("gsGrade");
     const gradeComment      = document.getElementById("gradeComment");
 
+    const guideModal      = document.getElementById("guideModal");
+    const opTierModal     = document.getElementById("opTierModal");
+    const favorTierModal  = document.getElementById("favorTierModal");
+    const opTierLockIcon  = document.getElementById("opTierLockIcon");
+    const favorTierLockIcon = document.getElementById("favorTierLockIcon");
+
     let visitorKey      = null;
     let completedState  = { op: false, favor: false };
     let currentBoardMode= null;
     let allCandidates   = [];
     let currentTournamentType = null;
     let selectedClass   = null;
+    let todayOpGrade    = null; // 오늘 OP 도장 등급
 
-    let workingCandidates     = [];
-    let currentRoundCandidates= [];
-    let nextRoundCandidates   = [];
+    let workingCandidates      = [];
+    let currentRoundCandidates = [];
+    let nextRoundCandidates    = [];
     let currentIndex    = 0;
     let currentLeft     = null;
     let currentRight    = null;
@@ -1250,28 +1690,9 @@
     let battleLogs      = [];
     let pendingWinner   = null;
 
-    // OP 점수 추적
     let opScore    = 0;
     let opMaxScore = 0;
     let isChoosing = false;
-
-    const fullToShortMap = {
-      "고독한 기사":"고기","전투 태세":"전태","광기":"광기","광전사의 비기":"비기",
-      "분노의 망치":"분망","중력 수련":"중수","심판자":"심판자","축복의 오라":"축오",
-      "처단자":"처단자","포식자":"포식자","빛의 기사":"빛의 기사","해방자":"해방자",
-      "초심":"초심","오의 강화":"오의","충격 단련":"충단","체술":"체술",
-      "세맥타통":"세맥","역천지체":"역천","절정":"절정","절제":"절제",
-      "오의난무":"난무","일격필살":"일격","권왕파천무":"권왕","수라의 길":"수라",
-      "강화 무기":"강무","핸드거너":"핸드","화력 강화":"화강","포격 강화":"포강",
-      "죽음의 습격":"죽습","두 번째 동료":"두동","진화의 유산":"유산",
-      "아르데타인의 기술":"기술","피스메이커":"피메","사냥의 시간":"사시",
-      "상급 소환사":"상소","넘치는 교감":"교감","황제의 칙령":"황제","황후의 은총":"황후",
-      "진실된 용맹":"진용","절실한 구원":"절구","점화":"점화","환류":"환류",
-      "버스트":"버스트","잔재된 기운":"잔재","멈출 수 없는 충동":"충동",
-      "완벽한 억제":"억제","달의 소리":"달소","갈증":"갈증","만월의 집행자":"만월",
-      "그믐의 경계":"그믐","회귀":"회귀","만개":"만개","이슬비":"이슬비",
-      "질풍노도":"질풍","환수 각성":"환각","야성":"야성","업화":"업화","드레드 로어":"드드"
-    };
 
     const classColorMap = {
       "워로드":"engr-warrior","버서커":"engr-warrior","디스트로이어":"engr-warrior",
@@ -1296,10 +1717,8 @@
       "가디언나이트":["가디언나이트"]
     };
 
-    // 호감 전용 추가 id
     const FAVOR_ONLY_IDS = [8, 12, 40, 52];
 
-    function getShortName(full) { return fullToShortMap[full] || full; }
     function getColorClass(cls) { return classColorMap[cls] || ""; }
 
     function getVisitorKey() {
@@ -1342,6 +1761,17 @@
       return `${date.getFullYear()}.${String(date.getMonth()+1).padStart(2,"0")}.${String(date.getDate()).padStart(2,"0")} ${String(date.getHours()).padStart(2,"0")}:${String(date.getMinutes()).padStart(2,"0")}`;
     }
 
+    // ===== 자물쇠 아이콘 업데이트 =====
+    function updateLockIcons() {
+      // OP 티어표: A- 이상 도장 필요
+      const opUnlocked = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
+      opTierLockIcon.style.display = opUnlocked ? "none" : "inline";
+
+      // 호감 티어표: 도장 1개 이상
+      const favorUnlocked = completedState.op || completedState.favor;
+      favorTierLockIcon.style.display = favorUnlocked ? "none" : "inline";
+    }
+
     function sortRankingRows(rows) {
       return [...rows].sort((a, b) => {
         if (b.champion_count !== a.champion_count) return b.champion_count - a.champion_count;
@@ -1353,6 +1783,11 @@
 
     function renderBoardFromRows(rows, mode) {
       currentBoardMode = mode;
+      let filteredRows = rows;
+      if (mode === "op") {
+        filteredRows = rows.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
+      }
+
       rankingBoard.classList.remove("locked","board-op","board-favor");
       rankingBoardTitle.classList.remove("ranking-title-op","ranking-title-favor");
       rankingBoardTitle.textContent = mode === "op" ? "OP 직각 랭킹 보드" : "호감 직각 랭킹 보드";
@@ -1360,7 +1795,7 @@
 
       modeOpBtn.classList.remove("active-op","disabled");
       modeFavorBtn.classList.remove("active-favor","disabled");
-      if (!completedState.op) modeOpBtn.classList.add("disabled");
+      if (!completedState.op)    modeOpBtn.classList.add("disabled");
       if (!completedState.favor) modeFavorBtn.classList.add("disabled");
 
       if (mode === "op") {
@@ -1373,15 +1808,15 @@
         rankingBoard.classList.add("board-favor");
       }
 
-      const sorted = sortRankingRows(rows);
+      const sorted = sortRankingRows(filteredRows);
       const championTop = sorted[0] || null;
-      const rateSorted = [...rows].filter(r => r.total_matches > 0).sort((a,b) => {
+      const rateSorted  = [...filteredRows].filter(r => r.total_matches > 0).sort((a,b) => {
         if (Number(b.win_rate) !== Number(a.win_rate)) return Number(b.win_rate) - Number(a.win_rate);
         if (b.total_matches !== a.total_matches) return b.total_matches - a.total_matches;
         return b.win_count - a.win_count;
       });
       const rateTop = rateSorted[0] || championTop;
-      const latestUpdatedAt = rows.length > 0 ? rows[0].updated_at : null;
+      const latestUpdatedAt = filteredRows.length > 0 ? filteredRows[0].updated_at : null;
 
       rankingFooterNote.textContent = `※ 전체 랭킹은 매시간 정각 집계됩니다. 최근 집계: ${formatUpdatedAt(latestUpdatedAt)}`;
 
@@ -1457,8 +1892,8 @@
 
       rankingBoard.classList.remove("locked");
 
-      if (completedState.op && !completedState.favor) { currentBoardMode = "op"; loadRankingData("op"); return; }
-      if (!completedState.op && completedState.favor)  { currentBoardMode = "favor"; loadRankingData("favor"); return; }
+      if (completedState.op && !completedState.favor)  { currentBoardMode = "op";    loadRankingData("op");    return; }
+      if (!completedState.op && completedState.favor)   { currentBoardMode = "favor"; loadRankingData("favor"); return; }
       if (bothCompleted) { if (!currentBoardMode) currentBoardMode = "op"; loadRankingData(currentBoardMode); }
     }
 
@@ -1475,8 +1910,8 @@
 
     function getRoundLabel(count) {
       if (count <= 2) return "FINAL";
-      if (count === 4) return "4강";
-      if (count === 8) return "8강";
+      if (count === 4)  return "4강";
+      if (count === 8)  return "8강";
       if (count === 16) return "16강";
       if (count === 32) return "32강";
       if (count === 64) return "64강";
@@ -1491,7 +1926,7 @@
       return "stage-green";
     }
 
-    function playFlipSound() { try { flipAudio.currentTime=0; flipAudio.play().catch(()=>{}); } catch {} }
+    function playFlipSound()   { try { flipAudio.currentTime=0;   flipAudio.play().catch(()=>{}); }   catch {} }
     function playWinnerSound() { try { winnerAudio.currentTime=0; winnerAudio.play().catch(()=>{}); } catch {} }
 
     async function loadCandidates() {
@@ -1522,9 +1957,13 @@
         opStamp.classList.add("show");
         opStampDate.textContent = formatStampDate(getDateKey());
         const opRow = data.find(r => r.tournament_type === "op");
-        if (opRow && opRow.grade) opStampGrade.textContent = opRow.grade;
+        if (opRow && opRow.grade) {
+          opStampGrade.textContent = opRow.grade;
+          todayOpGrade = opRow.grade;
+        }
       } else {
         opStamp.classList.remove("show");
+        todayOpGrade = null;
       }
 
       if (completedState.favor) {
@@ -1534,6 +1973,7 @@
         favorStamp.classList.remove("show");
       }
 
+      updateLockIcons();
       updateRankingLockState();
     }
 
@@ -1563,7 +2003,6 @@
 
     function closeClassModal() { classModal.classList.remove("show"); }
 
-    // ★★★ 버그 수정: disabled 속성도 초기화 ★★★
     function resetBattleCardEffects() {
       leftChoiceBtn.className  = "battle-choice";
       rightChoiceBtn.className = "battle-choice";
@@ -1572,7 +2011,6 @@
     }
 
     async function startBattle(type, selectedClassName) {
-      // 호감: enabled + FAVOR_ONLY_IDS 포함, OP: enabled만
       let pool;
       if (type === "favor") {
         pool = allCandidates.filter(item => item.enabled || FAVOR_ONLY_IDS.includes(item.id));
@@ -1655,13 +2093,12 @@
 
       playFlipSound();
 
-      const winner = side === "left" ? currentLeft  : currentRight;
-      const loser  = side === "left" ? currentRight : currentLeft;
-      const winBtn = side === "left" ? leftChoiceBtn  : rightChoiceBtn;
-      const loseBtn= side === "left" ? rightChoiceBtn : leftChoiceBtn;
-      const loseSide = side === "left" ? "right" : "left";
+      const winner  = side === "left" ? currentLeft  : currentRight;
+      const loser   = side === "left" ? currentRight : currentLeft;
+      const winBtn  = side === "left" ? leftChoiceBtn  : rightChoiceBtn;
+      const loseBtn = side === "left" ? rightChoiceBtn : leftChoiceBtn;
+      const loseSide= side === "left" ? "right" : "left";
 
-      // OP 점수 계산
       if (currentTournamentType === "op") {
         const wrWin  = getWinRate(winner.engraving_name);
         const wrLose = getWinRate(loser.engraving_name);
@@ -1669,7 +2106,6 @@
         if (wrWin >= wrLose) opScore++;
       }
 
-      // 카드 애니메이션
       leftChoiceBtn.disabled  = true;
       rightChoiceBtn.disabled = true;
 
@@ -1703,12 +2139,11 @@
       winnerSubText.textContent   = `우승 직각 · ${winner.class_name}`;
       winnerDescText.textContent  = "토너먼트가 완료되었습니다. 확인을 누르면 저장 후 참여 완료 도장이 표시되고 랭킹이 해제됩니다.";
 
-      // OP만 등급 도장
       if (currentTournamentType === "op") {
         const grade   = calcGrade(opScore, opMaxScore);
         const comment = getRandomComment(grade);
-        gsDate.textContent    = formatStampDate(getDateKey());
-        gsGrade.textContent   = grade;
+        gsDate.textContent       = formatStampDate(getDateKey());
+        gsGrade.textContent      = grade;
         gradeComment.textContent = comment;
         gradeStampWrap.style.display = "flex";
       } else {
@@ -1729,17 +2164,17 @@
       const maxScore = currentTournamentType === "op" ? opMaxScore : 0;
 
       const sessionPayload = {
-        visitor_key:       visitorKey,
-        client_ip:         clientIP,
-        selected_class:    selectedClass,
-        winner_engraving:  pendingWinner.engraving_name,
-        tournament_type:   currentTournamentType,
-        date_key:          getDateKey(),
-        week_key:          getWeekKey(),
-        month_key:         getMonthKey(),
-        grade:             grade,
-        score:             score,
-        max_score:         maxScore,
+        visitor_key:      visitorKey,
+        client_ip:        clientIP,
+        selected_class:   selectedClass,
+        winner_engraving: pendingWinner.engraving_name,
+        tournament_type:  currentTournamentType,
+        date_key:         getDateKey(),
+        week_key:         getWeekKey(),
+        month_key:        getMonthKey(),
+        grade:            grade,
+        score:            score,
+        max_score:        maxScore,
       };
 
       const { data: sessionData, error: sessionError } = await supabase
@@ -1767,6 +2202,7 @@
 
       if (currentTournamentType === "op") {
         completedState.op = true;
+        todayOpGrade = grade;
         opStamp.classList.add("show");
         opStampDate.textContent  = formatStampDate(getDateKey());
         opStampGrade.textContent = grade || "";
@@ -1778,6 +2214,7 @@
 
       currentBoardMode = currentTournamentType;
       winnerModal.classList.remove("show");
+      updateLockIcons();
       updateRankingLockState();
       rankingBoard.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -1799,15 +2236,16 @@
       for (let i = 0; i < 28; i++) {
         const piece = document.createElement("div");
         piece.className = "confetti";
-        piece.style.left = `${Math.random()*100}%`;
+        piece.style.left       = `${Math.random()*100}%`;
         piece.style.background = colors[Math.floor(Math.random()*colors.length)];
         piece.style.animationDelay = `${Math.random()*0.4}s`;
-        piece.style.transform = `rotate(${Math.random()*360}deg)`;
+        piece.style.transform  = `rotate(${Math.random()*360}deg)`;
         winnerModal.appendChild(piece);
         setTimeout(() => piece.remove(), 3200);
       }
     }
 
+    // ===== 이벤트 바인딩 =====
     opStartBtn.addEventListener("click",    () => handleStart("op"));
     favorStartBtn.addEventListener("click", () => handleStart("favor"));
 
@@ -1836,11 +2274,66 @@
 
     quitBattleBtn.addEventListener("click", () => {
       if (!confirm("진행 중인 토너먼트를 종료하시겠습니까?\n현재 진행은 저장되지 않습니다.")) return;
+      isChoosing = false;
       battleModal.classList.remove("show");
     });
 
     winnerConfirmBtn.addEventListener("click", finalizeTournamentSave);
 
+    // ===== 사이드바 모달 이벤트 =====
+    document.getElementById("openGuideBtn").addEventListener("click", () => { guideModal.classList.add("show"); });
+    document.getElementById("closeGuideBtn").addEventListener("click", () => { guideModal.classList.remove("show"); });
+    guideModal.addEventListener("click", e => { if (e.target === guideModal) guideModal.classList.remove("show"); });
+
+    document.getElementById("openOpTierBtn").addEventListener("click", async () => {
+      const opUnlocked = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
+      if (!opUnlocked) {
+        alert("OP 직각 티어표는 오늘 A- 이상 도장을 받은 경우에만 열람할 수 있습니다.");
+        return;
+      }
+      opTierModal.classList.add("show");
+      document.getElementById("opTierContent").innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
+      const entries = await loadTierData("op");
+      if (entries && entries.length > 0) {
+        document.getElementById("opTierSub").textContent = `전체 누적 승률 기준 · 5전 이상 직각만 포함 · 6티어 포함`;
+        renderTierContent(calcTiers(entries), "opTierContent");
+      } else {
+        document.getElementById("opTierContent").innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
+      }
+    });
+
+    document.getElementById("closeOpTierBtn").addEventListener("click", () => { opTierModal.classList.remove("show"); });
+    opTierModal.addEventListener("click", e => { if (e.target === opTierModal) opTierModal.classList.remove("show"); });
+
+    document.getElementById("openFavorTierBtn").addEventListener("click", async () => {
+      const favorUnlocked = completedState.op || completedState.favor;
+      if (!favorUnlocked) {
+        alert("호감 직각 티어표는 도장이 1개 이상 있어야 열람할 수 있습니다.");
+        return;
+      }
+      favorTierModal.classList.add("show");
+      document.getElementById("favorTierContent").innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
+      const entries = await loadTierData("favor");
+      if (entries && entries.length > 0) {
+        document.getElementById("favorTierSub").textContent = `전체 누적 승률 기준 · 5전 이상 직각만 포함 · 6티어 포함`;
+        renderTierContent(calcTiers(entries), "favorTierContent");
+      } else {
+        document.getElementById("favorTierContent").innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
+      }
+    });
+
+    document.getElementById("closeFavorTierBtn").addEventListener("click", () => { favorTierModal.classList.remove("show"); });
+    favorTierModal.addEventListener("click", e => { if (e.target === favorTierModal) favorTierModal.classList.remove("show"); });
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        guideModal.classList.remove("show");
+        opTierModal.classList.remove("show");
+        favorTierModal.classList.remove("show");
+      }
+    });
+
+    // ===== 초기화 =====
     async function init() {
       visitorKey = getVisitorKey();
       await loadCandidates();
