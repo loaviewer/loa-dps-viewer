@@ -2744,7 +2744,7 @@
       showNextBattle();
     }
 
-    function showNextBattle() {
+    function renderNextBattle() {
       if (currentIndex>=currentRoundCandidates.length) {
         if (nextRoundCandidates.length===1) { showWinnerModal(nextRoundCandidates[0]); return; }
         currentRoundCandidates=[...nextRoundCandidates];
