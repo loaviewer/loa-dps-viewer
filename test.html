@@ -556,14 +556,39 @@
 
     .stamp.show { display: flex; }
 
-    .stamp::before {
-      content: "";
-      position: absolute;
-      inset: 8px;
-      border-radius: 50%;
-      border: 2px dashed rgba(255,92,92,0.40);
-      pointer-events: none;
-    }
+ .stamp::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255,92,92,0.40);
+  pointer-events: none;
+}
+
+.stamp.stamp-ss::before,.grade-stamp.stamp-ss::before {
+  border-color: rgba(255,210,60,0.60);
+}
+.stamp.stamp-s::before,.grade-stamp.stamp-s::before {
+  border-color: rgba(100,200,255,0.60);
+}
+.stamp.stamp-a::before,.grade-stamp.stamp-a::before {
+  border-color: rgba(255,90,60,0.60);
+}
+.stamp.stamp-b::before,.grade-stamp.stamp-b::before {
+  border-color: rgba(255,160,60,0.60);
+}
+.stamp.stamp-c::before,.grade-stamp.stamp-c::before {
+  border-color: rgba(180,120,255,0.55);
+}
+.stamp.stamp-d::before,.grade-stamp.stamp-d::before {
+  border-color: rgba(90,180,255,0.55);
+}
+.stamp.stamp-e::before,.grade-stamp.stamp-e::before {
+  border-color: rgba(90,230,140,0.55);
+}
+.stamp.stamp-f::before,.grade-stamp.stamp-f::before {
+  border-color: rgba(160,160,160,0.45);
+}
 
     .stamp .date       { font-size: 12px; letter-spacing: 1px; margin-bottom: 2px; }
     .stamp .grade-text { font-size: 20px; font-weight: 900; line-height: 1.1; }
