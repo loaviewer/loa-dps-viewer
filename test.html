@@ -2444,13 +2444,12 @@
       if (currentRoundCandidates.length===1) { showWinnerModal(currentRoundCandidates[0]); return; }
 
       /* ✅ 홀수 처리 — 상대 없으면 자동 부전승 */
-      if (currentIndex+1>=currentRoundCandidates.length) {
-        nextRoundCandidates.push(currentRoundCandidates[currentIndex]);
-        completedMatches++;
-        currentIndex++;
-        showNextBattle();
-        return;
-      }
+if (currentIndex+1>=currentRoundCandidates.length) {
+  nextRoundCandidates.push(currentRoundCandidates[currentIndex]);
+  currentIndex++;
+  showNextBattle();
+  return;
+}
 
       currentLeft=currentRoundCandidates[currentIndex];
       currentRight=currentRoundCandidates[currentIndex+1];
