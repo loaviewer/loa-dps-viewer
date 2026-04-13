@@ -620,6 +620,118 @@
   animation: textShimmer 2s linear infinite;
 }
 
+/* S 도장 날짜 + 참여완료 글자 */
+.stamp.stamp-s .date,
+.stamp.stamp-s .done,
+.grade-stamp.stamp-s .gs-date,
+.grade-stamp.stamp-s .gs-done {
+  background: linear-gradient(90deg,#4a9edd 0%,#a8deff 20%,#ffffff 35%,#c8a8ff 50%,#a8ffdd 65%,#a8deff 80%,#4a9edd 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+}
+
+/* A 도장 날짜 + 참여완료 글자 */
+.stamp.stamp-a .date,
+.stamp.stamp-a .done,
+.grade-stamp.stamp-a .gs-date,
+.grade-stamp.stamp-a .gs-done {
+  background: linear-gradient(90deg,#cc3322 0%,#ff7755 30%,#ffbb99 50%,#ff7755 70%,#cc3322 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+}
+
+/* B 도장 날짜 + 참여완료 글자 */
+.stamp.stamp-b .date,
+.stamp.stamp-b .done,
+.grade-stamp.stamp-b .gs-date,
+.grade-stamp.stamp-b .gs-done {
+  background: linear-gradient(90deg,#cc7722 0%,#ffb060 30%,#ffe0a0 50%,#ffb060 70%,#cc7722 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 4s linear infinite;
+}
+
+/* S 바깥 테두리 그라데이션 */
+.stamp.stamp-s,.grade-stamp.stamp-s {
+  border-color: transparent;
+}
+.stamp.stamp-s::after,
+.grade-stamp.stamp-s::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: conic-gradient(from var(--angle,0deg),
+    rgba(100,200,255,0.75) 0deg,rgba(200,240,255,0.95) 60deg,
+    rgba(160,120,255,0.60) 120deg,rgba(80,220,180,0.55) 180deg,
+    rgba(100,180,255,0.70) 240deg,rgba(200,240,255,0.90) 300deg,
+    rgba(100,200,255,0.75) 360deg);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 5px;
+  animation: borderRotate 4.5s linear infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* A 바깥 테두리 그라데이션 */
+.stamp.stamp-a,.grade-stamp.stamp-a {
+  border-color: transparent;
+}
+.stamp.stamp-a::after,
+.grade-stamp.stamp-a::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: conic-gradient(from var(--angle,0deg),
+    transparent 0deg,rgba(255,90,60,0.55) 60deg,
+    rgba(255,180,120,0.80) 90deg,rgba(255,90,60,0.55) 120deg,
+    transparent 180deg);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 5px;
+  animation: borderRotate 5s linear infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* B 바깥 테두리 그라데이션 */
+.stamp.stamp-b,.grade-stamp.stamp-b {
+  border-color: transparent;
+}
+.stamp.stamp-b::after,
+.grade-stamp.stamp-b::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: conic-gradient(from var(--angle,0deg),
+    transparent 0deg,rgba(255,150,50,0.40) 60deg,
+    rgba(255,200,100,0.65) 90deg,rgba(255,150,50,0.40) 120deg,
+    transparent 200deg);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 5px;
+  animation: borderRotate 8s linear infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+    
 /* SS 점선 테두리 무지개 */
 .stamp.stamp-ss::after,
 .grade-stamp.stamp-ss::after {
