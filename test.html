@@ -1759,7 +1759,7 @@
   <audio id="flipAudio" preload="auto">
     <source src="https://loaviewer.github.io/loa-dps-viewer/sounds/Card%20Flip.wav" type="audio/wav">
   </audio>
-  <script type="module">
+    <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
     async function getClientIP() {
@@ -1817,7 +1817,7 @@
       "F-": ["가장 낮은 판정입니다. 이번엔 흐름이 전혀 맞지 않았어요.","많이 아쉬운 결과지만, 처음엔 이런 날도 있습니다.","다시 시작해볼 시간입니다. 다음엔 더 좋은 선택을 기대할게요."],
     };
 
-    /* ✅ 추가: 도장 색상 클래스 반환 함수 */
+    /* ✅ 도장 색상 클래스 반환 함수 */
     function getStampClass(grade) {
       if (!grade) return "";
       const g = grade.replace("+","").replace("-","");
@@ -2229,7 +2229,7 @@
       completedState.op    =!!data.find(r=>r.tournament_type==="op");
       completedState.favor =!!data.find(r=>r.tournament_type==="favor");
 
-      /* ✅ 수정: OP 도장 색상 적용 */
+      /* ✅ 수정1: OP 도장 색상 적용 */
       if (completedState.op) {
         opStamp.classList.add("show");
         opStampDate.textContent=formatStampDate(getDateKey());
@@ -2391,7 +2391,6 @@
     acUpdate();
     init();
 
-    /* ===== 클래스 모달 ===== */
     function openClassModal(type) {
       currentTournamentType=type;
       classFlowLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
@@ -2430,6 +2429,7 @@
       completedMatches=0;
       battleModeLabel.textContent=currentTournamentType==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
       battleTopKorTitle.textContent=currentTournamentType==="op"?"OP 직각 토너먼트":"호감 직각 토너먼트";
+      /* ✅ 수정2: 배틀 제목 색상 */
       battleTopKorTitle.style.color=currentTournamentType==="op"?"#8ef0c9":"#ffd48a";
       battleModal.classList.add("show");
       showNextBattle();
@@ -2443,17 +2443,18 @@
       }
       if (currentRoundCandidates.length===1) { showWinnerModal(currentRoundCandidates[0]); return; }
 
-  /* ✅ 홀수 처리 */
-if (currentIndex+1>=currentRoundCandidates.length) {
-  nextRoundCandidates.push(currentRoundCandidates[currentIndex]);
-  currentIndex++;
-  showNextBattle();
-  return;
-  }
+      /* ✅ 홀수 처리 — 상대 없으면 자동 부전승 */
+      if (currentIndex+1>=currentRoundCandidates.length) {
+        nextRoundCandidates.push(currentRoundCandidates[currentIndex]);
+        completedMatches++;
+        currentIndex++;
+        showNextBattle();
+        return;
+      }
 
-  currentLeft=currentRoundCandidates[currentIndex];
-  currentRight=currentRoundCandidates[currentIndex+1];
-  currentIndex+=2;
+      currentLeft=currentRoundCandidates[currentIndex];
+      currentRight=currentRoundCandidates[currentIndex+1];
+      currentIndex+=2;
       const roundCount=currentRoundCandidates.length;
       battleRoundTitle.textContent=`${getRoundLabel(roundCount)} — ${getShortName(currentLeft.engraving_name)} vs ${getShortName(currentRight.engraving_name)}`;
       const pct=Math.round((completedMatches/totalMatches)*100);
@@ -2464,9 +2465,11 @@ if (currentIndex+1>=currentRoundCandidates.length) {
       leftChoiceBtn.className=`battle-choice ${sc}`;
       rightChoiceBtn.className=`battle-choice ${sc}`;
       leftChoiceClass.textContent=currentLeft.class_name;
+      /* ✅ 수정3: 줄임말 적용 */
       leftChoiceName.textContent=getShortName(currentLeft.engraving_name);
       leftChoiceName.className=`battle-choice-name ${getColorClass(currentLeft.class_name)}`;
       rightChoiceClass.textContent=currentRight.class_name;
+      /* ✅ 수정3: 줄임말 적용 */
       rightChoiceName.textContent=getShortName(currentRight.engraving_name);
       rightChoiceName.className=`battle-choice-name ${getColorClass(currentRight.class_name)}`;
       isChoosing=true;
@@ -2510,7 +2513,7 @@ if (currentIndex+1>=currentRoundCandidates.length) {
         gradeComment.textContent=getRandomComment(grade);
         gradeStampWrap.style.display="flex";
 
-        /* ✅ 수정: 결과 모달 도장 색상 적용 */
+        /* ✅ 수정4: 결과 모달 도장 색상 적용 */
         const gradeStampEl=document.getElementById("gradeStamp");
         gradeStampEl.classList.remove("stamp-ss","stamp-s","stamp-a","stamp-b","stamp-c","stamp-d","stamp-e","stamp-f");
         gradeStampEl.classList.add(getStampClass(grade));
@@ -2534,7 +2537,7 @@ if (currentIndex+1>=currentRoundCandidates.length) {
         visitor_key:visitorKey, client_ip:clientIP,
         tournament_type:currentTournamentType,
         date_key:getDateKey(), month_key:getMonthKey(), week_key:getWeekKey(),
-        winner_engraving:pendingWinner.engraving_name,        
+        winner_engraving:pendingWinner.engraving_name,
         selected_class:selectedClass,
         score:currentTournamentType==="op"?opScore:null,
         max_score:currentTournamentType==="op"?opMaxScore:null,
@@ -2546,7 +2549,7 @@ if (currentIndex+1>=currentRoundCandidates.length) {
         await supabase.from("match_logs").insert(logs);
       }
 
-      /* ✅ 수정: 저장 후 도장 색상 적용 */
+      /* ✅ 수정5: 저장 후 도장 색상 적용 */
       if (currentTournamentType==="op") {
         completedState.op=true; todayOpGrade=grade;
         opStamp.classList.add("show");
