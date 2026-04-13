@@ -2454,10 +2454,10 @@
       leftChoiceBtn.className=`battle-choice ${sc}`;
       rightChoiceBtn.className=`battle-choice ${sc}`;
       leftChoiceClass.textContent=currentLeft.class_name;
-      leftChoiceName.textContent=currentLeft.engraving_name;
+      leftChoiceName.textContent=getShortName(currentLeft.engraving_name);
       leftChoiceName.className=`battle-choice-name ${getColorClass(currentLeft.class_name)}`;
       rightChoiceClass.textContent=currentRight.class_name;
-      rightChoiceName.textContent=currentRight.engraving_name;
+      rightChoiceName.textContent=getShortName(currentRight.engraving_name);
       rightChoiceName.className=`battle-choice-name ${getColorClass(currentRight.class_name)}`;
       isChoosing=true;
     }
