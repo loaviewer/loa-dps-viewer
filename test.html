@@ -223,6 +223,7 @@
       box-shadow: 0 0 18px rgba(255,196,90,0.15);
     }
 
+    /* ===== 미니 팝업 ===== */
     .mini-popup {
       position: fixed;
       z-index: 9999;
@@ -272,6 +273,7 @@
       font-weight: 900;
     }
 
+    /* ===== 달력 ===== */
     .sidebar-calendar {
       border-radius: 20px;
       padding: 16px;
@@ -548,7 +550,8 @@
       box-shadow: 0 0 18px rgba(255,80,80,0.22), 0 0 34px rgba(255,80,80,0.16), inset 0 0 0 2px rgba(255,255,255,0.03);
       background: radial-gradient(circle at center, rgba(255,70,70,0.05), rgba(255,70,70,0.01));
       opacity: 0.92;
-            pointer-events: none;
+      filter: saturate(1.05);
+      pointer-events: none;
     }
 
     .stamp.show { display: flex; }
@@ -564,212 +567,6 @@
 
     .stamp .date       { font-size: 12px; letter-spacing: 1px; margin-bottom: 2px; }
     .stamp .grade-text { font-size: 20px; font-weight: 900; line-height: 1.1; }
-    .stamp.stamp-ss .grade-text,
-.grade-stamp.stamp-ss .gs-grade {
-  background: linear-gradient(90deg,#ff6b6b 0%,#ffd700 15%,#fffacd 30%,#6bcb77 45%,#ffd700 60%,#fffacd 75%,#ff9ff3 90%,#ffd700 100%);
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: textShimmer 2s linear infinite;
-  filter: drop-shadow(0 0 7px rgba(255,215,0,0.85));
-}
-
-.stamp.stamp-s .grade-text,
-.grade-stamp.stamp-s .gs-grade {
-  background: linear-gradient(90deg,#4a9edd 0%,#a8deff 20%,#ffffff 35%,#c8a8ff 50%,#a8ffdd 65%,#a8deff 80%,#4a9edd 100%);
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: textShimmer 3s linear infinite;
-  filter: drop-shadow(0 0 5px rgba(100,200,255,0.70));
-}
-
-.stamp.stamp-a .grade-text,
-.grade-stamp.stamp-a .gs-grade {
-  background: linear-gradient(90deg,#cc3322 0%,#ff7755 30%,#ffbb99 50%,#ff7755 70%,#cc3322 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: textShimmer 3s linear infinite;
-  filter: drop-shadow(0 0 4px rgba(255,80,50,0.60));
-}
-
-.stamp.stamp-b .grade-text,
-.grade-stamp.stamp-b .gs-grade {
-  background: linear-gradient(90deg,#cc7722 0%,#ffb060 30%,#ffe0a0 50%,#ffb060 70%,#cc7722 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: textShimmer 4s linear infinite;
-  filter: drop-shadow(0 0 3px rgba(255,160,60,0.45));
-}
-    /* SS 도장 날짜 + 참여완료 글자 */
-.stamp.stamp-ss .date,
-.stamp.stamp-ss .done,
-.grade-stamp.stamp-ss .gs-date,
-.grade-stamp.stamp-ss .gs-done {
-  background: linear-gradient(90deg,#ff6b6b 0%,#ffd700 15%,#fffacd 30%,#6bcb77 45%,#ffd700 60%,#fffacd 75%,#ff9ff3 90%,#ffd700 100%);
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: textShimmer 2s linear infinite;
-}
-
-/* S 도장 날짜 + 참여완료 글자 */
-.stamp.stamp-s .date,
-.stamp.stamp-s .done,
-.grade-stamp.stamp-s .gs-date,
-.grade-stamp.stamp-s .gs-done {
-  background: linear-gradient(90deg,#4a9edd 0%,#a8deff 20%,#ffffff 35%,#c8a8ff 50%,#a8ffdd 65%,#a8deff 80%,#4a9edd 100%);
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: textShimmer 3s linear infinite;
-}
-
-/* A 도장 날짜 + 참여완료 글자 */
-.stamp.stamp-a .date,
-.stamp.stamp-a .done,
-.grade-stamp.stamp-a .gs-date,
-.grade-stamp.stamp-a .gs-done {
-  background: linear-gradient(90deg,#cc3322 0%,#ff7755 30%,#ffbb99 50%,#ff7755 70%,#cc3322 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: textShimmer 3s linear infinite;
-}
-
-/* B 도장 날짜 + 참여완료 글자 */
-.stamp.stamp-b .date,
-.stamp.stamp-b .done,
-.grade-stamp.stamp-b .gs-date,
-.grade-stamp.stamp-b .gs-done {
-  background: linear-gradient(90deg,#cc7722 0%,#ffb060 30%,#ffe0a0 50%,#ffb060 70%,#cc7722 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: textShimmer 4s linear infinite;
-}
-
-/* S 바깥 테두리 그라데이션 */
-.stamp.stamp-s,.grade-stamp.stamp-s {
-  border-color: transparent;
-}
-.stamp.stamp-s::after,
-.grade-stamp.stamp-s::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  background: conic-gradient(from var(--angle,0deg),
-    rgba(100,200,255,0.75) 0deg,rgba(200,240,255,0.95) 60deg,
-    rgba(160,120,255,0.60) 120deg,rgba(80,220,180,0.55) 180deg,
-    rgba(100,180,255,0.70) 240deg,rgba(200,240,255,0.90) 300deg,
-    rgba(100,200,255,0.75) 360deg);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 5px;
-  animation: borderRotate 4.5s linear infinite;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* A 바깥 테두리 그라데이션 */
-.stamp.stamp-a,.grade-stamp.stamp-a {
-  border-color: transparent;
-}
-.stamp.stamp-a::after,
-.grade-stamp.stamp-a::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  background: conic-gradient(from var(--angle,0deg),
-    transparent 0deg,rgba(255,90,60,0.55) 60deg,
-    rgba(255,180,120,0.80) 90deg,rgba(255,90,60,0.55) 120deg,
-    transparent 180deg);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 5px;
-  animation: borderRotate 5s linear infinite;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* B 바깥 테두리 그라데이션 */
-.stamp.stamp-b,.grade-stamp.stamp-b {
-  border-color: transparent;
-}
-.stamp.stamp-b::after,
-.grade-stamp.stamp-b::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  background: conic-gradient(from var(--angle,0deg),
-    transparent 0deg,rgba(255,150,50,0.40) 60deg,
-    rgba(255,200,100,0.65) 90deg,rgba(255,150,50,0.40) 120deg,
-    transparent 200deg);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 5px;
-  animation: borderRotate 8s linear infinite;
-  z-index: -1;
-  pointer-events: none;
-}
-    
-/* SS 점선 테두리 무지개 */
-.stamp.stamp-ss::after,
-.grade-stamp.stamp-ss::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  background: conic-gradient(from var(--angle,0deg),
-    rgba(255,60,60,0.85) 0deg,rgba(255,180,30,1) 60deg,
-    rgba(255,240,80,1) 90deg,rgba(80,220,140,0.85) 140deg,
-    rgba(90,160,255,0.85) 200deg,rgba(200,100,255,0.85) 260deg,
-    rgba(255,80,180,0.85) 310deg,rgba(255,60,60,0.85) 360deg);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 5px;
-  animation: borderRotate 2.5s linear infinite;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.stamp.stamp-ss::before,
-.grade-stamp.stamp-ss::before {
-  border-color: transparent;
-  background: conic-gradient(from var(--angle,0deg),
-    rgba(255,60,60,0.85) 0deg,rgba(255,180,30,1) 60deg,
-    rgba(255,240,80,1) 90deg,rgba(80,220,140,0.85) 140deg,
-    rgba(90,160,255,0.85) 200deg,rgba(200,100,255,0.85) 260deg,
-    rgba(255,80,180,0.85) 310deg,rgba(255,60,60,0.85) 360deg);
-  animation: borderRotate 2.5s linear infinite;
-  border: none;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 1.5px;
-}
     .stamp .done       { font-size: 13px; line-height: 1.2; word-break: keep-all; }
 
     .ranking-board {
@@ -1198,272 +995,312 @@
     .grade-name  { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
     .grade-range { font-size: 11px; opacity: 0.75; color: #aeb9cb; }
 
-    /* ============================================================
-       공통 — CSS 변수 + 통합 키프레임
-       ============================================================ */
     @property --angle {
-      syntax: "<angle>";
-      initial-value: 0deg;
-      inherits: false;
-    }
-    @keyframes borderRotate { to { --angle: 360deg; } }
-    @keyframes glowPulse {
-      0%   { box-shadow: 0 0 var(--glow-a) var(--glow-c1), 0 0 var(--glow-b) var(--glow-c2); }
-      100% { box-shadow: 0 0 var(--glow-a2) var(--glow-c1), 0 0 var(--glow-b2) var(--glow-c2); }
-    }
-    @keyframes innerPulse {
-      0%   { opacity: var(--pulse-min); transform: scaleY(var(--scale-min, 1)); }
-      100% { opacity: var(--pulse-max); transform: scaleY(var(--scale-max, 1)); }
-    }
-    @keyframes textShimmer {
-      0%   { background-position: 250% center; }
-      100% { background-position: 0%   center; }
-    }
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes borderRotate { to { --angle: 360deg; } }
+@keyframes glowPulse {
+  0%   { box-shadow: 0 0 var(--glow-a) var(--glow-c1), 0 0 var(--glow-b) var(--glow-c2); }
+  100% { box-shadow: 0 0 var(--glow-a2) var(--glow-c1), 0 0 var(--glow-b2) var(--glow-c2); }
+}
+@keyframes innerPulse {
+  0%   { opacity: var(--pulse-min); transform: scaleY(var(--scale-min, 1)); }
+  100% { opacity: var(--pulse-max); transform: scaleY(var(--scale-max, 1)); }
+}
+@keyframes textShimmer {
+  0%   { background-position: 250% center; }
+  100% { background-position: 0%   center; }
+}
+.grade-ss-plus {
+  --glow-a:18px; --glow-a2:28px; --glow-b:40px; --glow-b2:55px;
+  --glow-c1:rgba(255,210,60,0.50); --glow-c2:rgba(255,180,20,0.28);
+  --border-speed:2.5s; --pulse-speed:1.8s;
+  --pulse-min:0.70; --pulse-max:1.00; --scale-min:0.96; --scale-max:1.04;
+}
+.grade-ss {
+  --glow-a:14px; --glow-a2:22px; --glow-b:30px; --glow-b2:44px;
+  --glow-c1:rgba(255,200,50,0.42); --glow-c2:rgba(255,170,20,0.22);
+  --border-speed:2.5s; --pulse-speed:2.2s;
+  --pulse-min:0.65; --pulse-max:1.00; --scale-min:0.97; --scale-max:1.03;
+}
+.grade-ss-minus {
+  --glow-a:10px; --glow-a2:18px; --glow-b:22px; --glow-b2:34px;
+  --glow-c1:rgba(255,190,40,0.32); --glow-c2:rgba(255,160,10,0.16);
+  --border-speed:2.5s; --pulse-speed:2.6s;
+  --pulse-min:0.60; --pulse-max:0.95; --scale-min:0.97; --scale-max:1.03;
+}
+.grade-ss-plus,.grade-ss,.grade-ss-minus {
+  background:linear-gradient(135deg,rgba(255,60,60,0.12),rgba(255,200,60,0.18),rgba(80,220,140,0.10),rgba(90,160,255,0.10),rgba(255,200,80,0.16));
+  border-color:rgba(255,210,80,0.55);
+  animation:glowPulse var(--pulse-speed) ease-in-out infinite alternate;
+}
+.grade-ss-plus::before,.grade-ss::before,.grade-ss-minus::before {
+  content:""; position:absolute; inset:0; border-radius:12px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(255,220,100,0.38) 0%,rgba(255,180,40,0.12) 50%,transparent 80%),linear-gradient(135deg,rgba(255,80,80,0.08),rgba(255,200,60,0.10),rgba(80,200,140,0.07),rgba(100,160,255,0.07),rgba(180,80,255,0.06));
+  animation:innerPulse var(--pulse-speed) ease-in-out infinite alternate; z-index:0;
+}
+.grade-ss-plus::after,.grade-ss::after,.grade-ss-minus::after {
+  content:""; position:absolute; inset:-1px; border-radius:13px;
+  background:conic-gradient(from var(--angle,0deg),rgba(255,60,60,0.85) 0deg,rgba(255,180,30,1) 60deg,rgba(255,240,80,1) 90deg,rgba(80,220,140,0.85) 140deg,rgba(90,160,255,0.85) 200deg,rgba(200,100,255,0.85) 260deg,rgba(255,80,180,0.85) 310deg,rgba(255,60,60,0.85) 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  padding:1.5px; animation:borderRotate var(--border-speed) linear infinite; z-index:0;
+}
+.grade-ss-plus .grade-name,.grade-ss .grade-name,.grade-ss-minus .grade-name {
+  background:linear-gradient(90deg,#ff6b6b 0%,#ffd700 15%,#fffacd 30%,#6bcb77 45%,#ffd700 60%,#fffacd 75%,#ff9ff3 90%,#ffd700 100%);
+  background-size:250% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation:textShimmer 2s linear infinite;
+  filter:drop-shadow(0 0 7px rgba(255,215,0,0.85));
+}
+.grade-s-plus {
+  --glow-a:14px; --glow-a2:22px; --glow-b:30px; --glow-b2:44px;
+  --glow-c1:rgba(100,200,255,0.40); --glow-c2:rgba(60,160,240,0.20);
+  --border-speed:4.5s; --pulse-speed:2.2s;
+  --pulse-min:0.60; --pulse-max:1.00;
+}
+.grade-s {
+  --glow-a:10px; --glow-a2:16px; --glow-b:22px; --glow-b2:34px;
+  --glow-c1:rgba(90,190,255,0.32); --glow-c2:rgba(50,150,230,0.16);
+  --border-speed:4.5s; --pulse-speed:2.8s;
+  --pulse-min:0.55; --pulse-max:0.95;
+}
+.grade-s-minus {
+  --glow-a:8px; --glow-a2:14px; --glow-b:16px; --glow-b2:26px;
+  --glow-c1:rgba(80,180,255,0.25); --glow-c2:rgba(40,140,220,0.12);
+  --border-speed:4.5s; --pulse-speed:3.2s;
+  --pulse-min:0.50; --pulse-max:0.90;
+}
+.grade-s-plus,.grade-s,.grade-s-minus {
+  background:linear-gradient(135deg,rgba(100,200,255,0.14),rgba(60,160,240,0.10),rgba(130,80,255,0.06),rgba(80,220,160,0.05),rgba(100,180,255,0.10));
+  border-color:rgba(120,210,255,0.40);
+  animation:glowPulse var(--pulse-speed) ease-in-out infinite alternate;
+}
+.grade-s-plus::before,.grade-s::before,.grade-s-minus::before {
+  content:""; position:absolute; inset:0; border-radius:12px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(140,220,255,0.26) 0%,rgba(80,170,255,0.08) 60%,transparent 100%),linear-gradient(135deg,rgba(255,100,100,0.04),rgba(100,200,255,0.06),rgba(150,80,255,0.04),rgba(80,220,150,0.04));
+  animation:innerPulse var(--pulse-speed) ease-in-out infinite alternate; z-index:0;
+}
+.grade-s-plus::after,.grade-s::after,.grade-s-minus::after {
+  content:""; position:absolute; inset:-1px; border-radius:13px;
+  background:conic-gradient(from var(--angle,0deg),rgba(100,200,255,0.75) 0deg,rgba(200,240,255,0.95) 60deg,rgba(160,120,255,0.60) 120deg,rgba(80,220,180,0.55) 180deg,rgba(100,180,255,0.70) 240deg,rgba(200,240,255,0.90) 300deg,rgba(100,200,255,0.75) 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  padding:1.5px; animation:borderRotate var(--border-speed) linear infinite; z-index:0;
+}
+.grade-s-plus .grade-name,.grade-s .grade-name,.grade-s-minus .grade-name {
+  background:linear-gradient(90deg,#4a9edd 0%,#a8deff 20%,#ffffff 35%,#c8a8ff 50%,#a8ffdd 65%,#a8deff 80%,#4a9edd 100%);
+  background-size:250% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation:textShimmer 3s linear infinite;
+  filter:drop-shadow(0 0 5px rgba(100,200,255,0.70));
+}
+.grade-a-plus {
+  --glow-a:10px; --glow-a2:16px; --glow-b:22px; --glow-b2:32px;
+  --glow-c1:rgba(255,90,60,0.32); --glow-c2:rgba(220,60,30,0.16);
+  --border-speed:5s; --pulse-speed:2.4s;
+  --pulse-min:0.50; --pulse-max:0.90; --scale-min:0.97; --scale-max:1.03;
+}
+.grade-a {
+  --glow-a:7px; --glow-a2:12px; --glow-b:16px; --glow-b2:24px;
+  --glow-c1:rgba(240,80,50,0.25); --glow-c2:rgba(210,50,25,0.12);
+  --border-speed:5s; --pulse-speed:2.8s;
+  --pulse-min:0.45; --pulse-max:0.85; --scale-min:0.97; --scale-max:1.03;
+}
+.grade-a-minus {
+  --glow-a:5px; --glow-a2:9px; --glow-b:12px; --glow-b2:18px;
+  --glow-c1:rgba(220,70,40,0.20); --glow-c2:rgba(190,40,20,0.10);
+  --border-speed:5s; --pulse-speed:3.2s;
+  --pulse-min:0.40; --pulse-max:0.80; --scale-min:0.97; --scale-max:1.03;
+}
+.grade-a-plus,.grade-a,.grade-a-minus {
+  background:linear-gradient(135deg,rgba(255,80,60,0.14),rgba(220,50,40,0.10),rgba(180,30,30,0.10));
+  border-color:rgba(255,110,90,0.35);
+  animation:glowPulse var(--pulse-speed) ease-in-out infinite alternate;
+}
+.grade-a-plus::before,.grade-a::before,.grade-a-minus::before {
+  content:""; position:absolute; inset:0; border-radius:12px;
+  background:radial-gradient(ellipse at 50% 100%,rgba(255,100,60,0.22) 0%,rgba(220,60,30,0.06) 60%,transparent 100%);
+  animation:innerPulse var(--pulse-speed) ease-in-out infinite alternate; z-index:0;
+}
+.grade-a-plus::after,.grade-a::after,.grade-a-minus::after {
+  content:""; position:absolute; inset:-1px; border-radius:13px;
+  background:conic-gradient(from var(--angle,0deg),transparent 0deg,rgba(255,90,60,0.55) 60deg,rgba(255,180,120,0.80) 90deg,rgba(255,90,60,0.55) 120deg,transparent 180deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  padding:1.5px; animation:borderRotate var(--border-speed) linear infinite; z-index:0;
+}
+.grade-a-plus .grade-name,.grade-a .grade-name,.grade-a-minus .grade-name {
+  background:linear-gradient(90deg,#cc3322 0%,#ff7755 30%,#ffbb99 50%,#ff7755 70%,#cc3322 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation:textShimmer 3s linear infinite;
+  filter:drop-shadow(0 0 4px rgba(255,80,50,0.60));
+}
+.grade-b-plus {
+  --glow-a:6px; --glow-a2:10px; --glow-b:14px; --glow-b2:20px;
+  --glow-c1:rgba(255,160,60,0.28); --glow-c2:rgba(220,120,30,0.14);
+  --border-speed:8s; --pulse-speed:3.0s;
+  --pulse-min:0.50; --pulse-max:0.90;
+}
+.grade-b {
+  --glow-a:5px; --glow-a2:8px; --glow-b:11px; --glow-b2:16px;
+  --glow-c1:rgba(240,140,50,0.22); --glow-c2:rgba(210,110,25,0.11);
+  --border-speed:8s; --pulse-speed:3.4s;
+  --pulse-min:0.45; --pulse-max:0.85;
+}
+.grade-b-minus {
+  --glow-a:4px; --glow-a2:7px; --glow-b:9px; --glow-b2:13px;
+  --glow-c1:rgba(220,120,40,0.18); --glow-c2:rgba(190,90,20,0.09);
+  --border-speed:8s; --pulse-speed:3.8s;
+  --pulse-min:0.40; --pulse-max:0.80;
+}
+.grade-b-plus,.grade-b,.grade-b-minus {
+  background:linear-gradient(135deg,rgba(255,160,60,0.14),rgba(220,120,30,0.10),rgba(190,90,10,0.08));
+  border-color:rgba(255,160,60,0.30);
+  animation:glowPulse var(--pulse-speed) ease-in-out infinite alternate;
+}
+.grade-b-plus::before,.grade-b::before,.grade-b-minus::before {
+  content:""; position:absolute; inset:0; border-radius:12px;
+  background:radial-gradient(ellipse at 50% 50%,rgba(255,160,60,0.14) 0%,rgba(220,110,20,0.05) 60%,transparent 100%);
+  animation:innerPulse var(--pulse-speed) ease-in-out infinite alternate; z-index:0;
+}
+.grade-b-plus::after,.grade-b::after,.grade-b-minus::after {
+  content:""; position:absolute; inset:-1px; border-radius:13px;
+  background:conic-gradient(from var(--angle,0deg),transparent 0deg,rgba(255,150,50,0.40) 60deg,rgba(255,200,100,0.65) 90deg,rgba(255,150,50,0.40) 120deg,transparent 200deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  padding:1.5px; animation:borderRotate var(--border-speed) linear infinite; z-index:0;
+}
+.grade-b-plus .grade-name,.grade-b .grade-name,.grade-b-minus .grade-name {
+  background:linear-gradient(90deg,#cc7722 0%,#ffb060 30%,#ffe0a0 50%,#ffb060 70%,#cc7722 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation:textShimmer 4s linear infinite;
+  filter:drop-shadow(0 0 3px rgba(255,160,60,0.45));
+}
+.grade-c-plus  { background:rgba(180,120,255,0.14); border-color:rgba(180,120,255,0.28); } .grade-c-plus .grade-name  { color:#c79cff; }
+.grade-c       { background:rgba(150,100,220,0.12); border-color:rgba(150,100,220,0.24); } .grade-c .grade-name       { color:#aa88ee; }
+.grade-c-minus { background:rgba(120,80,190,0.12);  border-color:rgba(120,80,190,0.22);  } .grade-c-minus .grade-name { color:#9977dd; }
+.grade-d-plus  { background:rgba(90,180,255,0.14);  border-color:rgba(90,180,255,0.28);  } .grade-d-plus .grade-name  { color:#a9dfff; }
+.grade-d       { background:rgba(60,150,220,0.12);  border-color:rgba(60,150,220,0.24);  } .grade-d .grade-name       { color:#7bc8ee; }
+.grade-d-minus { background:rgba(30,120,190,0.12);  border-color:rgba(30,120,190,0.22);  } .grade-d-minus .grade-name { color:#55aadd; }
+.grade-e-plus  { background:rgba(90,230,140,0.14);  border-color:rgba(90,230,140,0.28);  } .grade-e-plus .grade-name  { color:#bff7d0; }
+.grade-e       { background:rgba(60,190,100,0.12);  border-color:rgba(60,190,100,0.24);  } .grade-e .grade-name       { color:#8ee8b0; }
+.grade-e-minus { background:rgba(30,150,70,0.12);   border-color:rgba(30,150,70,0.22);   } .grade-e-minus .grade-name { color:#66cc88; }
+.grade-f-plus  { background:rgba(180,180,180,0.14); border-color:rgba(200,200,200,0.22); } .grade-f-plus .grade-name  { color:#d9d9d9; }
+.grade-f       { background:rgba(140,140,140,0.12); border-color:rgba(170,170,170,0.18); } .grade-f .grade-name       { color:#bbbbbb; }
+.grade-f-minus { background:rgba(100,100,100,0.12); border-color:rgba(140,140,140,0.16); } .grade-f-minus .grade-name { color:#999999; }
 
-    /* ✨ SS 등급 */
-    .grade-ss-plus {
-      --glow-a:18px; --glow-a2:28px; --glow-b:40px; --glow-b2:55px;
-      --glow-c1:rgba(255,210,60,0.50); --glow-c2:rgba(255,180,20,0.28);
-      --border-speed:2.5s; --pulse-speed:1.8s;
-      --pulse-min:0.70; --pulse-max:1.00; --scale-min:0.96; --scale-max:1.04;
-    }
-    .grade-ss {
-      --glow-a:14px; --glow-a2:22px; --glow-b:30px; --glow-b2:44px;
-      --glow-c1:rgba(255,200,50,0.42); --glow-c2:rgba(255,170,20,0.22);
-      --border-speed:2.5s; --pulse-speed:2.2s;
-      --pulse-min:0.65; --pulse-max:1.00; --scale-min:0.97; --scale-max:1.03;
-    }
-    .grade-ss-minus {
-      --glow-a:10px; --glow-a2:18px; --glow-b:22px; --glow-b2:34px;
-      --glow-c1:rgba(255,190,40,0.32); --glow-c2:rgba(255,160,10,0.16);
-      --border-speed:2.5s; --pulse-speed:2.6s;
-      --pulse-min:0.60; --pulse-max:0.95; --scale-min:0.97; --scale-max:1.03;
-    }
-    .grade-ss-plus,.grade-ss,.grade-ss-minus {
-      background:linear-gradient(135deg,rgba(255,60,60,0.12),rgba(255,200,60,0.18),rgba(80,220,140,0.10),rgba(90,160,255,0.10),rgba(255,200,80,0.16));
-      border-color:rgba(255,210,80,0.55);
-      animation:glowPulse var(--pulse-speed) ease-in-out infinite alternate;
-    }
-    .grade-ss-plus::before,.grade-ss::before,.grade-ss-minus::before {
-      content:""; position:absolute; inset:0; border-radius:12px;
-      background:radial-gradient(ellipse at 50% 0%,rgba(255,220,100,0.38) 0%,rgba(255,180,40,0.12) 50%,transparent 80%),linear-gradient(135deg,rgba(255,80,80,0.08),rgba(255,200,60,0.10),rgba(80,200,140,0.07),rgba(100,160,255,0.07),rgba(180,80,255,0.06));
-      animation:innerPulse var(--pulse-speed) ease-in-out infinite alternate; z-index:0;
-    }
-    .grade-ss-plus::after,.grade-ss::after,.grade-ss-minus::after {
-      content:""; position:absolute; inset:-1px; border-radius:13px;
-      background:conic-gradient(from var(--angle,0deg),rgba(255,60,60,0.85) 0deg,rgba(255,180,30,1) 60deg,rgba(255,240,80,1) 90deg,rgba(80,220,140,0.85) 140deg,rgba(90,160,255,0.85) 200deg,rgba(200,100,255,0.85) 260deg,rgba(255,80,180,0.85) 310deg,rgba(255,60,60,0.85) 360deg);
-      -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-      -webkit-mask-composite:xor; mask-composite:exclude;
-      padding:1.5px; animation:borderRotate var(--border-speed) linear infinite; z-index:0;
-    }
-    .grade-ss-plus .grade-name,.grade-ss .grade-name,.grade-ss-minus .grade-name {
-      background:linear-gradient(90deg,#ff6b6b 0%,#ffd700 15%,#fffacd 30%,#6bcb77 45%,#ffd700 60%,#fffacd 75%,#ff9ff3 90%,#ffd700 100%);
-      background-size:250% auto;
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      animation:textShimmer 2s linear infinite;
-      filter:drop-shadow(0 0 7px rgba(255,215,0,0.85));
-    }
-
-    /* 💎 S 등급 */
-    .grade-s-plus {
-      --glow-a:14px; --glow-a2:22px; --glow-b:30px; --glow-b2:44px;
-      --glow-c1:rgba(100,200,255,0.40); --glow-c2:rgba(60,160,240,0.20);
-      --border-speed:4.5s; --pulse-speed:2.2s;
-      --pulse-min:0.60; --pulse-max:1.00;
-    }
-    .grade-s {
-      --glow-a:10px; --glow-a2:16px; --glow-b:22px; --glow-b2:34px;
-      --glow-c1:rgba(90,190,255,0.32); --glow-c2:rgba(50,150,230,0.16);
-      --border-speed:4.5s; --pulse-speed:2.8s;
-      --pulse-min:0.55; --pulse-max:0.95;
-    }
-    .grade-s-minus {
-      --glow-a:8px; --glow-a2:14px; --glow-b:16px; --glow-b2:26px;
-      --glow-c1:rgba(80,180,255,0.25); --glow-c2:rgba(40,140,220,0.12);
-      --border-speed:4.5s; --pulse-speed:3.2s;
-      --pulse-min:0.50; --pulse-max:0.90;
-    }
-    .grade-s-plus,.grade-s,.grade-s-minus {
-      background:linear-gradient(135deg,rgba(100,200,255,0.14),rgba(60,160,240,0.10),rgba(130,80,255,0.06),rgba(80,220,160,0.05),rgba(100,180,255,0.10));
-      border-color:rgba(120,210,255,0.40);
-      animation:glowPulse var(--pulse-speed) ease-in-out infinite alternate;
-    }
-    .grade-s-plus::before,.grade-s::before,.grade-s-minus::before {
-      content:""; position:absolute; inset:0; border-radius:12px;
-      background:radial-gradient(ellipse at 50% 0%,rgba(140,220,255,0.26) 0%,rgba(80,170,255,0.08) 60%,transparent 100%),linear-gradient(135deg,rgba(255,100,100,0.04),rgba(100,200,255,0.06),rgba(150,80,255,0.04),rgba(80,220,150,0.04));
-      animation:innerPulse var(--pulse-speed) ease-in-out infinite alternate; z-index:0;
-    }
-    .grade-s-plus::after,.grade-s::after,.grade-s-minus::after {
-      content:""; position:absolute; inset:-1px; border-radius:13px;
-      background:conic-gradient(from var(--angle,0deg),rgba(100,200,255,0.75) 0deg,rgba(200,240,255,0.95) 60deg,rgba(160,120,255,0.60) 120deg,rgba(80,220,180,0.55) 180deg,rgba(100,180,255,0.70) 240deg,rgba(200,240,255,0.90) 300deg,rgba(100,200,255,0.75) 360deg);
-      -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-      -webkit-mask-composite:xor; mask-composite:exclude;
-      padding:1.5px; animation:borderRotate var(--border-speed) linear infinite; z-index:0;
-    }
-    .grade-s-plus .grade-name,.grade-s .grade-name,.grade-s-minus .grade-name {
-      background:linear-gradient(90deg,#4a9edd 0%,#a8deff 20%,#ffffff 35%,#c8a8ff 50%,#a8ffdd 65%,#a8deff 80%,#4a9edd 100%);
-      background-size:250% auto;
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      animation:textShimmer 3s linear infinite;
-      filter:drop-shadow(0 0 5px rgba(100,200,255,0.70));
-    }
-
-    /* 🔥 A 등급 */
-    .grade-a-plus {
-      --glow-a:10px; --glow-a2:16px; --glow-b:22px; --glow-b2:32px;
-      --glow-c1:rgba(255,90,60,0.32); --glow-c2:rgba(220,60,30,0.16);
-      --border-speed:5s; --pulse-speed:2.4s;
-      --pulse-min:0.50; --pulse-max:0.90; --scale-min:0.97; --scale-max:1.03;
-    }
-    .grade-a {
-      --glow-a:7px; --glow-a2:12px; --glow-b:16px; --glow-b2:24px;
-      --glow-c1:rgba(240,80,50,0.25); --glow-c2:rgba(210,50,25,0.12);
-      --border-speed:5s; --pulse-speed:2.8s;
-      --pulse-min:0.45; --pulse-max:0.85; --scale-min:0.97; --scale-max:1.03;
-    }
-    .grade-a-minus {
-      --glow-a:5px; --glow-a2:9px; --glow-b:12px; --glow-b2:18px;
-      --glow-c1:rgba(220,70,40,0.20); --glow-c2:rgba(190,40,20,0.10);
-      --border-speed:5s; --pulse-speed:3.2s;
-      --pulse-min:0.40; --pulse-max:0.80; --scale-min:0.97; --scale-max:1.03;
-    }
-    .grade-a-plus,.grade-a,.grade-a-minus {
-      background:linear-gradient(135deg,rgba(255,80,60,0.14),rgba(220,50,40,0.10),rgba(180,30,30,0.10));
-      border-color:rgba(255,110,90,0.35);
-      animation:glowPulse var(--pulse-speed) ease-in-out infinite alternate;
-    }
-    .grade-a-plus::before,.grade-a::before,.grade-a-minus::before {
-      content:""; position:absolute; inset:0; border-radius:12px;
-      background:radial-gradient(ellipse at 50% 100%,rgba(255,100,60,0.22) 0%,rgba(220,60,30,0.06) 60%,transparent 100%);
-      animation:innerPulse var(--pulse-speed) ease-in-out infinite alternate; z-index:0;
-    }
-    .grade-a-plus::after,.grade-a::after,.grade-a-minus::after {
-      content:""; position:absolute; inset:-1px; border-radius:13px;
-      background:conic-gradient(from var(--angle,0deg),transparent 0deg,rgba(255,90,60,0.55) 60deg,rgba(255,180,120,0.80) 90deg,rgba(255,90,60,0.55) 120deg,transparent 180deg);
-      -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-      -webkit-mask-composite:xor; mask-composite:exclude;
-      padding:1.5px; animation:borderRotate var(--border-speed) linear infinite; z-index:0;
-    }
-    .grade-a-plus .grade-name,.grade-a .grade-name,.grade-a-minus .grade-name {
-      background:linear-gradient(90deg,#cc3322 0%,#ff7755 30%,#ffbb99 50%,#ff7755 70%,#cc3322 100%);
-      background-size:200% auto;
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      animation:textShimmer 3s linear infinite;
-      filter:drop-shadow(0 0 4px rgba(255,80,50,0.60));
-    }
-
-    /* 🟠 B 등급 */
-    .grade-b-plus {
-      --glow-a:6px; --glow-a2:10px; --glow-b:14px; --glow-b2:20px;
-      --glow-c1:rgba(255,160,60,0.28); --glow-c2:rgba(220,120,30,0.14);
-      --border-speed:8s; --pulse-speed:3.0s;
-      --pulse-min:0.50; --pulse-max:0.90;
-    }
-    .grade-b {
-      --glow-a:5px; --glow-a2:8px; --glow-b:11px; --glow-b2:16px;
-      --glow-c1:rgba(240,140,50,0.22); --glow-c2:rgba(210,110,25,0.11);
-      --border-speed:8s; --pulse-speed:3.4s;
-      --pulse-min:0.45; --pulse-max:0.85;
-    }
-    .grade-b-minus {
-      --glow-a:4px; --glow-a2:7px; --glow-b:9px; --glow-b2:13px;
-      --glow-c1:rgba(220,120,40,0.18); --glow-c2:rgba(190,90,20,0.09);
-      --border-speed:8s; --pulse-speed:3.8s;
-      --pulse-min:0.40; --pulse-max:0.80;
-    }
-    .grade-b-plus,.grade-b,.grade-b-minus {
-      background:linear-gradient(135deg,rgba(255,160,60,0.14),rgba(220,120,30,0.10),rgba(190,90,10,0.08));
-      border-color:rgba(255,160,60,0.30);
-      animation:glowPulse var(--pulse-speed) ease-in-out infinite alternate;
-    }
-    .grade-b-plus::before,.grade-b::before,.grade-b-minus::before {
-      content:""; position:absolute; inset:0; border-radius:12px;
-      background:radial-gradient(ellipse at 50% 50%,rgba(255,160,60,0.14) 0%,rgba(220,110,20,0.05) 60%,transparent 100%);
-      animation:innerPulse var(--pulse-speed) ease-in-out infinite alternate; z-index:0;
-    }
-    .grade-b-plus::after,.grade-b::after,.grade-b-minus::after {
-      content:""; position:absolute; inset:-1px; border-radius:13px;
-      background:conic-gradient(from var(--angle,0deg),transparent 0deg,rgba(255,150,50,0.40) 60deg,rgba(255,200,100,0.65) 90deg,rgba(255,150,50,0.40) 120deg,transparent 200deg);
-      -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-      -webkit-mask-composite:xor; mask-composite:exclude;
-      padding:1.5px; animation:borderRotate var(--border-speed) linear infinite; z-index:0;
-    }
-    .grade-b-plus .grade-name,.grade-b .grade-name,.grade-b-minus .grade-name {
-      background:linear-gradient(90deg,#cc7722 0%,#ffb060 30%,#ffe0a0 50%,#ffb060 70%,#cc7722 100%);
-      background-size:200% auto;
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      animation:textShimmer 4s linear infinite;
-      filter:drop-shadow(0 0 3px rgba(255,160,60,0.45));
-    }
-
-    /* C ~ F 등급 */
-    .grade-c-plus  { background:rgba(180,120,255,0.14); border-color:rgba(180,120,255,0.28); } .grade-c-plus .grade-name  { color:#c79cff; }
-    .grade-c       { background:rgba(150,100,220,0.12); border-color:rgba(150,100,220,0.24); } .grade-c .grade-name       { color:#aa88ee; }
-    .grade-c-minus { background:rgba(120,80,190,0.12);  border-color:rgba(120,80,190,0.22);  } .grade-c-minus .grade-name { color:#9977dd; }
-    .grade-d-plus  { background:rgba(90,180,255,0.14);  border-color:rgba(90,180,255,0.28);  } .grade-d-plus .grade-name  { color:#a9dfff; }
-    .grade-d       { background:rgba(60,150,220,0.12);  border-color:rgba(60,150,220,0.24);  } .grade-d .grade-name       { color:#7bc8ee; }
-    .grade-d-minus { background:rgba(30,120,190,0.12);  border-color:rgba(30,120,190,0.22);  } .grade-d-minus .grade-name { color:#55aadd; }
-    .grade-e-plus  { background:rgba(90,230,140,0.14);  border-color:rgba(90,230,140,0.28);  } .grade-e-plus .grade-name  { color:#bff7d0; }
-    .grade-e       { background:rgba(60,190,100,0.12);  border-color:rgba(60,190,100,0.24);  } .grade-e .grade-name       { color:#8ee8b0; }
-    .grade-e-minus { background:rgba(30,150,70,0.12);   border-color:rgba(30,150,70,0.22);   } .grade-e-minus .grade-name { color:#66cc88; }
-    .grade-f-plus  { background:rgba(180,180,180,0.14); border-color:rgba(200,200,200,0.22); } .grade-f-plus .grade-name  { color:#d9d9d9; }
-    .grade-f       { background:rgba(140,140,140,0.12); border-color:rgba(170,170,170,0.18); } .grade-f .grade-name       { color:#bbbbbb; }
-    .grade-f-minus { background:rgba(100,100,100,0.12); border-color:rgba(140,140,140,0.16); } .grade-f-minus .grade-name { color:#999999; }
-
-    /* 🏅 도장 등급별 색상 */
-    .stamp.stamp-ss,.grade-stamp.stamp-ss {
+    .grade-note { font-size:13px; color:#9ecdf7; text-align:center; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); line-height:1.7; }
+/* 🏅 도장 등급별 색상 + 효과 */
+.stamp.stamp-ss,.grade-stamp.stamp-ss {
   border-color:transparent; color:rgba(255,220,80,0.95);
   box-shadow:0 0 22px rgba(255,210,60,0.40),0 0 44px rgba(255,180,20,0.22),inset 0 0 0 2px rgba(255,255,255,0.05);
   background:radial-gradient(circle at center,rgba(255,210,60,0.08),rgba(255,180,20,0.02));
   animation:stampGlowSS 1.8s ease-in-out infinite alternate;
 }
-.stamp.stamp-ss::before,.grade-stamp.stamp-ss::before { border-color:rgba(255,210,60,0.45); }
-
 @keyframes stampGlowSS {
   0%   { box-shadow:0 0 18px rgba(255,210,60,0.50),0 0 40px rgba(255,180,20,0.28),0 0 70px rgba(255,100,100,0.12); }
   33%  { box-shadow:0 0 24px rgba(100,220,140,0.40),0 0 48px rgba(80,180,255,0.25),0 0 80px rgba(180,80,255,0.12); }
   66%  { box-shadow:0 0 22px rgba(255,100,180,0.40),0 0 44px rgba(255,200,60,0.28),0 0 75px rgba(80,200,255,0.12); }
   100% { box-shadow:0 0 28px rgba(255,220,80,0.65),0 0 55px rgba(255,200,40,0.40),0 0 90px rgba(255,150,50,0.18); }
 }
+.stamp.stamp-ss::after,.grade-stamp.stamp-ss::after {
+  content:""; position:absolute; inset:-5px; border-radius:50%;
+  background:conic-gradient(from var(--angle,0deg),rgba(255,60,60,0.85) 0deg,rgba(255,180,30,1) 60deg,rgba(255,240,80,1) 90deg,rgba(80,220,140,0.85) 140deg,rgba(90,160,255,0.85) 200deg,rgba(200,100,255,0.85) 260deg,rgba(255,80,180,0.85) 310deg,rgba(255,60,60,0.85) 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  padding:5px; animation:borderRotate 2.5s linear infinite; z-index:-1; pointer-events:none;
+}
+.stamp.stamp-ss .grade-text,.grade-stamp.stamp-ss .gs-grade,
+.stamp.stamp-ss .date,.stamp.stamp-ss .done,
+.grade-stamp.stamp-ss .gs-date,.grade-stamp.stamp-ss .gs-done {
+  background:linear-gradient(90deg,#ff6b6b 0%,#ffd700 15%,#fffacd 30%,#6bcb77 45%,#ffd700 60%,#fffacd 75%,#ff9ff3 90%,#ffd700 100%);
+  background-size:250% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation:textShimmer 2s linear infinite;
+}
 
 .stamp.stamp-s,.grade-stamp.stamp-s {
-  border-color:rgba(100,200,255,0.95); color:rgba(130,215,255,0.95);
+  border-color:transparent; color:rgba(130,215,255,0.95);
   box-shadow:0 0 22px rgba(100,200,255,0.35),0 0 44px rgba(60,160,240,0.18),inset 0 0 0 2px rgba(255,255,255,0.05);
   background:radial-gradient(circle at center,rgba(100,200,255,0.08),rgba(60,160,240,0.02));
   animation:stampGlowS 2.2s ease-in-out infinite alternate;
 }
-.stamp.stamp-s::before,.grade-stamp.stamp-s::before { border-color:rgba(100,200,255,0.40); }
-
 @keyframes stampGlowS {
   0%   { box-shadow:0 0 14px rgba(100,200,255,0.40),0 0 30px rgba(60,160,240,0.20),0 0 50px rgba(130,80,255,0.08); }
   50%  { box-shadow:0 0 16px rgba(130,100,255,0.30),0 0 34px rgba(80,220,160,0.15),0 0 52px rgba(100,180,255,0.10); }
   100% { box-shadow:0 0 22px rgba(130,220,255,0.58),0 0 44px rgba(80,180,255,0.30),0 0 60px rgba(150,100,255,0.10); }
 }
+.stamp.stamp-s::after,.grade-stamp.stamp-s::after {
+  content:""; position:absolute; inset:-5px; border-radius:50%;
+  background:conic-gradient(from var(--angle,0deg),rgba(100,200,255,0.75) 0deg,rgba(200,240,255,0.95) 60deg,rgba(160,120,255,0.60) 120deg,rgba(80,220,180,0.55) 180deg,rgba(100,180,255,0.70) 240deg,rgba(200,240,255,0.90) 300deg,rgba(100,200,255,0.75) 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  padding:5px; animation:borderRotate 4.5s linear infinite; z-index:-1; pointer-events:none;
+}
+.stamp.stamp-s .grade-text,.grade-stamp.stamp-s .gs-grade,
+.stamp.stamp-s .date,.stamp.stamp-s .done,
+.grade-stamp.stamp-s .gs-date,.grade-stamp.stamp-s .gs-done {
+  background:linear-gradient(90deg,#4a9edd 0%,#a8deff 20%,#ffffff 35%,#c8a8ff 50%,#a8ffdd 65%,#a8deff 80%,#4a9edd 100%);
+  background-size:250% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation:textShimmer 3s linear infinite;
+}
 
 .stamp.stamp-a,.grade-stamp.stamp-a {
-  border-color:rgba(255,90,60,0.95); color:rgba(255,120,90,0.95);
+  border-color:transparent; color:rgba(255,120,90,0.95);
   box-shadow:0 0 22px rgba(255,90,60,0.35),0 0 44px rgba(220,60,30,0.18),inset 0 0 0 2px rgba(255,255,255,0.05);
   background:radial-gradient(circle at center,rgba(255,90,60,0.06),rgba(220,60,30,0.02));
   animation:stampGlowA 2.4s ease-in-out infinite alternate;
 }
-.stamp.stamp-a::before,.grade-stamp.stamp-a::before { border-color:rgba(255,90,60,0.40); }
-
 @keyframes stampGlowA {
   0%   { box-shadow:0 0 10px rgba(255,90,60,0.32),0 0 22px rgba(220,60,30,0.16); }
   100% { box-shadow:0 0 16px rgba(255,110,80,0.48),0 0 32px rgba(240,80,50,0.26); }
 }
+.stamp.stamp-a::after,.grade-stamp.stamp-a::after {
+  content:""; position:absolute; inset:-5px; border-radius:50%;
+  background:conic-gradient(from var(--angle,0deg),transparent 0deg,rgba(255,90,60,0.55) 60deg,rgba(255,180,120,0.80) 90deg,rgba(255,90,60,0.55) 120deg,transparent 180deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  padding:5px; animation:borderRotate 5s linear infinite; z-index:-1; pointer-events:none;
+}
+.stamp.stamp-a .grade-text,.grade-stamp.stamp-a .gs-grade,
+.stamp.stamp-a .date,.stamp.stamp-a .done,
+.grade-stamp.stamp-a .gs-date,.grade-stamp.stamp-a .gs-done {
+  background:linear-gradient(90deg,#cc3322 0%,#ff7755 30%,#ffbb99 50%,#ff7755 70%,#cc3322 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation:textShimmer 3s linear infinite;
+}
 
 .stamp.stamp-b,.grade-stamp.stamp-b {
-  border-color:rgba(255,160,60,0.95); color:rgba(255,175,80,0.95);
+  border-color:transparent; color:rgba(255,175,80,0.95);
   box-shadow:0 0 18px rgba(255,160,60,0.30),0 0 36px rgba(220,120,30,0.15),inset 0 0 0 2px rgba(255,255,255,0.04);
   background:radial-gradient(circle at center,rgba(255,160,60,0.06),rgba(220,120,30,0.02));
   animation:stampGlowB 3.0s ease-in-out infinite alternate;
 }
-.stamp.stamp-b::before,.grade-stamp.stamp-b::before { border-color:rgba(255,160,60,0.35); }
-
 @keyframes stampGlowB {
   0%   { box-shadow:0 0 6px rgba(255,160,60,0.28),0 0 14px rgba(220,120,30,0.14); }
   100% { box-shadow:0 0 10px rgba(255,175,80,0.38),0 0 20px rgba(235,135,45,0.20); }
+}
+.stamp.stamp-b::after,.grade-stamp.stamp-b::after {
+  content:""; position:absolute; inset:-5px; border-radius:50%;
+  background:conic-gradient(from var(--angle,0deg),transparent 0deg,rgba(255,150,50,0.40) 60deg,rgba(255,200,100,0.65) 90deg,rgba(255,150,50,0.40) 120deg,transparent 200deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  padding:5px; animation:borderRotate 8s linear infinite; z-index:-1; pointer-events:none;
+}
+.stamp.stamp-b .grade-text,.grade-stamp.stamp-b .gs-grade,
+.stamp.stamp-b .date,.stamp.stamp-b .done,
+.grade-stamp.stamp-b .gs-date,.grade-stamp.stamp-b .gs-done {
+  background:linear-gradient(90deg,#cc7722 0%,#ffb060 30%,#ffe0a0 50%,#ffb060 70%,#cc7722 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation:textShimmer 4s linear infinite;
 }
 
 .stamp.stamp-c,.grade-stamp.stamp-c {
@@ -1472,84 +1309,24 @@
   background:radial-gradient(circle at center,rgba(180,120,255,0.05),rgba(140,80,220,0.01));
 }
 .stamp.stamp-c::before,.grade-stamp.stamp-c::before { border-color:rgba(180,120,255,0.30); }
-
 .stamp.stamp-d,.grade-stamp.stamp-d {
   border-color:rgba(90,180,255,0.85); color:rgba(110,190,255,0.85);
   box-shadow:0 0 12px rgba(90,180,255,0.18),0 0 24px rgba(60,140,220,0.10),inset 0 0 0 2px rgba(255,255,255,0.03);
   background:radial-gradient(circle at center,rgba(90,180,255,0.04),rgba(60,140,220,0.01));
 }
 .stamp.stamp-d::before,.grade-stamp.stamp-d::before { border-color:rgba(90,180,255,0.25); }
-
 .stamp.stamp-e,.grade-stamp.stamp-e {
   border-color:rgba(90,230,140,0.80); color:rgba(110,235,160,0.80);
   box-shadow:0 0 10px rgba(90,230,140,0.15),0 0 20px rgba(60,190,100,0.08),inset 0 0 0 2px rgba(255,255,255,0.02);
   background:radial-gradient(circle at center,rgba(90,230,140,0.04),rgba(60,190,100,0.01));
 }
 .stamp.stamp-e::before,.grade-stamp.stamp-e::before { border-color:rgba(90,230,140,0.22); }
-
 .stamp.stamp-f,.grade-stamp.stamp-f {
   border-color:rgba(160,160,160,0.75); color:rgba(180,180,180,0.75);
   box-shadow:0 0 8px rgba(160,160,160,0.12),0 0 16px rgba(120,120,120,0.06),inset 0 0 0 2px rgba(255,255,255,0.02);
   background:radial-gradient(circle at center,rgba(160,160,160,0.03),rgba(120,120,120,0.01));
 }
 .stamp.stamp-f::before,.grade-stamp.stamp-f::before { border-color:rgba(160,160,160,0.20); }
-      border-color:rgba(255,210,60,0.95); color:rgba(255,220,80,0.95);
-      box-shadow:0 0 22px rgba(255,210,60,0.40),0 0 44px rgba(255,180,20,0.22),inset 0 0 0 2px rgba(255,255,255,0.05);
-      background:radial-gradient(circle at center,rgba(255,210,60,0.08),rgba(255,180,20,0.02));
-    }
-    .stamp.stamp-ss::before,.grade-stamp.stamp-ss::before { border-color:rgba(255,210,60,0.45); }
-
-    .stamp.stamp-s,.grade-stamp.stamp-s {
-      border-color:rgba(100,200,255,0.95); color:rgba(130,215,255,0.95);
-      box-shadow:0 0 22px rgba(100,200,255,0.35),0 0 44px rgba(60,160,240,0.18),inset 0 0 0 2px rgba(255,255,255,0.05);
-      background:radial-gradient(circle at center,rgba(100,200,255,0.08),rgba(60,160,240,0.02));
-    }
-    .stamp.stamp-s::before,.grade-stamp.stamp-s::before { border-color:rgba(100,200,255,0.40); }
-
-    .stamp.stamp-a,.grade-stamp.stamp-a {
-      border-color:rgba(255,90,60,0.95); color:rgba(255,120,90,0.95);
-      box-shadow:0 0 22px rgba(255,90,60,0.35),0 0 44px rgba(220,60,30,0.18),inset 0 0 0 2px rgba(255,255,255,0.05);
-      background:radial-gradient(circle at center,rgba(255,90,60,0.06),rgba(220,60,30,0.02));
-    }
-    .stamp.stamp-a::before,.grade-stamp.stamp-a::before { border-color:rgba(255,90,60,0.40); }
-
-    .stamp.stamp-b,.grade-stamp.stamp-b {
-      border-color:rgba(255,160,60,0.95); color:rgba(255,175,80,0.95);
-      box-shadow:0 0 18px rgba(255,160,60,0.30),0 0 36px rgba(220,120,30,0.15),inset 0 0 0 2px rgba(255,255,255,0.04);
-      background:radial-gradient(circle at center,rgba(255,160,60,0.06),rgba(220,120,30,0.02));
-    }
-    .stamp.stamp-b::before,.grade-stamp.stamp-b::before { border-color:rgba(255,160,60,0.35); }
-
-    .stamp.stamp-c,.grade-stamp.stamp-c {
-      border-color:rgba(180,120,255,0.90); color:rgba(190,140,255,0.90);
-      box-shadow:0 0 14px rgba(180,120,255,0.22),0 0 28px rgba(140,80,220,0.12),inset 0 0 0 2px rgba(255,255,255,0.03);
-      background:radial-gradient(circle at center,rgba(180,120,255,0.05),rgba(140,80,220,0.01));
-    }
-    .stamp.stamp-c::before,.grade-stamp.stamp-c::before { border-color:rgba(180,120,255,0.30); }
-
-    .stamp.stamp-d,.grade-stamp.stamp-d {
-      border-color:rgba(90,180,255,0.85); color:rgba(110,190,255,0.85);
-      box-shadow:0 0 12px rgba(90,180,255,0.18),0 0 24px rgba(60,140,220,0.10),inset 0 0 0 2px rgba(255,255,255,0.03);
-      background:radial-gradient(circle at center,rgba(90,180,255,0.04),rgba(60,140,220,0.01));
-    }
-    .stamp.stamp-d::before,.grade-stamp.stamp-d::before { border-color:rgba(90,180,255,0.25); }
-
-    .stamp.stamp-e,.grade-stamp.stamp-e {
-      border-color:rgba(90,230,140,0.80); color:rgba(110,235,160,0.80);
-      box-shadow:0 0 10px rgba(90,230,140,0.15),0 0 20px rgba(60,190,100,0.08),inset 0 0 0 2px rgba(255,255,255,0.02);
-      background:radial-gradient(circle at center,rgba(90,230,140,0.04),rgba(60,190,100,0.01));
-    }
-    .stamp.stamp-e::before,.grade-stamp.stamp-e::before { border-color:rgba(90,230,140,0.22); }
-
-    .stamp.stamp-f,.grade-stamp.stamp-f {
-      border-color:rgba(160,160,160,0.75); color:rgba(180,180,180,0.75);
-      box-shadow:0 0 8px rgba(160,160,160,0.12),0 0 16px rgba(120,120,120,0.06),inset 0 0 0 2px rgba(255,255,255,0.02);
-      background:radial-gradient(circle at center,rgba(160,160,160,0.03),rgba(120,120,120,0.01));
-    }
-    .stamp.stamp-f::before,.grade-stamp.stamp-f::before { border-color:rgba(160,160,160,0.20); }
-
-    .grade-note { font-size:13px; color:#9ecdf7; text-align:center; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); line-height:1.7; }
-
     @keyframes rainbowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     @media (max-width: 1180px) {
@@ -1674,21 +1451,23 @@
     .rate-10 { color: #7fc6ff; }
     .bar-10  { background: linear-gradient(90deg, #7a8cff, #4bd3ff); }
     @media (max-width: 1024px) { .auction-calc { display: none; } }
+ 
+  .footer-loiter {
+  text-align: center;
+  padding: 12px 0 8px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  user-select: none;
+}
 
-    .footer-loiter {
-      text-align: center;
-      padding: 12px 0 8px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      user-select: none;
-    }
-
-    .footer-loiter p {
-      font-size: 12px;
-      color: rgba(255,255,255,0.25);
-      line-height: 1.9;
-      margin: 0;
-      letter-spacing: 0.3px;
-    }
+.footer-loiter p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  line-height: 1.9;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+  
+  
   </style>
 </head>
 <body>
@@ -1730,7 +1509,7 @@
         </button>
 
         <div class="sidebar-divider"></div>
-
+        <!-- 경매 계산기 -->
         <div class="auction-calc">
           <div class="ac-header">
             <div>
@@ -1879,12 +1658,14 @@
     </div>
   </div>
 
+  <!-- 미니 팝업 -->
   <div class="mini-popup" id="miniPopup">
     <div class="mini-popup-label">열람 조건</div>
     <div class="mini-popup-title" id="miniPopupTitle"></div>
     <div class="mini-popup-desc"  id="miniPopupDesc"></div>
   </div>
 
+  <!-- 클래스 선택 모달 -->
   <div class="flow-modal" id="classModal">
     <div class="flow-card">
       <div class="flow-label" id="classFlowLabel">TOURNAMENT</div>
@@ -1897,6 +1678,7 @@
     </div>
   </div>
 
+  <!-- 배틀 모달 -->
   <div class="flow-modal" id="battleModal">
     <div class="flow-card" style="width:min(980px,100%); text-align:center;">
       <div class="flow-label"       id="battleModeLabel">TOURNAMENT</div>
@@ -1957,6 +1739,7 @@
     </div>
   </div>
 
+  <!-- 우승 모달 -->
   <div class="winner-modal" id="winnerModal">
     <div class="winner-card" id="winnerCard">
       <div class="winner-label"   id="winnerModeLabel">TOURNAMENT COMPLETE</div>
@@ -1977,6 +1760,7 @@
     </div>
   </div>
 
+  <!-- 등급 안내 모달 -->
   <div class="modal-backdrop" id="guideModal">
     <div class="modal-card">
       <button class="modal-close" id="closeGuideBtn">×</button>
@@ -2017,6 +1801,7 @@
     </div>
   </div>
 
+  <!-- OP 티어표 모달 -->
   <div class="modal-backdrop" id="opTierModal">
     <div class="modal-card">
       <button class="modal-close" id="closeOpTierBtn">×</button>
@@ -2028,6 +1813,7 @@
     </div>
   </div>
 
+  <!-- 호감 티어표 모달 -->
   <div class="modal-backdrop" id="favorTierModal">
     <div class="modal-card">
       <button class="modal-close" id="closeFavorTierBtn">×</button>
@@ -2045,7 +1831,8 @@
   <audio id="flipAudio" preload="auto">
     <source src="https://loaviewer.github.io/loa-dps-viewer/sounds/Card%20Flip.wav" type="audio/wav">
   </audio>
-    <script type="module">
+
+  <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
     async function getClientIP() {
@@ -2102,22 +1889,19 @@
       "F":  ["많이 아쉬운 결과입니다. 선택이 꽤 엇갈렸어요.","토너먼트 흐름을 따라가기가 어려웠던 판정입니다.","다음 도전이 기대되는 결과입니다. 지금은 감을 다시 잡아야 해요."],
       "F-": ["가장 낮은 판정입니다. 이번엔 흐름이 전혀 맞지 않았어요.","많이 아쉬운 결과지만, 처음엔 이런 날도 있습니다.","다시 시작해볼 시간입니다. 다음엔 더 좋은 선택을 기대할게요."],
     };
-
-    /* ✅ 도장 색상 클래스 반환 함수 */
-    function getStampClass(grade) {
-      if (!grade) return "";
-      const g = grade.replace("+","").replace("-","");
-      if (g === "SS") return "stamp-ss";
-      if (g === "S")  return "stamp-s";
-      if (g === "A")  return "stamp-a";
-      if (g === "B")  return "stamp-b";
-      if (g === "C")  return "stamp-c";
-      if (g === "D")  return "stamp-d";
-      if (g === "E")  return "stamp-e";
-      if (g === "F")  return "stamp-f";
-      return "";
-    }
-
+function getStampClass(grade) {
+  if (!grade) return "";
+  const g = grade.replace("+","").replace("-","");
+  if (g === "SS") return "stamp-ss";
+  if (g === "S")  return "stamp-s";
+  if (g === "A")  return "stamp-a";
+  if (g === "B")  return "stamp-b";
+  if (g === "C")  return "stamp-c";
+  if (g === "D")  return "stamp-d";
+  if (g === "E")  return "stamp-e";
+  if (g === "F")  return "stamp-f";
+  return "";
+}
     function calcGrade(score, total) {
       if (total===0) return "F-";
       const rate=Math.round((score/total)*100);
@@ -2215,6 +1999,7 @@
       }).join("");
     }
 
+    // ===== 달력 =====
     let calYear, calMonth;
 
     function initCalendar() {
@@ -2251,6 +2036,7 @@
     document.getElementById("calPrev").addEventListener("click",()=>{ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); });
     document.getElementById("calNext").addEventListener("click",()=>{ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); });
 
+    // ===== 미니 팝업 (핵심 수정 부분) =====
     const miniPopup      = document.getElementById("miniPopup");
     const miniPopupTitle = document.getElementById("miniPopupTitle");
     const miniPopupDesc  = document.getElementById("miniPopupDesc");
@@ -2259,22 +2045,31 @@
     function showMiniPopup(btn, title, desc) {
       miniPopupTitle.textContent = title;
       miniPopupDesc.innerHTML    = desc;
+
+      // 먼저 show 없이 DOM에 올려서 크기 측정
       miniPopup.style.visibility = "hidden";
       miniPopup.style.display    = "block";
+
       const btnRect  = btn.getBoundingClientRect();
       const popW     = miniPopup.offsetWidth;
       const popH     = miniPopup.offsetHeight;
       const viewW    = window.innerWidth;
       const viewH    = window.innerHeight;
+
       let top  = btnRect.bottom + 8;
       let left = btnRect.left;
+
+      // 화면 오른쪽 넘치면 왼쪽으로 조정
       if (left + popW > viewW - 8) left = viewW - popW - 8;
+      // 화면 아래 넘치면 버튼 위로 표시
       if (top + popH > viewH - 8) top = btnRect.top - popH - 8;
+
       miniPopup.style.top        = top  + "px";
       miniPopup.style.left       = left + "px";
       miniPopup.style.visibility = "";
       miniPopup.style.display    = "";
       miniPopup.classList.add("show");
+
       if (popupTimeout) clearTimeout(popupTimeout);
       popupTimeout = setTimeout(() => miniPopup.classList.remove("show"), 3000);
     }
@@ -2287,6 +2082,7 @@
       }
     });
 
+    // ===== DOM =====
     const opStamp        = document.getElementById("opStamp");
     const favorStamp     = document.getElementById("favorStamp");
     const opStampDate    = document.getElementById("opStampDate");
@@ -2514,24 +2310,143 @@
       if (error) return;
       completedState.op    =!!data.find(r=>r.tournament_type==="op");
       completedState.favor =!!data.find(r=>r.tournament_type==="favor");
-
-      /* ✅ 수정1: OP 도장 색상 적용 */
       if (completedState.op) {
-        opStamp.classList.add("show");
-        opStampDate.textContent=formatStampDate(getDateKey());
-        const opRow=data.find(r=>r.tournament_type==="op");
-        if (opRow&&opRow.grade) {
-          opStampGrade.textContent=opRow.grade;
-          todayOpGrade=opRow.grade;
-          opStamp.classList.remove("stamp-ss","stamp-s","stamp-a","stamp-b","stamp-c","stamp-d","stamp-e","stamp-f");
-          opStamp.classList.add(getStampClass(opRow.grade));
-        }
-      } else { opStamp.classList.remove("show"); todayOpGrade=null; }
-
+  opStamp.classList.add("show"); opStampDate.textContent=formatStampDate(getDateKey());
+  const opRow=data.find(r=>r.tournament_type==="op");
+  if (opRow&&opRow.grade) {
+    opStampGrade.textContent=opRow.grade; todayOpGrade=opRow.grade;
+    opStamp.classList.remove("stamp-ss","stamp-s","stamp-a","stamp-b","stamp-c","stamp-d","stamp-e","stamp-f");
+    opStamp.classList.add(getStampClass(opRow.grade));
+  }
+} else { opStamp.classList.remove("show"); todayOpGrade=null; }
       if (completedState.favor) { favorStamp.classList.add("show"); favorStampDate.textContent=formatStampDate(getDateKey()); }
       else { favorStamp.classList.remove("show"); }
       updateLockIcons();
       updateRankingLockState();
+    }
+
+    function openClassModal(type) {
+      currentTournamentType=type;
+      classFlowLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
+      classTable.innerHTML=Object.entries(classGroups).map(([groupName,classes])=>`
+        <div class="class-row">
+          <div class="class-group">${groupName}</div>
+          <div class="class-buttons">${classes.map(cls=>`<button class="secondary-btn class-select-btn" data-class="${cls}" style="padding:10px 14px;">${cls}</button>`).join("")}</div>
+        </div>`).join("");
+      classModal.classList.add("show");
+      classTable.querySelectorAll(".class-select-btn").forEach(btn=>{
+        btn.addEventListener("click",()=>{ selectedClass=btn.dataset.class; classModal.classList.remove("show"); startBattle(type,selectedClass); });
+      });
+    }
+
+    function closeClassModal() { classModal.classList.remove("show"); }
+
+    function resetBattleCardEffects() {
+      leftChoiceBtn.className=rightChoiceBtn.className="battle-choice";
+      leftChoiceBtn.disabled=rightChoiceBtn.disabled=false;
+    }
+
+    async function startBattle(type,selectedClassName) {
+      let pool=type==="favor"?allCandidates.filter(i=>i.enabled||FAVOR_ONLY_IDS.includes(i.id)):allCandidates.filter(i=>i.enabled);
+      if (type==="op") await loadRecentWinRates("op");
+      const filtered=pool.filter(i=>i.class_name!==selectedClassName);
+      workingCandidates=shuffle(filtered); currentRoundCandidates=[...workingCandidates]; nextRoundCandidates=[];
+      currentIndex=0; currentLeft=currentRight=null;
+      totalMatches=computeTotalMatches(filtered.length); completedMatches=0;
+      battleLogs=[]; pendingWinner=null; opScore=opMaxScore=0; isChoosing=false;
+      battleModeLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
+      battleTopKorTitle.textContent=type==="op"?"OP 직각 토너먼트":"호감 직각 토너먼트";
+      battleTopKorTitle.style.color=type==="op"?"#8ef0c9":"#ffd48a";
+      battleModal.classList.add("show"); renderNextBattle();
+    }
+
+    function updateBattleProgress() {
+      const pct=totalMatches>0?Math.floor((completedMatches/totalMatches)*100):0;
+      battleProgressText.textContent=`${pct}%`; battleProgressFill.style.width=`${pct}%`;
+    }
+
+    function renderNextBattle() {
+      if (currentRoundCandidates.length===1) { pendingWinner=currentRoundCandidates[0]; showWinnerModal(pendingWinner); return; }
+      if (currentIndex>=currentRoundCandidates.length) { currentRoundCandidates=[...nextRoundCandidates]; nextRoundCandidates=[]; currentIndex=0; }
+      if (currentRoundCandidates.length===1) { pendingWinner=currentRoundCandidates[0]; showWinnerModal(pendingWinner); return; }
+      currentLeft=currentRoundCandidates[currentIndex]; currentRight=currentRoundCandidates[currentIndex+1]||null;
+      if (!currentRight) { nextRoundCandidates.push(currentLeft); currentIndex++; renderNextBattle(); return; }
+      resetBattleCardEffects();
+      const sc=getStageClass(currentRoundCandidates.length);
+      leftChoiceBtn.classList.add(sc); rightChoiceBtn.classList.add(sc);
+      battleRoundTitle.textContent=`${getShortName(currentLeft.engraving_name)} vs ${getShortName(currentRight.engraving_name)}`;
+      battleSubText.textContent=`${selectedClass} 제외 상태 · ${getRoundLabel(currentRoundCandidates.length)} 진행 중`;
+      leftChoiceClass.textContent=currentLeft.class_name;
+      leftChoiceName.textContent=getShortName(currentLeft.engraving_name);
+      leftChoiceName.className=`battle-choice-name ${getColorClass(currentLeft.class_name)}`;
+      rightChoiceClass.textContent=currentRight.class_name;
+      rightChoiceName.textContent=getShortName(currentRight.engraving_name);
+      rightChoiceName.className=`battle-choice-name ${getColorClass(currentRight.class_name)}`;
+      updateBattleProgress();
+    }
+
+    function chooseBattleWinner(side) {
+      if (!currentLeft||!currentRight||isChoosing) return;
+      isChoosing=true; playFlipSound();
+      const winner=side==="left"?currentLeft:currentRight;
+      const loser=side==="left"?currentRight:currentLeft;
+      const winBtn=side==="left"?leftChoiceBtn:rightChoiceBtn;
+      const loseBtn=side==="left"?rightChoiceBtn:leftChoiceBtn;
+      const loseSide=side==="left"?"right":"left";
+      if (currentTournamentType==="op") { const wrW=getWinRate(winner.engraving_name),wrL=getWinRate(loser.engraving_name); opMaxScore++; if(wrW>=wrL)opScore++; }
+      leftChoiceBtn.disabled=rightChoiceBtn.disabled=true;
+      winBtn.classList.add("anim-win");
+      loseBtn.classList.add(loseSide==="right"?"anim-lose-right":"anim-lose-left");
+      battleLogs.push({left_engraving:currentLeft.engraving_name,right_engraving:currentRight.engraving_name,winner_engraving:winner.engraving_name,loser_engraving:loser.engraving_name,round_label:getRoundLabel(currentRoundCandidates.length)});
+      nextRoundCandidates.push(winner); completedMatches++; currentIndex+=2;
+      setTimeout(()=>{ isChoosing=false; renderNextBattle(); },500);
+    }
+
+    function showWinnerModal(winner) {
+      battleModal.classList.remove("show"); playWinnerSound();
+      winnerModeLabel.textContent=currentTournamentType==="op"?"OP TOURNAMENT COMPLETE":"FAVOR TOURNAMENT COMPLETE";
+      winnerTitleText.textContent=getShortName(winner.engraving_name);
+      winnerSubText.textContent=`우승 직각 · ${winner.class_name}`;
+      winnerDescText.textContent="토너먼트가 완료되었습니다. 확인을 누르면 저장 후 참여 완료 도장이 표시되고 랭킹이 해제됩니다.";
+      if (currentTournamentType==="op") {
+        const grade=calcGrade(opScore,opMaxScore);
+        gsDate.textContent=formatStampDate(getDateKey()); gsGrade.textContent=grade;
+gradeComment.textContent=getRandomComment(grade); gradeStampWrap.style.display="flex";
+const gradeStampEl=document.getElementById("gradeStamp");
+gradeStampEl.classList.remove("stamp-ss","stamp-s","stamp-a","stamp-b","stamp-c","stamp-d","stamp-e","stamp-f");
+gradeStampEl.classList.add(getStampClass(grade));
+      } else { gradeStampWrap.style.display="none"; gradeComment.textContent=""; }
+      winnerModal.classList.add("show"); createConfetti();
+    }
+
+    async function finalizeTournamentSave() {
+      if (!pendingWinner) return;
+      const clientIP=await getClientIP();
+      const grade=currentTournamentType==="op"?calcGrade(opScore,opMaxScore):null;
+      const score=currentTournamentType==="op"?opScore:0;
+      const maxScore=currentTournamentType==="op"?opMaxScore:0;
+      const sessionPayload={visitor_key:visitorKey,client_ip:clientIP,selected_class:selectedClass,winner_engraving:pendingWinner.engraving_name,tournament_type:currentTournamentType,date_key:getDateKey(),week_key:getWeekKey(),month_key:getMonthKey(),grade,score,max_score:maxScore};
+      const {data:sessionData,error:sessionError}=await supabase.from("sessions").insert([sessionPayload]).select();
+      if (sessionError) { alert("sessions 저장 실패: "+sessionError.message); return; }
+      const sessionId=sessionData[0].id;
+      if (battleLogs.length>0) {
+        const matchPayload=battleLogs.map(log=>({session_id:sessionId,left_engraving:log.left_engraving,right_engraving:log.right_engraving,winner_engraving:log.winner_engraving,loser_engraving:log.loser_engraving,round_label:log.round_label,tournament_type:currentTournamentType,date_key:getDateKey(),week_key:getWeekKey(),month_key:getMonthKey()}));
+        const {error:matchError}=await supabase.from("match_logs").insert(matchPayload);
+        if (matchError) { alert("match_logs 저장 실패: "+matchError.message); return; }
+      }
+      if (currentTournamentType==="op") {
+        completedState.op=true; todayOpGrade=grade;
+        opStamp.classList.add("show"); opStampDate.textContent=formatStampDate(getDateKey()); opStampGrade.textContent=grade||"";
+        opStamp.classList.remove("stamp-ss","stamp-s","stamp-a","stamp-b","stamp-c","stamp-d","stamp-e","stamp-f");
+        opStamp.classList.add(getStampClass(grade));
+      } else {
+        completedState.favor=true; favorStamp.classList.add("show"); favorStampDate.textContent=formatStampDate(getDateKey());
+      }
+      currentBoardMode=currentTournamentType;
+      winnerModal.classList.remove("show");
+      updateLockIcons();
+      updateRankingLockState();
+      rankingBoard.scrollIntoView({behavior:"smooth",block:"start"});
     }
 
     async function handleStart(type) {
@@ -2552,6 +2467,7 @@
       }
     }
 
+    // ===== 이벤트 =====
     opStartBtn.addEventListener("click",()=>handleStart("op"));
     favorStartBtn.addEventListener("click",()=>handleStart("favor"));
 
@@ -2626,7 +2542,7 @@
       await loadCandidates();
       await loadTodayParticipation();
     }
-
+    // ===== 경매 계산기 =====
     function acFmt(n) { return Math.round(n).toLocaleString("ko-KR"); }
     function calcBreakeven(price, members) { return price * 0.95 * (members - 1) / members; }
     function calcRecommend(be, rate) { return be / (1 + rate); }
@@ -2676,215 +2592,15 @@
 
     acUpdate();
     init();
-
-    function openClassModal(type) {
-  currentTournamentType=type;
-  classFlowLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
-  classTable.innerHTML=Object.entries(classGroups).map(([groupName,classes])=>`
-    <div class="class-row">
-      <div class="class-group">${groupName}</div>
-      <div class="class-buttons">${classes.map(cls=>`<button class="secondary-btn class-select-btn" data-class="${cls}" style="padding:10px 14px;">${cls}</button>`).join("")}</div>
-    </div>`).join("");
-  classModal.classList.add("show");
-  classTable.querySelectorAll(".class-select-btn").forEach(btn=>{
-    btn.addEventListener("click",()=>{ selectedClass=btn.dataset.class; classModal.classList.remove("show"); startBattle(type,selectedClass); });
-  });
-}
-      currentTournamentType=type;
-      classFlowLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
-      classTable.innerHTML=Object.entries(classGroups).map(([group,classes])=>`
-        <div class="class-row">
-          <div class="class-group">${group}</div>
-          <div class="class-buttons">${classes.map(cls=>`
-            <button class="ghost-btn" style="font-size:13px;padding:8px 12px;border-radius:12px;"
-              onclick="selectClassAndStart('${cls}')">${cls}</button>`).join("")}
-          </div>
-        </div>`).join("");
-      classModal.classList.add("show");
-    }
-
-    function closeClassModal() { classModal.classList.remove("show"); }
-
-    async function startBattle(type,selectedClassName) {
-  let pool=type==="favor"?allCandidates.filter(i=>i.enabled||FAVOR_ONLY_IDS.includes(i.id)):allCandidates.filter(i=>i.enabled);
-  if (type==="op") await loadRecentWinRates("op");
-  const filtered=pool.filter(i=>i.class_name!==selectedClassName);
-  workingCandidates=shuffle(filtered); currentRoundCandidates=[...workingCandidates]; nextRoundCandidates=[];
-  currentIndex=0; currentLeft=currentRight=null;
-  totalMatches=computeTotalMatches(filtered.length); completedMatches=0;
-  battleLogs=[]; pendingWinner=null; opScore=opMaxScore=0; isChoosing=false;
-  battleModeLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
-  battleTopKorTitle.textContent=type==="op"?"OP 직각 토너먼트":"호감 직각 토너먼트";
-  battleTopKorTitle.style.color=type==="op"?"#8ef0c9":"#ffd48a";
-  battleModal.classList.add("show"); renderNextBattle();
-}
-      selectedClass=cls; closeClassModal();
-      await loadRecentWinRates(currentTournamentType);
-      let pool=allCandidates.filter(c=>c.enabled&&c.class_name!==cls);
-      if (currentTournamentType==="op") pool=pool.filter(c=>!SUPPORT_ENGRAVINGS.includes(c.engraving_name));
-      pool=shuffle(pool);
-      let n=pool.length;
-      while(n&(n-1)) n++;
-      while(pool.length<n) pool.push(null);
-      workingCandidates=[...pool];
-      opScore=0; opMaxScore=0; battleLogs=[];
-      startTournament();
-    };
-
-    function startTournament() {
-      currentRoundCandidates=workingCandidates.filter(Boolean);
-      nextRoundCandidates=[]; currentIndex=0;
-      totalMatches=computeTotalMatches(currentRoundCandidates.length);
-      completedMatches=0;
-      battleModeLabel.textContent=currentTournamentType==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
-      battleTopKorTitle.textContent=currentTournamentType==="op"?"OP 직각 토너먼트":"호감 직각 토너먼트";
-      /* ✅ 수정2: 배틀 제목 색상 */
-      battleTopKorTitle.style.color=currentTournamentType==="op"?"#8ef0c9":"#ffd48a";
-      battleModal.classList.add("show");
-      showNextBattle();
-    }
-
-    function renderNextBattle() {
-      if (currentIndex>=currentRoundCandidates.length) {
-        if (nextRoundCandidates.length===1) { showWinnerModal(nextRoundCandidates[0]); return; }
-        currentRoundCandidates=[...nextRoundCandidates];
-        nextRoundCandidates=[]; currentIndex=0;
-      }
-      if (currentRoundCandidates.length===1) { showWinnerModal(currentRoundCandidates[0]); return; }
-
-      /* ✅ 홀수 처리 — 상대 없으면 자동 부전승 */
-if (currentIndex+1>=currentRoundCandidates.length) {
-  nextRoundCandidates.push(currentRoundCandidates[currentIndex]);
-  currentIndex++;
-  showNextBattle();
-  return;
-}
-
-      currentLeft=currentRoundCandidates[currentIndex];
-      currentRight=currentRoundCandidates[currentIndex+1];
-      currentIndex+=2;
-      const roundCount=currentRoundCandidates.length;
-      battleRoundTitle.textContent=`${getRoundLabel(roundCount)} — ${getShortName(currentLeft.engraving_name)} vs ${getShortName(currentRight.engraving_name)}`;
-      const pct=Math.round((completedMatches/totalMatches)*100);
-      battleProgressText.textContent=`${pct}%`;
-      battleProgressFill.style.width=`${pct}%`;
-      
-   battleSubText.textContent=currentTournamentType==="op"?"최근 5일간 1:1 승률이 높은 쪽 선택 시 포인트 1점":"더 호감 가는 직각을 선택하세요!";
-      
-      const sc=getStageClass(roundCount);
-      leftChoiceBtn.className=`battle-choice ${sc}`;
-      rightChoiceBtn.className=`battle-choice ${sc}`;
-      leftChoiceClass.textContent=currentLeft.class_name;
-      /* ✅ 수정3: 줄임말 적용 */
-      leftChoiceName.textContent=getShortName(currentLeft.engraving_name);
-      leftChoiceName.className=`battle-choice-name ${getColorClass(currentLeft.class_name)}`;
-      rightChoiceClass.textContent=currentRight.class_name;
-      /* ✅ 수정3: 줄임말 적용 */
-      rightChoiceName.textContent=getShortName(currentRight.engraving_name);
-      rightChoiceName.className=`battle-choice-name ${getColorClass(currentRight.class_name)}`;
-      isChoosing=true;
-    }
-
-    function chooseBattleWinner(side) {
-      if (!isChoosing) return;
-      isChoosing=false;
-      playFlipSound();
-      const winner=side==="left"?currentLeft:currentRight;
-      const loser =side==="left"?currentRight:currentLeft;
-      if (currentTournamentType==="op") {
-      const winnerWr=getWinRate(winner.engraving_name);
-      const loserWr=getWinRate(loser.engraving_name);
-      if (winnerWr>=loserWr) opScore++;
-      opMaxScore++;
-      }
-      battleLogs.push({winner_engraving:winner.engraving_name,loser_engraving:loser.engraving_name});
-      nextRoundCandidates.push(winner);
-      completedMatches++;
-      const winBtn =side==="left"?leftChoiceBtn:rightChoiceBtn;
-      const loseBtn=side==="left"?rightChoiceBtn:leftChoiceBtn;
-      winBtn.classList.add("anim-win");
-      loseBtn.classList.add(side==="left"?"anim-lose-right":"anim-lose-left");
-      setTimeout(()=>{
-        winBtn.classList.remove("anim-win");
-        loseBtn.classList.remove("anim-lose-right","anim-lose-left");
-        showNextBattle();
-      },520);
-    }
-
-    function showWinnerModal(winner) {
-      battleModal.classList.remove("show");
-      pendingWinner=winner;
-      winnerModeLabel.textContent=currentTournamentType==="op"?"OP TOURNAMENT COMPLETE":"FAVOR TOURNAMENT COMPLETE";
-      winnerTitleText.textContent=winner.engraving_name;
-      winnerSubText.textContent=`우승 직각 : ${winner.engraving_name} (${winner.class_name})`;
-      if (currentTournamentType==="op") {
-        const grade=calcGrade(opScore,opMaxScore);
-        gsDate.textContent=formatStampDate(getDateKey());
-        gsGrade.textContent=grade;
-        gradeComment.textContent=getRandomComment(grade);
-        gradeStampWrap.style.display="flex";
-
-        /* ✅ 수정4: 결과 모달 도장 색상 적용 */
-        const gradeStampEl=document.getElementById("gradeStamp");
-        gradeStampEl.classList.remove("stamp-ss","stamp-s","stamp-a","stamp-b","stamp-c","stamp-d","stamp-e","stamp-f");
-        gradeStampEl.classList.add(getStampClass(grade));
-
-        winnerDescText.textContent="토너먼트가 완료되었습니다. 확인을 누르면 저장 후 참여 완료 도장이 표시되고 랭킹이 해제됩니다.";
-      } else {
-        gradeStampWrap.style.display="none";
-        gradeComment.textContent="";
-        winnerDescText.textContent="호감 직각 토너먼트가 완료되었습니다. 확인을 누르면 저장됩니다.";
-      }
-      playWinnerSound();
-      createConfetti();
-      winnerModal.classList.add("show");
-    }
-
-    async function finalizeTournamentSave() {
-      winnerModal.classList.remove("show");
-      const clientIP=await getClientIP();
-      const grade=currentTournamentType==="op"?calcGrade(opScore,opMaxScore):null;
-      const {error:sErr}=await supabase.from("sessions").insert({
-        visitor_key:visitorKey, client_ip:clientIP,
-        tournament_type:currentTournamentType,
-        date_key:getDateKey(), month_key:getMonthKey(), week_key:getWeekKey(),
-        winner_engraving:pendingWinner.engraving_name,
-        selected_class:selectedClass,
-        score:currentTournamentType==="op"?opScore:null,
-        max_score:currentTournamentType==="op"?opMaxScore:null,
-        grade:grade
-      });
-      if (sErr) { alert("저장 실패: "+sErr.message); return; }
-      if (battleLogs.length>0) {
-        const logs=battleLogs.map(l=>({...l,tournament_type:currentTournamentType,date_key:getDateKey(),month_key:getMonthKey(),week_key:getWeekKey()}));
-        await supabase.from("match_logs").insert(logs);
-      }
-
-      /* ✅ 수정5: 저장 후 도장 색상 적용 */
-      if (currentTournamentType==="op") {
-        completedState.op=true; todayOpGrade=grade;
-        opStamp.classList.add("show");
-        opStampDate.textContent=formatStampDate(getDateKey());
-        opStampGrade.textContent=grade||"";
-        opStamp.classList.remove("stamp-ss","stamp-s","stamp-a","stamp-b","stamp-c","stamp-d","stamp-e","stamp-f");
-        opStamp.classList.add(getStampClass(grade));
-      } else {
-        completedState.favor=true;
-        favorStamp.classList.add("show");
-        favorStampDate.textContent=formatStampDate(getDateKey());
-      }
-      updateLockIcons();
-      updateRankingLockState();
-    }
   </script>
 
-  <div class="footer-loiter">
-    <p>
-      © 2026 LOITER BASE · All Rights Reserved.<br>
-      Not associated with Smilegate RPG & Smilegate Stove.<br>
-      Data based on Google Sheets · Powered by Supabase · GitHub Pages · GoatCounter
-    </p>
-  </div>
-
+<div class="footer-loiter">
+  <p>
+    © 2026 LOITER BASE · All Rights Reserved.<br>
+    Not associated with Smilegate RPG & Smilegate Stove.<br>
+    Data based on Google Sheets · Powered by Supabase · GitHub Pages · GoatCounter
+  </p>
+</div>
+  
 </body>
 </html>
