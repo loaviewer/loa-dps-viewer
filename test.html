@@ -2746,13 +2746,7 @@ if (currentIndex+1>=currentRoundCandidates.length) {
       battleProgressText.textContent=`${pct}%`;
       battleProgressFill.style.width=`${pct}%`;
       
-      if (currentTournamentType==="op") {
-  const lwr=(getWinRate(currentLeft.engraving_name)*100).toFixed(1);
-  const rwr=(getWinRate(currentRight.engraving_name)*100).toFixed(1);
-  battleSubText.textContent=`${getShortName(currentLeft.engraving_name)} 승율 ${lwr}% vs ${getShortName(currentRight.engraving_name)} 승율 ${rwr}%`;
-} else {
-  battleSubText.textContent="더 호감 가는 직각을 선택하세요!";
-}
+   battleSubText.textContent=currentTournamentType==="op"?"현재 시점에서 더 강한 직각을 선택하세요!":"더 호감 가는 직각을 선택하세요!";
       
       const sc=getStageClass(roundCount);
       leftChoiceBtn.className=`battle-choice ${sc}`;
