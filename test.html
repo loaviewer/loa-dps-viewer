@@ -621,6 +621,27 @@
 }
 
 /* SS 점선 테두리 무지개 */
+.stamp.stamp-ss::after,
+.grade-stamp.stamp-ss::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: conic-gradient(from var(--angle,0deg),
+    rgba(255,60,60,0.85) 0deg,rgba(255,180,30,1) 60deg,
+    rgba(255,240,80,1) 90deg,rgba(80,220,140,0.85) 140deg,
+    rgba(90,160,255,0.85) 200deg,rgba(200,100,255,0.85) 260deg,
+    rgba(255,80,180,0.85) 310deg,rgba(255,60,60,0.85) 360deg);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 5px;
+  animation: borderRotate 2.5s linear infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
 .stamp.stamp-ss::before,
 .grade-stamp.stamp-ss::before {
   border-color: transparent;
@@ -1279,7 +1300,8 @@
 
     /* 🏅 도장 등급별 색상 */
     .stamp.stamp-ss,.grade-stamp.stamp-ss {
-  border-color:rgba(255,210,60,0.95); color:rgba(255,220,80,0.95);
+  border-color:transparent; color:rgba(255,220,80,0.95);
+  position:relative;
   box-shadow:0 0 22px rgba(255,210,60,0.40),0 0 44px rgba(255,180,20,0.22),inset 0 0 0 2px rgba(255,255,255,0.05);
   background:radial-gradient(circle at center,rgba(255,210,60,0.08),rgba(255,180,20,0.02));
   animation:stampGlowSS 1.8s ease-in-out infinite alternate;
