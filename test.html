@@ -2678,6 +2678,18 @@
     init();
 
     function openClassModal(type) {
+  currentTournamentType=type;
+  classFlowLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
+  classTable.innerHTML=Object.entries(classGroups).map(([groupName,classes])=>`
+    <div class="class-row">
+      <div class="class-group">${groupName}</div>
+      <div class="class-buttons">${classes.map(cls=>`<button class="secondary-btn class-select-btn" data-class="${cls}" style="padding:10px 14px;">${cls}</button>`).join("")}</div>
+    </div>`).join("");
+  classModal.classList.add("show");
+  classTable.querySelectorAll(".class-select-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{ selectedClass=btn.dataset.class; classModal.classList.remove("show"); startBattle(type,selectedClass); });
+  });
+}
       currentTournamentType=type;
       classFlowLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
       classTable.innerHTML=Object.entries(classGroups).map(([group,classes])=>`
@@ -2693,7 +2705,19 @@
 
     function closeClassModal() { classModal.classList.remove("show"); }
 
-    window.selectClassAndStart = async function(cls) {
+    async function startBattle(type,selectedClassName) {
+  let pool=type==="favor"?allCandidates.filter(i=>i.enabled||FAVOR_ONLY_IDS.includes(i.id)):allCandidates.filter(i=>i.enabled);
+  if (type==="op") await loadRecentWinRates("op");
+  const filtered=pool.filter(i=>i.class_name!==selectedClassName);
+  workingCandidates=shuffle(filtered); currentRoundCandidates=[...workingCandidates]; nextRoundCandidates=[];
+  currentIndex=0; currentLeft=currentRight=null;
+  totalMatches=computeTotalMatches(filtered.length); completedMatches=0;
+  battleLogs=[]; pendingWinner=null; opScore=opMaxScore=0; isChoosing=false;
+  battleModeLabel.textContent=type==="op"?"OP TOURNAMENT":"FAVOR TOURNAMENT";
+  battleTopKorTitle.textContent=type==="op"?"OP 직각 토너먼트":"호감 직각 토너먼트";
+  battleTopKorTitle.style.color=type==="op"?"#8ef0c9":"#ffd48a";
+  battleModal.classList.add("show"); renderNextBattle();
+}
       selectedClass=cls; closeClassModal();
       await loadRecentWinRates(currentTournamentType);
       let pool=allCandidates.filter(c=>c.enabled&&c.class_name!==cls);
