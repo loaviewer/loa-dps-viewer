@@ -2698,7 +2698,6 @@
       await loadRecentWinRates(currentTournamentType);
       let pool=allCandidates.filter(c=>c.enabled&&c.class_name!==cls);
       if (currentTournamentType==="op") pool=pool.filter(c=>!SUPPORT_ENGRAVINGS.includes(c.engraving_name));
-      else pool=pool.filter(c=>!FAVOR_ONLY_IDS.includes(c.id)||currentTournamentType==="favor");
       pool=shuffle(pool);
       let n=pool.length;
       while(n&(n-1)) n++;
