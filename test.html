@@ -2442,9 +2442,19 @@
         nextRoundCandidates=[]; currentIndex=0;
       }
       if (currentRoundCandidates.length===1) { showWinnerModal(currentRoundCandidates[0]); return; }
-      currentLeft=currentRoundCandidates[currentIndex];
-      currentRight=currentRoundCandidates[currentIndex+1];
-      currentIndex+=2;
+
+  /* ✅ 홀수 처리 */
+  if (currentIndex+1>=currentRoundCandidates.length) {
+    nextRoundCandidates.push(currentRoundCandidates[currentIndex]);
+    completedMatches++;
+    currentIndex++;
+    showNextBattle();
+    return;
+  }
+
+  currentLeft=currentRoundCandidates[currentIndex];
+  currentRight=currentRoundCandidates[currentIndex+1];
+  currentIndex+=2;
       const roundCount=currentRoundCandidates.length;
       battleRoundTitle.textContent=`${getRoundLabel(roundCount)} — ${getShortName(currentLeft.engraving_name)} vs ${getShortName(currentRight.engraving_name)}`;
       const pct=Math.round((completedMatches/totalMatches)*100);
