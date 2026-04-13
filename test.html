@@ -1849,7 +1849,7 @@
     async function loadRecentWinRates(type) {
       winRateCache={};
       const today=new Date(), dates=[];
-      for (let i=0;i<3;i++) {
+      for (let i=0;i<5;i++) {
         const d=new Date(today); d.setDate(d.getDate()-i);
         dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
       }
@@ -2481,9 +2481,10 @@ if (currentIndex+1>=currentRoundCandidates.length) {
       const winner=side==="left"?currentLeft:currentRight;
       const loser =side==="left"?currentRight:currentLeft;
       if (currentTournamentType==="op") {
-        const wr=getWinRate(winner.engraving_name);
-        if (wr>0.5) opScore++;
-        opMaxScore++;
+      const winnerWr=getWinRate(winner.engraving_name);
+      const loserWr=getWinRate(loser.engraving_name);
+      if (winnerWr>=loserWr) opScore++;
+      opMaxScore++;
       }
       battleLogs.push({winner_engraving:winner.engraving_name,loser_engraving:loser.engraving_name});
       nextRoundCandidates.push(winner);
