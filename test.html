@@ -564,6 +564,49 @@
 
     .stamp .date       { font-size: 12px; letter-spacing: 1px; margin-bottom: 2px; }
     .stamp .grade-text { font-size: 20px; font-weight: 900; line-height: 1.1; }
+    .stamp.stamp-ss .grade-text,
+.grade-stamp.stamp-ss .gs-grade {
+  background: linear-gradient(90deg,#ff6b6b 0%,#ffd700 15%,#fffacd 30%,#6bcb77 45%,#ffd700 60%,#fffacd 75%,#ff9ff3 90%,#ffd700 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 2s linear infinite;
+  filter: drop-shadow(0 0 7px rgba(255,215,0,0.85));
+}
+
+.stamp.stamp-s .grade-text,
+.grade-stamp.stamp-s .gs-grade {
+  background: linear-gradient(90deg,#4a9edd 0%,#a8deff 20%,#ffffff 35%,#c8a8ff 50%,#a8ffdd 65%,#a8deff 80%,#4a9edd 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+  filter: drop-shadow(0 0 5px rgba(100,200,255,0.70));
+}
+
+.stamp.stamp-a .grade-text,
+.grade-stamp.stamp-a .gs-grade {
+  background: linear-gradient(90deg,#cc3322 0%,#ff7755 30%,#ffbb99 50%,#ff7755 70%,#cc3322 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(255,80,50,0.60));
+}
+
+.stamp.stamp-b .grade-text,
+.grade-stamp.stamp-b .gs-grade {
+  background: linear-gradient(90deg,#cc7722 0%,#ffb060 30%,#ffe0a0 50%,#ffb060 70%,#cc7722 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 4s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(255,160,60,0.45));
+}
     .stamp .done       { font-size: 13px; line-height: 1.2; word-break: keep-all; }
 
     .ranking-board {
