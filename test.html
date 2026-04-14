@@ -1680,7 +1680,7 @@
             <div class="period-tabs" style="margin-bottom:18px;">
               <button class="mini-tab" id="periodWeekBtn"><span>주간</span><span class="tab-date" id="weekTabDate"></span></button>
               <button class="mini-tab disabled"><span>월간</span><span class="tab-date">집계중</span></button>
-              <button class="mini-tab active-period"><span>전체</span><span class="tab-date">26.04.07 ~ 오늘</span></button>
+              <button class="mini-tab active-period" id="periodAllBtn"><span>전체</span><span class="tab-date">26.04.07 ~ 오늘</span></button>
             </div>
             <div class="summary-cards" id="summaryCards"></div>
             <div class="ranking-list"  id="rankingList"></div>
@@ -2570,8 +2570,17 @@ gradeStampEl.classList.add(getStampClass(grade));
     modeOpBtn.addEventListener("click",async()=>{ if(!completedState.op) return; currentBoardMode="op"; await loadRankingData("op"); });
     modeFavorBtn.addEventListener("click",async()=>{ if(!completedState.favor) return; currentBoardMode="favor"; await loadRankingData("favor"); });
 
-    document.getElementById("periodWeekBtn").addEventListener("click", async () => {
+    document.getElementById("periodAllBtn").addEventListener("click", async () => {
   if (!completedState.op && !completedState.favor) return;
+  document.getElementById("periodAllBtn").classList.add("active-period");
+  document.getElementById("periodWeekBtn").classList.remove("active-period");
+  await loadRankingData(currentBoardMode || "op");
+});
+
+document.getElementById("periodWeekBtn").addEventListener("click", async () => {
+  if (!completedState.op && !completedState.favor) return;
+  document.getElementById("periodWeekBtn").classList.add("active-period");
+  document.getElementById("periodAllBtn").classList.remove("active-period");
   await loadRankingDataByPeriod(currentBoardMode || "op", "week");
 });
     
