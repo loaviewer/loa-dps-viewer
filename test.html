@@ -2568,7 +2568,7 @@ document.getElementById("periodWeekBtn").addEventListener("click", async () => {
       opTierModal.classList.add("show");
       document.getElementById("opTierContent").innerHTML=`<div class="loading-text">데이터 불러오는 중...</div>`;
       const entries=await loadTierData("op");
-      if (entries&&entries.length>0) { document.getElementById("opTierSub").textContent="최근 누적 1:1 승률 기준 · 5전 이상 직각만 포함"; renderTierContent(calcTiers(entries),"opTierContent"); }
+      if (entries&&entries.length>0) { document.getElementById("opTierSub").textContent="최근 5일전 OP 1:1 승률 기준"; renderTierContent(calcTiers(entries),"opTierContent"); }
       else { document.getElementById("opTierContent").innerHTML=`<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`; }
     });
 
@@ -2584,7 +2584,7 @@ document.getElementById("periodWeekBtn").addEventListener("click", async () => {
       favorTierModal.classList.add("show");
       document.getElementById("favorTierContent").innerHTML=`<div class="loading-text">데이터 불러오는 중...</div>`;
       const entries=await loadTierData("favor");
-      if (entries&&entries.length>0) { document.getElementById("favorTierSub").textContent="최근 누적 1:1 승률 기준 · 5전 이상 직각만 포함"; renderTierContent(calcTiers(entries),"favorTierContent"); }
+      if (entries&&entries.length>0) { document.getElementById("favorTierSub").textContent="최근 5일전 호감 1:1 승률 기준"; renderTierContent(calcTiers(entries),"favorTierContent"); }
       else { document.getElementById("favorTierContent").innerHTML=`<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`; }
     });
 
