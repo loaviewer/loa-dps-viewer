@@ -2304,6 +2304,7 @@ function getStampClass(grade) {
 
 async function loadRankingDataByPeriod(mode, period) {
   const weekKey = getWeekKey();
+  console.log("weekKey:", weekKey);
 
   const {data: sessionData, error: sessionError} = await supabase
     .from("sessions")
