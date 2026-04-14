@@ -2315,10 +2315,11 @@ async function loadRankingDataByPeriod(mode, period) {
   if (sessionError) { alert("주간 우승 조회 실패: " + sessionError.message); return; }
 
   const {data: matchData, error: matchError} = await supabase
-    .from("match_logs")
-    .select("winner_engraving, loser_engraving")
-    .eq("tournament_type", mode)
-    .eq("week_key", weekKey);
+  .from("match_logs")
+  .select("winner_engraving, loser_engraving")
+  .eq("tournament_type", mode)
+  .eq("week_key", weekKey)
+  .limit(20000);
 
   if (matchError) { alert("주간 매치 조회 실패: " + matchError.message); return; }
     console.log("matchData 개수:", matchData.length);  // ★ 추가
