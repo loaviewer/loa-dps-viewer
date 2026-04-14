@@ -1678,9 +1678,9 @@
               </div>
             </div>
             <div class="period-tabs" style="margin-bottom:18px;">
-              <button class="mini-tab disabled"><span>주간</span><span class="tab-date">집계중</span></button>
+              <button class="mini-tab" id="weeklyBtn"><span>주간</span><span class="tab-date" id="weeklyDateLabel"></span></button>
               <button class="mini-tab disabled"><span>월간</span><span class="tab-date">집계중</span></button>
-              <button class="mini-tab active-period"><span>전체</span><span class="tab-date">26.04.07 ~ 오늘</span></button>
+              <button class="mini-tab active-period" id="totalBtn"><span>전체</span><span class="tab-date">26.04.07 ~ 오늘</span></button>
             </div>
             <div class="summary-cards" id="summaryCards"></div>
             <div class="ranking-list"  id="rankingList"></div>
@@ -2568,7 +2568,85 @@ gradeStampEl.classList.add(getStampClass(grade));
     document.addEventListener("keydown",e=>{
       if (e.key==="Escape") { guideModal.classList.remove("show"); opTierModal.classList.remove("show"); favorTierModal.classList.remove("show"); }
     });
+    // ===== 주간 날짜 자동 계산 =====
+    function setWeeklyDateLabel() {
+      const today = new Date();
+      const weekAgo = new Date(today);
+      weekAgo.setDate(today.getDate() - 6);
+      function fmt2(d) {
+        return `${String(d.getFullYear()).slice(2)}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
+      }
+      document.getElementById("weeklyDateLabel").textContent = `${fmt2(weekAgo)} ~ 오늘`;
+    }
+    setWeeklyDateLabel();
 
+    // ===== 주간 랭킹 =====
+    document.getElementById("weeklyBtn").addEventListener("click", async () => {
+      if (!completedState.op && !completedState.favor) return;
+      const mode = currentBoardMode || "op";
+      const today = new Date();
+      const weekAgo = new Date(today);
+      weekAgo.setDate(today.getDate() - 6);
+      const dates = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(weekAgo);
+        d.setDate(weekAgo.getDate() + i);
+        dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
+      }
+
+      const { data, error } = await supabase
+        .from("match_logs")
+        .select("winner_engraving, loser_engraving, tournament_type")
+        .eq("tournament_type", mode)
+        .in("date_key", dates);
+
+      if (error || !data || data.length === 0) {
+        rankingList.innerHTML = `<div class="rank-row"><div class="rank-col"><div class="rank-num">-</div></div><div class="rank-col"><div class="rank-name">주간 데이터 없음</div><div class="rank-job">토너먼트 참여 후 반영됩니다.</div></div></div>`;
+        document.querySelectorAll(".period-tabs .mini-tab").forEach(b => b.classList.remove("active-period"));
+        document.getElementById("weeklyBtn").classList.add("active-period");
+        return;
+      }
+
+      const stats = {};
+      for (const row of data) {
+        if (!stats[row.winner_engraving]) stats[row.winner_engraving] = { w: 0, l: 0 };
+        if (!stats[row.loser_engraving])  stats[row.loser_engraving]  = { w: 0, l: 0 };
+        stats[row.winner_engraving].w++;
+        stats[row.loser_engraving].l++;
+      }
+
+      let sorted = Object.entries(stats)
+        .map(([name, s]) => ({ name, w: s.w, l: s.l, total: s.w + s.l, rate: s.total > 0 ? (s.w / (s.w + s.l)) * 100 : 0 }))
+        .sort((a, b) => b.w - a.w || b.rate - a.rate);
+
+      if (mode === "op") {
+        sorted = sorted.filter(r => !SUPPORT_ENGRAVINGS.includes(r.name));
+      }
+
+      document.querySelectorAll(".period-tabs .mini-tab").forEach(b => b.classList.remove("active-period"));
+      document.getElementById("weeklyBtn").classList.add("active-period");
+
+      summaryCards.innerHTML = "";
+
+      rankingList.innerHTML = sorted.map((row, i) => `
+        <div class="rank-row">
+          <div class="rank-col"><div class="rank-num">${i+1}위</div></div>
+          <div class="rank-col"><div class="rank-name">${row.name}</div><div class="rank-job">주간 집계</div></div>
+          <div class="rank-col metric-block"><div class="metric-title">1:1 승수</div><div class="metric-main">${row.w}승</div><div class="meter"><div class="meter-fill win" style="width:${Math.min(100, row.w * 8)}%;"></div></div></div>
+          <div class="rank-col metric-block"><div class="metric-title">1:1 승률</div><div class="metric-main">${row.rate.toFixed(2)}%</div><div class="meter"><div class="meter-fill rate" style="width:${Math.min(100, row.rate)}%;"></div></div></div>
+          <div class="rank-col metric-block"><div class="metric-title">설명</div><div class="metric-sub">총 ${row.total}전 · ${row.w}승 ${row.l}패</div></div>
+        </div>`).join("");
+
+      rankingFooterNote.textContent = "※ 주간 랭킹은 최근 7일 기준 match_logs에서 집계됩니다.";
+    });
+
+    // ===== 전체 버튼 클릭 =====
+    document.getElementById("totalBtn").addEventListener("click", async () => {
+      document.querySelectorAll(".period-tabs .mini-tab").forEach(b => b.classList.remove("active-period"));
+      document.getElementById("totalBtn").classList.add("active-period");
+      const mode = currentBoardMode || "op";
+      await loadRankingData(mode);
+    });
     async function init() {
       visitorKey=getVisitorKey();
       initCalendar();
