@@ -2616,7 +2616,7 @@ gradeStampEl.classList.add(getStampClass(grade));
       }
 
       let sorted = Object.entries(stats)
-        .map(([name, s]) => ({ name, w: s.w, l: s.l, total: s.w + s.l, rate: s.total > 0 ? (s.w / (s.w + s.l)) * 100 : 0 }))
+        .map(([name, s]) => ({ name, w: s.w, l: s.l, total: s.w + s.l, rate: (s.w + s.l) > 0 ? Math.round((s.w / (s.w + s.l)) * 10000) / 100 : 0 }))
         .sort((a, b) => b.w - a.w || b.rate - a.rate);
 
       if (mode === "op") {
@@ -2628,14 +2628,19 @@ gradeStampEl.classList.add(getStampClass(grade));
 
       summaryCards.innerHTML = "";
 
-      rankingList.innerHTML = sorted.map((row, i) => `
+      rankingList.innerHTML = sorted.map((row, i) => {
+        const maxW = sorted[0].w || 1;
+        const winBarPct = Math.min(100, Math.round((row.w / maxW) * 100));
+        const rateBarPct = Math.min(100, Math.round(row.rate));
+        return `
         <div class="rank-row">
           <div class="rank-col"><div class="rank-num">${i+1}위</div></div>
           <div class="rank-col"><div class="rank-name">${row.name}</div><div class="rank-job">주간 집계</div></div>
-          <div class="rank-col metric-block"><div class="metric-title">1:1 승수</div><div class="metric-main">${row.w}승</div><div class="meter"><div class="meter-fill win" style="width:${Math.min(100, row.w * 8)}%;"></div></div></div>
-          <div class="rank-col metric-block"><div class="metric-title">1:1 승률</div><div class="metric-main">${row.rate.toFixed(2)}%</div><div class="meter"><div class="meter-fill rate" style="width:${Math.min(100, row.rate)}%;"></div></div></div>
+          <div class="rank-col metric-block"><div class="metric-title">우승 횟수</div><div class="metric-main">${row.w}회</div><div class="meter"><div class="meter-fill win" style="width:${winBarPct}%;"></div></div></div>
+          <div class="rank-col metric-block"><div class="metric-title">1:1 승률</div><div class="metric-main">${row.rate.toFixed(2)}%</div><div class="meter"><div class="meter-fill rate" style="width:${rateBarPct}%;"></div></div></div>
           <div class="rank-col metric-block"><div class="metric-title">설명</div><div class="metric-sub">총 ${row.total}전 · ${row.w}승 ${row.l}패</div></div>
-        </div>`).join("");
+        </div>`;
+      }).join("");
 
       rankingFooterNote.textContent = "※ 주간 랭킹은 최근 7일 기준 match_logs에서 집계됩니다.";
     });
