@@ -2321,6 +2321,8 @@ async function loadRankingDataByPeriod(mode, period) {
     .eq("week_key", weekKey);
 
   if (matchError) { alert("주간 매치 조회 실패: " + matchError.message); return; }
+    console.log("matchData 개수:", matchData.length);  // ★ 추가
+  console.log("sessionData 개수:", sessionData.length);  // ★ 추가
 
   const stats = {};
 
