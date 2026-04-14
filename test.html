@@ -1512,7 +1512,7 @@
           <a href="#" class="active">직각 토너먼트</a>
         </div>
 
-        <div class="mini-label">LOITER BASE · v19</div>
+        <div class="mini-label">LOITER BASE · v20</div>
         <div class="hero">로아<br>직각 토너먼트</div>
         <div class="muted">OP 직각과 호감 직각을 직접 선택하고, 완료 후 전체 랭킹을 확인할 수 있습니다.</div>
 
@@ -2579,7 +2579,7 @@ document.getElementById("periodWeekBtn").addEventListener("click", async () => {
       opTierModal.classList.add("show");
       document.getElementById("opTierContent").innerHTML=`<div class="loading-text">데이터 불러오는 중...</div>`;
       const entries=await loadTierData("op");
-      if (entries&&entries.length>0) { document.getElementById("opTierSub").textContent="최근 7일전 OP 1:1 승률 기준 ⏳​ 자동 집계 ⏳​"; renderTierContent(calcTiers(entries),"opTierContent"); }
+      if (entries&&entries.length>0) { document.getElementById("opTierSub").textContent="최근 7일간 OP 1:1 승률 통합 기준​"; renderTierContent(calcTiers(entries),"opTierContent"); }
       else { document.getElementById("opTierContent").innerHTML=`<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`; }
     });
 
@@ -2595,7 +2595,7 @@ document.getElementById("periodWeekBtn").addEventListener("click", async () => {
       favorTierModal.classList.add("show");
       document.getElementById("favorTierContent").innerHTML=`<div class="loading-text">데이터 불러오는 중...</div>`;
       const entries=await loadTierData("favor");
-      if (entries&&entries.length>0) { document.getElementById("favorTierSub").textContent="최근 7일전 호감 1:1 승률 기준 ⏳​ 자동 집계 ⏳​"; renderTierContent(calcTiers(entries),"favorTierContent"); }
+      if (entries&&entries.length>0) { document.getElementById("favorTierSub").textContent="최근 7일간 호감 1:1 승률 통합 기준​"; renderTierContent(calcTiers(entries),"favorTierContent"); }
       else { document.getElementById("favorTierContent").innerHTML=`<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`; }
     });
 
