@@ -2581,43 +2581,42 @@ gradeStampEl.classList.add(getStampClass(grade));
     setWeeklyDateLabel();
 
     // ===== 주간 랭킹 =====
-    document.getElementById("weeklyBtn").addEventListener("click", async () => {
+      document.getElementById("weeklyBtn").addEventListener("click", async () => {
       if (!completedState.op && !completedState.favor) return;
       const mode = currentBoardMode || "op";
-      const today = new Date();
-      const weekAgo = new Date(today);
-      weekAgo.setDate(today.getDate() - 6);
-      const dates = [];
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(weekAgo);
-        d.setDate(weekAgo.getDate() + i);
-        dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
-      }
 
-      const { data, error } = await supabase
-        .from("match_logs")
-        .select("winner_engraving, loser_engraving, tournament_type")
+      const { data: sessData, error: sessError } = await supabase
+        .from("sessions")
+        .select("winner_engraving, tournament_type, week_key")
         .eq("tournament_type", mode)
-        .in("date_key", dates);
+        .eq("week_key", getWeekKey());
 
-      if (error || !data || data.length === 0) {
+      const { data: candData } = await supabase
+        .from("candidates")
+        .select("engraving_name, class_name");
+
+      if (sessError || !sessData || sessData.length === 0) {
         rankingList.innerHTML = `<div class="rank-row"><div class="rank-col"><div class="rank-num">-</div></div><div class="rank-col"><div class="rank-name">주간 데이터 없음</div><div class="rank-job">토너먼트 참여 후 반영됩니다.</div></div></div>`;
         document.querySelectorAll(".period-tabs .mini-tab").forEach(b => b.classList.remove("active-period"));
         document.getElementById("weeklyBtn").classList.add("active-period");
+        summaryCards.innerHTML = "";
+        rankingFooterNote.textContent = "※ 주간 데이터가 없습니다.";
         return;
       }
 
+      const classMap = {};
+      (candData || []).forEach(c => { classMap[c.engraving_name] = c.class_name; });
+
       const stats = {};
-      for (const row of data) {
-        if (!stats[row.winner_engraving]) stats[row.winner_engraving] = { w: 0, l: 0 };
-        if (!stats[row.loser_engraving])  stats[row.loser_engraving]  = { w: 0, l: 0 };
-        stats[row.winner_engraving].w++;
-        stats[row.loser_engraving].l++;
+      for (const row of sessData) {
+        const name = row.winner_engraving;
+        if (!stats[name]) stats[name] = { w: 0, class_name: classMap[name] || "-" };
+        stats[name].w++;
       }
 
       let sorted = Object.entries(stats)
-        .map(([name, s]) => ({ name, w: s.w, l: s.l, total: s.w + s.l, rate: (s.w + s.l) > 0 ? Math.round((s.w / (s.w + s.l)) * 10000) / 100 : 0 }))
-        .sort((a, b) => b.w - a.w || b.rate - a.rate);
+        .map(([name, s]) => ({ name, class_name: s.class_name, w: s.w }))
+        .sort((a, b) => b.w - a.w);
 
       if (mode === "op") {
         sorted = sorted.filter(r => !SUPPORT_ENGRAVINGS.includes(r.name));
@@ -2628,21 +2627,18 @@ gradeStampEl.classList.add(getStampClass(grade));
 
       summaryCards.innerHTML = "";
 
+      const maxW = sorted[0]?.w || 1;
       rankingList.innerHTML = sorted.map((row, i) => {
-        const maxW = sorted[0].w || 1;
         const winBarPct = Math.min(100, Math.round((row.w / maxW) * 100));
-        const rateBarPct = Math.min(100, Math.round(row.rate));
         return `
         <div class="rank-row">
           <div class="rank-col"><div class="rank-num">${i+1}위</div></div>
-          <div class="rank-col"><div class="rank-name">${row.name}</div><div class="rank-job">주간 집계</div></div>
+          <div class="rank-col"><div class="rank-name">${row.name}</div><div class="rank-job">${row.class_name}</div></div>
           <div class="rank-col metric-block"><div class="metric-title">우승 횟수</div><div class="metric-main">${row.w}회</div><div class="meter"><div class="meter-fill win" style="width:${winBarPct}%;"></div></div></div>
-          <div class="rank-col metric-block"><div class="metric-title">1:1 승률</div><div class="metric-main">${row.rate.toFixed(2)}%</div><div class="meter"><div class="meter-fill rate" style="width:${rateBarPct}%;"></div></div></div>
-          <div class="rank-col metric-block"><div class="metric-title">설명</div><div class="metric-sub">총 ${row.total}전 · ${row.w}승 ${row.l}패</div></div>
         </div>`;
       }).join("");
 
-      rankingFooterNote.textContent = "※ 주간 랭킹은 최근 7일 기준 match_logs에서 집계됩니다.";
+      rankingFooterNote.textContent = "※ 주간 랭킹은 이번 주 sessions 기준으로 집계됩니다.";
     });
 
     // ===== 전체 버튼 클릭 =====
