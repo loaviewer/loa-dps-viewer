@@ -1678,7 +1678,7 @@
               </div>
             </div>
             <div class="period-tabs" style="margin-bottom:18px;">
-              <button class="mini-tab disabled"><span>주간</span><span class="tab-date">집계중</span></button>
+              <button class="mini-tab" id="weeklyBtn"><span>주간</span><span class="tab-date" id="weeklyDateLabel"></span></button>
               <button class="mini-tab disabled"><span>월간</span><span class="tab-date">집계중</span></button>
               <button class="mini-tab active-period"><span>전체</span><span class="tab-date">26.04.07 ~ 오늘</span></button>
             </div>
@@ -2624,6 +2624,66 @@ gradeStampEl.classList.add(getStampClass(grade));
     });
 
     acUpdate();
+
+     // ===== 주간 날짜 자동 계산 =====
+function setWeeklyDateLabel() {
+  const today = new Date();
+  const weekAgo = new Date(today);
+  weekAgo.setDate(today.getDate() - 6);
+  function fmt2(d) {
+    return `${String(d.getFullYear()).slice(2)}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
+  }
+  document.getElementById("weeklyDateLabel").textContent = `${fmt2(weekAgo)} ~ 오늘`;
+}
+setWeeklyDateLabel();
+
+// ===== 주간 랭킹 =====
+document.getElementById("weeklyBtn").addEventListener("click", async () => {
+  if (!completedState.op && !completedState.favor) return;
+  const mode = currentBoardMode || "op";
+  const wk = getWeekKey();
+  const { data, error } = await supabase
+    .from("match_logs")
+    .select("winner_engraving, loser_engraving, tournament_type")
+    .eq("week_key", wk)
+    .eq("tournament_type", mode);
+  if (error || !data) return;
+
+  // 주간 집계
+  const stats = {};
+  for (const row of data) {
+    if (!stats[row.winner_engraving]) stats[row.winner_engraving] = { w: 0, l: 0 };
+    if (!stats[row.loser_engraving])  stats[row.loser_engraving]  = { w: 0, l: 0 };
+    stats[row.winner_engraving].w++;
+    stats[row.loser_engraving].l++;
+  }
+
+  // 주간 탭 활성화
+  document.querySelectorAll(".period-tabs .mini-tab").forEach(b => b.classList.remove("active-period"));
+  document.getElementById("weeklyBtn").classList.add("active-period");
+
+  // 랭킹 표시
+  const sorted = Object.entries(stats)
+    .map(([name, s]) => ({ name, w: s.w, l: s.l, total: s.w + s.l, rate: s.w / (s.w + s.l) * 100 }))
+    .sort((a, b) => b.w - a.w || b.rate - a.rate);
+
+  rankingList.innerHTML = sorted.map((row, i) => `
+    <div class="rank-row">
+      <div class="rank-col"><div class="rank-num">${i+1}위</div></div>
+      <div class="rank-col"><div class="rank-name">${row.name}</div><div class="rank-job">주간 집계</div></div>
+      <div class="rank-col metric-block"><div class="metric-title">1:1 승률</div><div class="metric-main">${row.rate.toFixed(2)}%</div><div class="meter"><div class="meter-fill rate" style="width:${Math.min(100,row.rate)}%;"></div></div></div>
+      <div class="rank-col metric-block"><div class="metric-title">설명</div><div class="metric-sub">총 ${row.total}전 · ${row.w}승 ${row.l}패</div></div>
+    </div>`).join("");
+});
+
+
+document.getElementById("totalBtn").addEventListener("click", async () => {
+  document.querySelectorAll(".period-tabs .mini-tab").forEach(b => b.classList.remove("active-period"));
+  document.getElementById("totalBtn").classList.add("active-period");
+  const mode = currentBoardMode || "op";
+  await loadRankingData(mode);
+});
+    
     init();
   </script>
 
