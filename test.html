@@ -2581,7 +2581,9 @@ document.getElementById("opTierSub").textContent=`최근 7일간 OP 1:1 승률 �
       favorTierModal.classList.add("show");
       document.getElementById("favorTierContent").innerHTML=`<div class="loading-text">데이터 불러오는 중...</div>`;
       const entries=await loadTierData("favor");
-      if (entries&&entries.length>0) { document.getElementById("favorTierSub").textContent="최근 7일간 호감 1:1 승률 통합 기준​"; renderTierContent(calcTiers(entries),"favorTierContent"); }
+      if (entries&&entries.length>0) { const now = new Date();
+const stamp = `${String(now.getFullYear()).slice(2)}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+document.getElementById("favorTierSub").textContent=`최근 7일간 호감 1:1 승률 통합 기준 🕜​ ${stamp}`; renderTierContent(calcTiers(entries),"favorTierContent"); }
       else { document.getElementById("favorTierContent").innerHTML=`<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`; }
     });
 
