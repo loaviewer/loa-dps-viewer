@@ -1950,22 +1950,14 @@ function getStampClass(grade) {
     let winRateCache={};
 
     async function loadRecentWinRates(type) {
-      winRateCache={};
-      const today=new Date(), dates=[];
-      for (let i=0;i<5;i++) {
-        const d=new Date(today); d.setDate(d.getDate()-i);
-        dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
-      }
-      const {data,error}=await supabase.from("match_logs").select("winner_engraving,loser_engraving").eq("tournament_type",type).in("date_key",dates);
-      if (error||!data) return;
-      const stats={};
-      for (const row of data) {
-        if (!stats[row.winner_engraving]) stats[row.winner_engraving]={w:0,l:0};
-        if (!stats[row.loser_engraving])  stats[row.loser_engraving]={w:0,l:0};
-        stats[row.winner_engraving].w++; stats[row.loser_engraving].l++;
-      }
-      for (const [name,s] of Object.entries(stats)) { const t=s.w+s.l; winRateCache[name]=t>0?s.w/t:0.5; }
-    }
+  winRateCache={};
+  const {data,error}=await supabase.rpc("get_recent_winrates",{
+    p_type: type,
+    p_days: 5
+  });
+  if (error||!data) return;
+  for (const row of data) { winRateCache[row.engraving_name]=Number(row.win_rate); }
+}
 
     function getWinRate(name) { return winRateCache[name]!==undefined?winRateCache[name]:0.5; }
 
