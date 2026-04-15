@@ -1996,21 +1996,13 @@ function getStampClass(grade) {
     }
 
     async function loadTierData(type) {
-  const today=new Date(), dates=[];
-  for (let i=0;i<7;i++) {
-    const d=new Date(today); d.setDate(d.getDate()-i);
-    dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
-  }
-  const {data,error}=await supabase.from("match_logs").select("winner_engraving,loser_engraving").eq("tournament_type",type).in("date_key",dates);
+  const {data, error} = await supabase.rpc("get_tier_data", {
+    p_type: type,
+    p_days: 7
+  });
   if (error||!data) return null;
-  const stats={};
-  for (const row of data) {
-    if (!stats[row.winner_engraving]) stats[row.winner_engraving]={w:0,l:0};
-    if (!stats[row.loser_engraving])  stats[row.loser_engraving]={w:0,l:0};
-    stats[row.winner_engraving].w++; stats[row.loser_engraving].l++;
-  }
-  let entries=Object.entries(stats).map(([name,s])=>({name,winRate:s.w/(s.w+s.l)*100,total:s.w+s.l})).filter(e=>e.total>=5);
-  if (type==="op") entries=entries.filter(e=>!SUPPORT_ENGRAVINGS.includes(e.name));
+  let entries = data.map(r => ({name: r.engraving_name, winRate: Number(r.win_rate), total: Number(r.total_matches)}));
+  if (type==="op") entries = entries.filter(e => !SUPPORT_ENGRAVINGS.includes(e.name));
   return entries;
 }
 
