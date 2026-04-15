@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>로이터 베이스 | 관리자</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+      background: linear-gradient(135deg, #0b1018 0%, #0d1320 45%, #121927 100%);
+      color: #f3ead6;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ===== 비밀번호 화면 ===== */
+    .lock-screen {
+      text-align: center;
+      padding: 40px;
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      width: min(400px, 90%);
+    }
+    .lock-icon { font-size: 48px; margin-bottom: 16px; }
+    .lock-title { font-size: 24px; font-weight: 900; color: #ffffff; margin-bottom: 6px; }
+    .lock-sub { font-size: 13px; color: #7a8da8; margin-bottom: 24px; }
+    .lock-input {
+      width: 100%; padding: 12px 16px;
+      border-radius: 12px; border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.06); color: #ffffff;
+      font-size: 18px; font-weight: 900; text-align: center;
+      outline: none; letter-spacing: 4px; margin-bottom: 14px;
+      transition: 0.18s ease;
+    }
+    .lock-input:focus { border-color: rgba(122,140,255,0.60); background: rgba(255,255,255,0.09); }
+    .lock-btn {
+      width: 100%; padding: 13px;
+      border-radius: 12px; border: none; cursor: pointer;
+      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
+      color: #08111e; font-size: 16px; font-weight: 900;
+      transition: 0.18s ease;
+    }
+    .lock-btn:hover { transform: translateY(-1px); }
+    .lock-error { color: #ff8f8f; font-size: 13px; margin-top: 10px; display: none; }
+
+    /* ===== 관리자 페이지 ===== */
+    .admin-page { display: none; width: 100%; min-height: 100vh; padding: 24px; align-items: flex-start; justify-content: center; }
+    .admin-page.show { display: flex; }
+
+    .admin-wrap {
+      width: min(1200px, 100%);
+    }
+
+    .admin-header {
+      text-align: center; margin-bottom: 30px;
+      padding: 24px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .admin-header-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #7fc6ff; margin-bottom: 8px; font-weight: 900; }
+    .admin-header-title { font-size: 30px; font-weight: 900; color: #ffffff; }
+    .admin-header-sub { font-size: 13px; color: #7a8da8; margin-top: 6px; }
+
+    .admin-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+    .admin-card {
+      border-radius: 22px; padding: 22px;
+      background: linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.28);
+    }
+
+    .admin-card-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 900; margin-bottom: 4px; }
+    .admin-card-title { font-size: 18px; font-weight: 900; color: #ffffff; margin-bottom: 16px; }
+    .label-op { color: #8ef0c9; }
+    .label-favor { color: #ffd48a; }
+    .label-blue { color: #7fc6ff; }
+
+    .rate-table { width: 100%; border-collapse: collapse; }
+    .rate-table th {
+      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      color: #5a6a82; font-weight: 900; padding: 8px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.06); text-align: left;
+    }
+    .rate-table td { padding: 9px 10px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .rate-table tr:last-child td { border-bottom: none; }
+    .rate-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+    .rank-num { font-size: 13px; font-weight: 900; color: #5a6a82; }
+    .rank-num.top1 { color: #ffd700; }
+    .rank-num.top2 { color: #c0c0c0; }
+    .rank-num.top3 { color: #cd7f32; }
+
+    .eng-name { font-weight: 900; color: #ffffff; }
+    .cls-name { font-size: 11px; color: #7a8da8; margin-top: 2px; }
+
+    .rate-bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .rate-bar { flex: 1; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .rate-fill { height: 100%; border-radius: 999px; }
+    .fill-op    { background: linear-gradient(90deg, #3edc7d, #6ff0b7); }
+    .fill-favor { background: linear-gradient(90deg, #ffac55, #ffd48a); }
+    .fill-5d    { background: linear-gradient(90deg, #7a8cff, #4bd3ff); }
+    .fill-7d    { background: linear-gradient(90deg, #ff8ca5, #ff5f8f); }
+
+    .rate-val { font-size: 13px; font-weight: 900; color: #ffffff; min-width: 48px; text-align: right; }
+
+    .loading-text { text-align: center; color: #5a6a82; font-size: 13px; padding: 30px 0; }
+
+    .period-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 900; margin-left: 8px;
+    }
+    .badge-5d { background: rgba(122,140,255,0.18); color: #7a8cff; }
+    .badge-7d { background: rgba(255,140,165,0.18); color: #ff8ca5; }
+
+    @media (max-width: 768px) {
+      .admin-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 비밀번호 화면 -->
+  <div class="lock-screen" id="lockScreen">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">관리자 페이지</div>
+    <div class="lock-sub">접근 권한이 필요합니다</div>
+    <input class="lock-input" type="password" id="pwInput" placeholder="••••" maxlength="20" />
+    <button class="lock-btn" id="pwBtn">확인</button>
+    <div class="lock-error" id="pwError">비밀번호가 틀렸습니다 🔒</div>
+  </div>
+
+  <!-- 관리자 페이지 -->
+  <div class="admin-page" id="adminPage">
+    <div class="admin-wrap">
+      <div class="admin-header">
+        <div class="admin-header-label">LOITER BASE · ADMIN</div>
+        <div class="admin-header-title">관리자 대시보드 🛠️</div>
+        <div class="admin-header-sub">각인별 승률 모니터링 · 최근 5일 / 7일 기준</div>
+      </div>
+
+      <div class="admin-grid">
+        <!-- OP 5일 -->
+        <div class="admin-card">
+          <div class="admin-card-label label-op">OP TOURNAMENT</div>
+          <div class="admin-card-title">OP 직각 승률 <span class="period-badge badge-5d">최근 5일</span></div>
+          <div id="op5dTable"><div class="loading-text">불러오는 중...</div></div>
+        </div>
+
+        <!-- OP 7일 -->
+        <div class="admin-card">
+          <div class="admin-card-label label-op">OP TOURNAMENT</div>
+          <div class="admin-card-title">OP 직각 승률 <span class="period-badge badge-7d">최근 7일</span></div>
+          <div id="op7dTable"><div class="loading-text">불러오는 중...</div></div>
+        </div>
+
+        <!-- 호감 5일 -->
+        <div class="admin-card">
+          <div class="admin-card-label label-favor">FAVOR TOURNAMENT</div>
+          <div class="admin-card-title">호감 직각 승률 <span class="period-badge badge-5d">최근 5일</span></div>
+          <div id="favor5dTable"><div class="loading-text">불러오는 중...</div></div>
+        </div>
+
+        <!-- 호감 7일 -->
+        <div class="admin-card">
+          <div class="admin-card-label label-favor">FAVOR TOURNAMENT</div>
+          <div class="admin-card-title">호감 직각 승률 <span class="period-badge badge-7d">최근 7일</span></div>
+          <div id="favor7dTable"><div class="loading-text">불러오는 중...</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const SUPABASE_URL = "https://khszfukekudyripouifm.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // ===== 비밀번호 확인 =====
+    const pwInput  = document.getElementById("pwInput");
+    const pwBtn    = document.getElementById("pwBtn");
+    const pwError  = document.getElementById("pwError");
+    const lockScreen = document.getElementById("lockScreen");
+    const adminPage  = document.getElementById("adminPage");
+
+    async function checkPassword() {
+      const pw = pwInput.value.trim();
+      if (!pw) return;
+      const { data, error } = await supabase
+        .from("admin_config")
+        .select("value")
+        .eq("key", "admin_password")
+        .single();
+      if (error || !data) { pwError.style.display = "block"; return; }
+      if (data.value === pw) {
+        lockScreen.style.display = "none";
+        document.body.style.alignItems = "flex-start";
+        adminPage.classList.add("show");
+        loadAllData();
+      } else {
+        pwError.style.display = "block";
+        pwInput.value = "";
+        pwInput.focus();
+      }
+    }
+
+    pwBtn.addEventListener("click", checkPassword);
+    pwInput.addEventListener("keydown", e => { if (e.key === "Enter") checkPassword(); });
+
+    // ===== 데이터 로드 =====
+    async function loadData(type, days) {
+      const { data, error } = await supabase.rpc("get_recent_winrates", {
+        p_type: type,
+        p_days: days
+      });
+      if (error || !data) return [];
+      return data;
+    }
+
+    function renderTable(containerId, data, fillClass) {
+      const container = document.getElementById(containerId);
+      if (!data || data.length === 0) {
+        container.innerHTML = `<div class="loading-text">데이터 없음 😢</div>`;
+        return;
+      }
+      const sorted = [...data].sort((a, b) => Number(b.win_rate) - Number(a.win_rate));
+      container.innerHTML = `
+        <table class="rate-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>각인</th>
+              <th>승률</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sorted.map((row, i) => `
+              <tr>
+                <td><div class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</div></td>
+                <td><div class="eng-name">${row.engraving_name}</div></td>
+                <td>
+                  <div class="rate-bar-wrap">
+                    <div class="rate-bar"><div class="rate-fill ${fillClass}" style="width:${Math.min(100, Number(row.win_rate)*100)}%"></div></div>
+                    <div class="rate-val">${(Number(row.win_rate)*100).toFixed(1)}%</div>
+                  </div>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function loadAllData() {
+      const [op5, op7, favor5, favor7] = await Promise.all([
+        loadData("op", 5),
+        loadData("op", 7),
+        loadData("favor", 5),
+        loadData("favor", 7),
+      ]);
+      renderTable("op5dTable",    op5,    "fill-5d");
+      renderTable("op7dTable",    op7,    "fill-7d");
+      renderTable("favor5dTable", favor5, "fill-5d");
+      renderTable("favor7dTable", favor7, "fill-7d");
+    }
+  </script>
+</body>
+</html>
