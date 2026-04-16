@@ -1097,15 +1097,15 @@
 
                 <div class="sidebar-divider"></div>
 
-                <button class="menu-item simple-entry" data-menu="simple">잔혈컷 간편보기</button>
+                <button class="menu-item simple-entry" data-menu="simple">🟢 잔혈컷 간편보기  </button>
 
                 <div class="sidebar-divider"></div>
 
                 <div class="menu">
-                    <button class="menu-item active" data-menu="serka">세르카 딜지분 보기</button>
-                    <button class="menu-item" data-menu="cathedral">성당 딜지분 보기</button>
-                    <button class="menu-item" data-menu="gato1730">1730 가토 딜지분</button>
-                    <button class="menu-item" data-menu="gato1750">1750 가토 딜지분</button>
+                    <button class="menu-item active" data-menu="serka">🟢 세르카 딜지분 보기</button>
+                    <button class="menu-item" data-menu="cathedral">🟢 성당 딜지분 보기</button>
+                    <button class="menu-item" data-menu="gato1730">🟢 1730 가토 딜지분</button>
+                    <button class="menu-item" data-menu="gato1750">🟢 1750 가토 딜지분</button>
                 </div>
 
                 <div class="sidebar-divider"></div>
@@ -1299,7 +1299,7 @@
         const simpleData = {
             "1710": {
                 sectionTitle: "1710 레이드",
-                intro: "해당 레벨대에 입장할수있는 레이드를 나열하였습니다.",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
                 cards: [
                     {
                         theme:"b-green", title:"종막 노말", node:"1710",
@@ -1333,7 +1333,7 @@
             },
             "1720": {
                 sectionTitle: "1720 레이드",
-                intro: "해당 레벨대에 입장할수있는 레이드를 나열하였습니다.",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
                 cards: [
                     {
                         theme:"b-gold", title:"4막 하드", node:"1720",
@@ -1346,7 +1346,7 @@
                         theme:"b-gold", title:"성당 2단계", node:"1720",
                         rows:[
                             {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3080"}
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
                         ], gold:"40,000", goldTag:"귀속골드"
                     },
                     {
@@ -1367,7 +1367,7 @@
             },
             "1730": {
                 sectionTitle: "1730 레이드",
-                intro: "해당 레벨대에 입장할수있는 레이드를 나열하였습니다.",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
                 cards: [
                     {
                         theme:"b-gold", title:"세르카 하드", node:"1730",
@@ -1394,14 +1394,14 @@
                         theme:"b-gold", title:"성당 2단계", node:"1720",
                         rows:[
                             {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3080"}
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
                         ], gold:"40,000", goldTag:"귀속골드"
                     }
                 ]
             },
             "1740": {
                 sectionTitle: "1740 레이드",
-                intro: "해당 레벨대에 입장할수있는 레이드를 나열하였습니다.",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
                 cards: [
                     {
                         theme:"b-purple", title:"세르카 나메", node:"1740",
@@ -1428,14 +1428,14 @@
                         theme:"b-gold", title:"성당 2단계", node:"1720",
                         rows:[
                             {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3080"}
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
                         ], gold:"40,000", goldTag:"귀속골드"
                     }
                 ]
             },
             "1750": {
                 sectionTitle: "1750 레이드",
-                intro: "해당 레벨대에 입장할수있는 레이드를 나열하였습니다.",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
                 cards: [
                     {
                         theme:"b-purple", title:"세르카 나메", node:"1740",
@@ -1604,7 +1604,7 @@
         }
 
         function getContentName() {
-            if (currentMenu === "simple") return "잔혈컷 간편보기";
+            if (currentMenu === "simple") return "잔혈컷 간편보기 👀";
             if (currentMenu==="serka"||currentMenu==="cathedral") {
                 const meta=raidMeta[currentMenu][currentCombo];
                 const menuName=currentMenu==="serka"?"세르카":"성당";
@@ -1901,7 +1901,7 @@
             document.getElementById("mainContent").innerHTML = `
                 <div class="simple-view">
                     <div class="simple-intro">
-                        <div class="simple-intro-title">안내 : 잔혈컷 간편보기 페이지 입니다.</div>
+                        <div class="simple-intro-title"><b>안내 : 잔혈컷 간편보기 페이지 입니다. 😎</b></div>
                         <div class="simple-intro-sub">${data.intro}</div>
                     </div>
                     <div class="simple-stack">
@@ -1966,7 +1966,7 @@
 
             if (currentMenu === "simple") {
                 setClearTimeDisabled(true);
-                document.getElementById("infoHint").innerHTML = "해당 레벨대에 입장할수있는 레이드를 나열하였습니다.";
+                document.getElementById("infoHint").innerHTML = "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>";
                 document.getElementById("partyDpsDisplay").innerHTML = `파티 DPS : <span class="party-dps-value">-</span>`;
                 renderSimpleView();
                 return;
