@@ -387,22 +387,23 @@
 
     // ===== 등급 렌더 =====
     function renderGrade(containerId, counts) {
-      const container = document.getElementById(containerId);
-      const total = Object.values(counts).reduce((a,b)=>a+b,0);
-      if (total===0) { container.innerHTML=`<div class="loading-text">데이터 없음 😢</div>`; return; }
-      container.innerHTML = `
-        <div class="grade-total">총 ${total}명 참여</div>
-        <div class="grade-list">
-          ${GRADE_TABLE.map(g => {
-            const count = counts[g.grade]||0;
-            if (count===0) return "";
-            return `<div class="grade-row">
-              <div class="grade-name-text" style="color:${GRADE_COLORS[g.grade]}">${g.grade}</div>
-              <div class="grade-count"><span>${count}</span>명</div>
-            </div>`;
-          }).join("")}
+  const container = document.getElementById(containerId);
+  const total = Object.values(counts).reduce((a,b)=>a+b,0);
+  if (total===0) { container.innerHTML=`<div class="loading-text">데이터 없음 😢</div>`; return; }
+  container.innerHTML = `
+    <div class="grade-total">총 ${total}명 참여</div>
+    <div class="grade-list">
+      ${GRADE_TABLE.map(g => {
+        const count = counts[g.grade]||0;
+        if (count===0) return "";
+        const pct = (count / total * 100).toFixed(2);
+        return `<div class="grade-row">
+          <div class="grade-name-text" style="color:${GRADE_COLORS[g.grade]}">${g.grade}</div>
+          <div class="grade-count"><span>${pct}%</span> (${count}명)</div>
         </div>`;
-    }
+      }).join("")}
+    </div>`;
+}
 
     // ===== 데이터 로드 =====
     async function loadAllData() {
