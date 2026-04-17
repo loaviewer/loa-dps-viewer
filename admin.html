@@ -391,7 +391,7 @@
   const total = Object.values(counts).reduce((a,b)=>a+b,0);
   if (total===0) { container.innerHTML=`<div class="loading-text">데이터 없음 😢</div>`; return; }
   container.innerHTML = `
-    <div class="grade-total">총 ${total}명 참여</div>
+    <div class="grade-total">실시간 집계중</div>
     <div class="grade-list">
       ${GRADE_TABLE.map(g => {
         const count = counts[g.grade]||0;
