@@ -419,7 +419,9 @@
       const {data: opAll} = await supabase.from("ranking_overall")
         .select("engraving_name,class_name,win_count,lose_count,total_matches,win_rate,champion_count")
         .eq("tournament_type","op");
-      renderAllTable("opAllTable", opAll, "op");
+      const SUPPORT_ENGRAVINGS = ["해방자","절실한 구원","만개","축복의 오라"];
+      const opFiltered = opAll.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
+      renderAllTable("opAllTable", opFiltered, "op");
 
       // OP 등급
       const {data: gradeSessions} = await supabase.from("sessions").select("grade").eq("tournament_type","op");
