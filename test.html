@@ -2987,8 +2987,6 @@ document.getElementById("weekTabDate").textContent = `${fmt(weekAgo)} ~ 오늘`;
 
 
 
-const opRateModal = document.getElementById("opRateModal");
-
 // updateLockIcons 함수 안에 추가
 const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
 document.getElementById("opRateLockIcon").style.display = opRateUnlocked ? "none" : "flex";
