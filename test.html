@@ -2856,72 +2856,7 @@ document.getElementById("openOpRateBtn").addEventListener("click", async(e) => {
     dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
   }
 
-  const { data, error } = await supabase
-    .from("match_logs")
-    .select("winner_engraving, loser_engraving")
-    .eq("tournament_type", "op")
-    .in("date_key", dates);
-
-  if (error || !data) {
-    document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
-    return;
-  }
-
-  const stats = {};
-  for (const row of data) {
-    if (!stats[row.winner_engraving]) stats[row.winner_engraving] = { w:0, l:0 };
-    if (!stats[row.loser_engraving])  stats[row.loser_engraving]  = { w:0, l:0 };
-    stats[row.winner_engraving].w++;
-    stats[row.loser_engraving].l++;
-  }
-
-  let entries = Object.entries(stats)
-    .map(([name, s]) => ({
-      name, w: s.w, l: s.l,
-      total: s.w + s.l,
-      rate: s.w + s.l > 0 ? (s.w / (s.w + s.l)) * 100 : 0
-    }))
-    .filter(e => !SUPPORT_ENGRAVINGS.includes(e.name))
-    .sort((a, b) => b.rate - a.rate);
-
-  const from = dates[dates.length-1].slice(2).replace(/-/g,".");
-  const to   = dates[0].slice(2).replace(/-/g,".");
-  document.getElementById("opRateSub").textContent = `집계일 ${from} ~ ${to} · 총 ${entries.length}개 직각`;
-
-  document.getElementById("opRateContent").innerHTML = `
-    <table class="rate-table">
-      <thead><tr><th>#</th><th>각인</th><th>승률 / 전적</th></tr></thead>
-      <tbody>
-        ${entries.map((e, i) => `
-          <tr>
-            <td><div class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</div></td>
-            <td><div class="eng-name">${e.name}</div></td>
-            <td>
-              <div class="rate-bar-wrap">
-                <div class="rate-bar"><div class="rate-fill fill-op" style="width:${Math.min(100,e.rate)}%"></div></div>
-                <div class="rate-val">${e.rate.toFixed(1)}%</div>
-              </div>
-              <div class="record-text">${e.total}전 ${e.w}승 ${e.l}패</div>
-            </td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>`;
-});
-
-document.getElementById("closeOpRateBtn").addEventListener("click", () => {
-  opRateModal.classList.remove("show");
-});
-opRateModal.addEventListener("click", e => {
-  if (e.target === opRateModal) opRateModal.classList.remove("show");
-});
-
-
-    document.addEventListener("keydown",e=>{
-      if (e.key==="Escape") { guideModal.classList.remove("show"); opTierModal.classList.remove("show"); favorTierModal.classList.remove("show"); }
-    });
-opRateModal.classList.remove("show");
-
+  
     async function init() {
       visitorKey=getVisitorKey();
       initCalendar();
@@ -3010,6 +2945,71 @@ document.getElementById("openOpRateBtn").addEventListener("click", async(e) => {
     dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
   }
 
+const { data, error } = await supabase
+    .from("match_logs")
+    .select("winner_engraving, loser_engraving")
+    .eq("tournament_type", "op")
+    .in("date_key", dates);
+
+  if (error || !data) {
+    document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
+    return;
+  }
+
+  const stats = {};
+  for (const row of data) {
+    if (!stats[row.winner_engraving]) stats[row.winner_engraving] = { w:0, l:0 };
+    if (!stats[row.loser_engraving])  stats[row.loser_engraving]  = { w:0, l:0 };
+    stats[row.winner_engraving].w++;
+    stats[row.loser_engraving].l++;
+  }
+
+  let entries = Object.entries(stats)
+    .map(([name, s]) => ({
+      name, w: s.w, l: s.l,
+      total: s.w + s.l,
+      rate: s.w + s.l > 0 ? (s.w / (s.w + s.l)) * 100 : 0
+    }))
+    .filter(e => !SUPPORT_ENGRAVINGS.includes(e.name))
+    .sort((a, b) => b.rate - a.rate);
+
+  const from = dates[dates.length-1].slice(2).replace(/-/g,".");
+  const to   = dates[0].slice(2).replace(/-/g,".");
+  document.getElementById("opRateSub").textContent = `집계일 ${from} ~ ${to} · 총 ${entries.length}개 직각`;
+
+  document.getElementById("opRateContent").innerHTML = `
+    <table class="rate-table">
+      <thead><tr><th>#</th><th>각인</th><th>승률 / 전적</th></tr></thead>
+      <tbody>
+        ${entries.map((e, i) => `
+          <tr>
+            <td><div class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</div></td>
+            <td><div class="eng-name">${e.name}</div></td>
+            <td>
+              <div class="rate-bar-wrap">
+                <div class="rate-bar"><div class="rate-fill fill-op" style="width:${Math.min(100,e.rate)}%"></div></div>
+                <div class="rate-val">${e.rate.toFixed(1)}%</div>
+              </div>
+              <div class="record-text">${e.total}전 ${e.w}승 ${e.l}패</div>
+            </td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>`;
+});
+
+document.getElementById("closeOpRateBtn").addEventListener("click", () => {
+  opRateModal.classList.remove("show");
+});
+opRateModal.addEventListener("click", e => {
+  if (e.target === opRateModal) opRateModal.classList.remove("show");
+});
+
+
+    document.addEventListener("keydown",e=>{
+      if (e.key==="Escape") { guideModal.classList.remove("show"); opTierModal.classList.remove("show"); favorTierModal.classList.remove("show"); }
+    });
+opRateModal.classList.remove("show");
 
 
   </script>
