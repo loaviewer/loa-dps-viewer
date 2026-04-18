@@ -1537,7 +1537,30 @@
   padding: 4px 10px !important;
   font-size: 12px !important;
 }
-  
+  /* ===== 티어표 열람 조건 솔리드 뱃지 ===== */
+.tier-badge-solid {
+  display: inline-block;
+  align-self: flex-start; /* 글자 길이에 맞게 배경 크기 조절 */
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  margin-top: 3px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* OP 뱃지 (초록) */
+.badge-op-solid {
+  color: #0c1a13 !important;
+  background: linear-gradient(135deg, #3edc7d, #6ff0b7) !important;
+}
+
+/* 호감 뱃지 (주황) */
+.badge-favor-solid {
+  color: #2a1400 !important;
+  background: linear-gradient(135deg, #ffac55, #ffd48a) !important;
+}
   </style>
 </head>
 <body>
@@ -1565,7 +1588,7 @@
           <div class="tier-btn-content">
             <span class="tier-btn-small">OP TOURNAMENT</span>
             <span class="tier-btn-main">OP직각 티어표 📊</span>
-            <span class="tier-btn-tiny">A 도장 이상 열람 가능</span>
+            <span class="tier-badge-solid badge-op-solid">A 도장 이상 열람 가능</span>
           </div>
         </button>
 
@@ -1574,7 +1597,7 @@
           <div class="tier-btn-content">
             <span class="tier-btn-small">FAVOR TOURNAMENT</span>
             <span class="tier-btn-main">호감직각 티어표 💗</span>
-            <span class="tier-btn-tiny">도장 1개 이상 열람 가능</span>
+            <span class="tier-badge-solid badge-favor-solid">도장 1개 이상 열람 가능</span>
           </div>
         </button>
 
