@@ -2856,96 +2856,7 @@ document.getElementById("openOpRateBtn").addEventListener("click", async(e) => {
     dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
   }
 
-  
-    async function init() {
-      visitorKey=getVisitorKey();
-      initCalendar();
-      await loadCandidates();
-      await loadTodayParticipation();
-      // 주간 탭 날짜 세팅
-const now = new Date();
-const weekAgo = new Date(now);
-weekAgo.setDate(weekAgo.getDate() - 7);
-const fmt = d => `${String(d.getFullYear()).slice(2)}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
-document.getElementById("weekTabDate").textContent = `${fmt(weekAgo)} ~ 오늘`;
-    }
-    // ===== 경매 계산기 =====
-    function acFmt(n) { return Math.round(n).toLocaleString("ko-KR"); }
-    function calcBreakeven(price, members) { return price * 0.95 * (members - 1) / members; }
-    function calcRecommend(be, rate) { return be / (1 + rate); }
-
-    let acMembers = 4;
-
-    function acUpdate() {
-      const raw = (document.getElementById("ac-price").value||"").replace(/,/g,"");
-      const price = parseInt(raw) || 0;
-      if (!price) {
-        document.getElementById("ac-be").textContent = "-";
-        document.getElementById("ac-be-desc").textContent = "거래소 가격을 입력하세요";
-        [5,10].forEach(r => {
-          document.getElementById(`ac-v${r}`).textContent = "-";
-          document.getElementById(`ac-d${r}`).textContent = "가격 입력 시 표시";
-          document.getElementById(`ac-bar${r}`).style.width = "0%";
-        });
-        return;
-      }
-      const be = calcBreakeven(price, acMembers);
-      document.getElementById("ac-be").textContent = acFmt(be);
-      document.getElementById("ac-be-desc").textContent = "이 금액 이하로 입찰하면 이득";
-      const rec5 = calcRecommend(be, 0.05);
-      const rec10 = calcRecommend(be, 0.10);
-      document.getElementById("ac-v5").textContent = acFmt(rec5);
-      document.getElementById("ac-d5").textContent = `${acFmt(rec5)} 입찰 시 ${acFmt(be - rec5)} 이득`;
-      document.getElementById("ac-bar5").style.width = "60%";
-      document.getElementById("ac-v10").textContent = acFmt(rec10);
-      document.getElementById("ac-d10").textContent = `${acFmt(rec10)} 입찰 시 ${acFmt(be - rec10)} 이득`;
-      document.getElementById("ac-bar10").style.width = "100%";
-    }
-
-    document.querySelectorAll(".ac-toggle-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".ac-toggle-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        acMembers = parseInt(btn.dataset.m);
-        acUpdate();
-      });
-    });
-
-    document.getElementById("ac-price").addEventListener("input", e => {
-      let v = e.target.value.replace(/,/g,"").replace(/[^0-9]/g,"");
-      e.target.value = v ? Number(v).toLocaleString("ko-KR") : "";
-      acUpdate();
-    });
-
-    acUpdate();
-    init();
-
-
-
-// updateLockIcons 함수 안에 추가
-const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
-document.getElementById("opRateLockIcon").style.display = opRateUnlocked ? "none" : "flex";
-
-// 버튼 이벤트
-document.getElementById("openOpRateBtn").addEventListener("click", async(e) => {
-  const unlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
-  if (!unlocked) {
-    showMiniPopup(e.currentTarget, "OP직각 승률표", `열람 조건 : <span class="cond">S 도장 이상 획득 필요</span>`);
-    return;
-  }
-  opRateModal.classList.add("show");
-  document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
-
-  // 10일치 날짜 계산
-  const today = new Date();
-  const dates = [];
-  for (let i = 0; i < 10; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
-  }
-
-const { data, error } = await supabase
+  const { data, error } = await supabase
     .from("match_logs")
     .select("winner_engraving, loser_engraving")
     .eq("tournament_type", "op")
@@ -3011,7 +2922,273 @@ opRateModal.addEventListener("click", e => {
     });
 opRateModal.classList.remove("show");
 
+    async function init() {
+      visitorKey=getVisitorKey();
+      initCalendar();
+      await loadCandidates();
+      await loadTodayParticipation();
+      // 주간 탭 날짜 세팅
+const now = new Date();
+const weekAgo = new Date(now);
+weekAgo.setDate(weekAgo.getDate() - 7);
+const fmt = d => `${String(d.getFullYear()).slice(2)}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
+document.getElementById("weekTabDate").textContent = `${fmt(weekAgo)} ~ 오늘`;
+    }
+    // ===== 경매 계산기 =====
+    function acFmt(n) { return Math.round(n).toLocaleString("ko-KR"); }
+    function calcBreakeven(price, members) { return price * 0.95 * (members - 1) / members; }
+    function calcRecommend(be, rate) { return be / (1 + rate); }
 
+    let acMembers = 4;
+
+    function acUpdate() {
+      const raw = (document.getElementById("ac-price").value||"").replace(/,/g,"");
+      const price = parseInt(raw) || 0;
+      if (!price) {
+        document.getElementById("ac-be").textContent = "-";
+        document.getElementById("ac-be-desc").textContent = "거래소 가격을 입력하세요";
+        [5,10].forEach(r => {
+          document.getElementById(`ac-v${r}`).textContent = "-";
+          document.getElementById(`ac-d${r}`).textContent = "가격 입력 시 표시";
+          document.getElementById(`ac-bar${r}`).style.width = "0%";
+        });
+        return;
+      }
+      const be = calcBreakeven(price, acMembers);
+      document.getElementById("ac-be").textContent = acFmt(be);
+      document.getElementById("ac-be-desc").textContent = "이 금액 이하로 입찰하면 이득";
+      const rec5 = calcRecommend(be, 0.05);
+      const rec10 = calcRecommend(be, 0.10);
+      document.getElementById("ac-v5").textContent = acFmt(rec5);
+      document.getElementById("ac-d5").textContent = `${acFmt(rec5)} 입찰 시 ${acFmt(be - rec5)} 이득`;
+      document.getElementById("ac-bar5").style.width = "60%";
+      document.getElementById("ac-v10").textContent = acFmt(rec10);
+      document.getElementById("ac-d10").textContent = `${acFmt(rec10)} 입찰 시 ${acFmt(be - rec10)} 이득`;
+      document.getElementById("ac-bar10").style.width = "100%";
+    }
+
+    document.querySelectorAll(".ac-toggle-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".ac-toggle-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        acMembers = parseInt(btn.dataset.m);
+        acUpdate();
+      });
+    });
+
+    document.getElementById("ac-price").addEventListener("input", e => {
+      let v = e.target.value.replace(/,/g,"").replace(/[^0-9]/g,"");
+      e.target.value = v ? Number(v).toLocaleString("ko-KR") : "";
+      acUpdate();
+    });
+
+    acUpdate();
+    init();
+
+
+
+
+
+// updateLockIcons 함수 안에 추가
+const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+document.getElementById("opRateLockIcon").style.display = opRateUnlocked ? "none" : "flex";
+
+// 버튼 이벤트
+document.getElementById("openOpRateBtn").addEventListener("click", async(e) => {
+  const unlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+  if (!unlocked) {
+    showMiniPopup(e.currentTarget, "OP직각 승률표", `열람 조건 : <span class="cond">S 도장 이상 획득 필요</span>`);
+    return;
+  }
+  opRateModal.classList.add("show");
+  document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
+
+  // 10일치 날짜 계산
+  const today = new Date();
+  const dates = [];
+  for (let i = 0; i < 10; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
+  }
+
+    <script>
+// ===== updateLockIcons 함수 안에 추가 =====
+const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+document.getElementById("opRateLockIcon").style.display = opRateUnlocked ? "none" : "flex";
+
+// ===== OP 승률 모달 열기 =====
+document.getElementById("openOpRateBtn").addEventListener("click", async(e) => {
+  const unlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+  if (!unlocked) {
+    showMiniPopup(e.currentTarget, "OP직각 승률표", `열람 조건 : <span class="cond">S 도장 이상 획득 필요</span>`);
+    return;
+  }
+
+  opRateModal.classList.add("show");
+  document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
+
+  // 10일치 날짜 계산
+  const today = new Date();
+  const dates = [];
+  for (let i = 0; i < 10; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
+  }
+
+  const { data, error } = await supabase
+    .from("match_logs")
+    .select("winner_engraving, loser_engraving")
+    .eq("tournament_type", "op")
+    .in("date_key", dates);
+
+  if (error || !data) {
+    document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
+    return;
+  }
+
+  // 집계
+  const stats = {};
+  for (const row of data) {
+    if (!stats[row.winner_engraving]) stats[row.winner_engraving] = { w:0, l:0 };
+    if (!stats[row.loser_engraving])  stats[row.loser_engraving]  = { w:0, l:0 };
+    stats[row.winner_engraving].w++;
+    stats[row.loser_engraving].l++;
+  }
+
+  let entries = Object.entries(stats)
+    .map(([name, s]) => ({
+      name,
+      w: s.w, l: s.l,
+      total: s.w + s.l,
+      rate: s.w + s.l > 0 ? (s.w / (s.w + s.l)) * 100 : 0
+    }))
+    .filter(e => !SUPPORT_ENGRAVINGS.includes(e.name))
+    .sort((a, b) => b.rate - a.rate);
+
+  // 집계일 표시
+  const from = dates[dates.length-1].slice(2).replace(/-/g,".");
+  const to   = dates[0].slice(2).replace(/-/g,".");
+  document.getElementById("opRateSub").textContent = `집계일 ${from} ~ ${to} · 총 ${entries.length}개 직각`;
+
+  document.getElementById("opRateContent").innerHTML = `
+    <table class="rate-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>각인</th>
+          <th>승률 / 전적</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${entries.map((e, i) => `
+          <tr>
+            <td><div class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</div></td>
+            <td><div class="eng-name">${e.name}</div></td>
+            <td>
+              <div class="rate-bar-wrap">
+                <div class="rate-bar">
+                  <div class="rate-fill fill-op" style="width:${Math.min(100,e.rate)}%"></div>
+                </div>
+                <div class="rate-val">${e.rate.toFixed(1)}%</div>
+              </div>
+              <div class="record-text">${e.total}전 ${e.w}승 ${e.l}패</div>
+            </td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>`;
+});
+
+// ===== 모달 닫기 =====
+document.getElementById("closeOpRateBtn").addEventListener("click", () => {
+  opRateModal.classList.remove("show");
+});
+
+opRateModal.addEventListener("click", e => {
+  if (e.target === opRateModal) opRateModal.classList.remove("show");
+});
+
+// ===== Escape 키 =====
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    guideModal.classList.remove("show");
+    opTierModal.classList.remove("show");
+    favorTierModal.classList.remove("show");
+    opRateModal.classList.remove("show"); // ✅ 누락됐던 부분 추가
+  }
+});
+
+// ===== 경매 계산기 =====
+function acFmt(n) { return Math.round(n).toLocaleString("ko-KR"); }
+function calcBreakeven(price, members) { return price * 0.95 * (members - 1) / members; }
+function calcRecommend(be, rate) { return be / (1 + rate); }
+
+let acMembers = 4;
+
+function acUpdate() {
+  const raw = (document.getElementById("ac-price").value||"").replace(/,/g,"");
+  const price = parseInt(raw) || 0;
+  if (!price) {
+    document.getElementById("ac-be").textContent = "-";
+    document.getElementById("ac-be-desc").textContent = "거래소 가격을 입력하세요";
+    [5,10].forEach(r => {
+      document.getElementById(`ac-v${r}`).textContent = "-";
+      document.getElementById(`ac-d${r}`).textContent = "가격 입력 시 표시";
+      document.getElementById(`ac-bar${r}`).style.width = "0%";
+    });
+    return;
+  }
+  const be = calcBreakeven(price, acMembers);
+  document.getElementById("ac-be").textContent = acFmt(be);
+  document.getElementById("ac-be-desc").textContent = "이 금액 이하로 입찰하면 이득";
+
+  const rec5  = calcRecommend(be, 0.05);
+  const rec10 = calcRecommend(be, 0.10);
+
+  document.getElementById("ac-v5").textContent  = acFmt(rec5);
+  document.getElementById("ac-d5").textContent  = `${acFmt(rec5)} 입찰 시 ${acFmt(be - rec5)} 이득`;
+  document.getElementById("ac-bar5").style.width = "60%";
+
+  document.getElementById("ac-v10").textContent  = acFmt(rec10);
+  document.getElementById("ac-d10").textContent  = `${acFmt(rec10)} 입찰 시 ${acFmt(be - rec10)} 이득`;
+  document.getElementById("ac-bar10").style.width = "100%";
+}
+
+document.querySelectorAll(".ac-toggle-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".ac-toggle-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    acMembers = parseInt(btn.dataset.m);
+    acUpdate();
+  });
+});
+
+document.getElementById("ac-price").addEventListener("input", e => {
+  let v = e.target.value.replace(/,/g,"").replace(/[^0-9]/g,"");
+  e.target.value = v ? Number(v).toLocaleString("ko-KR") : "";
+  acUpdate();
+});
+
+acUpdate();
+
+// ===== 초기화 =====
+async function init() {
+  visitorKey = getVisitorKey();
+  initCalendar();
+  await loadCandidates();
+  await loadTodayParticipation();
+
+  // 주간 탭 날짜 세팅
+  const now = new Date();
+  const weekAgo = new Date(now);
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const fmt = d => `${String(d.getFullYear()).slice(2)}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
+  document.getElementById("weekTabDate").textContent = `${fmt(weekAgo)} ~ 오늘`;
+}
+
+init();
   </script>
 
 <div class="footer-loiter">
@@ -3021,6 +3198,6 @@ opRateModal.classList.remove("show");
     Data based on Google Sheets · Powered by Supabase · GitHub Pages · GoatCounter
   </p>
 </div>
-  
+
 </body>
 </html>
