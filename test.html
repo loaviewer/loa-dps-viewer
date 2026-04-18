@@ -267,6 +267,46 @@
       filter: drop-shadow(0 0 5px rgba(130,140,255,0.50));
     }
 
+.tier-btn-op-rate .oprate-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: 6px;
+  border-radius: 999px;
+  vertical-align: middle;
+  background: linear-gradient(135deg, rgba(130,100,255,0.30), rgba(80,180,255,0.26));
+  border: 1px solid rgba(180,220,255,0.28);
+  box-shadow:
+    0 0 10px rgba(100,200,255,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.14);
+}
+
+.tier-btn-op-rate .oprate-icon {
+  display: inline-block;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  color: initial !important;
+  font-size: 14px;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(120,210,255,0.35));
+  animation: opRateIconPulse 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes opRateIconPulse {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 4px rgba(120,210,255,0.22));
+  }
+  100% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 8px rgba(120,210,255,0.45));
+  }
+}
+    
     @keyframes opRateGlow {
       0%   { box-shadow: 0 0 10px rgba(100,200,255,0.25), 0 0 24px rgba(122,140,255,0.12); }
       100% { box-shadow: 0 0 18px rgba(100,220,255,0.45), 0 0 38px rgba(122,140,255,0.22); }
@@ -1826,7 +1866,10 @@
   <div class="tier-lock-icon" id="opRateLockIcon" style="display:none;">🔒</div>
   <div class="tier-btn-content">
     <span class="tier-btn-small">OP TOURNAMENT</span>
-    <span class="tier-btn-main">OP직각 승률표 📈</span>
+    <span class="tier-btn-main">
+  OP직각 승률표
+  <span class="oprate-icon-wrap"><span class="oprate-icon">📈</span></span>
+</span>
     <span class="tier-badge-solid badge-s-solid">S 도장 이상 열람 가능</span>
   </div>
 </button>
