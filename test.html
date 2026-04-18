@@ -229,55 +229,25 @@
       box-shadow: 0 0 18px rgba(255,196,90,0.15);
     }
 
-/* S등급 하늘색 애니메이션 버튼 */
-.tier-btn-op-rate {
-  background: linear-gradient(135deg, rgba(100,200,255,0.18), rgba(60,160,240,0.12), rgba(130,80,255,0.08));
-  border: 1px solid rgba(120,210,255,0.40);
-  color: #96dcff;
-  position: relative;
-  overflow: hidden;
-}
+    .tier-btn-op-rate {
+      background: linear-gradient(135deg, rgba(90,180,255,0.18), rgba(20,60,120,0.62));
+      border: 1px solid rgba(90,180,255,0.35);
+      color: #a9dfff;
+    }
 
-.tier-btn-op-rate::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: 18px;
-  background: conic-gradient(from var(--angle, 0deg),
-    rgba(100,200,255,0.75) 0deg,
-    rgba(200,240,255,0.95) 60deg,
-    rgba(160,120,255,0.60) 120deg,
-    rgba(80,220,180,0.55) 180deg,
-    rgba(100,180,255,0.70) 240deg,
-    rgba(200,240,255,0.90) 300deg,
-    rgba(100,200,255,0.75) 360deg);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 1.5px;
-  animation: borderRotate 4.5s linear infinite;
-  z-index: 0;
-}
+    .tier-btn-op-rate:hover {
+      transform: translateY(-1px);
+      border-color: rgba(120,210,255,0.60);
+      box-shadow: 0 0 18px rgba(90,180,255,0.16);
+    }
 
-.tier-btn-op-rate > * { position: relative; z-index: 1; }
+    .tier-btn-op-rate .tier-btn-small {
+      color: #86c9ff;
+    }
 
-.tier-btn-op-rate:hover {
-  transform: translateY(-1px);
-  border-color: rgba(120,210,255,0.70);
-  box-shadow: 0 0 18px rgba(100,200,255,0.22);
-}
-
-/* S등급 뱃지 */
-.badge-s-solid {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 900;
-  background: linear-gradient(135deg, rgba(100,200,255,0.22), rgba(160,120,255,0.18));
-  border: 1px solid rgba(120,210,255,0.35);
-  color: #a8deff;
-}
+    .tier-btn-op-rate .tier-btn-main {
+      color: #dff3ff;
+    }
 
     /* ===== 미니 팝업 ===== */
     .mini-popup {
@@ -1617,6 +1587,30 @@
   background: linear-gradient(135deg, #ffac55, #ffd48a) !important;
 }
 
+.badge-s-solid {
+  color: #08111e !important;
+  background: linear-gradient(135deg, #7fc6ff, #4bd3ff) !important;
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow:
+    0 4px 12px rgba(75,211,255,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+  animation: badgeSGlow 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes badgeSGlow {
+  0% {
+    box-shadow:
+      0 4px 12px rgba(75,211,255,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+  100% {
+    box-shadow:
+      0 6px 18px rgba(75,211,255,0.32),
+      0 0 18px rgba(122,140,255,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.28);
+  }
+}
+
 /* ===== 상단 토글 active 버튼 유리빛 강조 ===== */
 .switch-wrap a.active::before {
   content: "";
@@ -1708,22 +1702,15 @@
   }
 }
 
-.rate-table { width:100%; border-collapse:collapse; }
-.rate-table th { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#5a6a82; font-weight:900; padding:7px 8px; border-bottom:1px solid rgba(255,255,255,0.06); text-align:left; }
-.rate-table td { padding:8px 8px; font-size:12px; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
-.rate-table tr:last-child td { border-bottom:none; }
-.rate-table tr:hover td { background:rgba(255,255,255,0.03); }
-.rank-num { font-size:12px; font-weight:900; color:#5a6a82; }
-.rank-num.top1 { color:#ffd700; } .rank-num.top2 { color:#c0c0c0; } .rank-num.top3 { color:#cd7f32; }
-.eng-name { font-weight:900; color:#ffffff; font-size:13px; }
-.cls-name { font-size:10px; color:#7a8da8; margin-top:1px; }
-.rate-bar-wrap { display:flex; align-items:center; gap:6px; }
-.rate-bar { flex:1; height:5px; border-radius:999px; background:rgba(255,255,255,0.06); overflow:hidden; min-width:40px; }
-.rate-fill { height:100%; border-radius:999px; }
-.fill-op { background:linear-gradient(90deg,#3edc7d,#6ff0b7); }
-.rate-val { font-size:12px; font-weight:900; color:#ffffff; min-width:42px; text-align:right; }
-.record-text { font-size:10px; color:#5a6a82; margin-top:2px; }
-
+/* ===== OP 승률표 리스트 스타일 ===== */
+.rate-list-wrap { display: flex; flex-direction: column; gap: 8px; padding-bottom: 10px; }
+.rate-row-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+.rate-rank { font-size: 16px; font-weight: 900; color: #7fc6ff; width: 28px; text-align: center; }
+.rate-info { flex: 1; min-width: 0; }
+.rate-name { font-size: 14px; font-weight: 900; color: #ffffff; margin-bottom: 6px; }
+.rate-bar-bg { width: 100%; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; }
+.rate-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #7a8cff, #4bd3ff); }
+.rate-value { font-size: 15px; font-weight: 900; color: #ffffff; width: 55px; text-align: right; }
 
   </style>
 </head>
@@ -1764,14 +1751,15 @@
             <span class="tier-badge-solid badge-favor-solid">도장 1개 이상 열람 가능</span>
           </div>
         </button>
-<button class="tier-btn tier-btn-op-rate" id="openOpRateBtn">
-  <div class="tier-lock-icon" id="opRateLockIcon">🔒</div>
-  <div class="tier-btn-content">
-    <span class="tier-btn-small">OP TOURNAMENT</span>
-    <span class="tier-btn-main">OP직각 1:1 승률표 📈</span>
-    <span class="tier-badge-solid badge-s-solid">S 도장 이상 열람 가능</span>
-  </div>
-</button>
+
+        <button class="tier-btn tier-btn-op-rate" id="openOpRateBtn">
+          <div class="tier-lock-icon" id="opRateLockIcon">🔒</div>
+           <div class="tier-btn-content">
+           <span class="tier-btn-small">OP TOURNAMENT</span>
+           <span class="tier-btn-main">OP직각 승률표 📈</span>
+           <span class="tier-badge-solid badge-s-solid">S 도장 이상 열람 가능</span>
+          </div>
+     </button>
 
         <div class="sidebar-divider"></div>
         <!-- 경매 계산기 -->
@@ -2090,17 +2078,17 @@
     </div>
   </div>
 
-<div class="modal-backdrop" id="opRateModal">
-  <div class="modal-card">
-    <button class="modal-close" id="closeOpRateBtn">×</button>
-    <div class="modal-top-label">OP TOURNAMENT</div>
-    <div class="modal-title" style="color:#8ef0c9;">OP직각 1:1 승률표</div>
-    <div class="modal-sub" id="opRateSub">최근 10일 기준</div>
-    <div class="modal-divider"></div>
-    <div id="opRateContent"><div class="loading-text">데이터 불러오는 중...</div></div>
+  <!-- OP 승률표 모달 -->
+  <div class="modal-backdrop" id="opRateModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeOpRateBtn">×</button>
+      <div class="modal-top-label">OP TOURNAMENT</div>
+      <div class="modal-title" style="color:#4bd3ff;">OP직각 승률표 📈</div>
+      <div class="modal-sub" id="opRateSub">최근 10일간 1:1 승률 순위</div>
+      <div class="modal-divider"></div>
+      <div id="opRateContent"><div class="loading-text">데이터 불러오는 중...</div></div>
+    </div>
   </div>
-</div>
-
 
   <audio id="winnerAudio" preload="auto">
     <source src="https://loaviewer.github.io/loa-dps-viewer/sounds/winner2.mp3" type="audio/mpeg">
@@ -2128,7 +2116,7 @@
 
     const SUPPORT_ENGRAVINGS = ["절실한 구원","만개","축복의 오라","해방자"];
     const A_MINUS_AND_ABOVE  = ["SS+","SS","SS-","S+","S","S-","A+","A","A-"];
-    const S_AND_ABOVE = ["SS+","SS","SS-","S+","S","S-"];
+    const S_AND_ABOVE = ["SS+","SS","SS-","S+","S"];
 
     const GRADE_TABLE = [
       {grade:"SS+",min:100,max:100},{grade:"SS",min:98,max:99},{grade:"SS-",min:96,max:97},
@@ -2243,6 +2231,15 @@ function getStampClass(grade) {
   return entries;
 }
 
+async function loadOpRateData() {
+  const {data, error} = await supabase.rpc("get_tier_data", {
+    p_type: "op",
+    p_days: 10
+  });
+  if (error || !data) return null;
+  return data.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
+}
+
     function calcTiers(entries) {
       if (!entries.length) return [[],[],[],[],[],[]];
       const sorted=[...entries].sort((a,b)=>b.winRate-a.winRate);
@@ -2271,6 +2268,37 @@ function getStampClass(grade) {
         </div>`;
       }).join("");
     }
+
+function renderOpRateContent(rows) {
+  if (!rows || rows.length===0) {
+    opRateContent.innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
+    return;
+  }
+
+  const sorted = [...rows].sort((a,b)=>{
+    if (Number(b.win_rate)!==Number(a.win_rate)) return Number(b.win_rate)-Number(a.win_rate);
+    if (Number(b.total_matches)!==Number(a.total_matches)) return Number(b.total_matches)-Number(a.total_matches);
+    return Number(b.win_count)-Number(a.win_count);
+  });
+
+  opRateContent.innerHTML = `
+    <div class="rate-list-wrap">
+      ${sorted.map((row,i)=>`
+        <div class="rate-row-item">
+          <div class="rate-rank">${i+1}</div>
+          <div class="rate-info">
+            <div class="rate-name">${row.engraving_name}</div>
+            <div class="rate-bar-bg">
+              <div class="rate-bar-fill" style="width:${Math.min(100,Number(row.win_rate))}%"></div>
+            </div>
+            <div class="record-text" style="margin-top:6px;">${row.total_matches}전 ${row.win_count}승 ${row.lose_count}패</div>
+          </div>
+          <div class="rate-value">${Number(row.win_rate).toFixed(1)}%</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
 
     // ===== 달력 =====
     let calYear, calMonth;
@@ -2408,7 +2436,10 @@ function getStampClass(grade) {
     const favorTierModal     = document.getElementById("favorTierModal");
     const opLockIcon         = document.getElementById("opLockIcon");
     const favorLockIcon      = document.getElementById("favorLockIcon");
-    const opRateModal = document.getElementById("opRateModal");
+    const opRateModal        = document.getElementById("opRateModal");
+    const opRateSub          = document.getElementById("opRateSub");
+    const opRateContent      = document.getElementById("opRateContent");
+    const opRateLockIcon     = document.getElementById("opRateLockIcon");
 
     let visitorKey    = null;
     let completedState= {op:false,favor:false};
@@ -2461,13 +2492,13 @@ function getStampClass(grade) {
     }
 
     function updateLockIcons() {
-  const opUnlocked = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
-  const favorUnlocked = completedState.op || completedState.favor;
-  const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade); // ← 추가
+  const opUnlocked      = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
+  const favorUnlocked   = completedState.op || completedState.favor;
+  const opRateUnlocked  = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
 
-  opLockIcon.style.display = opUnlocked ? "none" : "flex";
-  favorLockIcon.style.display = favorUnlocked ? "none" : "flex";
-  document.getElementById("opRateLockIcon").style.display = opRateUnlocked ? "none" : "flex"; // ← 추가
+  opLockIcon.style.display     = opUnlocked ? "none" : "flex";
+  favorLockIcon.style.display  = favorUnlocked ? "none" : "flex";
+  opRateLockIcon.style.display = opRateUnlocked ? "none" : "flex";
 }
 
     function sortRankingRows(rows) {
@@ -2839,88 +2870,41 @@ document.getElementById("favorTierSub").textContent=`최근 7일간 호감 1:1 �
     document.getElementById("closeFavorTierBtn").addEventListener("click",()=>{ favorTierModal.classList.remove("show"); });
     favorTierModal.addEventListener("click",e=>{ if(e.target===favorTierModal) favorTierModal.classList.remove("show"); });
 
-document.getElementById("openOpRateBtn").addEventListener("click", async(e) => {
-  const unlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
-  if (!unlocked) {
-    showMiniPopup(e.currentTarget, "OP직각 승률표", `열람 조건 : <span class="cond">S 도장 이상 획득 필요</span>`);
+document.getElementById("closeOpRateBtn").addEventListener("click",()=>{ opRateModal.classList.remove("show"); });
+opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal.classList.remove("show"); });
+
+    document.getElementById("openOpRateBtn").addEventListener("click",async(e)=>{
+  const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+
+  if (!opRateUnlocked) {
+    showMiniPopup(
+      e.currentTarget,
+      "OP직각 승률표",
+      `열람 조건 : <span class="cond">S 도장 이상 획득 필요</span>`
+    );
     return;
   }
+
   opRateModal.classList.add("show");
-  document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
+  opRateContent.innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
 
-  const today = new Date();
-  const dates = [];
-  for (let i = 0; i < 10; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
-  }
+  const rows = await loadOpRateData();
 
-  const { data, error } = await supabase
-    .from("match_logs")
-    .select("winner_engraving, loser_engraving")
-    .eq("tournament_type", "op")
-    .in("date_key", dates);
+  const now = new Date();
+  const stamp = `${String(now.getFullYear()).slice(2)}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+  opRateSub.textContent = `OP 직각 1:1 승률 · 최근 10일 데이터 🕙 ${stamp}`;
 
-  if (error || !data) {
-    document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
-    return;
-  }
-
-  const stats = {};
-  for (const row of data) {
-    if (!stats[row.winner_engraving]) stats[row.winner_engraving] = { w:0, l:0 };
-    if (!stats[row.loser_engraving])  stats[row.loser_engraving]  = { w:0, l:0 };
-    stats[row.winner_engraving].w++;
-    stats[row.loser_engraving].l++;
-  }
-
-  let entries = Object.entries(stats)
-    .map(([name, s]) => ({
-      name, w: s.w, l: s.l,
-      total: s.w + s.l,
-      rate: s.w + s.l > 0 ? (s.w / (s.w + s.l)) * 100 : 0
-    }))
-    .filter(e => !SUPPORT_ENGRAVINGS.includes(e.name))
-    .sort((a, b) => b.rate - a.rate);
-
-  const from = dates[dates.length-1].slice(2).replace(/-/g,".");
-  const to   = dates[0].slice(2).replace(/-/g,".");
-  document.getElementById("opRateSub").textContent = `집계일 ${from} ~ ${to} · 총 ${entries.length}개 직각`;
-
-  document.getElementById("opRateContent").innerHTML = `
-    <table class="rate-table">
-      <thead><tr><th>#</th><th>각인</th><th>승률 / 전적</th></tr></thead>
-      <tbody>
-        ${entries.map((e, i) => `
-          <tr>
-            <td><div class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</div></td>
-            <td><div class="eng-name">${e.name}</div></td>
-            <td>
-              <div class="rate-bar-wrap">
-                <div class="rate-bar"><div class="rate-fill fill-op" style="width:${Math.min(100,e.rate)}%"></div></div>
-                <div class="rate-val">${e.rate.toFixed(1)}%</div>
-              </div>
-              <div class="record-text">${e.total}전 ${e.w}승 ${e.l}패</div>
-            </td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>`;
+  renderOpRateContent(rows);
 });
-
-document.getElementById("closeOpRateBtn").addEventListener("click", () => {
-  opRateModal.classList.remove("show");
-});
-opRateModal.addEventListener("click", e => {
-  if (e.target === opRateModal) opRateModal.classList.remove("show");
-});
-
 
     document.addEventListener("keydown",e=>{
-      if (e.key==="Escape") { guideModal.classList.remove("show"); opTierModal.classList.remove("show"); favorTierModal.classList.remove("show"); }
-    });
-opRateModal.classList.remove("show");
+  if (e.key==="Escape") {
+    guideModal.classList.remove("show");
+    opTierModal.classList.remove("show");
+    favorTierModal.classList.remove("show");
+    opRateModal.classList.remove("show");
+  }
+});
 
     async function init() {
       visitorKey=getVisitorKey();
@@ -2984,185 +2968,6 @@ document.getElementById("weekTabDate").textContent = `${fmt(weekAgo)} ~ 오늘`;
 
     acUpdate();
     init();
-
-
-    <script>
-// ===== updateLockIcons 함수 안에 추가 =====
-const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
-document.getElementById("opRateLockIcon").style.display = opRateUnlocked ? "none" : "flex";
-
-// ===== OP 승률 모달 열기 =====
-document.getElementById("openOpRateBtn").addEventListener("click", async(e) => {
-  const unlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
-  if (!unlocked) {
-    showMiniPopup(e.currentTarget, "OP직각 승률표", `열람 조건 : <span class="cond">S 도장 이상 획득 필요</span>`);
-    return;
-  }
-
-  opRateModal.classList.add("show");
-  document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
-
-  // 10일치 날짜 계산
-  const today = new Date();
-  const dates = [];
-  for (let i = 0; i < 10; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
-  }
-
-  const { data, error } = await supabase
-    .from("match_logs")
-    .select("winner_engraving, loser_engraving")
-    .eq("tournament_type", "op")
-    .in("date_key", dates);
-
-  if (error || !data) {
-    document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
-    return;
-  }
-
-  // 집계
-  const stats = {};
-  for (const row of data) {
-    if (!stats[row.winner_engraving]) stats[row.winner_engraving] = { w:0, l:0 };
-    if (!stats[row.loser_engraving])  stats[row.loser_engraving]  = { w:0, l:0 };
-    stats[row.winner_engraving].w++;
-    stats[row.loser_engraving].l++;
-  }
-
-  let entries = Object.entries(stats)
-    .map(([name, s]) => ({
-      name,
-      w: s.w, l: s.l,
-      total: s.w + s.l,
-      rate: s.w + s.l > 0 ? (s.w / (s.w + s.l)) * 100 : 0
-    }))
-    .filter(e => !SUPPORT_ENGRAVINGS.includes(e.name))
-    .sort((a, b) => b.rate - a.rate);
-
-  // 집계일 표시
-  const from = dates[dates.length-1].slice(2).replace(/-/g,".");
-  const to   = dates[0].slice(2).replace(/-/g,".");
-  document.getElementById("opRateSub").textContent = `집계일 ${from} ~ ${to} · 총 ${entries.length}개 직각`;
-
-  document.getElementById("opRateContent").innerHTML = `
-    <table class="rate-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>각인</th>
-          <th>승률 / 전적</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${entries.map((e, i) => `
-          <tr>
-            <td><div class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</div></td>
-            <td><div class="eng-name">${e.name}</div></td>
-            <td>
-              <div class="rate-bar-wrap">
-                <div class="rate-bar">
-                  <div class="rate-fill fill-op" style="width:${Math.min(100,e.rate)}%"></div>
-                </div>
-                <div class="rate-val">${e.rate.toFixed(1)}%</div>
-              </div>
-              <div class="record-text">${e.total}전 ${e.w}승 ${e.l}패</div>
-            </td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>`;
-});
-
-// ===== 모달 닫기 =====
-document.getElementById("closeOpRateBtn").addEventListener("click", () => {
-  opRateModal.classList.remove("show");
-});
-
-opRateModal.addEventListener("click", e => {
-  if (e.target === opRateModal) opRateModal.classList.remove("show");
-});
-
-// ===== Escape 키 =====
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
-    guideModal.classList.remove("show");
-    opTierModal.classList.remove("show");
-    favorTierModal.classList.remove("show");
-    opRateModal.classList.remove("show"); // ✅ 누락됐던 부분 추가
-  }
-});
-
-// ===== 경매 계산기 =====
-function acFmt(n) { return Math.round(n).toLocaleString("ko-KR"); }
-function calcBreakeven(price, members) { return price * 0.95 * (members - 1) / members; }
-function calcRecommend(be, rate) { return be / (1 + rate); }
-
-let acMembers = 4;
-
-function acUpdate() {
-  const raw = (document.getElementById("ac-price").value||"").replace(/,/g,"");
-  const price = parseInt(raw) || 0;
-  if (!price) {
-    document.getElementById("ac-be").textContent = "-";
-    document.getElementById("ac-be-desc").textContent = "거래소 가격을 입력하세요";
-    [5,10].forEach(r => {
-      document.getElementById(`ac-v${r}`).textContent = "-";
-      document.getElementById(`ac-d${r}`).textContent = "가격 입력 시 표시";
-      document.getElementById(`ac-bar${r}`).style.width = "0%";
-    });
-    return;
-  }
-  const be = calcBreakeven(price, acMembers);
-  document.getElementById("ac-be").textContent = acFmt(be);
-  document.getElementById("ac-be-desc").textContent = "이 금액 이하로 입찰하면 이득";
-
-  const rec5  = calcRecommend(be, 0.05);
-  const rec10 = calcRecommend(be, 0.10);
-
-  document.getElementById("ac-v5").textContent  = acFmt(rec5);
-  document.getElementById("ac-d5").textContent  = `${acFmt(rec5)} 입찰 시 ${acFmt(be - rec5)} 이득`;
-  document.getElementById("ac-bar5").style.width = "60%";
-
-  document.getElementById("ac-v10").textContent  = acFmt(rec10);
-  document.getElementById("ac-d10").textContent  = `${acFmt(rec10)} 입찰 시 ${acFmt(be - rec10)} 이득`;
-  document.getElementById("ac-bar10").style.width = "100%";
-}
-
-document.querySelectorAll(".ac-toggle-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".ac-toggle-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    acMembers = parseInt(btn.dataset.m);
-    acUpdate();
-  });
-});
-
-document.getElementById("ac-price").addEventListener("input", e => {
-  let v = e.target.value.replace(/,/g,"").replace(/[^0-9]/g,"");
-  e.target.value = v ? Number(v).toLocaleString("ko-KR") : "";
-  acUpdate();
-});
-
-acUpdate();
-
-// ===== 초기화 =====
-async function init() {
-  visitorKey = getVisitorKey();
-  initCalendar();
-  await loadCandidates();
-  await loadTodayParticipation();
-
-  // 주간 탭 날짜 세팅
-  const now = new Date();
-  const weekAgo = new Date(now);
-  weekAgo.setDate(weekAgo.getDate() - 7);
-  const fmt = d => `${String(d.getFullYear()).slice(2)}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
-  document.getElementById("weekTabDate").textContent = `${fmt(weekAgo)} ~ 오늘`;
-}
-
-init();
   </script>
 
 <div class="footer-loiter">
@@ -3172,6 +2977,6 @@ init();
     Data based on Google Sheets · Powered by Supabase · GitHub Pages · GoatCounter
   </p>
 </div>
-
+  
 </body>
 </html>
