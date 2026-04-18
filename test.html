@@ -2986,32 +2986,6 @@ document.getElementById("weekTabDate").textContent = `${fmt(weekAgo)} ~ 오늘`;
     init();
 
 
-
-
-
-// updateLockIcons 함수 안에 추가
-const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
-document.getElementById("opRateLockIcon").style.display = opRateUnlocked ? "none" : "flex";
-
-// 버튼 이벤트
-document.getElementById("openOpRateBtn").addEventListener("click", async(e) => {
-  const unlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
-  if (!unlocked) {
-    showMiniPopup(e.currentTarget, "OP직각 승률표", `열람 조건 : <span class="cond">S 도장 이상 획득 필요</span>`);
-    return;
-  }
-  opRateModal.classList.add("show");
-  document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
-
-  // 10일치 날짜 계산
-  const today = new Date();
-  const dates = [];
-  for (let i = 0; i < 10; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
-  }
-
     <script>
 // ===== updateLockIcons 함수 안에 추가 =====
 const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
