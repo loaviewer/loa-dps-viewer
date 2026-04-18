@@ -2376,12 +2376,19 @@ function renderOpRateContent(rows) {
     }
 
     document.addEventListener("click", e => {
-      const opBtn    = document.getElementById("openOpTierBtn");
-      const favorBtn = document.getElementById("openFavorTierBtn");
-      if (!miniPopup.contains(e.target) && e.target !== opBtn && !opBtn.contains(e.target) && e.target !== favorBtn && !favorBtn.contains(e.target)) {
-        miniPopup.classList.remove("show");
-      }
-    });
+  const opBtn     = document.getElementById("openOpTierBtn");
+  const favorBtn  = document.getElementById("openFavorTierBtn");
+  const opRateBtn = document.getElementById("openOpRateBtn");
+
+  if (
+    !miniPopup.contains(e.target) &&
+    e.target !== opBtn && !opBtn.contains(e.target) &&
+    e.target !== favorBtn && !favorBtn.contains(e.target) &&
+    e.target !== opRateBtn && !opRateBtn.contains(e.target)
+  ) {
+    miniPopup.classList.remove("show");
+  }
+});
 
     // ===== DOM =====
     const opStamp        = document.getElementById("opStamp");
