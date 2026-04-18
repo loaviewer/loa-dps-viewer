@@ -229,6 +229,56 @@
       box-shadow: 0 0 18px rgba(255,196,90,0.15);
     }
 
+/* S등급 하늘색 애니메이션 버튼 */
+.tier-btn-op-rate {
+  background: linear-gradient(135deg, rgba(100,200,255,0.18), rgba(60,160,240,0.12), rgba(130,80,255,0.08));
+  border: 1px solid rgba(120,210,255,0.40);
+  color: #96dcff;
+  position: relative;
+  overflow: hidden;
+}
+
+.tier-btn-op-rate::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 18px;
+  background: conic-gradient(from var(--angle, 0deg),
+    rgba(100,200,255,0.75) 0deg,
+    rgba(200,240,255,0.95) 60deg,
+    rgba(160,120,255,0.60) 120deg,
+    rgba(80,220,180,0.55) 180deg,
+    rgba(100,180,255,0.70) 240deg,
+    rgba(200,240,255,0.90) 300deg,
+    rgba(100,200,255,0.75) 360deg);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  animation: borderRotate 4.5s linear infinite;
+  z-index: 0;
+}
+
+.tier-btn-op-rate > * { position: relative; z-index: 1; }
+
+.tier-btn-op-rate:hover {
+  transform: translateY(-1px);
+  border-color: rgba(120,210,255,0.70);
+  box-shadow: 0 0 18px rgba(100,200,255,0.22);
+}
+
+/* S등급 뱃지 */
+.badge-s-solid {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  background: linear-gradient(135deg, rgba(100,200,255,0.22), rgba(160,120,255,0.18));
+  border: 1px solid rgba(120,210,255,0.35);
+  color: #a8deff;
+}
+
     /* ===== 미니 팝업 ===== */
     .mini-popup {
       position: fixed;
@@ -1658,6 +1708,22 @@
   }
 }
 
+.rate-table { width:100%; border-collapse:collapse; }
+.rate-table th { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#5a6a82; font-weight:900; padding:7px 8px; border-bottom:1px solid rgba(255,255,255,0.06); text-align:left; }
+.rate-table td { padding:8px 8px; font-size:12px; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
+.rate-table tr:last-child td { border-bottom:none; }
+.rate-table tr:hover td { background:rgba(255,255,255,0.03); }
+.rank-num { font-size:12px; font-weight:900; color:#5a6a82; }
+.rank-num.top1 { color:#ffd700; } .rank-num.top2 { color:#c0c0c0; } .rank-num.top3 { color:#cd7f32; }
+.eng-name { font-weight:900; color:#ffffff; font-size:13px; }
+.cls-name { font-size:10px; color:#7a8da8; margin-top:1px; }
+.rate-bar-wrap { display:flex; align-items:center; gap:6px; }
+.rate-bar { flex:1; height:5px; border-radius:999px; background:rgba(255,255,255,0.06); overflow:hidden; min-width:40px; }
+.rate-fill { height:100%; border-radius:999px; }
+.fill-op { background:linear-gradient(90deg,#3edc7d,#6ff0b7); }
+.rate-val { font-size:12px; font-weight:900; color:#ffffff; min-width:42px; text-align:right; }
+.record-text { font-size:10px; color:#5a6a82; margin-top:2px; }
+
 
   </style>
 </head>
@@ -1698,6 +1764,14 @@
             <span class="tier-badge-solid badge-favor-solid">도장 1개 이상 열람 가능</span>
           </div>
         </button>
+<button class="tier-btn tier-btn-op-rate" id="openOpRateBtn">
+  <div class="tier-lock-icon" id="opRateLockIcon">🔒</div>
+  <div class="tier-btn-content">
+    <span class="tier-btn-small">OP TOURNAMENT</span>
+    <span class="tier-btn-main">OP직각 1:1 승률표 📈</span>
+    <span class="tier-badge-solid badge-s-solid">S 도장 이상 열람 가능</span>
+  </div>
+</button>
 
         <div class="sidebar-divider"></div>
         <!-- 경매 계산기 -->
@@ -2015,6 +2089,18 @@
       <div id="favorTierContent"><div class="loading-text">데이터 불러오는 중...</div></div>
     </div>
   </div>
+
+<div class="modal-backdrop" id="opRateModal">
+  <div class="modal-card">
+    <button class="modal-close" id="closeOpRateBtn">×</button>
+    <div class="modal-top-label">OP TOURNAMENT</div>
+    <div class="modal-title" style="color:#8ef0c9;">OP직각 1:1 승률표</div>
+    <div class="modal-sub" id="opRateSub">최근 10일 기준</div>
+    <div class="modal-divider"></div>
+    <div id="opRateContent"><div class="loading-text">데이터 불러오는 중...</div></div>
+  </div>
+</div>
+
 
   <audio id="winnerAudio" preload="auto">
     <source src="https://loaviewer.github.io/loa-dps-viewer/sounds/winner2.mp3" type="audio/mpeg">
@@ -2751,6 +2837,7 @@ document.getElementById("favorTierSub").textContent=`최근 7일간 호감 1:1 �
     document.addEventListener("keydown",e=>{
       if (e.key==="Escape") { guideModal.classList.remove("show"); opTierModal.classList.remove("show"); favorTierModal.classList.remove("show"); }
     });
+opRateModal.classList.remove("show");
 
     async function init() {
       visitorKey=getVisitorKey();
@@ -2814,6 +2901,103 @@ document.getElementById("weekTabDate").textContent = `${fmt(weekAgo)} ~ 오늘`;
 
     acUpdate();
     init();
+
+
+const S_AND_ABOVE = ["SS+","SS","SS-","S+","S","S-"];
+const opRateModal = document.getElementById("opRateModal");
+
+// updateLockIcons 함수 안에 추가
+const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+document.getElementById("opRateLockIcon").style.display = opRateUnlocked ? "none" : "flex";
+
+// 버튼 이벤트
+document.getElementById("openOpRateBtn").addEventListener("click", async(e) => {
+  const unlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+  if (!unlocked) {
+    showMiniPopup(e.currentTarget, "OP직각 승률표", `열람 조건 : <span class="cond">S 도장 이상 획득 필요</span>`);
+    return;
+  }
+  opRateModal.classList.add("show");
+  document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
+
+  // 10일치 날짜 계산
+  const today = new Date();
+  const dates = [];
+  for (let i = 0; i < 10; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`);
+  }
+
+  const { data, error } = await supabase
+    .from("match_logs")
+    .select("winner_engraving, loser_engraving")
+    .eq("tournament_type", "op")
+    .in("date_key", dates);
+
+  if (error || !data) {
+    document.getElementById("opRateContent").innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
+    return;
+  }
+
+  // 집계
+  const stats = {};
+  for (const row of data) {
+    if (!stats[row.winner_engraving]) stats[row.winner_engraving] = { w:0, l:0 };
+    if (!stats[row.loser_engraving])  stats[row.loser_engraving]  = { w:0, l:0 };
+    stats[row.winner_engraving].w++;
+    stats[row.loser_engraving].l++;
+  }
+
+  let entries = Object.entries(stats)
+    .map(([name, s]) => ({
+      name,
+      w: s.w, l: s.l,
+      total: s.w + s.l,
+      rate: s.w + s.l > 0 ? (s.w / (s.w + s.l)) * 100 : 0
+    }))
+    .filter(e => !SUPPORT_ENGRAVINGS.includes(e.name))
+    .sort((a, b) => b.rate - a.rate);
+
+  // 집계일 표시
+  const from = dates[dates.length-1].slice(2).replace(/-/g,".");
+  const to   = dates[0].slice(2).replace(/-/g,".");
+  document.getElementById("opRateSub").textContent = `집계일 ${from} ~ ${to} · 총 ${entries.length}개 직각`;
+
+  document.getElementById("opRateContent").innerHTML = `
+    <table class="rate-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>각인</th>
+          <th>승률 / 전적</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${entries.map((e, i) => `
+          <tr>
+            <td><div class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</div></td>
+            <td><div class="eng-name">${e.name}</div></td>
+            <td>
+              <div class="rate-bar-wrap">
+                <div class="rate-bar"><div class="rate-fill fill-op" style="width:${Math.min(100,e.rate)}%"></div></div>
+                <div class="rate-val">${e.rate.toFixed(1)}%</div>
+              </div>
+              <div class="record-text">${e.total}전 ${e.w}승 ${e.l}패</div>
+            </td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>`;
+});
+
+document.getElementById("closeOpRateBtn").addEventListener("click", () => {
+  opRateModal.classList.remove("show");
+});
+opRateModal.addEventListener("click", e => {
+  if (e.target === opRateModal) opRateModal.classList.remove("show");
+});
+
   </script>
 
 <div class="footer-loiter">
