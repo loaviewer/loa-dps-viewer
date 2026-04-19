@@ -2423,7 +2423,7 @@
               </div>
             </div>
             <div class="period-tabs" style="margin-bottom:18px;">
-              <button class="mini-tab" id="periodWeekBtn"><span>주간 (최근 7일)</span><span class="tab-date" id="weekTabDate"></span></button>
+              <button class="mini-tab" id="periodWeekBtn"><span>주간</span><span class="tab-date" id="weekTabDate"></span></button>
               <button class="mini-tab disabled"><span>월간</span><span class="tab-date">집계중</span></button>
               <button class="mini-tab active-period" id="periodAllBtn"><span>전체</span><span class="tab-date">26.04.07 ~ 오늘</span></button>
             </div>
@@ -3184,6 +3184,7 @@ async function loadRankingDataByPeriod(mode, period) {
 
   renderBoardFromRows(data, mode);
 }
+    
     function updateRankingLockState() {
       const bothCompleted=completedState.op&&completedState.favor;
       const oneCompleted=completedState.op||completedState.favor;
