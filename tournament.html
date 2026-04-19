@@ -3173,17 +3173,16 @@ function renderOpRateContent(rows) {
 }
 
 async function loadRankingDataByPeriod(mode, period) {
-  const weekKey = getWeekKey();
-
-  const {data, error} = await supabase.rpc("get_weekly_ranking", {
+  const {data, error} = await supabase.rpc("get_tier_data", {
     p_type: mode,
-    p_week: weekKey
+    p_days: 7
   });
 
   if (error) { alert("주간 랭킹 조회 실패: " + error.message); return; }
 
   renderBoardFromRows(data, mode);
 }
+    
     function updateRankingLockState() {
       const bothCompleted=completedState.op&&completedState.favor;
       const oneCompleted=completedState.op||completedState.favor;
