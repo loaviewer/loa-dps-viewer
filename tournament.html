@@ -3173,24 +3173,16 @@ function renderOpRateContent(rows) {
 }
 
 async function loadRankingDataByPeriod(mode, period) {
-  const {data, error} = await supabase.rpc("get_tier_data", {
+  const weekKey = getWeekKey();
+
+  const {data, error} = await supabase.rpc("get_weekly_ranking", {
     p_type: mode,
-    p_days: 7
+    p_week: weekKey
   });
 
   if (error) { alert("주간 랭킹 조회 실패: " + error.message); return; }
 
-  const mapped = data.map(row => {
-    const cand = allCandidates.find(c => c.engraving_name === row.engraving_name);
-    return {
-      ...row,
-      class_name: cand ? cand.class_name : "-",
-      champion_count: row.champion_count || 0,
-      updated_at: row.updated_at || null
-    };
-  });
-
-  renderBoardFromRows(mapped, mode);
+  renderBoardFromRows(data, mode);
 }
     
     function updateRankingLockState() {
