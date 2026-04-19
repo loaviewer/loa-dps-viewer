@@ -174,8 +174,6 @@
    .tier-btn-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
   gap: 3px;
   flex: 1;
   min-width: 0;
@@ -198,14 +196,17 @@
       opacity: 0.65;
     }
 
-    .tier-lock-icon {
-      font-size: 28px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-    }
+   .tier-lock-icon {
+  font-size: 28px;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+}
 
     .tier-btn-op {
       background: linear-gradient(135deg, rgba(62,220,125,0.18), rgba(30,80,50,0.6));
@@ -1675,7 +1676,7 @@
   /* ===== 티어표 열람 조건 솔리드 뱃지 ===== */
 .tier-badge-solid {
   display: inline-block;
-  align-self: center;
+  align-self: flex-start;
   padding: 4px 8px;
   border-radius: 6px;
   font-weight: 900;
