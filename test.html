@@ -1810,15 +1810,404 @@
   }
 }
 
-/* ===== OP 승률표 리스트 스타일 ===== */
-.rate-list-wrap { display: flex; flex-direction: column; gap: 8px; padding-bottom: 10px; }
-.rate-row-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
-.rate-rank { font-size: 16px; font-weight: 900; color: #7fc6ff; width: 28px; text-align: center; }
-.rate-info { flex: 1; min-width: 0; }
-.rate-name { font-size: 14px; font-weight: 900; color: #ffffff; margin-bottom: 6px; }
-.rate-bar-bg { width: 100%; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; }
-.rate-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #7a8cff, #4bd3ff); }
-.rate-value { font-size: 15px; font-weight: 900; color: #ffffff; width: 55px; text-align: right; }
+/* ===== OP 승률표 모달 전용 ===== */
+.oprate-modal-card {
+  width: min(680px, 100%);
+  border-radius: 26px;
+  padding: 26px 24px 22px;
+  background: linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
+  border: 1px solid rgba(140,160,255,0.22);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.50),
+    0 0 50px rgba(100,140,255,0.08),
+    0 0 100px rgba(80,120,255,0.04);
+  position: relative;
+  max-height: 92vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.oprate-modal-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(130,160,255,0.06), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(160,120,255,0.05), transparent 40%),
+    radial-gradient(circle at 50% 5%, rgba(255,220,100,0.04), transparent 30%);
+}
+
+.oprate-royal-ornament {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 26px;
+  overflow: hidden;
+}
+
+.oprate-royal-ornament svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.035;
+}
+
+.oprate-crown-line {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.oprate-crown-bar {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,180,120,0.30), rgba(200,180,120,0.08));
+}
+
+.oprate-crown-bar.right {
+  background: linear-gradient(90deg, rgba(200,180,120,0.08), rgba(200,180,120,0.30), transparent);
+}
+
+.oprate-crown-icon {
+  font-size: 20px;
+  animation: crownPulse 3s ease-in-out infinite;
+}
+
+.oprate-bottom-ornament {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+.oprate-bottom-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,180,120,0.18), rgba(200,180,120,0.05));
+}
+
+.oprate-bottom-line.right {
+  background: linear-gradient(90deg, rgba(200,180,120,0.05), rgba(200,180,120,0.18), transparent);
+}
+
+.oprate-bottom-diamond {
+  font-size: 10px;
+  color: rgba(200,180,120,0.35);
+}
+
+/* ===== OP 승률표 리스트 ===== */
+.rate-list-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rate-row-item {
+  display: grid;
+  grid-template-columns: 32px 1fr 90px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: 0.15s ease;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  animation: none !important;
+}
+
+.rate-row-item:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.09);
+}
+
+.rate-rank {
+  font-size: 13px;
+  font-weight: 900;
+  color: #5a6a82;
+  text-align: center;
+}
+
+.rate-info {
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.rate-name {
+  font-size: 13px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+
+.rate-class {
+  font-size: 10px;
+  color: #5a6a82;
+  margin-bottom: 4px;
+}
+
+.rate-bar-bg {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+
+.rate-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.bar-fill-op {
+  background: linear-gradient(90deg, #7a8cff, #4bd3ff);
+}
+
+.rate-right {
+  position: relative;
+  z-index: 1;
+  text-align: right;
+  min-width: 90px;
+}
+
+.rate-value {
+  font-size: 14px;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.rate-record {
+  font-size: 9px;
+  color: #5a6a82;
+  font-weight: 800;
+  margin-top: 3px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ===== 1등 ===== */
+.rate-row-item.row-top1 {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,235,140,0.24) 0%, transparent 62%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,90,90,0.12) 0%, transparent 52%),
+    linear-gradient(135deg, rgba(255,70,70,0.16), rgba(255,210,70,0.18), rgba(90,230,150,0.12), rgba(100,170,255,0.12), rgba(255,210,90,0.15));
+  border-color: rgba(255,255,255,0.05);
+  box-shadow:
+    0 0 20px rgba(255,210,60,0.34),
+    0 0 42px rgba(255,180,20,0.20),
+    inset 0 0 0 1px rgba(255,255,255,0.03);
+}
+
+.rate-row-item.row-top1::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: conic-gradient(
+    from var(--angle,0deg),
+    rgba(255,60,60,0.75) 0deg,
+    rgba(255,180,30,0.90) 60deg,
+    rgba(255,240,80,0.90) 90deg,
+    rgba(80,220,140,0.75) 140deg,
+    rgba(90,160,255,0.75) 200deg,
+    rgba(200,100,255,0.75) 260deg,
+    rgba(255,80,180,0.75) 310deg,
+    rgba(255,60,60,0.75) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  animation: borderRotate 2.5s linear infinite;
+  z-index: 0;
+}
+
+.row-top1 .rate-rank {
+  font-size: 15px;
+  background: linear-gradient(90deg,#ff6b6b,#ffd700,#fffacd,#6bcb77,#ffd700,#ff9ff3,#ffd700);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 2s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(255,215,0,0.60));
+}
+
+.row-top1 .rate-name {
+  background: linear-gradient(90deg,#ff6b6b,#ffd700,#fffacd,#6bcb77,#ffd700,#fffacd,#ff9ff3,#ffd700);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 2s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(255,215,0,0.55));
+}
+
+.row-top1 .rate-value {
+  background: linear-gradient(90deg,#ffd700,#fffacd,#ffd700);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 2.5s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(255,215,0,0.50));
+}
+
+/* ===== 2등 ===== */
+.rate-row-item.row-top2 {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(150,225,255,0.18) 0%, transparent 58%),
+    radial-gradient(ellipse at 50% 100%, rgba(140,110,255,0.08) 0%, transparent 46%),
+    linear-gradient(135deg, rgba(125,105,255,0.15), rgba(85,185,255,0.13), rgba(65,225,185,0.09));
+  border-color: rgba(255,255,255,0.05);
+  box-shadow:
+    0 0 16px rgba(100,200,255,0.28),
+    0 0 34px rgba(122,140,255,0.16),
+    inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.rate-row-item.row-top2::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: conic-gradient(
+    from var(--angle,0deg),
+    rgba(130,100,255,0.60) 0deg,
+    rgba(100,200,255,0.80) 90deg,
+    rgba(80,220,180,0.55) 180deg,
+    rgba(160,120,255,0.65) 270deg,
+    rgba(130,100,255,0.60) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  animation: borderRotate 4.5s linear infinite;
+  z-index: 0;
+}
+
+.row-top2 .rate-rank {
+  font-size: 14px;
+  background: linear-gradient(90deg,#4a9edd,#a8deff,#ffffff,#c8a8ff,#a8deff,#4a9edd);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(100,200,255,0.50));
+}
+
+.row-top2 .rate-name {
+  background: linear-gradient(90deg,#4a9edd,#a8deff,#ffffff,#c8a8ff,#a8ffdd,#a8deff,#4a9edd);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(100,200,255,0.45));
+}
+
+.row-top2 .rate-value {
+  background: linear-gradient(90deg,#a8deff,#ffffff,#a8deff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+}
+
+/* ===== 3등 ===== */
+.rate-row-item.row-top3 {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,120,80,0.16) 0%, transparent 58%),
+    linear-gradient(135deg, rgba(255,90,70,0.13), rgba(225,60,45,0.09), rgba(185,35,35,0.07));
+  border-color: rgba(255,255,255,0.05);
+  box-shadow:
+    0 0 10px rgba(255,95,65,0.22),
+    0 0 22px rgba(220,60,30,0.10),
+    inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.rate-row-item.row-top3::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: conic-gradient(
+    from var(--angle,0deg),
+    rgba(255,90,60,0.45) 0deg,
+    rgba(255,180,120,0.65) 60deg,
+    rgba(255,220,160,0.70) 90deg,
+    rgba(255,180,120,0.65) 140deg,
+    rgba(255,90,60,0.45) 200deg,
+    rgba(255,140,80,0.50) 260deg,
+    rgba(255,90,60,0.45) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  animation: borderRotate 6s linear infinite;
+  z-index: 0;
+}
+
+.row-top3 .rate-rank {
+  font-size: 14px;
+  background: linear-gradient(90deg,#cc3322,#ff7755,#ffbb99,#ff7755,#cc3322);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3.5s linear infinite;
+  filter: drop-shadow(0 0 2px rgba(255,80,50,0.40));
+}
+
+.row-top3 .rate-name {
+  background: linear-gradient(90deg,#cc3322,#ff7755,#ffbb99,#ff7755,#cc3322);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3.5s linear infinite;
+  filter: drop-shadow(0 0 2px rgba(255,80,50,0.35));
+}
+
+.row-top3 .rate-value {
+  color: #ff9977;
+}
+
+.oprate-modal-card::-webkit-scrollbar {
+  width: 5px;
+}
+
+.oprate-modal-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.oprate-modal-card::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+}
 
   </style>
 </head>
@@ -2191,15 +2580,63 @@
     </div>
   </div>
 
-  <!-- OP 승률표 모달 -->
+   <!-- OP 승률표 모달 -->
   <div class="modal-backdrop" id="opRateModal">
-    <div class="modal-card">
+    <div class="modal-card oprate-modal-card">
+      <div class="oprate-royal-ornament">
+        <svg viewBox="0 0 680 800" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 40 Q20 40 20 60" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <path d="M40 40 Q40 20 60 20" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <circle cx="40" cy="40" r="3" fill="rgba(200,180,120,0.4)"/>
+
+          <path d="M640 40 Q660 40 660 60" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <path d="M640 40 Q640 20 620 20" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <circle cx="640" cy="40" r="3" fill="rgba(200,180,120,0.4)"/>
+
+          <path d="M40 760 Q20 760 20 740" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <path d="M40 760 Q40 780 60 780" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <circle cx="40" cy="760" r="3" fill="rgba(200,180,120,0.4)"/>
+
+          <path d="M640 760 Q660 760 660 740" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <path d="M640 760 Q640 780 620 780" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <circle cx="640" cy="760" r="3" fill="rgba(200,180,120,0.4)"/>
+
+          <line x1="100" y1="30" x2="580" y2="30" stroke="rgba(200,180,120,0.25)" stroke-width="0.5"/>
+          <rect x="326" y="22" width="28" height="16" rx="3" fill="none" stroke="rgba(200,180,120,0.35)" stroke-width="0.5"/>
+          <circle cx="340" cy="30" r="2" fill="rgba(200,180,120,0.3)"/>
+
+          <line x1="100" y1="770" x2="580" y2="770" stroke="rgba(200,180,120,0.25)" stroke-width="0.5"/>
+          <rect x="326" y="762" width="28" height="16" rx="3" fill="none" stroke="rgba(200,180,120,0.35)" stroke-width="0.5"/>
+          <circle cx="340" cy="770" r="2" fill="rgba(200,180,120,0.3)"/>
+
+          <line x1="20" y1="120" x2="20" y2="680" stroke="rgba(200,180,120,0.15)" stroke-width="0.5" stroke-dasharray="4 8"/>
+          <line x1="660" y1="120" x2="660" y2="680" stroke="rgba(200,180,120,0.15)" stroke-width="0.5" stroke-dasharray="4 8"/>
+
+          <rect x="334" y="60" width="12" height="12" rx="1" transform="rotate(45 340 66)" fill="none" stroke="rgba(200,180,120,0.20)" stroke-width="0.5"/>
+          <rect x="334" y="728" width="12" height="12" rx="1" transform="rotate(45 340 734)" fill="none" stroke="rgba(200,180,120,0.20)" stroke-width="0.5"/>
+        </svg>
+      </div>
+
       <button class="modal-close" id="closeOpRateBtn">×</button>
+
+      <div class="oprate-crown-line">
+        <div class="oprate-crown-bar"></div>
+        <div class="oprate-crown-icon">👑</div>
+        <div class="oprate-crown-bar right"></div>
+      </div>
+
       <div class="modal-top-label">OP TOURNAMENT</div>
       <div class="modal-title" style="color:#4bd3ff;">OP직각 승률표 📈</div>
       <div class="modal-sub" id="opRateSub">최근 10일간 1:1 승률 순위</div>
       <div class="modal-divider"></div>
+
       <div id="opRateContent"><div class="loading-text">데이터 불러오는 중...</div></div>
+
+      <div class="oprate-bottom-ornament">
+        <div class="oprate-bottom-line"></div>
+        <div class="oprate-bottom-diamond">◆</div>
+        <div class="oprate-bottom-line right"></div>
+      </div>
     </div>
   </div>
 
@@ -2394,19 +2831,34 @@ function renderOpRateContent(rows) {
     return Number(b.win_count)-Number(a.win_count);
   });
 
+  function getRowClass(i) {
+    if (i===0) return "row-top1";
+    if (i===1) return "row-top2";
+    if (i===2) return "row-top3";
+    return "";
+  }
+
+  function getClassName(engraving) {
+    const cand = allCandidates.find(c => c.engraving_name === engraving);
+    return cand ? cand.class_name : "";
+  }
+
   opRateContent.innerHTML = `
     <div class="rate-list-wrap">
       ${sorted.map((row,i)=>`
-        <div class="rate-row-item">
+        <div class="rate-row-item ${getRowClass(i)}">
           <div class="rate-rank">${i+1}</div>
           <div class="rate-info">
             <div class="rate-name">${row.engraving_name}</div>
+            <div class="rate-class">${getClassName(row.engraving_name)}</div>
             <div class="rate-bar-bg">
-              <div class="rate-bar-fill" style="width:${Math.min(100,Number(row.win_rate))}%"></div>
+              <div class="rate-bar-fill bar-fill-op" style="width:${Math.min(100,Number(row.win_rate))}%"></div>
             </div>
-            <div class="record-text" style="margin-top:6px;">${row.total_matches}전 ${row.win_count}승 ${row.lose_count}패</div>
           </div>
-          <div class="rate-value">${Number(row.win_rate).toFixed(1)}%</div>
+          <div class="rate-right">
+            <div class="rate-value">${Number(row.win_rate).toFixed(1)}%</div>
+            <div class="rate-record">${row.total_matches}전 ${row.win_count}승 ${row.lose_count}패</div>
+          </div>
         </div>
       `).join("")}
     </div>
