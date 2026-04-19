@@ -3180,7 +3180,17 @@ async function loadRankingDataByPeriod(mode, period) {
 
   if (error) { alert("주간 랭킹 조회 실패: " + error.message); return; }
 
-  renderBoardFromRows(data, mode);
+  const mapped = data.map(row => {
+    const cand = allCandidates.find(c => c.engraving_name === row.engraving_name);
+    return {
+      ...row,
+      class_name: cand ? cand.class_name : "-",
+      champion_count: row.champion_count || 0,
+      updated_at: row.updated_at || null
+    };
+  });
+
+  renderBoardFromRows(mapped, mode);
 }
     
     function updateRankingLockState() {
