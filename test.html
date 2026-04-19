@@ -3398,8 +3398,24 @@ gradeStampEl.classList.add(getStampClass(grade));
       rankingBoard.classList.remove("locked"); rankingBoard.scrollIntoView({behavior:"smooth",block:"start"});
     });
 
-    modeOpBtn.addEventListener("click",async()=>{ if(!completedState.op) return; currentBoardMode="op"; await loadRankingData("op"); });
-    modeFavorBtn.addEventListener("click",async()=>{ if(!completedState.favor) return; currentBoardMode="favor"; await loadRankingData("favor"); });
+    modeOpBtn.addEventListener("click",async()=>{
+  if(!completedState.op) return;
+  currentBoardMode="op";
+  if(document.getElementById("periodWeekBtn").classList.contains("active-period")) {
+    await loadRankingDataByPeriod("op","week");
+  } else {
+    await loadRankingData("op");
+  }
+});
+modeFavorBtn.addEventListener("click",async()=>{
+  if(!completedState.favor) return;
+  currentBoardMode="favor";
+  if(document.getElementById("periodWeekBtn").classList.contains("active-period")) {
+    await loadRankingDataByPeriod("favor","week");
+  } else {
+    await loadRankingData("favor");
+  }
+});
 
     document.getElementById("periodAllBtn").addEventListener("click", async () => {
   if (!completedState.op && !completedState.favor) return;
