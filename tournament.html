@@ -171,13 +171,13 @@
       position: relative;
     }
 
-    .tier-btn-content {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      flex: 1;
-      min-width: 0;
-    }
+   .tier-btn-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
 
     .tier-btn-small {
       font-size: 11px;
@@ -196,14 +196,17 @@
       opacity: 0.65;
     }
 
-    .tier-lock-icon {
-      font-size: 28px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-    }
+   .tier-lock-icon {
+  font-size: 36px;
+  position: absolute;
+  right: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+}
 
     .tier-btn-op {
       background: linear-gradient(135deg, rgba(62,220,125,0.18), rgba(30,80,50,0.6));
@@ -227,6 +230,134 @@
       transform: translateY(-1px);
       border-color: rgba(255,196,90,0.6);
       box-shadow: 0 0 18px rgba(255,196,90,0.15);
+    }
+
+        .tier-btn-op-rate {
+      background: linear-gradient(135deg, rgba(120,100,255,0.16), rgba(80,180,255,0.12), rgba(60,220,180,0.08));
+      border: 1px solid rgba(140,160,255,0.40);
+      color: #c8d8ff;
+      animation: opRateGlow 2.4s ease-in-out infinite alternate, opRateAura 6s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .tier-btn-op-rate:hover {
+      transform: translateY(-2px);
+    }
+
+    .tier-btn-op-rate::before {
+      content: ""; position: absolute; inset: 0; border-radius: 18px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(130,140,255,0.20) 0%, rgba(80,200,255,0.08) 50%, transparent 100%);
+      animation: opRateInner 2.4s ease-in-out infinite alternate; z-index: 0;
+    }
+
+    .tier-btn-op-rate::after {
+      content: ""; position: absolute; inset: -1px; border-radius: 19px;
+      background: conic-gradient(from var(--angle,0deg), rgba(130,100,255,0.70) 0deg, rgba(100,200,255,0.90) 90deg, rgba(80,220,180,0.65) 180deg, rgba(160,120,255,0.75) 270deg, rgba(130,100,255,0.70) 360deg);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      padding: 1.5px; animation: borderRotate 5s linear infinite; z-index: 0;
+    }
+
+    .tier-btn-op-rate .tier-btn-small { color: #a8b8ff; }
+
+    .tier-btn-op-rate .tier-btn-main {
+      background: linear-gradient(90deg, #7a7aff, #a8deff, #ffffff, #c8a8ff, #a8ffdd, #a8deff, #7a7aff);
+      background-size: 250% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: textShimmer 3s linear infinite;
+      filter: drop-shadow(0 0 5px rgba(130,140,255,0.50));
+    }
+
+.tier-btn-op-rate .oprate-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: 6px;
+  border-radius: 999px;
+  vertical-align: middle;
+  background: linear-gradient(135deg, rgba(130,100,255,0.30), rgba(80,180,255,0.26));
+  border: 1px solid rgba(180,220,255,0.28);
+  box-shadow:
+    0 0 10px rgba(100,200,255,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.14);
+}
+
+.tier-btn-op-rate .oprate-icon {
+  display: inline-block;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  color: initial !important;
+  font-size: 14px;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(120,210,255,0.35));
+  animation: opRateIconPulse 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes opRateIconPulse {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 4px rgba(120,210,255,0.22));
+  }
+  100% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 8px rgba(120,210,255,0.45));
+  }
+}
+    
+    @keyframes opRateGlow {
+      0%   { box-shadow: 0 0 10px rgba(100,200,255,0.25), 0 0 24px rgba(122,140,255,0.12); }
+      100% { box-shadow: 0 0 18px rgba(100,220,255,0.45), 0 0 38px rgba(122,140,255,0.22); }
+    }
+
+    @keyframes opRateInner {
+      0%   { opacity: 0.55; }
+      100% { opacity: 1.0; }
+    }
+
+    @keyframes opRateAura {
+      0%, 80%, 100% {
+        box-shadow: 0 0 10px rgba(100,200,255,0.25), 0 0 24px rgba(122,140,255,0.12);
+      }
+      88% {
+        box-shadow: 0 0 18px rgba(130,180,255,0.50), 0 0 36px rgba(100,200,255,0.30), 0 0 56px rgba(160,120,255,0.20);
+      }
+      94% {
+        box-shadow: 0 0 12px rgba(130,180,255,0.30), 0 0 24px rgba(100,200,255,0.16), 0 0 36px rgba(160,120,255,0.10);
+      }
+    }
+
+    .oprate-spark-glow {
+      position: absolute; inset: -45%; border-radius: 18px; pointer-events: none;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.12) 18%, rgba(130,160,255,0.16) 34%, transparent 62%);
+      opacity: 0; transform: scale(0.55);
+      animation: opRateSparkGlow 6s ease-in-out infinite; z-index: 3;
+    }
+
+    .oprate-spark-sweep {
+      position: absolute; top: -35%; left: -130%; width: 72%; height: 190%;
+      border-radius: 18px; pointer-events: none;
+      background: linear-gradient(115deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.38) 48%, rgba(255,255,255,0.08) 68%, rgba(255,255,255,0) 100%);
+      transform: rotate(18deg); opacity: 0;
+      animation: opRateSparkSweep 6s linear infinite; z-index: 4;
+    }
+
+    @keyframes opRateSparkGlow {
+      0%, 80%, 100% { opacity: 0; transform: scale(0.55); }
+      86% { opacity: 0.55; transform: scale(1.05); }
+      92% { opacity: 0.18; transform: scale(1.42); }
+    }
+
+    @keyframes opRateSparkSweep {
+      0%, 80% { left: -130%; opacity: 0; }
+      84% { opacity: 1; }
+      96% { left: 145%; opacity: 0.65; }
+      100% { left: 145%; opacity: 0; }
     }
 
     /* ===== 미니 팝업 ===== */
@@ -1256,19 +1387,23 @@
 }
 
 .stamp.stamp-s,.grade-stamp.stamp-s {
-  border-color:transparent; color:rgba(130,215,255,0.95);
-  box-shadow:0 0 22px rgba(100,200,255,0.35),0 0 44px rgba(60,160,240,0.18),inset 0 0 0 2px rgba(255,255,255,0.05);
-  background:radial-gradient(circle at center,rgba(100,200,255,0.08),rgba(60,160,240,0.02));
+  border-color:transparent; color:rgba(160,180,255,0.95);
+  background:
+    radial-gradient(circle at 40% 30%, rgba(130,100,255,0.12), transparent 50%),
+    radial-gradient(circle at 60% 70%, rgba(80,200,255,0.10), transparent 50%),
+    radial-gradient(circle at center, rgba(100,160,255,0.06), rgba(80,120,255,0.02));
+  box-shadow:0 0 22px rgba(130,100,255,0.40),0 0 44px rgba(80,180,255,0.22),inset 0 0 0 2px rgba(255,255,255,0.05);
   animation:stampGlowS 2.2s ease-in-out infinite alternate;
 }
 @keyframes stampGlowS {
-  0%   { box-shadow:0 0 14px rgba(100,200,255,0.40),0 0 30px rgba(60,160,240,0.20),0 0 50px rgba(130,80,255,0.08); }
-  50%  { box-shadow:0 0 16px rgba(130,100,255,0.30),0 0 34px rgba(80,220,160,0.15),0 0 52px rgba(100,180,255,0.10); }
-  100% { box-shadow:0 0 22px rgba(130,220,255,0.58),0 0 44px rgba(80,180,255,0.30),0 0 60px rgba(150,100,255,0.10); }
+  0%   { box-shadow:0 0 18px rgba(130,100,255,0.40),0 0 40px rgba(80,180,255,0.24),0 0 70px rgba(160,120,255,0.12); }
+  33%  { box-shadow:0 0 24px rgba(80,200,255,0.48),0 0 50px rgba(130,100,255,0.32),0 0 85px rgba(80,220,180,0.16); }
+  66%  { box-shadow:0 0 22px rgba(160,120,255,0.44),0 0 46px rgba(100,200,255,0.28),0 0 78px rgba(130,100,255,0.14); }
+  100% { box-shadow:0 0 28px rgba(140,120,255,0.58),0 0 55px rgba(100,200,255,0.38),0 0 90px rgba(160,100,255,0.18); }
 }
 .stamp.stamp-s::after,.grade-stamp.stamp-s::after {
   content:""; position:absolute; inset:-5px; border-radius:50%;
-  background:conic-gradient(from var(--angle,0deg),rgba(100,200,255,0.75) 0deg,rgba(200,240,255,0.95) 60deg,rgba(160,120,255,0.60) 120deg,rgba(80,220,180,0.55) 180deg,rgba(100,180,255,0.70) 240deg,rgba(200,240,255,0.90) 300deg,rgba(100,200,255,0.75) 360deg);
+  background:conic-gradient(from var(--angle,0deg),rgba(130,100,255,0.85) 0deg,rgba(100,200,255,1) 90deg,rgba(80,220,180,0.85) 180deg,rgba(160,120,255,0.90) 270deg,rgba(130,100,255,0.85) 360deg);
   -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   padding:5px; animation:borderRotate 4.5s linear infinite; z-index:-1; pointer-events:none;
@@ -1276,29 +1411,37 @@
 .stamp.stamp-s .grade-text,.grade-stamp.stamp-s .gs-grade,
 .stamp.stamp-s .date,.stamp.stamp-s .done,
 .grade-stamp.stamp-s .gs-date,.grade-stamp.stamp-s .gs-done {
-  background:linear-gradient(90deg,#4a9edd 0%,#a8deff 20%,#ffffff 35%,#c8a8ff 50%,#a8ffdd 65%,#a8deff 80%,#4a9edd 100%);
+  background:linear-gradient(90deg,#7a7aff,#a8deff,#ffffff,#c8a8ff,#a8ffdd,#a8deff,#7a7aff);
   background-size:250% auto;
   -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   animation:textShimmer 3s linear infinite;
+  filter:drop-shadow(0 0 4px rgba(130,140,255,0.45));
 }
 
 .stamp.stamp-a,.grade-stamp.stamp-a {
-  border-color:transparent; color:rgba(255,120,90,0.95);
-  box-shadow:0 0 22px rgba(255,90,60,0.35),0 0 44px rgba(220,60,30,0.18),inset 0 0 0 2px rgba(255,255,255,0.05);
-  background:radial-gradient(circle at center,rgba(255,90,60,0.06),rgba(220,60,30,0.02));
-  animation:stampGlowA 2.4s ease-in-out infinite alternate;
+  border-color:transparent; color:rgba(255,150,110,0.95);
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255,100,50,0.10), transparent 50%),
+    radial-gradient(circle at 65% 65%, rgba(120,220,120,0.06), transparent 50%),
+    radial-gradient(circle at center, rgba(255,80,60,0.06), rgba(200,50,30,0.02));
+  box-shadow:0 0 22px rgba(255,90,60,0.35),0 0 44px rgba(255,150,60,0.18),inset 0 0 0 2px rgba(255,255,255,0.05);
+  animation:stampGlowA 2.6s ease-in-out infinite alternate;
 }
 @keyframes stampGlowA {
-  0%   { box-shadow:0 0 10px rgba(255,90,60,0.32),0 0 22px rgba(220,60,30,0.16); }
-  100% { box-shadow:0 0 16px rgba(255,110,80,0.48),0 0 32px rgba(240,80,50,0.26); }
+  0%   { box-shadow:0 0 14px rgba(255,90,60,0.32),0 0 28px rgba(255,150,60,0.16),0 0 46px rgba(120,200,100,0.06); }
+  50%  { box-shadow:0 0 16px rgba(140,210,120,0.24),0 0 34px rgba(255,130,60,0.20),0 0 52px rgba(255,180,80,0.08); }
+  100% { box-shadow:0 0 20px rgba(255,120,70,0.44),0 0 40px rgba(255,170,70,0.26),0 0 60px rgba(140,220,120,0.10); }
 }
 .stamp.stamp-a::after,.grade-stamp.stamp-a::after {
   content:""; position:absolute; inset:-5px; border-radius:50%;
   background:conic-gradient(from var(--angle,0deg),
-    rgba(255,90,60,0.85) 0deg,rgba(255,180,120,1) 60deg,
-    rgba(255,220,160,1) 90deg,rgba(255,180,120,0.85) 140deg,
-    rgba(255,90,60,0.85) 200deg,rgba(255,140,80,0.85) 260deg,
-    rgba(255,90,60,0.85) 360deg);
+    rgba(255,80,50,0.65) 0deg,
+    rgba(255,170,70,0.80) 60deg,
+    rgba(180,230,120,0.55) 120deg,
+    rgba(255,200,90,0.75) 180deg,
+    rgba(255,90,55,0.65) 240deg,
+    rgba(255,160,70,0.78) 300deg,
+    rgba(255,80,50,0.65) 360deg);
   -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   padding:5px; animation:borderRotate 5s linear infinite; z-index:-1; pointer-events:none;
@@ -1306,10 +1449,11 @@
 .stamp.stamp-a .grade-text,.grade-stamp.stamp-a .gs-grade,
 .stamp.stamp-a .date,.stamp.stamp-a .done,
 .grade-stamp.stamp-a .gs-date,.grade-stamp.stamp-a .gs-done {
-  background:linear-gradient(90deg,#cc3322 0%,#ff7755 30%,#ffbb99 50%,#ff7755 70%,#cc3322 100%);
-  background-size:200% auto;
+  background:linear-gradient(90deg,#cc3322,#ff7755,#ffcc77,#88dd88,#ffbb99,#ff7755,#cc3322);
+  background-size:250% auto;
   -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   animation:textShimmer 3s linear infinite;
+  filter:drop-shadow(0 0 3px rgba(255,110,55,0.40));
 }
 
 .stamp.stamp-b,.grade-stamp.stamp-b {
@@ -1545,7 +1689,7 @@
   /* ===== 티어표 열람 조건 솔리드 뱃지 ===== */
 .tier-badge-solid {
   display: inline-block;
-  align-self: flex-start; /* 글자 길이에 맞게 배경 크기 조절 */
+  align-self: flex-start;
   padding: 4px 8px;
   border-radius: 6px;
   font-weight: 900;
@@ -1565,6 +1709,30 @@
 .badge-favor-solid {
   color: #2a1400 !important;
   background: linear-gradient(135deg, #ffac55, #ffd48a) !important;
+}
+
+.badge-s-solid {
+  color: #08111e !important;
+  background: linear-gradient(135deg, #7fc6ff, #4bd3ff) !important;
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow:
+    0 4px 12px rgba(75,211,255,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+  animation: badgeSGlow 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes badgeSGlow {
+  0% {
+    box-shadow:
+      0 4px 12px rgba(75,211,255,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+  100% {
+    box-shadow:
+      0 6px 18px rgba(75,211,255,0.32),
+      0 0 18px rgba(122,140,255,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.28);
+  }
 }
 
 /* ===== 상단 토글 active 버튼 유리빛 강조 ===== */
@@ -1658,6 +1826,411 @@
   }
 }
 
+/* ===== OP 승률표 모달 전용 ===== */
+.oprate-modal-card {
+  width: min(680px, 100%);
+  border-radius: 26px;
+  padding: 26px 24px 22px;
+  background: linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
+  border: 1px solid rgba(140,160,255,0.22);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.50),
+    0 0 50px rgba(100,140,255,0.08),
+    0 0 100px rgba(80,120,255,0.04);
+  position: relative;
+  max-height: 92vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.oprate-modal-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(130,160,255,0.06), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(160,120,255,0.05), transparent 40%),
+    radial-gradient(circle at 50% 5%, rgba(255,220,100,0.04), transparent 30%);
+}
+
+.oprate-royal-ornament {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 26px;
+  overflow: hidden;
+}
+
+.oprate-royal-ornament svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.035;
+}
+
+.oprate-crown-line {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.oprate-crown-bar {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,180,120,0.30), rgba(200,180,120,0.08));
+}
+
+.oprate-crown-bar.right {
+  background: linear-gradient(90deg, rgba(200,180,120,0.08), rgba(200,180,120,0.30), transparent);
+}
+
+.oprate-crown-icon {
+  font-size: 20px;
+  animation: crownPulse 3s ease-in-out infinite;
+}
+
+.oprate-bottom-ornament {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+.oprate-bottom-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,180,120,0.18), rgba(200,180,120,0.05));
+}
+
+.oprate-bottom-line.right {
+  background: linear-gradient(90deg, rgba(200,180,120,0.05), rgba(200,180,120,0.18), transparent);
+}
+
+.oprate-bottom-diamond {
+  font-size: 10px;
+  color: rgba(200,180,120,0.35);
+}
+
+/* ===== OP 승률표 리스트 ===== */
+.rate-list-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rate-row-item {
+  display: grid;
+  grid-template-columns: 32px 1fr 90px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: 0.15s ease;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  animation: none !important;
+}
+
+.rate-row-item:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.09);
+}
+
+.rate-rank {
+  font-size: 13px;
+  font-weight: 900;
+  color: #5a6a82;
+  text-align: center;
+}
+
+.rate-info {
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.rate-name {
+  font-size: 13px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+
+.rate-class {
+  font-size: 10px;
+  color: #5a6a82;
+  margin-bottom: 4px;
+}
+
+.rate-bar-bg {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+
+.rate-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.bar-fill-op {
+  background: linear-gradient(90deg, #7a8cff, #4bd3ff);
+}
+
+.rate-right {
+  position: relative;
+  z-index: 1;
+  text-align: right;
+  min-width: 90px;
+}
+
+.rate-value {
+  font-size: 14px;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.rate-record {
+  font-size: 9px;
+  color: #5a6a82;
+  font-weight: 800;
+  margin-top: 3px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ===== 1등 ===== */
+.rate-row-item.row-top1 {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,235,140,0.24) 0%, transparent 62%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,90,90,0.12) 0%, transparent 52%),
+    linear-gradient(135deg, rgba(255,70,70,0.16), rgba(255,210,70,0.18), rgba(90,230,150,0.12), rgba(100,170,255,0.12), rgba(255,210,90,0.15));
+  border-color: rgba(255,255,255,0.05);
+  box-shadow:
+    0 0 20px rgba(255,210,60,0.34),
+    0 0 42px rgba(255,180,20,0.20),
+    inset 0 0 0 1px rgba(255,255,255,0.03);
+}
+
+.rate-row-item.row-top1::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: conic-gradient(
+    from var(--angle,0deg),
+    rgba(255,60,60,0.75) 0deg,
+    rgba(255,180,30,0.90) 60deg,
+    rgba(255,240,80,0.90) 90deg,
+    rgba(80,220,140,0.75) 140deg,
+    rgba(90,160,255,0.75) 200deg,
+    rgba(200,100,255,0.75) 260deg,
+    rgba(255,80,180,0.75) 310deg,
+    rgba(255,60,60,0.75) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  animation: borderRotate 2.5s linear infinite;
+  z-index: 0;
+}
+
+.row-top1 .rate-rank {
+  font-size: 15px;
+  background: linear-gradient(90deg,#ff6b6b,#ffd700,#fffacd,#6bcb77,#ffd700,#ff9ff3,#ffd700);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 2s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(255,215,0,0.60));
+}
+
+.row-top1 .rate-name {
+  background: linear-gradient(90deg,#ff6b6b,#ffd700,#fffacd,#6bcb77,#ffd700,#fffacd,#ff9ff3,#ffd700);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 2s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(255,215,0,0.55));
+}
+
+.row-top1 .rate-value {
+  background: linear-gradient(90deg,#ffd700,#fffacd,#ffd700);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 2.5s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(255,215,0,0.50));
+}
+
+/* ===== 2등 ===== */
+.rate-row-item.row-top2 {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(150,225,255,0.18) 0%, transparent 58%),
+    radial-gradient(ellipse at 50% 100%, rgba(140,110,255,0.08) 0%, transparent 46%),
+    linear-gradient(135deg, rgba(125,105,255,0.15), rgba(85,185,255,0.13), rgba(65,225,185,0.09));
+  border-color: rgba(255,255,255,0.05);
+  box-shadow:
+    0 0 16px rgba(100,200,255,0.28),
+    0 0 34px rgba(122,140,255,0.16),
+    inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.rate-row-item.row-top2::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: conic-gradient(
+    from var(--angle,0deg),
+    rgba(130,100,255,0.60) 0deg,
+    rgba(100,200,255,0.80) 90deg,
+    rgba(80,220,180,0.55) 180deg,
+    rgba(160,120,255,0.65) 270deg,
+    rgba(130,100,255,0.60) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  animation: borderRotate 4.5s linear infinite;
+  z-index: 0;
+}
+
+.row-top2 .rate-rank {
+  font-size: 14px;
+  background: linear-gradient(90deg,#4a9edd,#a8deff,#ffffff,#c8a8ff,#a8deff,#4a9edd);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(100,200,255,0.50));
+}
+
+.row-top2 .rate-name {
+  background: linear-gradient(90deg,#4a9edd,#a8deff,#ffffff,#c8a8ff,#a8ffdd,#a8deff,#4a9edd);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(100,200,255,0.45));
+}
+
+.row-top2 .rate-value {
+  background: linear-gradient(90deg,#a8deff,#ffffff,#a8deff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+}
+
+/* ===== 3등 ===== */
+.rate-row-item.row-top3 {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,120,80,0.16) 0%, transparent 58%),
+    linear-gradient(135deg, rgba(255,90,70,0.13), rgba(225,60,45,0.09), rgba(185,35,35,0.07));
+  border-color: rgba(255,255,255,0.05);
+  box-shadow:
+    0 0 10px rgba(255,95,65,0.22),
+    0 0 22px rgba(220,60,30,0.10),
+    inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.rate-row-item.row-top3::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: conic-gradient(
+    from var(--angle,0deg),
+    rgba(255,90,60,0.45) 0deg,
+    rgba(255,180,120,0.65) 60deg,
+    rgba(255,220,160,0.70) 90deg,
+    rgba(255,180,120,0.65) 140deg,
+    rgba(255,90,60,0.45) 200deg,
+    rgba(255,140,80,0.50) 260deg,
+    rgba(255,90,60,0.45) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  animation: borderRotate 6s linear infinite;
+  z-index: 0;
+}
+
+.row-top3 .rate-rank {
+  font-size: 14px;
+  background: linear-gradient(90deg,#cc3322,#ff7755,#ffbb99,#ff7755,#cc3322);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3.5s linear infinite;
+  filter: drop-shadow(0 0 2px rgba(255,80,50,0.40));
+}
+
+.row-top3 .rate-name {
+  background: linear-gradient(90deg,#cc3322,#ff7755,#ffbb99,#ff7755,#cc3322);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3.5s linear infinite;
+  filter: drop-shadow(0 0 2px rgba(255,80,50,0.35));
+}
+
+.row-top3 .rate-value {
+  color: #ff9977;
+}
+
+.oprate-modal-card .modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+}
+    
+.oprate-modal-card::-webkit-scrollbar {
+  width: 5px;
+}
+
+.oprate-modal-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.oprate-modal-card::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+}
 
   </style>
 </head>
@@ -1670,7 +2243,7 @@
           <a href="#" class="active">직각 토너먼트</a>
         </div>
 
-        <div class="mini-label">LOITER BASE · v21</div>
+        <div class="mini-label">LOITER BASE · v21.1</div>
         <div class="hero">로아<br>직각 토너먼트</div>
         <div class="muted">OP 직각과 호감 직각을 직접 선택하고, 완료 후 전체 랭킹을 확인할 수 있습니다.</div>
 
@@ -1698,6 +2271,20 @@
             <span class="tier-badge-solid badge-favor-solid">도장 1개 이상 열람 가능</span>
           </div>
         </button>
+
+       <button class="tier-btn tier-btn-op-rate" id="openOpRateBtn">
+  <div class="oprate-spark-glow"></div>
+  <div class="oprate-spark-sweep"></div>
+  <div class="tier-lock-icon" id="opRateLockIcon" style="display:none;">🔒</div>
+  <div class="tier-btn-content">
+    <span class="tier-btn-small">OP TOURNAMENT</span>
+    <span class="tier-btn-main">
+  OP직각 승률표
+  <span class="oprate-icon-wrap"><span class="oprate-icon">📈</span></span>
+</span>
+    <span class="tier-badge-solid badge-s-solid">S 도장 이상 열람 가능</span>
+  </div>
+</button>
 
         <div class="sidebar-divider"></div>
         <!-- 경매 계산기 -->
@@ -1997,7 +2584,7 @@
     <div class="modal-card">
       <button class="modal-close" id="closeOpTierBtn">×</button>
       <div class="modal-top-label">OP TOURNAMENT</div>
-      <div class="modal-title" style="color:#8ef0c9;">OP직각 티어표</div>
+      <div class="modal-title" style="color:#8ef0c9;">OP직각 티어표 📊</div>
       <div class="modal-sub"   id="opTierSub">전체 누적 승률 기준 · 6티어 포함</div>
       <div class="modal-divider"></div>
       <div id="opTierContent"><div class="loading-text">데이터 불러오는 중...</div></div>
@@ -2013,6 +2600,66 @@
       <div class="modal-sub"   id="favorTierSub">전체 누적 승률 기준 · 6티어 포함</div>
       <div class="modal-divider"></div>
       <div id="favorTierContent"><div class="loading-text">데이터 불러오는 중...</div></div>
+    </div>
+  </div>
+
+   <!-- OP 승률표 모달 -->
+  <div class="modal-backdrop" id="opRateModal">
+    <div class="modal-card oprate-modal-card">
+      <div class="oprate-royal-ornament">
+        <svg viewBox="0 0 680 800" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 40 Q20 40 20 60" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <path d="M40 40 Q40 20 60 20" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <circle cx="40" cy="40" r="3" fill="rgba(200,180,120,0.4)"/>
+
+          <path d="M640 40 Q660 40 660 60" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <path d="M640 40 Q640 20 620 20" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <circle cx="640" cy="40" r="3" fill="rgba(200,180,120,0.4)"/>
+
+          <path d="M40 760 Q20 760 20 740" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <path d="M40 760 Q40 780 60 780" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <circle cx="40" cy="760" r="3" fill="rgba(200,180,120,0.4)"/>
+
+          <path d="M640 760 Q660 760 660 740" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <path d="M640 760 Q640 780 620 780" stroke="rgba(200,180,120,0.6)" stroke-width="1" fill="none"/>
+          <circle cx="640" cy="760" r="3" fill="rgba(200,180,120,0.4)"/>
+
+          <line x1="100" y1="30" x2="580" y2="30" stroke="rgba(200,180,120,0.25)" stroke-width="0.5"/>
+          <rect x="326" y="22" width="28" height="16" rx="3" fill="none" stroke="rgba(200,180,120,0.35)" stroke-width="0.5"/>
+          <circle cx="340" cy="30" r="2" fill="rgba(200,180,120,0.3)"/>
+
+          <line x1="100" y1="770" x2="580" y2="770" stroke="rgba(200,180,120,0.25)" stroke-width="0.5"/>
+          <rect x="326" y="762" width="28" height="16" rx="3" fill="none" stroke="rgba(200,180,120,0.35)" stroke-width="0.5"/>
+          <circle cx="340" cy="770" r="2" fill="rgba(200,180,120,0.3)"/>
+
+          <line x1="20" y1="120" x2="20" y2="680" stroke="rgba(200,180,120,0.15)" stroke-width="0.5" stroke-dasharray="4 8"/>
+          <line x1="660" y1="120" x2="660" y2="680" stroke="rgba(200,180,120,0.15)" stroke-width="0.5" stroke-dasharray="4 8"/>
+
+          <rect x="334" y="60" width="12" height="12" rx="1" transform="rotate(45 340 66)" fill="none" stroke="rgba(200,180,120,0.20)" stroke-width="0.5"/>
+          <rect x="334" y="728" width="12" height="12" rx="1" transform="rotate(45 340 734)" fill="none" stroke="rgba(200,180,120,0.20)" stroke-width="0.5"/>
+        </svg>
+      </div>
+
+      <button class="modal-close" id="closeOpRateBtn">×</button>
+
+      <div class="oprate-crown-line">
+        <div class="oprate-crown-bar"></div>
+        <div class="oprate-crown-icon">👑</div>
+        <div class="oprate-crown-bar right"></div>
+      </div>
+
+      <div class="modal-top-label">OP TOURNAMENT</div>
+      <div class="modal-title" style="color:#4bd3ff;">OP직각 승률표 📈</div>
+      <div class="modal-sub" id="opRateSub">최근 10일간 1:1 승률 순위</div>
+      <div class="modal-divider"></div>
+
+      <div id="opRateContent"><div class="loading-text">데이터 불러오는 중...</div></div>
+
+      <div class="oprate-bottom-ornament">
+        <div class="oprate-bottom-line"></div>
+        <div class="oprate-bottom-diamond">◆</div>
+        <div class="oprate-bottom-line right"></div>
+      </div>
     </div>
   </div>
 
@@ -2042,6 +2689,7 @@
 
     const SUPPORT_ENGRAVINGS = ["절실한 구원","만개","축복의 오라","해방자"];
     const A_MINUS_AND_ABOVE  = ["SS+","SS","SS-","S+","S","S-","A+","A","A-"];
+    const S_AND_ABOVE = ["SS+","SS","SS-","S+","S"];
 
     const GRADE_TABLE = [
       {grade:"SS+",min:100,max:100},{grade:"SS",min:98,max:99},{grade:"SS-",min:96,max:97},
@@ -2156,6 +2804,15 @@ function getStampClass(grade) {
   return entries;
 }
 
+async function loadOpRateData() {
+  const {data, error} = await supabase.rpc("get_tier_data", {
+    p_type: "op",
+    p_days: 10
+  });
+  if (error || !data) return null;
+  return data.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
+}
+
     function calcTiers(entries) {
       if (!entries.length) return [[],[],[],[],[],[]];
       const sorted=[...entries].sort((a,b)=>b.winRate-a.winRate);
@@ -2184,6 +2841,52 @@ function getStampClass(grade) {
         </div>`;
       }).join("");
     }
+
+function renderOpRateContent(rows) {
+  if (!rows || rows.length===0) {
+    opRateContent.innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
+    return;
+  }
+
+  const sorted = [...rows].sort((a,b)=>{
+    if (Number(b.win_rate)!==Number(a.win_rate)) return Number(b.win_rate)-Number(a.win_rate);
+    if (Number(b.total_matches)!==Number(a.total_matches)) return Number(b.total_matches)-Number(a.total_matches);
+    return Number(b.win_count)-Number(a.win_count);
+  });
+
+  function getRowClass(i) {
+    if (i===0) return "row-top1";
+    if (i===1) return "row-top2";
+    if (i===2) return "row-top3";
+    return "";
+  }
+
+  function getClassName(engraving) {
+    const cand = allCandidates.find(c => c.engraving_name === engraving);
+    return cand ? cand.class_name : "";
+  }
+
+  opRateContent.innerHTML = `
+    <div class="rate-list-wrap">
+      ${sorted.map((row,i)=>`
+        <div class="rate-row-item ${getRowClass(i)}">
+          <div class="rate-rank">${i+1}</div>
+          <div class="rate-info">
+            <div class="rate-name">${row.engraving_name}</div>
+            <div class="rate-class">${getClassName(row.engraving_name)}</div>
+            <div class="rate-bar-bg">
+              <div class="rate-bar-fill bar-fill-op" style="width:${Math.min(100,Number(row.win_rate))}%"></div>
+            </div>
+          </div>
+          <div class="rate-right">
+            <div class="rate-value">${Number(row.win_rate).toFixed(1)}%</div>
+            <div class="rate-record">${row.total_matches}전 ${row.win_count}승 ${row.lose_count}패</div>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
 
     // ===== 달력 =====
     let calYear, calMonth;
@@ -2261,12 +2964,19 @@ function getStampClass(grade) {
     }
 
     document.addEventListener("click", e => {
-      const opBtn    = document.getElementById("openOpTierBtn");
-      const favorBtn = document.getElementById("openFavorTierBtn");
-      if (!miniPopup.contains(e.target) && e.target !== opBtn && !opBtn.contains(e.target) && e.target !== favorBtn && !favorBtn.contains(e.target)) {
-        miniPopup.classList.remove("show");
-      }
-    });
+  const opBtn     = document.getElementById("openOpTierBtn");
+  const favorBtn  = document.getElementById("openFavorTierBtn");
+  const opRateBtn = document.getElementById("openOpRateBtn");
+
+  if (
+    !miniPopup.contains(e.target) &&
+    e.target !== opBtn && !opBtn.contains(e.target) &&
+    e.target !== favorBtn && !favorBtn.contains(e.target) &&
+    e.target !== opRateBtn && !opRateBtn.contains(e.target)
+  ) {
+    miniPopup.classList.remove("show");
+  }
+});
 
     // ===== DOM =====
     const opStamp        = document.getElementById("opStamp");
@@ -2321,6 +3031,10 @@ function getStampClass(grade) {
     const favorTierModal     = document.getElementById("favorTierModal");
     const opLockIcon         = document.getElementById("opLockIcon");
     const favorLockIcon      = document.getElementById("favorLockIcon");
+    const opRateModal        = document.getElementById("opRateModal");
+    const opRateSub          = document.getElementById("opRateSub");
+    const opRateContent      = document.getElementById("opRateContent");
+    const opRateLockIcon     = document.getElementById("opRateLockIcon");
 
     let visitorKey    = null;
     let completedState= {op:false,favor:false};
@@ -2373,11 +3087,14 @@ function getStampClass(grade) {
     }
 
     function updateLockIcons() {
-      const opUnlocked    = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
-      const favorUnlocked = completedState.op || completedState.favor;
-      opLockIcon.style.display    = opUnlocked    ? "none" : "flex";
-      favorLockIcon.style.display = favorUnlocked ? "none" : "flex";
-    }
+  const opUnlocked      = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
+  const favorUnlocked   = completedState.op || completedState.favor;
+  const opRateUnlocked  = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+
+  opLockIcon.style.display     = opUnlocked ? "none" : "flex";
+  favorLockIcon.style.display  = favorUnlocked ? "none" : "flex";
+  opRateLockIcon.style.display = opRateUnlocked ? "none" : "flex";
+}
 
     function sortRankingRows(rows) {
       return [...rows].sort((a,b)=>{
@@ -2748,9 +3465,41 @@ document.getElementById("favorTierSub").textContent=`최근 7일간 호감 1:1 �
     document.getElementById("closeFavorTierBtn").addEventListener("click",()=>{ favorTierModal.classList.remove("show"); });
     favorTierModal.addEventListener("click",e=>{ if(e.target===favorTierModal) favorTierModal.classList.remove("show"); });
 
+document.getElementById("closeOpRateBtn").addEventListener("click",()=>{ opRateModal.classList.remove("show"); });
+opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal.classList.remove("show"); });
+
+    document.getElementById("openOpRateBtn").addEventListener("click",async(e)=>{
+  const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+
+  if (!opRateUnlocked) {
+    showMiniPopup(
+      e.currentTarget,
+      "OP직각 승률표",
+      `열람 조건 : <span class="cond">S 도장 이상 획득 필요</span>`
+    );
+    return;
+  }
+
+  opRateModal.classList.add("show");
+  opRateContent.innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
+
+  const rows = await loadOpRateData();
+
+  const now = new Date();
+  const stamp = `${String(now.getFullYear()).slice(2)}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+  opRateSub.textContent = `OP 직각 1:1 승률 · 최근 10일 데이터 🕙 ${stamp}`;
+
+  renderOpRateContent(rows);
+});
+
     document.addEventListener("keydown",e=>{
-      if (e.key==="Escape") { guideModal.classList.remove("show"); opTierModal.classList.remove("show"); favorTierModal.classList.remove("show"); }
-    });
+  if (e.key==="Escape") {
+    guideModal.classList.remove("show");
+    opTierModal.classList.remove("show");
+    favorTierModal.classList.remove("show");
+    opRateModal.classList.remove("show");
+  }
+});
 
     async function init() {
       visitorKey=getVisitorKey();
