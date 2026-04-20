@@ -1203,12 +1203,12 @@
 
                 <div class="sidebar-divider"></div>
 
-                <button class="menu-item simple-entry" data-menu="simple">🟢 잔혈컷 간편보기  </button>
+                <button class="menu-item simple-entry active" data-menu="simple">🟢 잔혈컷 간편보기  </button>
 
                 <div class="sidebar-divider"></div>
 
                 <div class="menu">
-                    <button class="menu-item active" data-menu="serka">🟢 세르카 딜지분 보기</button>
+                    <button class="menu-item" data-menu="serka">🟢 세르카 딜지분 보기</button>
                     <button class="menu-item" data-menu="cathedral">🟢 성당 딜지분 보기</button>
                     <button class="menu-item" data-menu="gato1730">🟢 1730 가토 딜지분</button>
                     <button class="menu-item" data-menu="gato1750">🟢 1750 가토 딜지분</button>
@@ -1368,7 +1368,7 @@
     <script>
         const CSV_URL = "https://docs.google.com/spreadsheets/d/1v4gfG-Lr0iFmiP0PXtVTsijdMziekQaZ-wBTWrobncY/export?format=csv&gid=0";
 
-        let currentMenu  = "serka";
+        let currentMenu  = "simple";
         let currentCombo = "hard_gate1";
         let currentGatoBoss     = "루멘칼리고";
         let currentGato1750Boss = "스콜라키아";
@@ -1402,178 +1402,200 @@
             }
         };
 
-        const simpleData = {
-            "1710": {
-                sectionTitle: "1710 레이드",
-                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-                cards: [
-                    {
-                        theme:"b-green", title:"종막 노말", node:"1710",
-                        rows:[
-                            {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1190 - 1590"},
-                            {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1050 - 1400"}
-                        ], gold:"40,000"
-                    },
-                    {
-                        theme:"b-green", title:"세르카 노말", node:"1710",
-                        rows:[
-                            {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"1100 - 1480"},
-                            {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"1430 - 1900"}
-                        ], gold:"35,000"
-                    },
-                    {
-                        theme:"b-green", title:"4막 노말", node:"1700",
-                        rows:[
-                            {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"740 - 990"},
-                            {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"950 - 1270"}
-                        ], gold:"33,000"
-                    },
-                    {
-                        theme:"b-gray", title:"성당 1단계", node:"1700",
-                        rows:[
-                            {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"995 - 1325"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"940 - 1250"}
-                        ], gold:"30,000", goldTag:"귀속골드"
-                    }
-                ]
+       const simpleData = {
+    "1710": {
+        sectionTitle: "1710 레이드",
+        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+        cards: [
+            {
+                theme:"b-green", title:"종막 노말", node:"1710",
+                rows:[
+                    {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1190 - 1590"},
+                    {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1050 - 1400"}
+                ], gold:"20,000", goldTag:"귀속 20,000"
             },
-            "1720": {
-                sectionTitle: "1720 레이드",
-                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-                cards: [
-                    {
-                        theme:"b-gold", title:"4막 하드", node:"1720",
-                        rows:[
-                            {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"1425 - 1900"},
-                            {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"1575 - 2100"}
-                        ], gold:"42,000"
-                    },
-                    {
-                        theme:"b-gold", title:"성당 2단계", node:"1720",
-                        rows:[
-                            {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
-                        ], gold:"40,000", goldTag:"귀속골드"
-                    },
-                    {
-                        theme:"b-green", title:"종막 노말", node:"1710",
-                        rows:[
-                            {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1190 - 1590"},
-                            {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1050 - 1400"}
-                        ], gold:"40,000"
-                    },
-                    {
-                        theme:"b-green", title:"세르카 노말", node:"1710",
-                        rows:[
-                            {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"1100 - 1480"},
-                            {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"1430 - 1900"}
-                        ], gold:"35,000"
-                    }
-                ]
+            {
+                theme:"b-green", title:"세르카 노말", node:"1710",
+                rows:[
+                    {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"1100 - 1480"},
+                    {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"1430 - 1900"}
+                ], gold:"17,500", goldTag:"귀속 17,500"
             },
-            "1730": {
-                sectionTitle: "1730 레이드",
-                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-                cards: [
-                    {
-                        theme:"b-gold", title:"세르카 하드", node:"1730",
-                        rows:[
-                            {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"2300 - 3070"},
-                            {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"2980 - 3970"}
-                        ], gold:"44,000"
-                    },
-                    {
-                        theme:"b-gold", title:"종막 하드", node:"1730",
-                        rows:[
-                            {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"2370 - 3170"},
-                            {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"},{text:"신", cls:"type-divine"}], range:"4200 - 5625"}
-                        ], gold:"52,000"
-                    },
-                    {
-                        theme:"b-gold", title:"4막 하드", node:"1720",
-                        rows:[
-                            {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"1425 - 1900"},
-                            {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"1575 - 2100"}
-                        ], gold:"42,000"
-                    },
-                    {
-                        theme:"b-gold", title:"성당 2단계", node:"1720",
-                        rows:[
-                            {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
-                        ], gold:"40,000", goldTag:"귀속골드"
-                    }
-                ]
+            {
+                theme:"b-green", title:"4막 노말", node:"1700",
+                rows:[
+                    {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"740 - 990"},
+                    {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"950 - 1270"}
+                ], gold:"16,500", goldTag:"귀속 16,500"
             },
-            "1740": {
-                sectionTitle: "1740 레이드",
-                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-                cards: [
-                    {
-                        theme:"b-purple", title:"세르카 나메", node:"1740",
-                        rows:[
-                            {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"3580 - 4770"},
-                            {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"4620 - 6160"}
-                        ], gold:"54,000"
-                    },
-                    {
-                        theme:"b-gold", title:"종막 하드", node:"1730",
-                        rows:[
-                            {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"2370 - 3170"},
-                            {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"},{text:"신", cls:"type-divine"}], range:"4200 - 5625"}
-                        ], gold:"52,000"
-                    },
-                    {
-                        theme:"b-gold", title:"4막 하드", node:"1720",
-                        rows:[
-                            {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"1425 - 1900"},
-                            {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"1575 - 2100"}
-                        ], gold:"42,000"
-                    },
-                    {
-                        theme:"b-gold", title:"성당 2단계", node:"1720",
-                        rows:[
-                            {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
-                        ], gold:"40,000", goldTag:"귀속골드"
-                    }
-                ]
-            },
-            "1750": {
-                sectionTitle: "1750 레이드",
-                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-                cards: [
-                    {
-                        theme:"b-purple", title:"세르카 나메", node:"1740",
-                        rows:[
-                            {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"3580 - 4770"},
-                            {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"4620 - 6160"}
-                        ], gold:"54,000"
-                    },
-                    {
-                        theme:"b-gold", title:"종막 하드", node:"1730",
-                        rows:[
-                            {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"2370 - 3170"},
-                            {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"},{text:"신", cls:"type-divine"}], range:"4200 - 5625"}
-                        ], gold:"52,000"
-                    },
-                    {
-                        theme:"b-orange", title:"성당 3단계", node:"1750",
-                        rows:[
-                            {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"3840 - 5120"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"3780 - 5040"}
-                        ], gold:"50,000", goldTag:"귀속골드"
-                    },
-                    {
-                        theme:"b-gray", title:"4막 하드", node:"1720",
-                        rows:[
-                            {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"1425 - 1900"},
-                            {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"1575 - 2100"}
-                        ], gold:"42,000"
-                    }
-                ]
+            {
+                theme:"b-gray", title:"성당 1단계", node:"1700",
+                rows:[
+                    {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"995 - 1325"},
+                    {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"940 - 1250"}
+                ], gold:"30,000", goldTag:"귀속골드"
             }
-        };
+        ]
+    },
+    "1720": {
+        sectionTitle: "1720 레이드",
+        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+        cards: [
+            {
+                theme:"b-gold", title:"에기르 EX 노말", node:"1720",
+                rows:[
+                    {gate:"1관", boss:"에기르", badges:[{text:"고대", cls:"type-ancient"}], range:"준비중"}
+                ], gold:"20,000", goldTag:"토큰 150"
+            },
+            {
+                theme:"b-gold", title:"4막 하드", node:"1720",
+                rows:[
+                    {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"1425 - 1900"},
+                    {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"1575 - 2100"}
+                ], gold:"42,000"
+            },
+            {
+                theme:"b-gold", title:"성당 2단계", node:"1720",
+                rows:[
+                    {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
+                    {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
+                ], gold:"40,000", goldTag:"귀속골드"
+            },
+            {
+                theme:"b-green", title:"종막 노말", node:"1710",
+                rows:[
+                    {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1190 - 1590"},
+                    {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1050 - 1400"}
+                ], gold:"20,000", goldTag:"귀속 20,000"
+            },
+            {
+                theme:"b-green", title:"세르카 노말", node:"1710",
+                rows:[
+                    {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"1100 - 1480"},
+                    {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"1430 - 1900"}
+                ], gold:"17,500", goldTag:"귀속 17,500"
+            }
+        ]
+    },
+    "1730": {
+        sectionTitle: "1730 레이드",
+        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+        cards: [
+            {
+                theme:"b-gold", title:"세르카 하드", node:"1730",
+                rows:[
+                    {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"2300 - 3070"},
+                    {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"2980 - 3970"}
+                ], gold:"44,000"
+            },
+            {
+                theme:"b-gold", title:"종막 하드", node:"1730",
+                rows:[
+                    {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"2370 - 3170"},
+                    {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"},{text:"신", cls:"type-divine"}], range:"4200 - 5625"}
+                ], gold:"52,000"
+            },
+            {
+                theme:"b-gold", title:"4막 하드", node:"1720",
+                rows:[
+                    {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"1425 - 1900"},
+                    {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"1575 - 2100"}
+                ], gold:"42,000"
+            },
+            {
+                theme:"b-gold", title:"성당 2단계", node:"1720",
+                rows:[
+                    {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
+                    {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
+                ], gold:"40,000", goldTag:"귀속골드"
+            }
+        ]
+    },
+    "1740": {
+        sectionTitle: "1740 레이드",
+        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+        cards: [
+            {
+                theme:"b-purple", title:"세르카 나메", node:"1740",
+                rows:[
+                    {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"3580 - 4770"},
+                    {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"4620 - 6160"}
+                ], gold:"54,000"
+            },
+            {
+                theme:"b-gold", title:"종막 하드", node:"1730",
+                rows:[
+                    {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"2370 - 3170"},
+                    {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"},{text:"신", cls:"type-divine"}], range:"4200 - 5625"}
+                ], gold:"52,000"
+            },
+            {
+                theme:"b-gold", title:"4막 하드", node:"1720",
+                rows:[
+                    {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"1425 - 1900"},
+                    {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"1575 - 2100"}
+                ], gold:"42,000"
+            },
+            {
+                theme:"b-gold", title:"성당 2단계", node:"1720",
+                rows:[
+                    {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
+                    {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
+                ], gold:"40,000", goldTag:"귀속골드"
+            }
+        ]
+    },
+    "1750": {
+        sectionTitle: "1750 레이드",
+        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+        cards: [
+            {
+                theme:"b-gold", title:"에기르 EX 하드", node:"1750",
+                rows:[
+                    {gate:"1관", boss:"에기르", badges:[{text:"고대", cls:"type-ancient"}], range:"준비중"}
+                ], gold:"45,000", goldTag:"토큰 200"
+            },
+            {
+                theme:"b-purple", title:"세르카 나메", node:"1740",
+                rows:[
+                    {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"3580 - 4770"},
+                    {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"4620 - 6160"}
+                ], gold:"54,000"
+            },
+            {
+                theme:"b-gold", title:"종막 하드", node:"1730",
+                rows:[
+                    {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"2370 - 3170"},
+                    {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"},{text:"신", cls:"type-divine"}], range:"4200 - 5625"}
+                ], gold:"52,000"
+            },
+            {
+                theme:"b-orange", title:"성당 3단계", node:"1750",
+                rows:[
+                    {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"3840 - 5120"},
+                    {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"3780 - 5040"}
+                ], gold:"50,000", goldTag:"귀속골드"
+            }
+        ]
+    },
+    "1760": {
+        sectionTitle: "1760 레이드",
+        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+        cards: []
+    },
+    "1770": {
+        sectionTitle: "1770 레이드",
+        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+        cards: [
+            {
+                theme:"b-purple", title:"에기르 EX 나이트메어", node:"1770",
+                rows:[
+                    {gate:"1관", boss:"에기르", badges:[{text:"고대", cls:"type-ancient"}], range:"준비중"}
+                ], gold:"45,000", goldTag:"토큰 200"
+            }
+        ]
+    }
+};
 
         const gato1730Bosses = ["루멘칼리고","가르가디스","스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
         const gato1750Bosses = ["루멘칼리고","가르가디스","스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
@@ -1787,7 +1809,7 @@
 
             if (currentMenu==="simple") {
                 tabs.classList.add("simple-tabs");
-                tabs.innerHTML = ["1710","1720","1730","1740","1750"].map(level => `
+                tabs.innerHTML = ["1710","1720","1730","1740","1750","1760","1770"].map(level => `
                     <button class="tab ${currentSimpleLevel===level?'active':''}" data-simple-level="${level}">
                         <div class="tab-label">${level}</div>
                     </button>
