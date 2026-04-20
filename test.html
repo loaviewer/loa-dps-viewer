@@ -1578,12 +1578,7 @@
             }
         ]
     },
-    "1760": {
-        sectionTitle: "1760 레이드",
-        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-        cards: []
-    },
-    "1770": {
+        "1770": {
         sectionTitle: "1770 레이드",
         intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
         cards: [
@@ -1809,7 +1804,7 @@
 
             if (currentMenu==="simple") {
                 tabs.classList.add("simple-tabs");
-                tabs.innerHTML = ["1710","1720","1730","1740","1750","1760","1770"].map(level => `
+                tabs.innerHTML = ["1710","1720","1730","1740","1750","1770"].map(level => `
                     <button class="tab ${currentSimpleLevel===level?'active':''}" data-simple-level="${level}">
                         <div class="tab-label">${level}</div>
                     </button>
