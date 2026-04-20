@@ -364,7 +364,47 @@
       margin-top: 2px;
     }
     
-    @media (max-width: 1100px) { .triple-grid { grid-template-columns: 1fr; } }
+        /* ===== 2단 그리드 ===== */
+    .dual-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+    /* ===== 기간 토글 버튼 ===== */
+    .period-toggle-wrap {
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+      margin-bottom: 8px;
+    }
+
+    .period-toggle-btn {
+      flex: 1;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: none;
+      background: none;
+      color: #5a6a82;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .period-toggle-btn:hover {
+      color: #c6d4e8;
+    }
+
+    .period-toggle-btn.active {
+      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
+      color: #08111e;
+      box-shadow: 0 2px 8px rgba(78,168,255,0.22);
+    }
+
+    @media (max-width: 1100px) {
+      .triple-grid { grid-template-columns: 1fr; }
+      .dual-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -394,120 +434,122 @@
         <div class="admin-header-sub">각인별 승률 모니터링 · 5일 / 7일 / 전체 비교</div>
       </div>
 
-      <!-- OP 섹션 -->
+           <!-- OP 섹션 -->
       <div class="section-wrap">
         <div class="section-header">
           <span class="section-label label-op">OP TOURNAMENT</span>
           <span class="section-title">OP 직각 승률</span>
         </div>
         <div class="triple-grid">
+          <!-- 1칸: 5일/7일 토글 -->
           <div class="admin-card">
             <div class="card-head">
-              <div class="card-period-badge badge-5d">최근 5일</div>
-              <div class="card-title">5일 기준 승률</div>
+              <div class="period-toggle-wrap">
+                <button class="period-toggle-btn active" data-target="op" data-days="5">5일</button>
+                <button class="period-toggle-btn" data-target="op" data-days="7">7일</button>
+              </div>
+              <div class="card-title" id="opPeriodTitle">5일 기준 승률</div>
             </div>
-            <div id="op5Table"><div class="loading-text">불러오는 중...</div></div>
+            <div id="opPeriodTable"><div class="loading-text">불러오는 중...</div></div>
           </div>
-          <div class="admin-card">
-            <div class="card-head">
-              <div class="card-period-badge badge-7d">최근 7일</div>
-              <div class="card-title">7일 기준 승률</div>
-            </div>
-            <div id="op7Table"><div class="loading-text">불러오는 중...</div></div>
-          </div>
+          <!-- 2칸: 전체 -->
           <div class="admin-card">
             <div class="card-head">
               <div class="card-period-badge badge-all">전체</div>
               <div class="card-title">전체 기준 승률 + 우승</div>
             </div>
             <div id="opAllTable"><div class="loading-text">불러오는 중...</div></div>
-            <div class="grade-divider"></div>
+          </div>
+          <!-- 3칸: 등급분포 + 클래스별 우승 분석 -->
+          <div class="admin-card">
+            <div class="card-head">
+              <div class="card-period-badge badge-all">분석</div>
+              <div class="card-title">등급 분포 + 우승 직각 분석</div>
+            </div>
             <div class="grade-section-title">📊 등급 분포</div>
             <div id="opGradeList"><div class="loading-text">불러오는 중...</div></div>
-                      <div class="grade-divider"></div>
-          <div class="grade-section-title">🏆 클래스별 우승 직각 분석</div>
-          <div class="class-pick-wrap">
-            <div class="pick-controls">
-              <div class="pick-toggle">
-                <button class="pick-toggle-btn active" data-type="op">OP</button>
-                <button class="pick-toggle-btn" data-type="favor">호감</button>
+            <div class="grade-divider"></div>
+            <div class="grade-section-title">🏆 클래스별 우승 직각 분석</div>
+            <div class="class-pick-wrap">
+              <div class="pick-controls">
+                <div class="pick-toggle">
+                  <button class="pick-toggle-btn active" data-type="op">OP</button>
+                  <button class="pick-toggle-btn" data-type="favor">호감</button>
+                </div>
+                <div class="pick-select-wrap">
+                  <select class="pick-select" id="classPickSelect">
+                    <option value="">클래스 선택 ▼</option>
+                    <optgroup label="전사">
+                      <option value="워로드">워로드</option>
+                      <option value="버서커">버서커</option>
+                      <option value="디스트로이어">디스트로이어</option>
+                      <option value="홀리나이트">홀리나이트</option>
+                      <option value="슬레이어">슬레이어</option>
+                      <option value="발키리">발키리</option>
+                    </optgroup>
+                    <optgroup label="무도가">
+                      <option value="배틀마스터">배틀마스터</option>
+                      <option value="인파이터">인파이터</option>
+                      <option value="기공사">기공사</option>
+                      <option value="창술사">창술사</option>
+                      <option value="스트라이커">스트라이커</option>
+                      <option value="브레이커">브레이커</option>
+                    </optgroup>
+                    <optgroup label="헌터">
+                      <option value="데빌헌터">데빌헌터</option>
+                      <option value="블래스터">블래스터</option>
+                      <option value="호크아이">호크아이</option>
+                      <option value="스카우터">스카우터</option>
+                      <option value="건슬링어">건슬링어</option>
+                    </optgroup>
+                    <optgroup label="마법사">
+                      <option value="서머너">서머너</option>
+                      <option value="아르카나">아르카나</option>
+                      <option value="바드">바드</option>
+                      <option value="소서리스">소서리스</option>
+                    </optgroup>
+                    <optgroup label="암살자">
+                      <option value="블레이드">블레이드</option>
+                      <option value="데모닉">데모닉</option>
+                      <option value="리퍼">리퍼</option>
+                      <option value="소울이터">소울이터</option>
+                    </optgroup>
+                    <optgroup label="스페셜리스트">
+                      <option value="도화가">도화가</option>
+                      <option value="기상술사">기상술사</option>
+                      <option value="환수사">환수사</option>
+                    </optgroup>
+                    <optgroup label="가디언나이트">
+                      <option value="가디언나이트">가디언나이트</option>
+                    </optgroup>
+                  </select>
+                </div>
               </div>
-              <div class="pick-select-wrap">
-                <select class="pick-select" id="classPickSelect">
-                  <option value="">클래스 선택 ▼</option>
-                  <optgroup label="전사">
-                    <option value="워로드">워로드</option>
-                    <option value="버서커">버서커</option>
-                    <option value="디스트로이어">디스트로이어</option>
-                    <option value="홀리나이트">홀리나이트</option>
-                    <option value="슬레이어">슬레이어</option>
-                    <option value="발키리">발키리</option>
-                  </optgroup>
-                  <optgroup label="무도가">
-                    <option value="배틀마스터">배틀마스터</option>
-                    <option value="인파이터">인파이터</option>
-                    <option value="기공사">기공사</option>
-                    <option value="창술사">창술사</option>
-                    <option value="스트라이커">스트라이커</option>
-                    <option value="브레이커">브레이커</option>
-                  </optgroup>
-                  <optgroup label="헌터">
-                    <option value="데빌헌터">데빌헌터</option>
-                    <option value="블래스터">블래스터</option>
-                    <option value="호크아이">호크아이</option>
-                    <option value="스카우터">스카우터</option>
-                    <option value="건슬링어">건슬링어</option>
-                  </optgroup>
-                  <optgroup label="마법사">
-                    <option value="서머너">서머너</option>
-                    <option value="아르카나">아르카나</option>
-                    <option value="바드">바드</option>
-                    <option value="소서리스">소서리스</option>
-                  </optgroup>
-                  <optgroup label="암살자">
-                    <option value="블레이드">블레이드</option>
-                    <option value="데모닉">데모닉</option>
-                    <option value="리퍼">리퍼</option>
-                    <option value="소울이터">소울이터</option>
-                  </optgroup>
-                  <optgroup label="스페셜리스트">
-                    <option value="도화가">도화가</option>
-                    <option value="기상술사">기상술사</option>
-                    <option value="환수사">환수사</option>
-                  </optgroup>
-                  <optgroup label="가디언나이트">
-                    <option value="가디언나이트">가디언나이트</option>
-                  </optgroup>
-                </select>
-              </div>
+              <div id="classPickResult"><div class="loading-text">클래스를 선택하세요 🎯</div></div>
             </div>
-            <div id="classPickResult"><div class="loading-text">클래스를 선택하세요 🎯</div></div>
-          </div>
           </div>
         </div>
       </div>
 
-      <!-- 호감 섹션 -->
+            <!-- 호감 섹션 -->
       <div class="section-wrap">
         <div class="section-header">
           <span class="section-label label-favor">FAVOR TOURNAMENT</span>
           <span class="section-title">호감 직각 승률</span>
         </div>
-        <div class="triple-grid">
+        <div class="dual-grid">
+          <!-- 1칸: 5일/7일 토글 -->
           <div class="admin-card">
             <div class="card-head">
-              <div class="card-period-badge badge-5d">최근 5일</div>
-              <div class="card-title">5일 기준 승률</div>
+              <div class="period-toggle-wrap">
+                <button class="period-toggle-btn active" data-target="favor" data-days="5">5일</button>
+                <button class="period-toggle-btn" data-target="favor" data-days="7">7일</button>
+              </div>
+              <div class="card-title" id="favorPeriodTitle">5일 기준 승률</div>
             </div>
-            <div id="favor5Table"><div class="loading-text">불러오는 중...</div></div>
+            <div id="favorPeriodTable"><div class="loading-text">불러오는 중...</div></div>
           </div>
-          <div class="admin-card">
-            <div class="card-head">
-              <div class="card-period-badge badge-7d">최근 7일</div>
-              <div class="card-title">7일 기준 승률</div>
-            </div>
-            <div id="favor7Table"><div class="loading-text">불러오는 중...</div></div>
-          </div>
+          <!-- 2칸: 전체 -->
           <div class="admin-card">
             <div class="card-head">
               <div class="card-period-badge badge-all">전체</div>
@@ -517,9 +559,6 @@
           </div>
         </div>
       </div>
-
-    </div>
-  </div>
 
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
@@ -675,20 +714,17 @@
 }
 
     // ===== 데이터 로드 =====
-    async function loadAllData() {
-      // OP 5일
-      const {data: op5} = await supabase.rpc("get_tier_data", {p_type:"op", p_days:5});
-      renderPeriodTable("op5Table", op5, "op");
+       async function loadAllData() {
+      const SUPPORT_ENGRAVINGS = ["해방자","절실한 구원","만개","축복의 오라"];
 
-      // OP 7일
-      const {data: op7} = await supabase.rpc("get_tier_data", {p_type:"op", p_days:7});
-      renderPeriodTable("op7Table", op7, "op");
+      // OP 5일 (기본)
+      const {data: op5} = await supabase.rpc("get_tier_data", {p_type:"op", p_days:5});
+      renderPeriodTable("opPeriodTable", op5, "op");
 
       // OP 전체
       const {data: opAll} = await supabase.from("ranking_overall")
         .select("engraving_name,class_name,win_count,lose_count,total_matches,win_rate,champion_count")
         .eq("tournament_type","op");
-      const SUPPORT_ENGRAVINGS = ["해방자","절실한 구원","만개","축복의 오라"];
       const opFiltered = opAll.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
       renderAllTable("opAllTable", opFiltered, "op");
 
@@ -698,21 +734,50 @@
       if (gradeSessions) { for (const r of gradeSessions) { if(!r.grade) continue; counts[r.grade]=(counts[r.grade]||0)+1; } }
       renderGrade("opGradeList", counts);
 
-      // 호감 5일
+      // 호감 5일 (기본)
       const {data: favor5} = await supabase.rpc("get_tier_data", {p_type:"favor", p_days:5});
-      renderPeriodTable("favor5Table", favor5, "favor");
-
-      // 호감 7일
-      const {data: favor7} = await supabase.rpc("get_tier_data", {p_type:"favor", p_days:7});
-      renderPeriodTable("favor7Table", favor7, "favor");
+      renderPeriodTable("favorPeriodTable", favor5, "favor");
 
       // 호감 전체
       const {data: favorAll} = await supabase.from("ranking_overall")
         .select("engraving_name,class_name,win_count,lose_count,total_matches,win_rate,champion_count")
         .eq("tournament_type","favor");
       renderAllTable("favorAllTable", favorAll, "favor");
-            // ===== 클래스별 우승 직각 분석 =====
+
+      // 기간 토글 이벤트
+      initPeriodToggle();
+
+      // 클래스별 우승 직각 분석
       initClassPicker();
+    }
+
+    // ===== 기간 토글 (5일/7일) =====
+    function initPeriodToggle() {
+      document.querySelectorAll(".period-toggle-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const target = btn.dataset.target;
+          const days = Number(btn.dataset.days);
+
+          // 같은 그룹 토글 처리
+          btn.closest(".period-toggle-wrap").querySelectorAll(".period-toggle-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          // 타이틀 변경
+          const titleEl = document.getElementById(target + "PeriodTitle");
+          titleEl.textContent = `${days}일 기준 승률`;
+
+          // 데이터 로드
+          const tableId = target + "PeriodTable";
+          document.getElementById(tableId).innerHTML = `<div class="loading-text">불러오는 중...</div>`;
+
+          const {data, error} = await supabase.rpc("get_tier_data", {p_type: target, p_days: days});
+          if (error) {
+            document.getElementById(tableId).innerHTML = `<div class="loading-text">조회 실패 😢</div>`;
+            return;
+          }
+          renderPeriodTable(tableId, data, target);
+        });
+      });
     }
 
     // ===== 클래스별 우승 직각 분석 =====
