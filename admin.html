@@ -154,6 +154,216 @@
 
     .loading-text { text-align: center; color: #5a6a82; font-size: 13px; padding: 20px 0; }
 
+    /* ===== 클래스별 우승 직각 분석 ===== */
+    .class-pick-wrap {
+      margin-top: 10px;
+    }
+
+    .pick-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .pick-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .pick-toggle-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: none;
+      background: none;
+      color: #5a6a82;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .pick-toggle-btn:hover {
+      color: #c6d4e8;
+    }
+
+    .pick-toggle-btn.active {
+      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
+      color: #08111e;
+      box-shadow: 0 2px 8px rgba(78,168,255,0.22);
+    }
+
+    .pick-select-wrap {
+      flex: 1;
+    }
+
+    .pick-select {
+      width: 100%;
+      padding: 7px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.06);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      outline: none;
+      transition: 0.15s ease;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .pick-select:focus {
+      border-color: rgba(122,140,255,0.50);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .pick-select option,
+    .pick-select optgroup {
+      background: #141a28;
+      color: #ffffff;
+    }
+
+    .pick-select optgroup {
+      font-weight: 900;
+      color: #7fc6ff;
+    }
+
+    /* ===== 우승 직각 결과 리스트 ===== */
+    .pick-result-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .pick-result-row {
+      display: grid;
+      grid-template-columns: 28px 1fr 52px;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: 0.15s ease;
+    }
+
+    .pick-result-row:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .pick-result-row.pick-top1 {
+      background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,180,60,0.04));
+      border-color: rgba(255,215,0,0.18);
+    }
+
+    .pick-result-row.pick-top2 {
+      background: linear-gradient(135deg, rgba(192,192,192,0.06), rgba(160,170,190,0.03));
+      border-color: rgba(192,192,192,0.14);
+    }
+
+    .pick-result-row.pick-top3 {
+      background: linear-gradient(135deg, rgba(205,127,50,0.06), rgba(180,120,60,0.03));
+      border-color: rgba(205,127,50,0.14);
+    }
+
+    .pick-rank {
+      font-size: 12px;
+      font-weight: 900;
+      color: #5a6a82;
+      text-align: center;
+    }
+
+    .pick-rank.ptop1 { color: #ffd700; }
+    .pick-rank.ptop2 { color: #c0c0c0; }
+    .pick-rank.ptop3 { color: #cd7f32; }
+
+    .pick-info {
+      min-width: 0;
+    }
+
+    .pick-eng-name {
+      font-size: 12px;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .pick-bar-bg {
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .pick-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .pick-bar-op {
+      background: linear-gradient(90deg, #3edc7d, #6ff0b7);
+    }
+
+    .pick-bar-favor {
+      background: linear-gradient(90deg, #ffac55, #ffd48a);
+    }
+
+    .pick-count-text {
+      font-size: 9px;
+      color: #5a6a82;
+      margin-top: 3px;
+      font-weight: 800;
+    }
+
+    .pick-rate-val {
+      font-size: 13px;
+      font-weight: 900;
+      color: #ffffff;
+      text-align: right;
+    }
+
+    .pick-rate-val.ptop1 { color: #ffd700; }
+    .pick-rate-val.ptop2 { color: #dcdcdc; }
+    .pick-rate-val.ptop3 { color: #e8a860; }
+
+    .pick-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 8px;
+    }
+
+    .pick-summary-label {
+      font-size: 11px;
+      color: #7fc6ff;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .pick-summary-value {
+      font-size: 14px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .pick-summary-sub {
+      font-size: 10px;
+      color: #5a6a82;
+      margin-top: 2px;
+    }
+    
     @media (max-width: 1100px) { .triple-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -214,6 +424,65 @@
             <div class="grade-divider"></div>
             <div class="grade-section-title">📊 등급 분포</div>
             <div id="opGradeList"><div class="loading-text">불러오는 중...</div></div>
+                      <div class="grade-divider"></div>
+          <div class="grade-section-title">🏆 클래스별 우승 직각 분석</div>
+          <div class="class-pick-wrap">
+            <div class="pick-controls">
+              <div class="pick-toggle">
+                <button class="pick-toggle-btn active" data-type="op">OP</button>
+                <button class="pick-toggle-btn" data-type="favor">호감</button>
+              </div>
+              <div class="pick-select-wrap">
+                <select class="pick-select" id="classPickSelect">
+                  <option value="">클래스 선택 ▼</option>
+                  <optgroup label="전사">
+                    <option value="워로드">워로드</option>
+                    <option value="버서커">버서커</option>
+                    <option value="디스트로이어">디스트로이어</option>
+                    <option value="홀리나이트">홀리나이트</option>
+                    <option value="슬레이어">슬레이어</option>
+                    <option value="발키리">발키리</option>
+                  </optgroup>
+                  <optgroup label="무도가">
+                    <option value="배틀마스터">배틀마스터</option>
+                    <option value="인파이터">인파이터</option>
+                    <option value="기공사">기공사</option>
+                    <option value="창술사">창술사</option>
+                    <option value="스트라이커">스트라이커</option>
+                    <option value="브레이커">브레이커</option>
+                  </optgroup>
+                  <optgroup label="헌터">
+                    <option value="데빌헌터">데빌헌터</option>
+                    <option value="블래스터">블래스터</option>
+                    <option value="호크아이">호크아이</option>
+                    <option value="스카우터">스카우터</option>
+                    <option value="건슬링어">건슬링어</option>
+                  </optgroup>
+                  <optgroup label="마법사">
+                    <option value="서머너">서머너</option>
+                    <option value="아르카나">아르카나</option>
+                    <option value="바드">바드</option>
+                    <option value="소서리스">소서리스</option>
+                  </optgroup>
+                  <optgroup label="암살자">
+                    <option value="블레이드">블레이드</option>
+                    <option value="데모닉">데모닉</option>
+                    <option value="리퍼">리퍼</option>
+                    <option value="소울이터">소울이터</option>
+                  </optgroup>
+                  <optgroup label="스페셜리스트">
+                    <option value="도화가">도화가</option>
+                    <option value="기상술사">기상술사</option>
+                    <option value="환수사">환수사</option>
+                  </optgroup>
+                  <optgroup label="가디언나이트">
+                    <option value="가디언나이트">가디언나이트</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+            <div id="classPickResult"><div class="loading-text">클래스를 선택하세요 🎯</div></div>
+          </div>
           </div>
         </div>
       </div>
@@ -442,7 +711,85 @@
         .select("engraving_name,class_name,win_count,lose_count,total_matches,win_rate,champion_count")
         .eq("tournament_type","favor");
       renderAllTable("favorAllTable", favorAll, "favor");
+            // ===== 클래스별 우승 직각 분석 =====
+      initClassPicker();
     }
+
+    // ===== 클래스별 우승 직각 분석 =====
+    let currentPickType = "op";
+
+    function initClassPicker() {
+      const toggleBtns = document.querySelectorAll(".pick-toggle-btn");
+      const select = document.getElementById("classPickSelect");
+
+      toggleBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          toggleBtns.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentPickType = btn.dataset.type;
+          if (select.value) loadClassPickData(select.value, currentPickType);
+        });
+      });
+
+      select.addEventListener("change", () => {
+        if (select.value) loadClassPickData(select.value, currentPickType);
+        else document.getElementById("classPickResult").innerHTML = `<div class="loading-text">클래스를 선택하세요 🎯</div>`;
+      });
+    }
+
+    async function loadClassPickData(className, type) {
+      const resultDiv = document.getElementById("classPickResult");
+      resultDiv.innerHTML = `<div class="loading-text">불러오는 중...</div>`;
+
+      const {data, error} = await supabase.rpc("get_class_winner_stats", {
+        p_class: className,
+        p_type: type
+      });
+
+      if (error) {
+        resultDiv.innerHTML = `<div class="loading-text">조회 실패 😢</div>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        resultDiv.innerHTML = `<div class="loading-text">데이터 없음 😢<br>${className} 유저의 ${type === "op" ? "OP" : "호감"} 참여 기록이 없습니다.</div>`;
+        return;
+      }
+
+      const totalPicks = data.reduce((sum, r) => sum + Number(r.pick_count), 0);
+      const barClass = type === "op" ? "pick-bar-op" : "pick-bar-favor";
+      const typeLabel = type === "op" ? "OP 토너먼트" : "호감 토너먼트";
+
+      resultDiv.innerHTML = `
+        <div class="pick-summary">
+          <div>
+            <div class="pick-summary-label">📊 ${className} · ${typeLabel}</div>
+            <div class="pick-summary-sub">총 ${totalPicks}명 참여</div>
+          </div>
+          <div class="pick-summary-value">${data.length}개 직각</div>
+        </div>
+        <div class="pick-result-list">
+          ${data.map((row, i) => {
+            const rankClass = i === 0 ? "ptop1" : i === 1 ? "ptop2" : i === 2 ? "ptop3" : "";
+            const rowClass = i === 0 ? "pick-top1" : i === 1 ? "pick-top2" : i === 2 ? "pick-top3" : "";
+            return `
+              <div class="pick-result-row ${rowClass}">
+                <div class="pick-rank ${rankClass}">${i + 1}</div>
+                <div class="pick-info">
+                  <div class="pick-eng-name">${row.winner_engraving}</div>
+                  <div class="pick-bar-bg">
+                    <div class="pick-bar-fill ${barClass}" style="width:${Math.min(100, Number(row.pick_rate))}%"></div>
+                  </div>
+                  <div class="pick-count-text">${row.pick_count}명 선택</div>
+                </div>
+                <div class="pick-rate-val ${rankClass}">${Number(row.pick_rate).toFixed(1)}%</div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+    
   </script>
 </body>
 </html>
