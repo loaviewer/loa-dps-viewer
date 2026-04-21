@@ -821,7 +821,7 @@
         }
 
         function getContentName() {
-            if(currentMenu==="simple")return currentSimpleLevel==="egir-ex"?"에기르 EX 레이드 (데이터 수집중 🚧)":"잔혈컷 간편보기 👀";
+            if(currentMenu==="simple")return currentSimpleLevel==="egir-ex"?"에기르 EX 레이드 🚧 데이터 수집중 🚧":"잔혈컷 간편보기 👀";
             if(currentMenu==="serka"||currentMenu==="cathedral"){const meta=raidMeta[currentMenu][currentCombo];const menuName=currentMenu==="serka"?"세르카":"성당";return`${menuName} : ${meta.title.replace(/\s*\(.+\)/,"")} ${meta.gateName}`;}
             if(currentMenu==="gato1730")return`1730 가디언 토벌 : ${currentGatoBoss}`;
             if(currentMenu==="gato1750")return`1750 가디언 토벌 : ${currentGato1750Boss}`;
