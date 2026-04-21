@@ -44,6 +44,29 @@
         .menu-item.active { background:linear-gradient(135deg,#7a8cff,#4bd3ff); color:#08111e; box-shadow:0 0 18px rgba(106,172,255,0.24); border-color:transparent; }
         .menu-item.simple-entry { font-size:16px; padding:15px 16px; }
 
+
+.icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.gold-material {
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #ddd;
+}
+
+.icon.orb {
+    width: 18px;
+    height: 18px;
+}
+
+
         /* 간편보기 EX 탭 행 */
         .simple-ex-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:0; }
         .menu-item-ex { border-radius:18px; padding:12px 16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); font-weight:800; font-size:15px; color:#e6edf8; transition:0.2s ease; cursor:pointer; text-align:left; width:100%; display:flex; flex-direction:column; gap:3px; }
@@ -866,46 +889,72 @@
             const sideNote=timeCard.querySelector(".side-note");if(sideNote)sideNote.textContent=isDisabled?"간편보기 상태에서는 비활성화":"시간 변경 시 즉시 반영";
         }
 
-        // 골드 영역 렌더
-        function goldBarHtml(card) {
-            if (!card.gold) return "";
-            if (card.bindGold) {
-                // 클리어 + 귀속 + 합계
-                return `<div class="simple-goldbar">
-                    <div class="gold-item">
-                        <div class="gold-item-label">
-                            <svg width="10" height="10" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#f2c86b" stroke="#c8860a" stroke-width="1.5"/><text x="9" y="13" text-anchor="middle" font-size="8" font-weight="900" fill="#422700" font-family="Arial">G</text></svg>
-                            <span class="gold-clear-label">클리어 골드</span>
-                        </div>
-                        <div class="gold-item-value gold-clear-value">${card.gold}</div>
-                    </div>
-                    <div class="gold-operator">+</div>
-                    <div class="gold-item">
-                        <div class="gold-item-label">
-                            <svg width="10" height="10" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0c0c0" stroke="#888888" stroke-width="1.5"/><text x="9" y="13" text-anchor="middle" font-size="8" font-weight="900" fill="#333333" font-family="Arial">G</text></svg>
-                            <span class="gold-bind-label">귀속 골드</span>
-                        </div>
-                        <div class="gold-item-value gold-bind-value">${card.bindGold}</div>
-                    </div>
-                    <div class="gold-operator">=</div>
-                    <div class="gold-total">
-                        <div class="gold-total-label">합계</div>
-                        <div class="gold-total-value">${card.total}</div>
-                    </div>
-                </div>`;
-            } else {
-                // 클리어만
-                return `<div class="simple-goldbar">
-                    <div class="gold-item">
-                        <div class="gold-item-label">
-                            <svg width="10" height="10" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#f2c86b" stroke="#c8860a" stroke-width="1.5"/><text x="9" y="13" text-anchor="middle" font-size="8" font-weight="900" fill="#422700" font-family="Arial">G</text></svg>
-                            <span class="gold-clear-label">클리어 골드</span>
-                        </div>
-                        <div class="gold-item-value gold-clear-value">${card.gold}</div>
-                    </div>
-                </div>`;
-            }
-        }
+      // 골드 영역 렌더
+function goldBarHtml(card) {
+    if (!card.gold) return "";
+
+    // ⭐ 에기르 EX 전용
+    if (currentSimpleLevel === "egir-ex") {
+
+        let tokenCount = 0;
+
+        if (card.title.includes("노말")) tokenCount = 150;
+        else if (card.title.includes("하드")) tokenCount = 200;
+        else if (card.title.includes("나이트메어")) tokenCount = 200;
+
+        return `<div class="simple-goldbar">
+            <div class="gold-item">
+                <div class="gold-item-label">
+                    <img src="img/gold.png" class="icon">
+                    <span class="gold-clear-label">클리어 골드</span>
+                </div>
+                <div class="gold-item-value gold-clear-value">${card.gold}</div>
+            </div>
+
+            <div class="gold-material">
+                <img src="img/wing_orb.png" class="icon orb">
+                x${tokenCount}
+            </div>
+        </div>`;
+    }
+
+    // 일반 레이드 (귀속 있음)
+    if (card.bindGold) {
+        return `<div class="simple-goldbar">
+            <div class="gold-item">
+                <div class="gold-item-label">
+                    <img src="img/gold.png" class="icon">
+                    <span class="gold-clear-label">클리어 골드</span>
+                </div>
+                <div class="gold-item-value gold-clear-value">${card.gold}</div>
+            </div>
+            <div class="gold-operator">+</div>
+            <div class="gold-item">
+                <div class="gold-item-label">
+                    <img src="img/bind_gold.png" class="icon">
+                    <span class="gold-bind-label">귀속 골드</span>
+                </div>
+                <div class="gold-item-value gold-bind-value">${card.bindGold}</div>
+            </div>
+            <div class="gold-operator">=</div>
+            <div class="gold-total">
+                <div class="gold-total-label">합계</div>
+                <div class="gold-total-value">${card.total}</div>
+            </div>
+        </div>`;
+    }
+
+    // 클리어 골드만
+    return `<div class="simple-goldbar">
+        <div class="gold-item">
+            <div class="gold-item-label">
+                <img src="img/gold.png" class="icon">
+                <span class="gold-clear-label">클리어 골드</span>
+            </div>
+            <div class="gold-item-value gold-clear-value">${card.gold}</div>
+        </div>
+    </div>`;
+}
 
         function simpleCardHtml(card) {
             const rowsHtml=card.rows.map(row=>{
