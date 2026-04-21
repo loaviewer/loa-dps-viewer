@@ -448,42 +448,28 @@
         // ===== simpleData =====
         // 골드 구조: gold=클리어골드, bindGold=귀속골드, total=합계 (귀속없으면 gold만)
         const simpleData = {
-            "egir-ex": {
-                sectionTitle: "에기르 EX",
-                intro: "<i>에기르 EX 레이드 잔혈컷 안내입니다. 난이도를 선택하세요.</i>",
-                diff: {
-                    normal: {
-                        node: "1720", theme: "b-gold",
-                        cards: [
-                            {
-                                theme:"b-gold", title:"에기르 EX 노말", node:"1720",
-                                rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
-                                gold:"20,000", bindGold:"", total:""
-                            }
-                        ]
-                    },
-                    hard: {
-                        node: "1750", theme: "b-gold",
-                        cards: [
-                            {
-                                theme:"b-gold", title:"에기르 EX 하드", node:"1750",
-                                rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
-                                gold:"45,000", bindGold:"", total:""
-                            }
-                        ]
-                    },
-                    nightmare: {
-                        node: "1770", theme: "b-purple",
-                        cards: [
-                            {
-                                theme:"b-purple", title:"에기르 EX 나이트메어", node:"1770",
-                                rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
-                                gold:"45,000", bindGold:"", total:""
-                            }
-                        ]
-                    }
-                }
-            },
+           "egir-ex": {
+    sectionTitle: "에기르 EX",
+    intro: "<i>에기르 EX 레이드 잔혈컷 안내입니다.</i>",
+    cards: [
+        {
+            theme:"b-gold", title:"에기르 EX 노말", node:"1720",
+            rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
+            gold:"20,000", bindGold:"", total:""
+        },
+        {
+            theme:"b-gold", title:"에기르 EX 하드", node:"1750",
+            rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
+            gold:"45,000", bindGold:"", total:""
+        },
+        {
+            theme:"b-purple", title:"에기르 EX 나이트메어", node:"1770",
+            rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
+            gold:"45,000", bindGold:"", total:""
+        }
+    ]
+},
+
             "1710": {
                 sectionTitle: "1710 레이드",
                 intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
@@ -674,12 +660,7 @@
                     }
                 ]
             },
-            "1770": {
-                sectionTitle: "1770 레이드",
-                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-                cards: []
-            }
-        };
+                    };
 
         const gato1730Bosses = ["루멘칼리고","가르가디스","스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
         const gato1750Bosses = ["루멘칼리고","가르가디스","스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
@@ -811,7 +792,7 @@
             if(currentMenu==="simple"){
                 tabs.classList.add("simple-tabs");
                 // EX 탭 + 레벨 탭
-                const levels=["1710","1720","1730","1740","1750","1770"];
+                const levels=["1710","1720","1730","1740","1750"];
                 tabs.innerHTML=`
                     <button class="tab tab-ex ${currentSimpleLevel==="egir-ex"?"active":""}" data-simple-level="egir-ex">
                         <div class="tab-label">에기르 EX</div>
@@ -944,27 +925,7 @@
 
         function renderSimpleView() {
             // 에기르 EX
-            if (currentSimpleLevel === "egir-ex") {
-                const exData = simpleData["egir-ex"];
-                const diffCards = exData.diff[currentExDiff];
-                document.getElementById("mainContent").innerHTML = `
-                    <div class="simple-view">
-                        <div class="simple-intro">
-                            <div class="simple-intro-title"><b>에기르 EX 레이드 💠</b></div>
-                            <div class="simple-intro-sub">${exData.intro}</div>
-                        </div>
-                        <div style="display:flex;gap:8px;margin-bottom:4px;">
-                            <button class="ex-diff-tab ${currentExDiff==="normal"?"active-normal":""}" data-diff="normal">노말 (1720)</button>
-                            <button class="ex-diff-tab ${currentExDiff==="hard"?"active-hard":""}" data-diff="hard">하드 (1750)</button>
-                            <button class="ex-diff-tab ${currentExDiff==="nightmare"?"active-nightmare":""}" data-diff="nightmare">나이트메어 (1770)</button>
-                        </div>
-                        <div class="simple-stack">${diffCards.cards.map(simpleCardHtml).join("")}</div>
-                    </div>`;
-                document.querySelectorAll(".ex-diff-tab").forEach(btn=>{
-                    btn.addEventListener("click",()=>{currentExDiff=btn.dataset.diff;renderSimpleView();});
-                });
-                return;
-            }
+           
 
             const data=simpleData[currentSimpleLevel];
             if (!data) { document.getElementById("mainContent").innerHTML=`<div class="coming-soon"><h3>준비중</h3><p>데이터 준비중입니다.</p></div>`; return; }
