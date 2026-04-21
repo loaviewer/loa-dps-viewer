@@ -766,62 +766,7 @@
         }
 
         function getContentName() {
-            if(currentMenu==="simple")return currentSimpleLevel==="egir-ex"?"에기르 EX 레이드 (데이터 수집중      function trackEvent(path, title) {
-            if (window.goatcounter && typeof window.goatcounter.count === "function") {
-                window.goatcounter.count({ path, title, event: true });
-            }
-        }
-
-        function formatDateTime(date) {
-            const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,"0"),d=String(date.getDate()).padStart(2,"0");
-            const h=String(date.getHours()).padStart(2,"0"),min=String(date.getMinutes()).padStart(2,"0"),s=String(date.getSeconds()).padStart(2,"0");
-            return `${y} / ${m} / ${d} ${h}:${min}:${s}`;
-        }
-        function updateTopDateTime() { document.getElementById("topDateTime").textContent = formatDateTime(new Date()); }
-        function makeBadge(text, cls) { return `<span class="badge ${cls}">${text}</span>`; }
-
-        function updateTimeDisplay() {
-            let min=parseInt(document.getElementById("minutes").value||0,10);
-            let sec=parseInt(document.getElementById("seconds").value||0,10);
-            if(isNaN(min)||min<0)min=0; if(isNaN(sec)||sec<0)sec=0; if(sec>59)sec=59;
-            document.getElementById("minutes").value=min; document.getElementById("seconds").value=sec;
-            document.getElementById("timeDisplay").textContent=`${String(min).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
-        }
-
-        function setBaseTimeByMenu(menu) {
-            const minInput=document.getElementById("minutes"),secInput=document.getElementById("seconds"),label=document.getElementById("timeBaseLabel");
-            if(menu==="gato1730"||menu==="gato1750"){minInput.value=1;secInput.value=50;label.textContent="기본값: 1분 50초(110초)";}
-            else{minInput.value=10;secInput.value=0;label.textContent="기본값: 10분(600초)";}
-            updateTimeDisplay();
-        }
-
-        function getTotalSeconds() {
-            let min=parseInt(document.getElementById("minutes").value||0,10);
-            let sec=parseInt(document.getElementById("seconds").value||0,10);
-            if(isNaN(min)||min<0)min=0; if(isNaN(sec)||sec<0)sec=0; if(sec>59)sec=59;
-            document.getElementById("minutes").value=min; document.getElementById("seconds").value=sec;
-            return Math.max(1,min*60+sec);
-        }
-
-        function fmt(n){return Number(n||0).toLocaleString("ko-KR");}
-        function fmtPartyDps(n){return `${Number(n||0).toLocaleString("ko-KR",{minimumFractionDigits:1,maximumFractionDigits:1})}억`;}
-        function toNum(v){if(v===undefined||v===null)return 0;const s=String(v).replace(/,/g,"").replace(/"/g,"").trim();const n=Number(s);return isNaN(n)?0:n;}
-
-        function parseCSVLine(line) {
-            const result=[];let cur="";let inQuotes=false;
-            for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){if(inQuotes&&line[i+1]==='"'){cur+='"';i++;}else{inQuotes=!inQuotes;}}else if(ch===","&&!inQuotes){result.push(cur);cur="";}else{cur+=ch;}}
-            result.push(cur);return result;
-        }
-        function percentNum(v){const m=String(v||"").match(/(\d+)%/);return m?Number(m[1]):null;}
-
-        function getComboTabs(menu) {
-            if(menu==="serka")return[{key:"normal_gate1",label:"노말",sub:"1관"},{key:"normal_gate2",label:"노말",sub:"2관"},{key:"hard_gate1",label:"하드",sub:"1관"},{key:"hard_gate2",label:"하드",sub:"2관"},{key:"nightmare_gate1",label:"나메",sub:"1관"},{key:"nightmare_gate2",label:"나메",sub:"2관"}];
-            if(menu==="cathedral")return[{key:"normal_gate1",label:"1단계",sub:"1관"},{key:"normal_gate2",label:"1단계",sub:"2관"},{key:"hard_gate1",label:"2단계",sub:"1관"},{key:"hard_gate2",label:"2단계",sub:"2관"},{key:"nightmare_gate1",label:"3단계",sub:"1관"},{key:"nightmare_gate2",label:"3단계",sub:"2관"}];
-            return[];
-        }
-
-        function getContentName() {
-            if(currentMenu==="simple")return currentSimpleLevel==="egir-ex"?"에기르 EX 레이드 (데이터 수집중 🚧)":"잔혈컷 간편보기 👀";
+            if(currentMenu==="simple")return currentSimpleLevel==="egir-ex"?"에기르 EX 레이드 🚧 공사중 🚧":"잔혈컷 간편보기 👀";
             if(currentMenu==="serka"||currentMenu==="cathedral"){const meta=raidMeta[currentMenu][currentCombo];const menuName=currentMenu==="serka"?"세르카":"성당";return`${menuName} : ${meta.title.replace(/\s*\(.+\)/,"")} ${meta.gateName}`;}
             if(currentMenu==="gato1730")return`1730 가디언 토벌 : ${currentGatoBoss}`;
             if(currentMenu==="gato1750")return`1750 가디언 토벌 : ${currentGato1750Boss}`;
