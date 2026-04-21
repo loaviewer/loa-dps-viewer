@@ -10,1218 +10,287 @@
     <meta name="google-site-verification" content="OXexKwy54GyK_RP2qIzpKT-bkyj1KiTXipanMawmZNg" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="로이터 베이스 | DPS 계산기 | 1인분·강투컷·잔혈컷 세르카 성당 계산" />
-    <meta property="og:description" content="로아 1인분, 강투컷, 잔혈컷을 세밀하게 계산할 수 있는 로스트아크 DPS 계산기입니다. 세르카 강투컷, 세르카 잔혈컷, 세르카 1인분, 성당 강투컷, 성당 잔혈컷, 성당 1인분과 가디언 토벌 딜지분/DPS를 확인할 수 있습니다." />
+    <meta property="og:description" content="로아 1인분, 강투컷, 잔혈컷을 세밀하게 계산할 수 있는 로스트아크 DPS 계산기입니다." />
     <meta property="og:url" content="https://loaviewer.github.io/loa-dps-viewer/" />
     <meta property="og:site_name" content="로아 DPS 계산기" />
     <link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="%23121925"/><circle cx="32" cy="32" r="24" fill="none" stroke="%23f6d18b" stroke-width="2"/><text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle" font-size="26" font-weight="900" fill="%23f6d18b" font-family="Arial">DP</text></svg>'>
-    
     <style>
         * { box-sizing: border-box; }
+        body { margin:0; min-height:100vh; font-family:"Segoe UI","Malgun Gothic",sans-serif; background:radial-gradient(circle at top,rgba(120,170,255,0.10),transparent 26%),linear-gradient(135deg,#0b1018 0%,#0d1320 45%,#121927 100%); color:#f3ead6; zoom:0.9; }
+        .app { width:min(1440px,calc(100% - 20px)); margin:20px auto 10px; border-radius:30px; overflow:hidden; border:1px solid rgba(255,255,255,0.07); background:linear-gradient(135deg,#111723 0%,#0b0f18 45%,#0d1320 100%); box-shadow:0 24px 60px rgba(0,0,0,0.38); }
+        .workspace { display:grid; grid-template-columns:320px 1fr; min-height:780px; }
+        .sidebar { padding:24px; background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01)); border-right:1px solid rgba(255,255,255,0.06); }
+        .switch-wrap { display:flex; align-items:center; width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:999px; padding:4px; gap:2px; margin-bottom:20px; }
+        .switch-wrap a { flex:1; text-decoration:none; text-align:center; padding:10px 12px; border-radius:999px; font-size:12px; font-weight:900; transition:0.2s ease; color:#7a8da8; position:relative; overflow:hidden; isolation:isolate; }
+        .switch-wrap a.active { background:linear-gradient(135deg,#7a8cff,#4bd3ff); color:#08111e; box-shadow:0 4px 14px rgba(78,168,255,0.28); animation:switchActiveAura 5s ease-in-out infinite; }
+        .switch-wrap a.active::before { content:""; position:absolute; inset:-45%; border-radius:999px; pointer-events:none; background:radial-gradient(circle at center,rgba(255,255,255,0.30) 0%,rgba(255,255,255,0.14) 18%,rgba(75,211,255,0.16) 34%,transparent 62%); opacity:0; transform:scale(0.55); animation:switchGlowPulse 5s ease-in-out infinite; }
+        .switch-wrap a.active::after { content:""; position:absolute; top:-35%; left:-130%; width:72%; height:190%; border-radius:999px; pointer-events:none; background:linear-gradient(115deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.08) 25%,rgba(255,255,255,0.42) 48%,rgba(255,255,255,0.10) 68%,rgba(255,255,255,0) 100%); transform:rotate(18deg); opacity:0; animation:switchGlassSweep 5s linear infinite; }
+        @keyframes switchGlowPulse { 0%,80%,100%{opacity:0;transform:scale(0.55);} 86%{opacity:0.55;transform:scale(1.05);} 92%{opacity:0.18;transform:scale(1.42);} }
+        @keyframes switchGlassSweep { 0%,80%{left:-130%;opacity:0;} 84%{opacity:1;} 96%{left:145%;opacity:0.65;} 100%{left:145%;opacity:0;} }
+        @keyframes switchActiveAura { 0%,80%,100%{box-shadow:0 4px 14px rgba(78,168,255,0.28);} 88%{box-shadow:0 4px 14px rgba(78,168,255,0.34),0 0 18px rgba(120,210,255,0.30),0 0 32px rgba(120,210,255,0.18);} 94%{box-shadow:0 4px 14px rgba(78,168,255,0.30),0 0 10px rgba(120,210,255,0.18),0 0 22px rgba(120,210,255,0.10);} }
+        .mini-label { font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#7fc6ff; opacity:0.9; margin-bottom:8px; }
+        .hero { font-size:34px; font-weight:900; line-height:1.12; color:#ffffff; margin-bottom:12px; word-break:keep-all; }
+        .muted { font-size:14px; line-height:1.65; color:#b8c1d2; }
+        .guide-trigger-wrap { margin-top:18px; margin-bottom:18px; }
+        .guide-trigger { width:100%; border:none; cursor:pointer; padding:20px 18px 18px; border-radius:20px; font-size:17px; font-weight:900; color:#f2ede2; text-align:left; background:linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04)); border:1px solid rgba(255,255,255,0.08); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.02),0 10px 24px rgba(0,0,0,0.18); transition:0.2s ease; }
+        .guide-trigger:hover { transform:translateY(-1px); border-color:rgba(122,140,255,0.28); background:linear-gradient(180deg,rgba(255,255,255,0.11),rgba(255,255,255,0.05)); }
+        .guide-trigger .guide-small { display:block; font-size:12px; letter-spacing:1.8px; color:#8ec7ff; margin-bottom:8px; text-transform:uppercase; }
+        .guide-trigger .guide-main { display:block; line-height:1.35; word-break:keep-all; }
+        .guide-trigger .guide-accent { color:#ffd48a; }
+        .sidebar-divider { width:100%; height:1px; margin:14px 0 18px; background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.12),rgba(255,255,255,0.26),rgba(255,255,255,0.12),rgba(255,255,255,0)); }
+        .menu { display:grid; gap:10px; margin-top:0; }
+        .menu-item { border-radius:18px; padding:15px 16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); font-weight:800; font-size:16px; color:#e6edf8; transition:0.2s ease; cursor:pointer; text-align:left; width:100%; }
+        .menu-item:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.12); }
+        .menu-item.active { background:linear-gradient(135deg,#7a8cff,#4bd3ff); color:#08111e; box-shadow:0 0 18px rgba(106,172,255,0.24); border-color:transparent; }
+        .menu-item.simple-entry { font-size:16px; padding:15px 16px; }
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: "Segoe UI", "Malgun Gothic", sans-serif;
-            background: radial-gradient(circle at top, rgba(120,170,255,0.10), transparent 26%),
-                        linear-gradient(135deg, #0b1018 0%, #0d1320 45%, #121927 100%);
-            color: #f3ead6;
-            zoom: 0.9;
-        }
-
-        .app {
-            width: min(1440px, calc(100% - 20px));
-            margin: 20px auto 10px;
-            border-radius: 30px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.07);
-            background: linear-gradient(135deg, #111723 0%, #0b0f18 45%, #0d1320 100%);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.38);
-        }
-
-        .workspace {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            min-height: 780px;
-        }
-
-        .sidebar {
-            padding: 24px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-            border-right: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .switch-wrap {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 999px;
-            padding: 4px;
-            gap: 2px;
-            margin-bottom: 20px;
-        }
-
-        .switch-wrap a {
-  flex: 1;
-  text-decoration: none;
-  text-align: center;
-  padding: 10px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 900;
-  transition: 0.2s ease;
-  color: #7a8da8;
-
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-        .switch-wrap a.active {
-  background: linear-gradient(135deg, #7a8cff, #4bd3ff);
-  color: #08111e;
-  box-shadow: 0 4px 14px rgba(78,168,255,0.28);
-  animation: switchActiveAura 5s ease-in-out infinite;
-}
-
-        .mini-label {
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #7fc6ff;
-            opacity: 0.9;
-            margin-bottom: 8px;
-        }
-
-        .hero {
-            font-size: 34px;
-            font-weight: 900;
-            line-height: 1.12;
-            color: #ffffff;
-            margin-bottom: 12px;
-            word-break: keep-all;
-        }
-
-        .muted {
-            font-size: 14px;
-            line-height: 1.65;
-            color: #b8c1d2;
-        }
-
-        .guide-trigger-wrap {
-            margin-top: 18px;
-            margin-bottom: 18px;
-        }
-
-        .guide-trigger {
-            width: 100%;
-            border: none;
-            cursor: pointer;
-            padding: 20px 18px 18px;
-            border-radius: 20px;
-            font-size: 17px;
-            font-weight: 900;
-            color: #f2ede2;
-            text-align: left;
-            background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02), 0 10px 24px rgba(0,0,0,0.18);
-            transition: 0.2s ease;
-        }
-
-        .guide-trigger:hover {
-            transform: translateY(-1px);
-            border-color: rgba(122,140,255,0.28);
-            background: linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05));
-        }
-
-        .guide-trigger .guide-small {
-            display: block;
-            font-size: 12px;
-            letter-spacing: 1.8px;
-            color: #8ec7ff;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .guide-trigger .guide-main {
-            display: block;
-            line-height: 1.35;
-            word-break: keep-all;
-        }
-
-        .guide-trigger .guide-accent {
-            color: #ffd48a;
-            text-shadow: 0 0 10px rgba(255, 210, 130, 0.10);
-        }
-
-        .sidebar-divider {
-            width: 100%;
-            height: 1px;
-            margin: 14px 0 18px;
-            background: linear-gradient(90deg,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0.12),
-                rgba(255,255,255,0.26),
-                rgba(255,255,255,0.12),
-                rgba(255,255,255,0));
-        }
-
-        .menu {
-            display: grid;
-            gap: 10px;
-            margin-top: 0;
-        }
-
-        .menu-item {
-            border-radius: 18px;
-            padding: 15px 16px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            font-weight: 800;
-            font-size: 16px;
-            color: #e6edf8;
-            transition: 0.2s ease;
-            cursor: pointer;
-            text-align: left;
-            width: 100%;
-        }
-
-        .menu-item:hover {
-            transform: translateY(-1px);
-            border-color: rgba(255,255,255,0.12);
-        }
-
-        .menu-item.active {
-            background: linear-gradient(135deg, #7a8cff, #4bd3ff);
-            color: #08111e;
-            box-shadow: 0 0 18px rgba(106,172,255,0.24);
-            border-color: transparent;
-        }
-
-        /* 잔혈컷 간편보기 버튼은 다른 버튼과 동일 크기 */
-        .menu-item.simple-entry {
-            font-size: 16px;
-            padding: 15px 16px;
-        }
+        /* 간편보기 EX 탭 행 */
+        .simple-ex-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:0; }
+        .menu-item-ex { border-radius:18px; padding:12px 16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); font-weight:800; font-size:15px; color:#e6edf8; transition:0.2s ease; cursor:pointer; text-align:left; width:100%; display:flex; flex-direction:column; gap:3px; }
+        .menu-item-ex:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.12); }
+        .menu-item-ex.active { background:linear-gradient(135deg,#7a8cff,#4bd3ff); color:#08111e; box-shadow:0 0 18px rgba(106,172,255,0.24); border-color:transparent; }
+        .menu-item-ex.disabled { opacity:0.45; filter:grayscale(0.4); cursor:not-allowed; pointer-events:none; }
+        .menu-item-ex .ex-open-date { font-size:11px; font-weight:800; color:#8ec7ff; opacity:0.85; }
+        .menu-item-ex.active .ex-open-date { color:#08111e; opacity:0.7; }
+        .menu-item-ex.disabled .ex-open-date { color:#7a8da8; }
 
         /* 달력 */
-        .sidebar-calendar {
-            border-radius: 20px;
-            padding: 16px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-            border: 1px solid rgba(255,255,255,0.07);
-        }
-
-        .cal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .cal-month {
-            font-size: 14px;
-            font-weight: 900;
-            color: #c6d4e8;
-            letter-spacing: 0.5px;
-        }
-
-        .cal-nav {
-            background: none;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px;
-            color: #7a8da8;
-            cursor: pointer;
-            font-size: 13px;
-            width: 26px;
-            height: 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.18s ease;
-        }
-
-        .cal-nav:hover {
-            background: rgba(255,255,255,0.07);
-            color: #c6d4e8;
-        }
-
-        .cal-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-        }
-
-        .cal-dow {
-            text-align: center;
-            font-size: 10px;
-            font-weight: 900;
-            color: #5a6a82;
-            padding: 4px 0;
-            letter-spacing: 0.5px;
-        }
-
-        .cal-dow.sun { color: rgba(255,100,100,0.55); }
-        .cal-dow.sat { color: rgba(100,160,255,0.55); }
-
-        .cal-day {
-            text-align: center;
-            font-size: 12px;
-            font-weight: 700;
-            color: #8a9ab5;
-            padding: 5px 0;
-            border-radius: 8px;
-            cursor: default;
-            transition: 0.15s ease;
-            line-height: 1;
-        }
-
-        .cal-day.other-month { color: rgba(255,255,255,0.12); }
-
-        .cal-day.today {
-            background: linear-gradient(135deg, #7a8cff, #4bd3ff);
-            color: #08111e;
-            font-weight: 900;
-        }
-
-        .cal-day.sun { color: rgba(255,120,120,0.75); }
-        .cal-day.sat { color: rgba(120,180,255,0.75); }
-        .cal-day.today.sun,
-        .cal-day.today.sat { color: #08111e; }
-
-        .main {
-            padding: 22px;
-            display: grid;
-            grid-template-rows: auto auto 1fr auto;
-            gap: 16px;
-            min-width: 0;
-        }
-
-        .topline {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .title {
-            font-size: 30px;
-            font-weight: 900;
-            color: #f7fbff;
-            line-height: 1.15;
-            word-break: keep-all;
-        }
-
-        .subtitle {
-            margin-top: 8px;
-            font-size: 13px;
-            color: #aeb8cb;
-        }
-
-        .date {
-            font-size: 13px;
-            color: #b9c4d8;
-            white-space: nowrap;
-            padding: 10px 12px;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .panel-box {
-            padding: 18px;
-            border-radius: 24px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.015);
-            min-width: 0;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            height: 28px;
-            padding: 0 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 800;
-            border: 1px solid rgba(255,255,255,0.10);
-            white-space: nowrap;
-        }
-
-        .title-meta {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-            align-items: center;
-        }
-
-        .type-human   { background: rgba(100,181,246,0.18); color: #bfe1ff; }
-        .type-ancient { background: rgba(186,104,200,0.18); color: #edc6ff; }
-        .type-beast   { background: rgba(141,110,99,0.22);  color: #e4c9bb; }
-        .type-insect  { background: rgba(174,213,129,0.20); color: #e2f5bf; }
-        .type-spirit  { background: rgba(128,222,234,0.18); color: #c6f7ff; }
-        .type-demon   { background: rgba(255,112,67,0.22); color: #ffbfaa; }
-        .type-archdemon { background: rgba(255,84,84,0.22); color: #ffd0d0; }
-        .type-divine  { background: rgba(132,206,255,0.18); color: #d6f2ff; }
-        .attr-dark      { background: rgba(126,87,194,0.22);  color: #dab8ff; }
-        .attr-earth     { background: rgba(121,85,72,0.24);   color: #e0c2a8; }
-        .attr-lightning { background: rgba(255,214,10,0.22);  color: #ffe98f; }
-        .attr-holy      { background: rgba(255,236,179,0.20); color: #fff2b0; }
-        .attr-fire      { background: rgba(255,112,67,0.22);  color: #ffbfaa; }
-        .attr-none      { background: rgba(255,255,255,0.08); color: #d1d5db; }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 0;
-        }
-
-        .tabs.gato-grid { display: flex; }
-
-        .tabs.simple-tabs {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-start;
-        }
-
-        .tab {
-            position: relative;
-            min-width: 104px;
-            min-height: 54px;
-            padding: 12px 14px;
-            border-radius: 16px;
-            font-size: 14px;
-            font-weight: 900;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.08);
-            color: #e8eef7;
-            background: rgba(255,255,255,0.04);
-            cursor: pointer;
-            transition: 0.18s ease;
-            display: inline-flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 4px;
-            overflow: hidden;
-        }
-
-        .tabs.simple-tabs .tab {
-            min-width: 104px;
-            min-height: 54px;
-            padding: 12px 14px;
-            font-size: 14px;
-            font-weight: 900;
-        }
-
-        .tabs.simple-tabs .tab.active {
-            background: linear-gradient(135deg, #7a8cff, #4bd3ff);
-            color: #08111e;
-            box-shadow: 0 0 18px rgba(106,172,255,0.24);
-            border-color: transparent;
-        }
-
-        .tab:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.14); }
-        .tab-label { line-height: 1.1; }
-        .tab-sub   { font-size: 11px; opacity: 0.92; line-height: 1; }
-
-        .tab-tier-normal    { border-color: rgba(170,235,160,0.30); background: linear-gradient(180deg, rgba(124,172,112,0.18), rgba(28,42,28,0.88)); color: #dff5d9; }
-        .tab-tier-hard      { border-color: rgba(255,206,140,0.32); background: linear-gradient(180deg, rgba(177,124,70,0.18), rgba(46,31,18,0.90)); color: #f5dfc2; }
-        .tab-tier-nightmare { border-color: rgba(214,180,255,0.34); background: linear-gradient(180deg, rgba(129,91,177,0.18), rgba(36,25,49,0.90)); color: #ead8ff; }
-
-        .tab-tier-normal.active    { background: linear-gradient(180deg, #b9ef98, #79c96a); color: #18240f; box-shadow: 0 0 18px rgba(153,230,134,0.30); border-color: transparent; }
-        .tab-tier-hard.active      { background: linear-gradient(180deg, #ffd79d, #e3a85a); color: #241700; box-shadow: 0 0 18px rgba(255,193,110,0.30); border-color: transparent; }
-        .tab-tier-nightmare.active { background: linear-gradient(180deg, #e5c0ff, #be89eb); color: #241130; box-shadow: 0 0 18px rgba(198,141,255,0.30); border-color: transparent; }
-
-        .tab.gato {
-            min-width: 118px;
-            min-height: 78px;
-            padding: 10px 8px;
-            color: #eef4ff;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .tab.gato .tab-meta {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            min-height: 18px;
-        }
-
-        .tab.gato .badge { height: 20px; font-size: 10px; padding: 0 7px; }
-
-        .tab.gato.active {
-            background: linear-gradient(135deg, #7a8cff, #4bd3ff);
-            color: #08111e;
-            box-shadow: 0 0 18px rgba(106,172,255,0.24);
-            border-color: transparent;
-        }
-
-        .tab.gato.active .badge {
-            background: rgba(8,17,30,0.18) !important;
-            color: #0b1727 !important;
-            border-color: rgba(8,17,30,0.12) !important;
-        }
-
-        .tab.gato.pending { filter: grayscale(1); opacity: 0.74; cursor: pointer; }
-
-        .tab.gato.pending .tab-pending {
-            margin-top: 3px;
-            font-size: 10px;
-            font-weight: 900;
-            color: #e1e1e1;
-            padding: 2px 7px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 280px;
-            gap: 16px;
-            align-items: start;
-            min-width: 0;
-        }
-
-        .table-box { padding: 0; overflow: hidden; }
-
-        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-        table { width: 100%; min-width: 520px; border-collapse: collapse; table-layout: fixed; }
-
-        thead th, tbody td { text-align: center; padding: 14px 18px; }
-
-        thead th {
-            font-weight: 900;
-            color: #fff6e4;
-            background: linear-gradient(180deg, rgba(157,115,58,0.95), rgba(107,72,34,0.95));
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-
-        tbody td {
-            font-weight: 800;
-            color: #f2ead8;
-            background: rgba(255,255,255,0.015);
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        tbody tr:hover td { background: rgba(255,255,255,0.04); }
-
-        .row-30 td { background: rgba(245,166,35,0.12); }
-        .row-33 td { background: rgba(61,195,145,0.12); }
-        .row-40 td { background: rgba(158,107,214,0.14); }
-
-        .share-cell {
-            color: #ffe8b3 !important;
-            font-weight: 900;
-            font-size: 15px;
-            text-align: left;
-            padding: 14px 18px;
-        }
-
-        .share-row { display: grid; grid-template-columns: 58px 1fr; align-items: center; column-gap: 8px; }
-        .share-label { font-size: 12px; font-weight: 800; white-space: nowrap; opacity: 0.95; }
-        .share-value { font-size: 15px; font-weight: 900; white-space: nowrap; }
-
-        .label-30 { color: #ffcf7a; }
-        .label-33 { color: #8ef0c9; }
-        .label-40 { color: #d8b2ff; }
-
-        .dps-cell { color: #ffd58c; font-weight: 900; }
-
-        .right-column { display: flex; flex-direction: column; gap: 14px; }
-
-        .side-card, .info-box {
-            padding: 18px;
-            border-radius: 22px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .side-title {
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #9fb7d8;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .time-card {
-            text-align: center;
-            background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02));
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.015), 0 0 20px rgba(106,172,255,0.05);
-            position: relative;
-        }
-
-        .time-card.simple-disabled {
-            opacity: .58;
-            filter: grayscale(.1);
-            pointer-events: none;
-        }
-
-        .time-card.simple-disabled::after {
-            content: "간편보기 상태에서는 비활성화";
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 120px;
-            padding: 10px 12px;
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,.14);
-            background: rgba(10,14,24,.86);
-            color: #ffffff;
-            font-size: 13px;
-            font-weight: 900;
-            line-height: 1.35;
-            text-align: center;
-            z-index: 5;
-        }
-
-        .time-badge-wrap { display: flex; justify-content: center; margin-bottom: 14px; }
-
-        .time-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 900;
-            color: #fff1d1;
-            border: 1px solid rgba(255,220,160,0.20);
-            background: linear-gradient(180deg, rgba(164,125,62,0.28), rgba(90,63,26,0.28));
-        }
-
-        .time-main { text-align: center; font-size: 42px; font-weight: 900; color: #ffffff; margin: 0 0 6px; letter-spacing: 1px; }
-        .time-labels { text-align: center; font-size: 12px; color: #c1b39c; margin-bottom: 16px; }
-        .time-inputs { display: flex; justify-content: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
-        .time-input-group { display: flex; align-items: center; gap: 6px; }
-
-        .time-input-box {
-            width: 72px; height: 48px;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.06);
-            color: #ffffff;
-            font-size: 20px; font-weight: 800;
-            text-align: center;
-            outline: none;
-            transition: 0.18s ease;
-            appearance: textfield;
-            -moz-appearance: textfield;
-        }
-
-        .time-input-box::-webkit-outer-spin-button,
-        .time-input-box::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
-        .time-input-box:focus {
-            border-color: rgba(122,140,255,0.50);
-            box-shadow: 0 0 0 1px rgba(122,140,255,0.14) inset, 0 0 14px rgba(106,172,255,0.12);
-            background: rgba(255,255,255,0.07);
-        }
-
-        .time-stepper { width: 26px; height: 48px; display: flex; flex-direction: column; gap: 4px; }
-
-        .time-step-btn {
-            flex: 1;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.045);
-            color: #dce7f8;
-            border-radius: 10px;
-            font-size: 11px; font-weight: 900;
-            cursor: pointer;
-            transition: 0.18s ease;
-            padding: 0; line-height: 1;
-        }
-
-        .time-step-btn:hover { background: rgba(255,255,255,0.09); border-color: rgba(122,140,255,0.35); color: #ffffff; }
-        .time-step-btn:active { transform: scale(0.97); }
-
-        .time-divider {
-            width: 100%; height: 1px; margin: 0 0 14px;
-            background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.10), rgba(255,255,255,0.18), rgba(255,255,255,0.10), rgba(255,255,255,0));
-        }
-
-        .party-dps {
-            margin: 0 0 12px;
-            padding: 10px 12px;
-            border-radius: 14px;
-            background: rgba(255,211,125,0.08);
-            border: 1px solid rgba(255,211,125,0.14);
-            font-size: 15px; font-weight: 900;
-            color: #ffd37d;
-            text-align: center;
-        }
-
-        .party-dps .party-dps-value { color: #ffffff; }
-        .side-note { text-align: center; font-size: 12px; color: #9decd9; margin-bottom: 0; }
-
-        .info-box { padding-top: 16px; padding-bottom: 16px; text-align: center; }
-        .info-text { font-size: 13px; color: #b6c0d0; line-height: 1.5; margin-top: 4px; }
-
-        .coming-soon {
-            padding: 44px 20px; text-align: center;
-            border-radius: 24px;
-            background: rgba(255,255,255,0.03);
-            border: 1px dashed rgba(255,255,255,0.10);
-            color: #e8dcc0;
-        }
-
-        .coming-soon h3 { margin: 0 0 10px; color: #f6d18b; font-size: 24px; }
-        .coming-soon p  { margin: 0; color: #b9a98b; font-size: 14px; line-height: 1.6; }
-
-        .status { text-align: right; font-size: 13px; color: #98a7bd; padding-right: 2px; }
-
-        .footer-loiter {
-            text-align: center;
-            padding: 12px 0 8px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            user-select: none;
-        }
-
-        .footer-loiter p {
-            font-size: 12px;
-            color: rgba(255,255,255,0.25);
-            line-height: 1.9;
-            margin: 0;
-            letter-spacing: 0.3px;
-        }
-
-        .modal-backdrop {
-            position: fixed; inset: 0;
-            background: rgba(4,8,16,0.72);
-            backdrop-filter: blur(6px);
-            display: none; align-items: center; justify-content: center;
-            padding: 20px; z-index: 1000;
-        }
-
-        .modal-backdrop.show { display: flex; }
-
-        .modal-card {
-            width: min(720px, 100%);
-            border-radius: 28px; padding: 26px 24px 22px;
-            background: linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
-            border: 1px solid rgba(255,255,255,0.10);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.02);
-            position: relative;
-        }
-
-        .modal-top-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #86c9ff; margin-bottom: 10px; text-align: center; }
-        .modal-title     { font-size: 30px; font-weight: 900; color: #ffffff; text-align: center; margin: 0 0 10px; line-height: 1.2; }
-        .modal-divider   { width: 100%; height: 1px; margin: 16px 0 18px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.12), rgba(255,255,255,0.24), rgba(255,255,255,0.12), rgba(255,255,255,0)); }
-
-        .modal-content { color: #d8e0ef; font-size: 15px; line-height: 1.9; word-break: keep-all; }
-        .modal-content p { margin: 0 0 14px; }
-        .modal-content .point    { color: #ffd98b; font-weight: 900; }
-        .modal-content .subpoint { color: #9decd9; font-weight: 800; }
-
-        .modal-close {
-            position: absolute; top: 14px; right: 14px;
-            width: 38px; height: 38px; border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.05);
-            color: #ffffff; font-size: 18px; font-weight: 900;
-            cursor: pointer; transition: 0.18s ease;
-        }
-
-        .modal-close:hover { background: rgba(255,255,255,0.10); transform: rotate(90deg); }
-
-        /* ===== 잔혈컷 간편보기 ===== */
-        .simple-view {
-            width: 100%;
-            display: grid;
-            gap: 12px;
-        }
-
-        .simple-intro {
-            padding: 8px 4px 2px;
-            text-align: center;
-        }
-
-        .simple-intro-title {
-            font-size: 16px;
-            font-weight: 1000;
-            color: #ffffff;
-            margin-bottom: 6px;
-        }
-
-        .simple-intro-sub {
-            font-size: 13px;
-            color: #c9d3e5;
-            line-height: 1.6;
-        }
-
-        .simple-stack {
-            display: grid;
-            gap: 12px;
-        }
-
-        .simple-card {
-            display: grid;
-            grid-template-columns: 74px 1fr;
-            gap: 10px;
-            padding: 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,.08);
-            background: rgba(255,255,255,.03);
-            box-shadow: 0 14px 30px rgba(0,0,0,.18);
-        }
-
-        .simple-left {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 142px;
-        }
-
-        .simple-left::before {
-            content: "";
-            position: absolute;
-            left: 37px;
-            top: 10px;
-            bottom: 10px;
-            width: 2px;
-            border-radius: 999px;
-            background: linear-gradient(180deg, rgba(122,140,255,.10), rgba(255,255,255,.18), rgba(242,200,107,.12));
-        }
-
-        .simple-node {
-            width: 50px;
-            height: 50px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 1000;
-            color: #08111e;
-            box-shadow: 0 10px 18px rgba(242,200,107,.15);
-            position: relative;
-            z-index: 1;
-        }
-
-        .simple-card.b-green .simple-node { background: linear-gradient(135deg, #c7ff5f, #86de6e); }
-        .simple-card.b-gold  .simple-node { background: linear-gradient(135deg, #fff0be, #f2c86b); }
-        .simple-card.b-purple .simple-node{ background: linear-gradient(135deg, #dec1ff, #ba89eb); }
-        .simple-card.b-orange .simple-node{ background: linear-gradient(135deg, #ffb37e, #f08a16); }
-        .simple-card.b-gray   .simple-node{ background: linear-gradient(135deg, #d9d9d9, #bcbcbc); }
-
-        .simple-right {
-            display: grid;
-            gap: 9px;
-            align-content: start;
-        }
-
-        .simple-head {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            align-items: flex-start;
-            flex-wrap: wrap;
-        }
-
-        .simple-title {
-            margin: 0;
-            font-size: 22px;
-            font-weight: 1000;
-            line-height: 1.12;
-            color: #f7fbff;
-            letter-spacing: -.2px;
-        }
-
-        .simple-kind {
-            text-align: right;
-            font-size: 13px;
-            font-weight: 1000;
-            letter-spacing: 1px;
-            color: #ffd98d;
-            white-space: nowrap;
-        }
-
-        .simple-rows {
-            display: grid;
-            gap: 7px;
-        }
-
-        .simple-row {
-            display: grid;
-            grid-template-columns: 10px 1fr auto;
-            gap: 8px;
-            align-items: center;
-            padding: 10px 11px;
-            border-radius: 12px;
-            background: rgba(255,255,255,.055);
-            border: 1px solid rgba(255,255,255,.07);
-        }
-
-        .simple-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #8cc0ff, #4bd2ff);
-            box-shadow: 0 0 0 3px rgba(75,210,255,.12);
-        }
-
-        .simple-row-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 0;
-            flex-wrap: wrap;
-        }
-
-        .simple-row .gate-b {
-            padding: 4px 7px;
-            border-radius: 999px;
-            background: rgba(255,255,255,.09);
-            color: #fff2c8;
-            font-size: 9px;
-            font-weight: 900;
-            white-space: nowrap;
-        }
-
-        .simple-row .boss-b {
-            font-size: 13px;
-            font-weight: 900;
-            color: #f3f7ff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .simple-badges {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .simple-badges .badge {
-            height: 20px;
-            padding: 0 7px;
-            font-size: 10px;
-            line-height: 18px;
-        }
-
-        .simple-row .range-b {
-            font-size: 16px;
-            font-weight: 1000;
-            color: #ffe6a8;
-            white-space: nowrap;
-            letter-spacing: .2px;
-        }
-
-        .simple-goldbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 10px 11px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, rgba(255,232,160,.10), rgba(255,255,255,.03));
-            border: 1px solid rgba(255,232,160,.16);
-        }
-
-        .simple-goldbar .left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 0;
-        }
-
-        .simple-gold-label {
-            font-size: 10px;
-            letter-spacing: 1.2px;
-            color: #c9a24f;
-            font-weight: 900;
-            margin-bottom: 2px;
-        }
-
-        .simple-gold-value {
-            font-size: 19px;
-            font-weight: 1000;
-            color: #fff0be;
-            line-height: 1;
-        }
-
-        @media (max-width: 1180px) {
-            .workspace { grid-template-columns: 280px 1fr; }
-            .content-grid { grid-template-columns: 1fr 260px; }
-        }
-
-        @media (max-width: 1024px) {
-            .workspace { grid-template-columns: 1fr; }
-            .sidebar { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
-            .menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .content-grid { grid-template-columns: 1fr; }
-            .topline { flex-direction: column; align-items: flex-start; }
-            .date { align-self: flex-start; }
-            .sidebar-calendar { display: none; }
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 8px; }
-            .app { width: 100%; margin: 0 auto 8px; border-radius: 20px; }
-            .sidebar { padding: 16px; }
-            .main { padding: 14px; }
-            .hero { font-size: 26px; }
-            .menu { grid-template-columns: 1fr; }
-            .menu-item { font-size: 15px; padding: 13px 14px; }
-            .menu-item.simple-entry { font-size: 15px; padding: 13px 14px; }
-            .title { font-size: 22px; }
-            .tabs { gap: 8px; }
-            .tab { min-width: 92px; min-height: 48px; font-size: 12px; padding: 10px 10px; }
-            .tab-sub { font-size: 10px; }
-            .tab.gato { min-width: 0; width: 100%; }
-            .tabs.gato-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
-            .time-main { font-size: 32px; }
-            .time-input-box { width: 64px; height: 44px; font-size: 18px; }
-            .time-stepper { height: 44px; width: 24px; }
-            .party-dps { font-size: 14px; padding: 9px 10px; }
-            .modal-card { padding: 24px 18px 18px; border-radius: 22px; }
-            .modal-title { font-size: 24px; }
-            .modal-content { font-size: 14px; line-height: 1.8; }
-            table { min-width: 100%; font-size: 12px; }
-            thead th, tbody td { padding: 10px 8px; }
-            .share-cell { font-size: 13px; padding: 10px 8px; }
-            .share-row { grid-template-columns: 46px 1fr; column-gap: 5px; }
-            .share-label { font-size: 10px; }
-            .share-value { font-size: 13px; }
-            .dps-cell { font-size: 13px; }
-            .footer-loiter { width: 100%; margin-bottom: 12px; }
-            .footer-loiter span { font-size: 17px; padding: 6px 14px 7px; }
-            .sidebar-calendar { display: none; }
-
-            .simple-card { grid-template-columns: 1fr; }
-            .simple-left { min-height: 0; padding: 6px 0 4px; }
-            .simple-left::before { left: 50%; transform: translateX(-50%); top: 0; bottom: 0; }
-        }
-
-        @media (max-width: 480px) {
-            .title { font-size: 19px; }
-            .hero { font-size: 23px; }
-            .subtitle, .info-text, .muted { font-size: 12px; }
-            .tab { min-width: 84px; font-size: 11px; }
-            .time-main { font-size: 28px; }
-            .time-input-box { width: 58px; height: 42px; font-size: 17px; }
-            .time-stepper { height: 42px; }
-            .guide-trigger { font-size: 15px; padding: 18px 16px 16px; }
-            .modal-title { font-size: 22px; }
-            .simple-title { font-size: 19px; }
-            .simple-row .range-b { font-size: 14px; }
-            .simple-gold-value { font-size: 17px; }
-            .sidebar-calendar { display: none; }
-        }
-
-        .auction-calc {
-          border-radius: 18px;
-          padding: 16px;
-          background: linear-gradient(180deg, rgba(20,26,38,0.98), rgba(13,18,28,0.98));
-          border: 1px solid rgba(200,165,90,0.30);
-          box-shadow: 0 0 24px rgba(200,165,90,0.07), 0 0 0 1px rgba(255,255,255,0.02) inset, 0 14px 32px rgba(0,0,0,0.36);
-          position: relative;
-          overflow: hidden;
-          margin-bottom: 14px;
-        }
-        .auction-calc::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at top right, rgba(200,165,90,0.06), transparent 55%), radial-gradient(circle at bottom left, rgba(122,140,255,0.04), transparent 50%);
-          pointer-events: none;
-        }
-        .ac-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; position: relative; z-index: 1; }
-        .ac-label { font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; color: #c8a55a; font-weight: 900; margin-bottom: 2px; }
-        .ac-title { font-size: 14px; font-weight: 900; color: #ffffff; }
-        .ac-toggle { display: flex; background: rgba(255,255,255,0.04); border: 1px solid rgba(200,165,90,0.16); border-radius: 8px; padding: 2px; gap: 2px; }
-        .ac-toggle-btn { padding: 4px 9px; border-radius: 6px; border: none; background: none; color: #5a6a82; font-size: 11px; font-weight: 900; cursor: pointer; transition: 0.15s ease; }
-        .ac-toggle-btn:hover { color: #c6d4e8; }
-        .ac-toggle-btn.active { background: linear-gradient(135deg, #c8a55a, #a8843a); color: #1a1000; box-shadow: 0 0 10px rgba(200,165,90,0.22); }
-        .ac-input-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #7fc6ff; font-weight: 900; margin-bottom: 5px; position: relative; z-index: 1; }
-        .ac-input-wrap { position: relative; z-index: 1; margin-bottom: 12px; }
-        .ac-input { width: 100%; padding: 9px 36px 9px 12px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(122,140,255,0.30); color: #ffffff; font-size: 16px; font-weight: 900; text-align: right; outline: none; transition: 0.15s ease; }
-        .ac-input:focus { border-color: rgba(122,140,255,0.60); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 2px rgba(122,140,255,0.12); }
-        .ac-input::placeholder { color: rgba(255,255,255,0.22); font-size: 13px; }
-        .ac-input-suffix { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 11px; font-weight: 900; color: #7a8da8; pointer-events: none; }
-        .ac-breakeven { position: relative; z-index: 1; border-radius: 10px; padding: 10px 12px; background: linear-gradient(135deg, rgba(200,165,90,0.10), rgba(160,125,60,0.06)); border: 1px solid rgba(200,165,90,0.20); margin-bottom: 10px; }
-        .ac-breakeven-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-        .ac-breakeven-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: #c8a55a; font-weight: 900; }
-        .ac-breakeven-sub   { font-size: 10px; color: #5a6a82; }
-        .ac-breakeven-value { font-size: 20px; font-weight: 900; color: #fff6e4; }
-        .ac-breakeven-desc  { font-size: 10px; color: #7a8da8; margin-top: 2px; }
-        .ac-sep { display: flex; align-items: center; gap: 8px; margin: 8px 0; position: relative; z-index: 1; }
-        .ac-sep-line { flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
-        .ac-sep-text { font-size: 10px; color: #5a6a82; font-weight: 900; letter-spacing: 1px; white-space: nowrap; }
-        .ac-rates { position: relative; z-index: 1; display: grid; gap: 5px; }
-        .ac-rate-row { border-radius: 9px; padding: 8px 10px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.05); transition: 0.15s ease; }
-        .ac-rate-row:hover { background: rgba(255,255,255,0.045); border-color: rgba(255,255,255,0.09); }
-        .ac-rate-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .ac-rate-left { display: flex; flex-direction: column; gap: 1px; }
-        .ac-rate-pct  { font-size: 11px; font-weight: 900; }
-        .ac-rate-desc { font-size: 10px; color: #5a6a82; }
-        .ac-rate-val  { font-size: 15px; font-weight: 900; color: #ffffff; }
-        .ac-bar-wrap { height: 3px; border-radius: 999px; background: rgba(255,255,255,0.05); overflow: hidden; }
-        .ac-bar { height: 100%; border-radius: 999px; transition: width 0.35s ease; }
-        .rate-5  { color: #8ef0c9; }
-        .bar-5   { background: linear-gradient(90deg, #4bd3ff, #8ef0c9); }
-        .rate-10 { color: #7fc6ff; }
-        .bar-10  { background: linear-gradient(90deg, #7a8cff, #4bd3ff); }
-        @media (max-width: 1024px) { .auction-calc { display: none; } }
-   
-/* ===== 상단 토글 active 버튼 유리빛 강조 ===== */
-.switch-wrap a.active::before {
-  content: "";
-  position: absolute;
-  inset: -45%;
-  border-radius: 999px;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at center,
-      rgba(255,255,255,0.30) 0%,
-      rgba(255,255,255,0.14) 18%,
-      rgba(75,211,255,0.16) 34%,
-      transparent 62%);
-  opacity: 0;
-  transform: scale(0.55);
-  animation: switchGlowPulse 5s ease-in-out infinite;
-}
-
-.switch-wrap a.active::after {
-  content: "";
-  position: absolute;
-  top: -35%;
-  left: -130%;
-  width: 72%;
-  height: 190%;
-  border-radius: 999px;
-  pointer-events: none;
-  background: linear-gradient(
-    115deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.08) 25%,
-    rgba(255,255,255,0.42) 48%,
-    rgba(255,255,255,0.10) 68%,
-    rgba(255,255,255,0) 100%
-  );
-  transform: rotate(18deg);
-  opacity: 0;
-  animation: switchGlassSweep 5s linear infinite;
-}
-
-@keyframes switchGlowPulse {
-  0%, 80%, 100% {
-    opacity: 0;
-    transform: scale(0.55);
-  }
-  86% {
-    opacity: 0.55;
-    transform: scale(1.05);
-  }
-  92% {
-    opacity: 0.18;
-    transform: scale(1.42);
-  }
-}
-
-@keyframes switchGlassSweep {
-  0%, 80% {
-    left: -130%;
-    opacity: 0;
-  }
-  84% {
-    opacity: 1;
-  }
-  96% {
-    left: 145%;
-    opacity: 0.65;
-  }
-  100% {
-    left: 145%;
-    opacity: 0;
-  }
-}
-
-@keyframes switchActiveAura {
-  0%, 80%, 100% {
-    box-shadow: 0 4px 14px rgba(78,168,255,0.28);
-  }
-  88% {
-    box-shadow:
-      0 4px 14px rgba(78,168,255,0.34),
-      0 0 18px rgba(120,210,255,0.30),
-      0 0 32px rgba(120,210,255,0.18);
-  }
-  94% {
-    box-shadow:
-      0 4px 14px rgba(78,168,255,0.30),
-      0 0 10px rgba(120,210,255,0.18),
-      0 0 22px rgba(120,210,255,0.10);
-  }
-}
-
- </style>
+        .sidebar-calendar { border-radius:20px; padding:16px; background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.07); }
+        .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+        .cal-month { font-size:14px; font-weight:900; color:#c6d4e8; letter-spacing:0.5px; }
+        .cal-nav { background:none; border:1px solid rgba(255,255,255,0.08); border-radius:8px; color:#7a8da8; cursor:pointer; font-size:13px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; transition:0.18s ease; }
+        .cal-nav:hover { background:rgba(255,255,255,0.07); color:#c6d4e8; }
+        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+        .cal-dow { text-align:center; font-size:10px; font-weight:900; color:#5a6a82; padding:4px 0; letter-spacing:0.5px; }
+        .cal-dow.sun { color:rgba(255,100,100,0.55); } .cal-dow.sat { color:rgba(100,160,255,0.55); }
+        .cal-day { text-align:center; font-size:12px; font-weight:700; color:#8a9ab5; padding:5px 0; border-radius:8px; cursor:default; transition:0.15s ease; line-height:1; }
+        .cal-day.other-month { color:rgba(255,255,255,0.12); }
+        .cal-day.today { background:linear-gradient(135deg,#7a8cff,#4bd3ff); color:#08111e; font-weight:900; }
+        .cal-day.sun { color:rgba(255,120,120,0.75); } .cal-day.sat { color:rgba(120,180,255,0.75); }
+        .cal-day.today.sun,.cal-day.today.sat { color:#08111e; }
+
+        .main { padding:22px; display:grid; grid-template-rows:auto auto 1fr auto; gap:16px; min-width:0; }
+        .topline { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+        .title { font-size:30px; font-weight:900; color:#f7fbff; line-height:1.15; word-break:keep-all; }
+        .subtitle { margin-top:8px; font-size:13px; color:#aeb8cb; }
+        .date { font-size:13px; color:#b9c4d8; white-space:nowrap; padding:10px 12px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); font-variant-numeric:tabular-nums; }
+        .panel-box { padding:18px; border-radius:24px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.015); min-width:0; }
+        .badge { display:inline-flex; align-items:center; justify-content:center; height:28px; padding:0 10px; border-radius:999px; font-size:12px; font-weight:800; border:1px solid rgba(255,255,255,0.10); white-space:nowrap; }
+        .title-meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; align-items:center; }
+        .type-human{background:rgba(100,181,246,0.18);color:#bfe1ff;} .type-ancient{background:rgba(186,104,200,0.18);color:#edc6ff;} .type-beast{background:rgba(141,110,99,0.22);color:#e4c9bb;} .type-insect{background:rgba(174,213,129,0.20);color:#e2f5bf;} .type-spirit{background:rgba(128,222,234,0.18);color:#c6f7ff;} .type-demon{background:rgba(255,112,67,0.22);color:#ffbfaa;} .type-archdemon{background:rgba(255,84,84,0.22);color:#ffd0d0;} .type-divine{background:rgba(132,206,255,0.18);color:#d6f2ff;}
+        .attr-dark{background:rgba(126,87,194,0.22);color:#dab8ff;} .attr-earth{background:rgba(121,85,72,0.24);color:#e0c2a8;} .attr-lightning{background:rgba(255,214,10,0.22);color:#ffe98f;} .attr-holy{background:rgba(255,236,179,0.20);color:#fff2b0;} .attr-fire{background:rgba(255,112,67,0.22);color:#ffbfaa;} .attr-none{background:rgba(255,255,255,0.08);color:#d1d5db;}
+        .tabs { display:flex; gap:10px; flex-wrap:wrap; margin-top:0; }
+        .tabs.gato-grid { display:flex; }
+        .tabs.simple-tabs { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-start; }
+        .tab { position:relative; min-width:104px; min-height:54px; padding:12px 14px; border-radius:16px; font-size:14px; font-weight:900; text-align:center; border:1px solid rgba(255,255,255,0.08); color:#e8eef7; background:rgba(255,255,255,0.04); cursor:pointer; transition:0.18s ease; display:inline-flex; flex-direction:column; justify-content:center; align-items:center; gap:4px; overflow:hidden; }
+        .tabs.simple-tabs .tab { min-width:80px; min-height:48px; padding:10px 12px; font-size:13px; font-weight:900; }
+        .tabs.simple-tabs .tab.active { background:linear-gradient(135deg,#7a8cff,#4bd3ff); color:#08111e; box-shadow:0 0 18px rgba(106,172,255,0.24); border-color:transparent; }
+        .tab.tab-ex { min-width:90px; min-height:54px; background:linear-gradient(135deg,rgba(255,196,90,0.14),rgba(80,50,20,0.5)); border-color:rgba(255,196,90,0.30); color:#ffd48a; }
+        .tab.tab-ex.active { background:linear-gradient(135deg,#ffd48a,#ffac55); color:#2a1400; border-color:transparent; box-shadow:0 0 18px rgba(255,196,90,0.28); }
+        .tab.tab-ex.disabled { opacity:0.42; filter:grayscale(0.4); cursor:not-allowed; pointer-events:none; }
+        .tab.tab-ex .tab-open-date { font-size:10px; font-weight:800; opacity:0.80; }
+        .tab:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.14); }
+        .tab-label { line-height:1.1; }
+        .tab-sub { font-size:11px; opacity:0.92; line-height:1; }
+        .tab-tier-normal{border-color:rgba(170,235,160,0.30);background:linear-gradient(180deg,rgba(124,172,112,0.18),rgba(28,42,28,0.88));color:#dff5d9;}
+        .tab-tier-hard{border-color:rgba(255,206,140,0.32);background:linear-gradient(180deg,rgba(177,124,70,0.18),rgba(46,31,18,0.90));color:#f5dfc2;}
+        .tab-tier-nightmare{border-color:rgba(214,180,255,0.34);background:linear-gradient(180deg,rgba(129,91,177,0.18),rgba(36,25,49,0.90));color:#ead8ff;}
+        .tab-tier-normal.active{background:linear-gradient(180deg,#b9ef98,#79c96a);color:#18240f;box-shadow:0 0 18px rgba(153,230,134,0.30);border-color:transparent;}
+        .tab-tier-hard.active{background:linear-gradient(180deg,#ffd79d,#e3a85a);color:#241700;box-shadow:0 0 18px rgba(255,193,110,0.30);border-color:transparent;}
+        .tab-tier-nightmare.active{background:linear-gradient(180deg,#e5c0ff,#be89eb);color:#241130;box-shadow:0 0 18px rgba(198,141,255,0.30);border-color:transparent;}
+        .tab.gato{min-width:118px;min-height:78px;padding:10px 8px;color:#eef4ff;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);}
+        .tab.gato .tab-meta{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;align-items:center;min-height:18px;}
+        .tab.gato .badge{height:20px;font-size:10px;padding:0 7px;}
+        .tab.gato.active{background:linear-gradient(135deg,#7a8cff,#4bd3ff);color:#08111e;box-shadow:0 0 18px rgba(106,172,255,0.24);border-color:transparent;}
+        .tab.gato.active .badge{background:rgba(8,17,30,0.18)!important;color:#0b1727!important;border-color:rgba(8,17,30,0.12)!important;}
+        .tab.gato.pending{filter:grayscale(1);opacity:0.74;cursor:pointer;}
+        .tab.gato.pending .tab-pending{margin-top:3px;font-size:10px;font-weight:900;color:#e1e1e1;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.08);}
+        .content-grid{display:grid;grid-template-columns:1fr 280px;gap:16px;align-items:start;min-width:0;}
+        .table-box{padding:0;overflow:hidden;}
+        .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+        table{width:100%;min-width:520px;border-collapse:collapse;table-layout:fixed;}
+        thead th,tbody td{text-align:center;padding:14px 18px;}
+        thead th{font-weight:900;color:#fff6e4;background:linear-gradient(180deg,rgba(157,115,58,0.95),rgba(107,72,34,0.95));border-bottom:1px solid rgba(255,255,255,0.06);}
+        tbody td{font-weight:800;color:#f2ead8;background:rgba(255,255,255,0.015);border-top:1px solid rgba(255,255,255,0.05);}
+        tbody tr:hover td{background:rgba(255,255,255,0.04);}
+        .row-30 td{background:rgba(245,166,35,0.12);} .row-33 td{background:rgba(61,195,145,0.12);} .row-40 td{background:rgba(158,107,214,0.14);}
+        .share-cell{color:#ffe8b3!important;font-weight:900;font-size:15px;text-align:left;padding:14px 18px;}
+        .share-row{display:grid;grid-template-columns:58px 1fr;align-items:center;column-gap:8px;}
+        .share-label{font-size:12px;font-weight:800;white-space:nowrap;opacity:0.95;}
+        .share-value{font-size:15px;font-weight:900;white-space:nowrap;}
+        .label-30{color:#ffcf7a;} .label-33{color:#8ef0c9;} .label-40{color:#d8b2ff;}
+        .dps-cell{color:#ffd58c;font-weight:900;}
+        .right-column{display:flex;flex-direction:column;gap:14px;}
+        .side-card,.info-box{padding:18px;border-radius:22px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);}
+        .side-title{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#9fb7d8;margin-bottom:12px;text-align:center;}
+        .time-card{text-align:center;background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02));box-shadow:inset 0 0 0 1px rgba(255,255,255,0.015),0 0 20px rgba(106,172,255,0.05);position:relative;}
+        .time-card.simple-disabled{opacity:.58;filter:grayscale(.1);pointer-events:none;}
+        .time-card.simple-disabled::after{content:"간편보기 상태에서는 비활성화";position:absolute;right:12px;top:50%;transform:translateY(-50%);width:120px;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(10,14,24,.86);color:#ffffff;font-size:13px;font-weight:900;line-height:1.35;text-align:center;z-index:5;}
+        .time-badge-wrap{display:flex;justify-content:center;margin-bottom:14px;}
+        .time-badge{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:900;color:#fff1d1;border:1px solid rgba(255,220,160,0.20);background:linear-gradient(180deg,rgba(164,125,62,0.28),rgba(90,63,26,0.28));}
+        .time-main{text-align:center;font-size:42px;font-weight:900;color:#ffffff;margin:0 0 6px;letter-spacing:1px;}
+        .time-labels{text-align:center;font-size:12px;color:#c1b39c;margin-bottom:16px;}
+        .time-inputs{display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+        .time-input-group{display:flex;align-items:center;gap:6px;}
+        .time-input-box{width:72px;height:48px;border-radius:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.06);color:#ffffff;font-size:20px;font-weight:800;text-align:center;outline:none;transition:0.18s ease;appearance:textfield;-moz-appearance:textfield;}
+        .time-input-box::-webkit-outer-spin-button,.time-input-box::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+        .time-input-box:focus{border-color:rgba(122,140,255,0.50);box-shadow:0 0 0 1px rgba(122,140,255,0.14) inset,0 0 14px rgba(106,172,255,0.12);background:rgba(255,255,255,0.07);}
+        .time-stepper{width:26px;height:48px;display:flex;flex-direction:column;gap:4px;}
+        .time-step-btn{flex:1;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.045);color:#dce7f8;border-radius:10px;font-size:11px;font-weight:900;cursor:pointer;transition:0.18s ease;padding:0;line-height:1;}
+        .time-step-btn:hover{background:rgba(255,255,255,0.09);border-color:rgba(122,140,255,0.35);color:#ffffff;}
+        .time-step-btn:active{transform:scale(0.97);}
+        .time-divider{width:100%;height:1px;margin:0 0 14px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.10),rgba(255,255,255,0.18),rgba(255,255,255,0.10),rgba(255,255,255,0));}
+        .party-dps{margin:0 0 12px;padding:10px 12px;border-radius:14px;background:rgba(255,211,125,0.08);border:1px solid rgba(255,211,125,0.14);font-size:15px;font-weight:900;color:#ffd37d;text-align:center;}
+        .party-dps .party-dps-value{color:#ffffff;}
+        .side-note{text-align:center;font-size:12px;color:#9decd9;margin-bottom:0;}
+        .info-box{padding-top:16px;padding-bottom:16px;text-align:center;}
+        .info-text{font-size:13px;color:#b6c0d0;line-height:1.5;margin-top:4px;}
+        .coming-soon{padding:44px 20px;text-align:center;border-radius:24px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.10);color:#e8dcc0;}
+        .coming-soon h3{margin:0 0 10px;color:#f6d18b;font-size:24px;}
+        .coming-soon p{margin:0;color:#b9a98b;font-size:14px;line-height:1.6;}
+        .status{text-align:right;font-size:13px;color:#98a7bd;padding-right:2px;}
+        .footer-loiter{text-align:center;padding:12px 0 8px;border-top:1px solid rgba(255,255,255,0.05);user-select:none;}
+        .footer-loiter p{font-size:12px;color:rgba(255,255,255,0.25);line-height:1.9;margin:0;letter-spacing:0.3px;}
+        .modal-backdrop{position:fixed;inset:0;background:rgba(4,8,16,0.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px;z-index:1000;}
+        .modal-backdrop.show{display:flex;}
+        .modal-card{width:min(720px,100%);border-radius:28px;padding:26px 24px 22px;background:linear-gradient(180deg,rgba(20,26,40,0.98),rgba(13,18,30,0.98));border:1px solid rgba(255,255,255,0.10);box-shadow:0 30px 80px rgba(0,0,0,0.45),inset 0 0 0 1px rgba(255,255,255,0.02);position:relative;}
+        .modal-top-label{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#86c9ff;margin-bottom:10px;text-align:center;}
+        .modal-title{font-size:30px;font-weight:900;color:#ffffff;text-align:center;margin:0 0 10px;line-height:1.2;}
+        .modal-divider{width:100%;height:1px;margin:16px 0 18px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.12),rgba(255,255,255,0.24),rgba(255,255,255,0.12),rgba(255,255,255,0));}
+        .modal-content{color:#d8e0ef;font-size:15px;line-height:1.9;word-break:keep-all;}
+        .modal-content p{margin:0 0 14px;}
+        .modal-content .point{color:#ffd98b;font-weight:900;}
+        .modal-content .subpoint{color:#9decd9;font-weight:800;}
+        .modal-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.05);color:#ffffff;font-size:18px;font-weight:900;cursor:pointer;transition:0.18s ease;}
+        .modal-close:hover{background:rgba(255,255,255,0.10);transform:rotate(90deg);}
+
+        /* 간편보기 */
+        .simple-view{width:100%;display:grid;gap:12px;}
+        .simple-intro{padding:8px 4px 2px;text-align:center;}
+        .simple-intro-title{font-size:16px;font-weight:1000;color:#ffffff;margin-bottom:6px;}
+        .simple-intro-sub{font-size:13px;color:#c9d3e5;line-height:1.6;}
+        .simple-stack{display:grid;gap:12px;}
+        .simple-card{display:grid;grid-template-columns:74px 1fr;gap:10px;padding:12px;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);box-shadow:0 14px 30px rgba(0,0,0,.18);}
+        .simple-left{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:142px;}
+        .simple-left::before{content:"";position:absolute;left:37px;top:10px;bottom:10px;width:2px;border-radius:999px;background:linear-gradient(180deg,rgba(122,140,255,.10),rgba(255,255,255,.18),rgba(242,200,107,.12));}
+        .simple-node{width:50px;height:50px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:1000;color:#08111e;box-shadow:0 10px 18px rgba(242,200,107,.15);position:relative;z-index:1;}
+        .simple-card.b-green .simple-node{background:linear-gradient(135deg,#c7ff5f,#86de6e);}
+        .simple-card.b-gold .simple-node{background:linear-gradient(135deg,#fff0be,#f2c86b);}
+        .simple-card.b-purple .simple-node{background:linear-gradient(135deg,#dec1ff,#ba89eb);}
+        .simple-card.b-orange .simple-node{background:linear-gradient(135deg,#ffb37e,#f08a16);}
+        .simple-card.b-gray .simple-node{background:linear-gradient(135deg,#d9d9d9,#bcbcbc);}
+        .simple-right{display:grid;gap:9px;align-content:start;}
+        .simple-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;}
+        .simple-title{margin:0;font-size:22px;font-weight:1000;line-height:1.12;color:#f7fbff;letter-spacing:-.2px;}
+        .simple-kind{text-align:right;font-size:13px;font-weight:1000;letter-spacing:1px;color:#ffd98d;white-space:nowrap;}
+        .simple-rows{display:grid;gap:7px;}
+        .simple-row{display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center;padding:10px 11px;border-radius:12px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.07);}
+        .simple-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#8cc0ff,#4bd2ff);}
+        .simple-row-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap;}
+        .simple-row .gate-b{padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.09);color:#fff2c8;font-size:9px;font-weight:900;white-space:nowrap;}
+        .simple-row .boss-b{font-size:13px;font-weight:900;color:#f3f7ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .simple-badges{display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
+        .simple-badges .badge{height:20px;padding:0 7px;font-size:10px;line-height:18px;}
+        .simple-row .range-b{font-size:16px;font-weight:1000;color:#ffe6a8;white-space:nowrap;letter-spacing:.2px;}
+        .simple-row .range-b.preparing{color:#5a6a82;font-size:13px;font-style:italic;}
+
+        /* 골드 영역 새 디자인 */
+        .simple-goldbar{display:flex;align-items:center;gap:14px;padding:10px 11px;border-radius:14px;background:linear-gradient(135deg,rgba(255,232,160,.10),rgba(255,255,255,.03));border:1px solid rgba(255,232,160,.16);flex-wrap:wrap;}
+        .gold-item{display:flex;flex-direction:column;gap:3px;}
+        .gold-item-label{display:flex;align-items:center;gap:4px;}
+        .gold-item-label span{font-size:10px;font-weight:900;letter-spacing:0.5px;}
+        .gold-clear-label{color:#c9a24f;}
+        .gold-bind-label{color:#b0b8c8;}
+        .gold-item-value{font-size:17px;font-weight:900;line-height:1;}
+        .gold-clear-value{color:#fff0be;}
+        .gold-bind-value{color:#d8dce8;}
+        .gold-operator{font-size:15px;color:#5a6a82;font-weight:900;align-self:flex-end;padding-bottom:2px;}
+        .gold-total{display:flex;flex-direction:column;gap:3px;}
+        .gold-total-label{font-size:10px;color:#7a8da8;font-weight:900;}
+        .gold-total-value{font-size:17px;font-weight:900;color:#ffffff;line-height:1;}
+
+        /* EX 탭 내부 난이도 탭 */
+        .ex-diff-tabs{display:flex;gap:8px;flex-wrap:wrap;}
+        .ex-diff-tab{padding:8px 16px;border-radius:12px;font-size:13px;font-weight:900;cursor:pointer;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#e8eef7;transition:0.18s ease;}
+        .ex-diff-tab:hover{transform:translateY(-1px);border-color:rgba(255,255,255,0.14);}
+        .ex-diff-tab.active-normal{background:linear-gradient(180deg,#b9ef98,#79c96a);color:#18240f;border-color:transparent;}
+        .ex-diff-tab.active-hard{background:linear-gradient(180deg,#ffd79d,#e3a85a);color:#241700;border-color:transparent;}
+        .ex-diff-tab.active-nightmare{background:linear-gradient(180deg,#e5c0ff,#be89eb);color:#241130;border-color:transparent;}
+
+        /* 경매 계산기 */
+        .auction-calc{border-radius:18px;padding:16px;background:linear-gradient(180deg,rgba(20,26,38,0.98),rgba(13,18,28,0.98));border:1px solid rgba(200,165,90,0.30);box-shadow:0 0 24px rgba(200,165,90,0.07),0 0 0 1px rgba(255,255,255,0.02) inset,0 14px 32px rgba(0,0,0,0.36);position:relative;overflow:hidden;margin-bottom:14px;}
+        .auction-calc::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top right,rgba(200,165,90,0.06),transparent 55%),radial-gradient(circle at bottom left,rgba(122,140,255,0.04),transparent 50%);pointer-events:none;}
+        .ac-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;position:relative;z-index:1;}
+        .ac-label{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#c8a55a;font-weight:900;margin-bottom:2px;}
+        .ac-title{font-size:14px;font-weight:900;color:#ffffff;}
+        .ac-toggle{display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(200,165,90,0.16);border-radius:8px;padding:2px;gap:2px;}
+        .ac-toggle-btn{padding:4px 9px;border-radius:6px;border:none;background:none;color:#5a6a82;font-size:11px;font-weight:900;cursor:pointer;transition:0.15s ease;}
+        .ac-toggle-btn:hover{color:#c6d4e8;}
+        .ac-toggle-btn.active{background:linear-gradient(135deg,#c8a55a,#a8843a);color:#1a1000;box-shadow:0 0 10px rgba(200,165,90,0.22);}
+        .ac-input-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#7fc6ff;font-weight:900;margin-bottom:5px;position:relative;z-index:1;}
+        .ac-input-wrap{position:relative;z-index:1;margin-bottom:12px;}
+        .ac-input{width:100%;padding:9px 36px 9px 12px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(122,140,255,0.30);color:#ffffff;font-size:16px;font-weight:900;text-align:right;outline:none;transition:0.15s ease;}
+        .ac-input:focus{border-color:rgba(122,140,255,0.60);background:rgba(255,255,255,0.09);box-shadow:0 0 0 2px rgba(122,140,255,0.12);}
+        .ac-input::placeholder{color:rgba(255,255,255,0.22);font-size:13px;}
+        .ac-input-suffix{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:900;color:#7a8da8;pointer-events:none;}
+        .ac-breakeven{position:relative;z-index:1;border-radius:10px;padding:10px 12px;background:linear-gradient(135deg,rgba(200,165,90,0.10),rgba(160,125,60,0.06));border:1px solid rgba(200,165,90,0.20);margin-bottom:10px;}
+        .ac-breakeven-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;}
+        .ac-breakeven-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#c8a55a;font-weight:900;}
+        .ac-breakeven-sub{font-size:10px;color:#5a6a82;}
+        .ac-breakeven-value{font-size:20px;font-weight:900;color:#fff6e4;}
+        .ac-breakeven-desc{font-size:10px;color:#7a8da8;margin-top:2px;}
+        .ac-sep{display:flex;align-items:center;gap:8px;margin:8px 0;position:relative;z-index:1;}
+        .ac-sep-line{flex:1;height:1px;background:rgba(255,255,255,0.06);}
+        .ac-sep-text{font-size:10px;color:#5a6a82;font-weight:900;letter-spacing:1px;white-space:nowrap;}
+        .ac-rates{position:relative;z-index:1;display:grid;gap:5px;}
+        .ac-rate-row{border-radius:9px;padding:8px 10px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.05);transition:0.15s ease;}
+        .ac-rate-row:hover{background:rgba(255,255,255,0.045);border-color:rgba(255,255,255,0.09);}
+        .ac-rate-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+        .ac-rate-left{display:flex;flex-direction:column;gap:1px;}
+        .ac-rate-pct{font-size:11px;font-weight:900;}
+        .ac-rate-desc{font-size:10px;color:#5a6a82;}
+        .ac-rate-val{font-size:15px;font-weight:900;color:#ffffff;}
+        .ac-bar-wrap{height:3px;border-radius:999px;background:rgba(255,255,255,0.05);overflow:hidden;}
+        .ac-bar{height:100%;border-radius:999px;transition:width 0.35s ease;}
+        .rate-5{color:#8ef0c9;} .bar-5{background:linear-gradient(90deg,#4bd3ff,#8ef0c9);}
+        .rate-10{color:#7fc6ff;} .bar-10{background:linear-gradient(90deg,#7a8cff,#4bd3ff);}
+
+        @media(max-width:1180px){.workspace{grid-template-columns:280px 1fr;}.content-grid{grid-template-columns:1fr 260px;}}
+        @media(max-width:1024px){.workspace{grid-template-columns:1fr;}.sidebar{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06);}.menu{grid-template-columns:repeat(2,minmax(0,1fr));}.content-grid{grid-template-columns:1fr;}.topline{flex-direction:column;align-items:flex-start;}.date{align-self:flex-start;}.sidebar-calendar{display:none;}.auction-calc{display:none;}}
+        @media(max-width:768px){body{padding:8px;}.app{width:100%;margin:0 auto 8px;border-radius:20px;}.sidebar{padding:16px;}.main{padding:14px;}.hero{font-size:26px;}.menu{grid-template-columns:1fr;}.menu-item{font-size:15px;padding:13px 14px;}.menu-item.simple-entry{font-size:15px;padding:13px 14px;}.title{font-size:22px;}.tabs{gap:8px;}.tab{min-width:92px;min-height:48px;font-size:12px;padding:10px 10px;}.tab-sub{font-size:10px;}.tab.gato{min-width:0;width:100%;}.tabs.gato-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;}.time-main{font-size:32px;}.time-input-box{width:64px;height:44px;font-size:18px;}.time-stepper{height:44px;width:24px;}.party-dps{font-size:14px;padding:9px 10px;}.modal-card{padding:24px 18px 18px;border-radius:22px;}.modal-title{font-size:24px;}.modal-content{font-size:14px;line-height:1.8;}table{min-width:100%;font-size:12px;}thead th,tbody td{padding:10px 8px;}.share-cell{font-size:13px;padding:10px 8px;}.share-row{grid-template-columns:46px 1fr;column-gap:5px;}.share-label{font-size:10px;}.share-value{font-size:13px;}.dps-cell{font-size:13px;}.sidebar-calendar{display:none;}.simple-card{grid-template-columns:1fr;}.simple-left{min-height:0;padding:6px 0 4px;}.simple-left::before{left:50%;transform:translateX(-50%);top:0;bottom:0;}}
+        @media(max-width:480px){.title{font-size:19px;}.hero{font-size:23px;}.subtitle,.info-text,.muted{font-size:12px;}.tab{min-width:84px;font-size:11px;}.time-main{font-size:28px;}.time-input-box{width:58px;height:42px;font-size:17px;}.time-stepper{height:42px;}.guide-trigger{font-size:15px;padding:18px 16px 16px;}.modal-title{font-size:22px;}.simple-title{font-size:19px;}.simple-row .range-b{font-size:14px;}.gold-item-value{font-size:15px;}}
+    </style>
 </head>
 <body>
     <div class="app">
         <div class="workspace">
             <aside class="sidebar">
-
                 <div class="switch-wrap">
                     <a href="#" class="active">DPS 계산기</a>
                     <a href="./tournament.html">직각 토너먼트</a>
                 </div>
-
-                <div class="mini-label">LOITER BASE · v21.1</div>
+                <div class="mini-label">LOITER BASE · v21.2</div>
                 <div class="hero">로아<br>DPS 계산기</div>
-                <div class="muted">
-                    전분으로 세르카, 성당, 가디언 토벌의 딜지분과 DPS를 확인할수 있습니다.
-                </div>
-
+                <div class="muted">전분으로 세르카, 성당, 가디언 토벌의 딜지분과 DPS를 확인할수 있습니다.</div>
                 <div class="guide-trigger-wrap">
                     <button class="guide-trigger" id="openGuideBtn" type="button">
                         <span class="guide-small">안내</span>
                         <span class="guide-main"><span class="guide-accent">DPS</span> 보는 방법</span>
                     </button>
                 </div>
-
                 <div class="sidebar-divider"></div>
-
-                <button class="menu-item simple-entry active" data-menu="simple">🟢 잔혈컷 간편보기  </button>
-
+                <button class="menu-item simple-entry active" data-menu="simple">🟢 잔혈컷 간편보기</button>
                 <div class="sidebar-divider"></div>
-
                 <div class="menu">
                     <button class="menu-item" data-menu="serka">🟢 세르카 딜지분 보기</button>
                     <button class="menu-item" data-menu="cathedral">🟢 성당 딜지분 보기</button>
                     <button class="menu-item" data-menu="gato1730">🟢 1730 가토 딜지분</button>
                     <button class="menu-item" data-menu="gato1750">🟢 1750 가토 딜지분</button>
                 </div>
-
                 <div class="sidebar-divider"></div>
-
                 <div class="auction-calc">
                     <div class="ac-header">
-                        <div>
-                            <div class="ac-label">AUCTION CALC</div>
-                            <div class="ac-title">경매 계산기 🔨</div>
-                        </div>
+                        <div><div class="ac-label">AUCTION CALC</div><div class="ac-title">경매 계산기 🔨</div></div>
                         <div class="ac-toggle">
                             <button class="ac-toggle-btn active" data-m="4">4인</button>
                             <button class="ac-toggle-btn" data-m="8">8인</button>
@@ -1234,44 +303,23 @@
                         <span class="ac-input-suffix">G</span>
                     </div>
                     <div class="ac-breakeven">
-                        <div class="ac-breakeven-top">
-                            <div class="ac-breakeven-label">손익 분기점</div>
-                            <div class="ac-breakeven-sub">균등 분배 기준</div>
-                        </div>
+                        <div class="ac-breakeven-top"><div class="ac-breakeven-label">손익 분기점</div><div class="ac-breakeven-sub">균등 분배 기준</div></div>
                         <div class="ac-breakeven-value" id="ac-be">-</div>
                         <div class="ac-breakeven-desc" id="ac-be-desc">거래소 가격을 입력하세요</div>
                     </div>
-                    <div class="ac-sep">
-                        <div class="ac-sep-line"></div>
-                        <div class="ac-sep-text">입찰 추천가</div>
-                        <div class="ac-sep-line"></div>
-                    </div>
+                    <div class="ac-sep"><div class="ac-sep-line"></div><div class="ac-sep-text">입찰 추천가</div><div class="ac-sep-line"></div></div>
                     <div class="ac-rates">
                         <div class="ac-rate-row">
-                            <div class="ac-rate-top">
-                                <div class="ac-rate-left">
-                                    <span class="ac-rate-pct rate-5">+5% 이득</span>
-                                    <span class="ac-rate-desc" id="ac-d5">가격 입력 시 표시</span>
-                                </div>
-                                <span class="ac-rate-val" id="ac-v5">-</span>
-                            </div>
+                            <div class="ac-rate-top"><div class="ac-rate-left"><span class="ac-rate-pct rate-5">+5% 이득</span><span class="ac-rate-desc" id="ac-d5">가격 입력 시 표시</span></div><span class="ac-rate-val" id="ac-v5">-</span></div>
                             <div class="ac-bar-wrap"><div class="ac-bar bar-5" id="ac-bar5" style="width:0%"></div></div>
                         </div>
                         <div class="ac-rate-row">
-                            <div class="ac-rate-top">
-                                <div class="ac-rate-left">
-                                    <span class="ac-rate-pct rate-10">+10% 이득</span>
-                                    <span class="ac-rate-desc" id="ac-d10">가격 입력 시 표시</span>
-                                </div>
-                                <span class="ac-rate-val" id="ac-v10">-</span>
-                            </div>
+                            <div class="ac-rate-top"><div class="ac-rate-left"><span class="ac-rate-pct rate-10">+10% 이득</span><span class="ac-rate-desc" id="ac-d10">가격 입력 시 표시</span></div><span class="ac-rate-val" id="ac-v10">-</span></div>
                             <div class="ac-bar-wrap"><div class="ac-bar bar-10" id="ac-bar10" style="width:0%"></div></div>
                         </div>
                     </div>
                 </div>
-
                 <div class="sidebar-divider"></div>
-
                 <div class="sidebar-calendar">
                     <div class="cal-header">
                         <button class="cal-nav" id="calPrev">‹</button>
@@ -1285,8 +333,8 @@
             <main class="main">
                 <div class="topline">
                     <div>
-                        <div class="title" id="contentTitle">세르카 : 하드 1관</div>
-                        <div class="subtitle" id="tableTitle">입장레벨 : 1730</div>
+                        <div class="title" id="contentTitle">잔혈컷 간편보기</div>
+                        <div class="subtitle" id="tableTitle">레벨별 레이드 잔혈컷 안내</div>
                         <div class="title-meta" id="titleMeta"></div>
                     </div>
                     <div class="date" id="topDateTime">0000 / 00 / 00 00:00:00</div>
@@ -1305,13 +353,10 @@
                             </table>
                         </div>
                     </section>
-
                     <aside class="right-column">
                         <div class="side-card time-card" id="timeCard">
                             <div class="side-title">CLEAR TIME</div>
-                            <div class="time-badge-wrap">
-                                <div class="time-badge">실제 클리어 타임 입력</div>
-                            </div>
+                            <div class="time-badge-wrap"><div class="time-badge">실제 클리어 타임 입력</div></div>
                             <div class="time-main" id="timeDisplay">10:00</div>
                             <div class="time-labels" id="timeBaseLabel">기본값: 10분(600초)</div>
                             <div class="time-inputs">
@@ -1334,14 +379,12 @@
                             <div class="party-dps" id="partyDpsDisplay">파티 DPS : <span class="party-dps-value">-</span></div>
                             <div class="side-note">시간 변경 시 즉시 반영</div>
                         </div>
-
                         <div class="info-box">
                             <div class="side-title">INFO</div>
                             <div class="info-text" id="infoHint">구글 시트 데이터를 읽어 옵니다.</div>
                         </div>
                     </aside>
                 </div>
-
                 <div class="status" id="status">불러오는 중...</div>
             </main>
         </div>
@@ -1364,20 +407,20 @@
     </div>
 
     <script data-goatcounter="https://loaviewer.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-
     <script>
         const CSV_URL = "https://docs.google.com/spreadsheets/d/1v4gfG-Lr0iFmiP0PXtVTsijdMziekQaZ-wBTWrobncY/export?format=csv&gid=0";
 
-        let currentMenu  = "simple";
+        let currentMenu = "simple";
         let currentCombo = "hard_gate1";
-        let currentGatoBoss     = "루멘칼리고";
+        let currentGatoBoss = "루멘칼리고";
         let currentGato1750Boss = "스콜라키아";
-        let currentSimpleLevel   = "1710";
+        let currentSimpleLevel = "1710";
+        let currentExDiff = "normal"; // 에기르 EX 난이도
         let acMembers = 4;
         let calYear, calMonth;
 
         const parsedData = {
-            serka:     { normal: [], hard: [], nightmare: [] },
+            serka: { normal: [], hard: [], nightmare: [] },
             cathedral: { normal: [], hard: [], nightmare: [] },
             gato1730: {},
             gato1750: {}
@@ -1385,239 +428,274 @@
 
         const raidMeta = {
             serka: {
-                normal_gate1:    {diffKey:"normal",    gateKey:"gate1",title:"노말 (1710)",    gateName:"1관",type:{text:"인간",cls:"type-human"},  attr:{text:"속성 없음",cls:"attr-none"},   tierClass:"tab-tier-normal"},
-                normal_gate2:    {diffKey:"normal",    gateKey:"gate2",title:"노말 (1710)",    gateName:"2관",type:{text:"고대",cls:"type-ancient"}, attr:{text:"성속성 취약",cls:"attr-holy"}, tierClass:"tab-tier-normal"},
-                hard_gate1:      {diffKey:"hard",      gateKey:"gate1",title:"하드 (1730)",    gateName:"1관",type:{text:"인간",cls:"type-human"},  attr:{text:"속성 없음",cls:"attr-none"},   tierClass:"tab-tier-hard"},
-                hard_gate2:      {diffKey:"hard",      gateKey:"gate2",title:"하드 (1730)",    gateName:"2관",type:{text:"고대",cls:"type-ancient"}, attr:{text:"성속성 취약",cls:"attr-holy"}, tierClass:"tab-tier-hard"},
-                nightmare_gate1: {diffKey:"nightmare", gateKey:"gate1",title:"나메 (1740)",    gateName:"1관",type:{text:"인간",cls:"type-human"},  attr:{text:"속성 없음",cls:"attr-none"},   tierClass:"tab-tier-nightmare"},
-                nightmare_gate2: {diffKey:"nightmare", gateKey:"gate2",title:"나메 (1740)",    gateName:"2관",type:{text:"고대",cls:"type-ancient"}, attr:{text:"성속성 취약",cls:"attr-holy"}, tierClass:"tab-tier-nightmare"}
+                normal_gate1: {diffKey:"normal",gateKey:"gate1",title:"노말 (1710)",gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"속성 없음",cls:"attr-none"},tierClass:"tab-tier-normal"},
+                normal_gate2: {diffKey:"normal",gateKey:"gate2",title:"노말 (1710)",gateName:"2관",type:{text:"고대",cls:"type-ancient"},attr:{text:"성속성 취약",cls:"attr-holy"},tierClass:"tab-tier-normal"},
+                hard_gate1: {diffKey:"hard",gateKey:"gate1",title:"하드 (1730)",gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"속성 없음",cls:"attr-none"},tierClass:"tab-tier-hard"},
+                hard_gate2: {diffKey:"hard",gateKey:"gate2",title:"하드 (1730)",gateName:"2관",type:{text:"고대",cls:"type-ancient"},attr:{text:"성속성 취약",cls:"attr-holy"},tierClass:"tab-tier-hard"},
+                nightmare_gate1: {diffKey:"nightmare",gateKey:"gate1",title:"나메 (1740)",gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"속성 없음",cls:"attr-none"},tierClass:"tab-tier-nightmare"},
+                nightmare_gate2: {diffKey:"nightmare",gateKey:"gate2",title:"나메 (1740)",gateName:"2관",type:{text:"고대",cls:"type-ancient"},attr:{text:"성속성 취약",cls:"attr-holy"},tierClass:"tab-tier-nightmare"}
             },
             cathedral: {
-                normal_gate1:    {diffKey:"normal",    gateKey:"gate1",title:"1단계 (1700)", gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-normal"},
-                normal_gate2:    {diffKey:"normal",    gateKey:"gate2",title:"1단계 (1700)", gateName:"2관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-normal"},
-                hard_gate1:      {diffKey:"hard",      gateKey:"gate1",title:"2단계 (1720)", gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-hard"},
-                hard_gate2:      {diffKey:"hard",      gateKey:"gate2",title:"2단계 (1720)", gateName:"2관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-hard"},
-                nightmare_gate1: {diffKey:"nightmare", gateKey:"gate1",title:"3단계 (1750)", gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-nightmare"},
-                nightmare_gate2: {diffKey:"nightmare", gateKey:"gate2",title:"3단계 (1750)", gateName:"2관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-nightmare"}
+                normal_gate1: {diffKey:"normal",gateKey:"gate1",title:"1단계 (1700)",gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-normal"},
+                normal_gate2: {diffKey:"normal",gateKey:"gate2",title:"1단계 (1700)",gateName:"2관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-normal"},
+                hard_gate1: {diffKey:"hard",gateKey:"gate1",title:"2단계 (1720)",gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-hard"},
+                hard_gate2: {diffKey:"hard",gateKey:"gate2",title:"2단계 (1720)",gateName:"2관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-hard"},
+                nightmare_gate1: {diffKey:"nightmare",gateKey:"gate1",title:"3단계 (1750)",gateName:"1관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-nightmare"},
+                nightmare_gate2: {diffKey:"nightmare",gateKey:"gate2",title:"3단계 (1750)",gateName:"2관",type:{text:"인간",cls:"type-human"},attr:{text:"암속성 취약",cls:"attr-dark"},tierClass:"tab-tier-nightmare"}
             }
         };
 
-       const simpleData = {
-    "1710": {
-        sectionTitle: "1710 레이드",
-        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-        cards: [
-            {
-                theme:"b-green", title:"종막 노말", node:"1710",
-                rows:[
-                    {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1190 - 1590"},
-                    {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1050 - 1400"}
-                ], gold:"20,000", goldTag:"귀속 20,000"
+        // ===== simpleData =====
+        // 골드 구조: gold=클리어골드, bindGold=귀속골드, total=합계 (귀속없으면 gold만)
+        const simpleData = {
+            "egir-ex": {
+                sectionTitle: "에기르 EX",
+                intro: "<i>에기르 EX 레이드 잔혈컷 안내입니다. 난이도를 선택하세요.</i>",
+                diff: {
+                    normal: {
+                        node: "1720", theme: "b-gold",
+                        cards: [
+                            {
+                                theme:"b-gold", title:"에기르 EX 노말", node:"1720",
+                                rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
+                                gold:"20,000", bindGold:"", total:""
+                            }
+                        ]
+                    },
+                    hard: {
+                        node: "1750", theme: "b-gold",
+                        cards: [
+                            {
+                                theme:"b-gold", title:"에기르 EX 하드", node:"1750",
+                                rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
+                                gold:"45,000", bindGold:"", total:""
+                            }
+                        ]
+                    },
+                    nightmare: {
+                        node: "1770", theme: "b-purple",
+                        cards: [
+                            {
+                                theme:"b-purple", title:"에기르 EX 나이트메어", node:"1770",
+                                rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
+                                gold:"45,000", bindGold:"", total:""
+                            }
+                        ]
+                    }
+                }
             },
-            {
-                theme:"b-green", title:"세르카 노말", node:"1710",
-                rows:[
-                    {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"1100 - 1480"},
-                    {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"1430 - 1900"}
-                ], gold:"17,500", goldTag:"귀속 17,500"
+            "1710": {
+                sectionTitle: "1710 레이드",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+                cards: [
+                    {
+                        theme:"b-green", title:"종막 노말", node:"1710",
+                        rows:[
+                            {gate:"1관", boss:"카제로스", badges:[{text:"대악마",cls:"type-archdemon"}], range:"1190 - 1590"},
+                            {gate:"2관", boss:"카제로스", badges:[{text:"대악마",cls:"type-archdemon"}], range:"1050 - 1400"}
+                        ],
+                        gold:"20,000", bindGold:"20,000", total:"40,000"
+                    },
+                    {
+                        theme:"b-green", title:"세르카 노말", node:"1710",
+                        rows:[
+                            {gate:"1관", boss:"세르카", badges:[{text:"인간",cls:"type-human"}], range:"1100 - 1480"},
+                            {gate:"2관", boss:"코르부스", badges:[{text:"고대",cls:"type-ancient"},{text:"성속성 취약",cls:"attr-holy"}], range:"1430 - 1900"}
+                        ],
+                        gold:"17,500", bindGold:"17,500", total:"35,000"
+                    },
+                    {
+                        theme:"b-green", title:"4막 노말", node:"1700",
+                        rows:[
+                            {gate:"1관", boss:"에키드나", badges:[{text:"악마",cls:"type-demon"}], range:"740 - 990"},
+                            {gate:"2관", boss:"아르모체", badges:[{text:"고대",cls:"type-ancient"},{text:"화속성 취약",cls:"attr-fire"}], range:"950 - 1270"}
+                        ],
+                        gold:"16,500", bindGold:"16,500", total:"33,000"
+                    },
+                    {
+                        theme:"b-gray", title:"성당 1단계", node:"1700",
+                        rows:[
+                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"995 - 1325"},
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"940 - 1250"}
+                        ],
+                        gold:"30,000", bindGold:"", total:""
+                    }
+                ]
             },
-            {
-                theme:"b-green", title:"4막 노말", node:"1700",
-                rows:[
-                    {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"740 - 990"},
-                    {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"950 - 1270"}
-                ], gold:"16,500", goldTag:"귀속 16,500"
+            "1720": {
+                sectionTitle: "1720 레이드",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+                cards: [
+                    {
+                        theme:"b-gold", title:"4막 하드", node:"1720",
+                        rows:[
+                            {gate:"1관", boss:"에키드나", badges:[{text:"악마",cls:"type-demon"}], range:"1425 - 1900"},
+                            {gate:"2관", boss:"아르모체", badges:[{text:"고대",cls:"type-ancient"},{text:"화속성 취약",cls:"attr-fire"}], range:"1575 - 2100"}
+                        ],
+                        gold:"42,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-gold", title:"성당 2단계", node:"1720",
+                        rows:[
+                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2370 - 3160"},
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2300 - 3060"}
+                        ],
+                        gold:"40,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-green", title:"종막 노말", node:"1710",
+                        rows:[
+                            {gate:"1관", boss:"카제로스", badges:[{text:"대악마",cls:"type-archdemon"}], range:"1190 - 1590"},
+                            {gate:"2관", boss:"카제로스", badges:[{text:"대악마",cls:"type-archdemon"}], range:"1050 - 1400"}
+                        ],
+                        gold:"20,000", bindGold:"20,000", total:"40,000"
+                    },
+                    {
+                        theme:"b-gray", title:"세르카 노말", node:"1710",
+                        rows:[
+                            {gate:"1관", boss:"세르카", badges:[{text:"인간",cls:"type-human"}], range:"1100 - 1480"},
+                            {gate:"2관", boss:"코르부스", badges:[{text:"고대",cls:"type-ancient"},{text:"성속성 취약",cls:"attr-holy"}], range:"1430 - 1900"}
+                        ],
+                        gold:"17,500", bindGold:"17,500", total:"35,000"
+                    }
+                ]
             },
-            {
-                theme:"b-gray", title:"성당 1단계", node:"1700",
-                rows:[
-                    {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"995 - 1325"},
-                    {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"940 - 1250"}
-                ], gold:"30,000", goldTag:"귀속골드"
+            "1730": {
+                sectionTitle: "1730 레이드",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+                cards: [
+                    {
+                        theme:"b-gold", title:"세르카 하드", node:"1730",
+                        rows:[
+                            {gate:"1관", boss:"세르카", badges:[{text:"인간",cls:"type-human"}], range:"2300 - 3070"},
+                            {gate:"2관", boss:"코르부스", badges:[{text:"고대",cls:"type-ancient"},{text:"성속성 취약",cls:"attr-holy"}], range:"2980 - 3970"}
+                        ],
+                        gold:"44,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-gold", title:"종막 하드", node:"1730",
+                        rows:[
+                            {gate:"1관", boss:"카제로스", badges:[{text:"대악마",cls:"type-archdemon"}], range:"2370 - 3170"},
+                            {gate:"2관", boss:"카제로스", badges:[{text:"대악마",cls:"type-archdemon"},{text:"신",cls:"type-divine"}], range:"4200 - 5625"}
+                        ],
+                        gold:"52,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-gold", title:"4막 하드", node:"1720",
+                        rows:[
+                            {gate:"1관", boss:"에키드나", badges:[{text:"악마",cls:"type-demon"}], range:"1425 - 1900"},
+                            {gate:"2관", boss:"아르모체", badges:[{text:"고대",cls:"type-ancient"},{text:"화속성 취약",cls:"attr-fire"}], range:"1575 - 2100"}
+                        ],
+                        gold:"42,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-gray", title:"성당 2단계", node:"1720",
+                        rows:[
+                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2370 - 3160"},
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2300 - 3060"}
+                        ],
+                        gold:"40,000", bindGold:"", total:""
+                    }
+                ]
+            },
+            "1740": {
+                sectionTitle: "1740 레이드",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+                cards: [
+                    {
+                        theme:"b-purple", title:"세르카 나메", node:"1740",
+                        rows:[
+                            {gate:"1관", boss:"세르카", badges:[{text:"인간",cls:"type-human"}], range:"3580 - 4770"},
+                            {gate:"2관", boss:"코르부스", badges:[{text:"고대",cls:"type-ancient"},{text:"성속성 취약",cls:"attr-holy"}], range:"4620 - 6160"}
+                        ],
+                        gold:"54,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-gold", title:"종막 하드", node:"1730",
+                        rows:[
+                            {gate:"1관", boss:"카제로스", badges:[{text:"대악마",cls:"type-archdemon"}], range:"2370 - 3170"},
+                            {gate:"2관", boss:"카제로스", badges:[{text:"대악마",cls:"type-archdemon"},{text:"신",cls:"type-divine"}], range:"4200 - 5625"}
+                        ],
+                        gold:"52,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-gold", title:"4막 하드", node:"1720",
+                        rows:[
+                            {gate:"1관", boss:"에키드나", badges:[{text:"악마",cls:"type-demon"}], range:"1425 - 1900"},
+                            {gate:"2관", boss:"아르모체", badges:[{text:"고대",cls:"type-ancient"},{text:"화속성 취약",cls:"attr-fire"}], range:"1575 - 2100"}
+                        ],
+                        gold:"42,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-gray", title:"성당 2단계", node:"1720",
+                        rows:[
+                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2370 - 3160"},
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2300 - 3060"}
+                        ],
+                        gold:"40,000", bindGold:"", total:""
+                    }
+                ]
+            },
+            "1750": {
+                sectionTitle: "1750 레이드",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+                cards: [
+                    {
+                        theme:"b-purple", title:"세르카 나메", node:"1740",
+                        rows:[
+                            {gate:"1관", boss:"세르카", badges:[{text:"인간",cls:"type-human"}], range:"3580 - 4770"},
+                            {gate:"2관", boss:"코르부스", badges:[{text:"고대",cls:"type-ancient"},{text:"성속성 취약",cls:"attr-holy"}], range:"4620 - 6160"}
+                        ],
+                        gold:"54,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-gold", title:"종막 하드", node:"1730",
+                        rows:[
+                            {gate:"1관", boss:"카제로스", badges:[{text:"대악마",cls:"type-archdemon"}], range:"2370 - 3170"},
+                            {gate:"2관", boss:"카제로스", badges:[{text:"대악마",cls:"type-archdemon"},{text:"신",cls:"type-divine"}], range:"4200 - 5625"}
+                        ],
+                        gold:"52,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-orange", title:"성당 3단계", node:"1750",
+                        rows:[
+                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"3840 - 5120"},
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"3780 - 5040"}
+                        ],
+                        gold:"50,000", bindGold:"", total:""
+                    },
+                    {
+                        theme:"b-gray", title:"4막 하드", node:"1720",
+                        rows:[
+                            {gate:"1관", boss:"에키드나", badges:[{text:"악마",cls:"type-demon"}], range:"1425 - 1900"},
+                            {gate:"2관", boss:"아르모체", badges:[{text:"고대",cls:"type-ancient"},{text:"화속성 취약",cls:"attr-fire"}], range:"1575 - 2100"}
+                        ],
+                        gold:"42,000", bindGold:"", total:""
+                    }
+                ]
+            },
+            "1770": {
+                sectionTitle: "1770 레이드",
+                intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
+                cards: []
             }
-        ]
-    },
-    "1720": {
-        sectionTitle: "1720 레이드",
-        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-        cards: [
-            {
-                theme:"b-gold", title:"에기르 EX 노말", node:"1720",
-                rows:[
-                    {gate:"1관", boss:"에기르", badges:[{text:"고대", cls:"type-ancient"}], range:"준비중"}
-                ], gold:"20,000", goldTag:"토큰 150"
-            },
-            {
-                theme:"b-gold", title:"4막 하드", node:"1720",
-                rows:[
-                    {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"1425 - 1900"},
-                    {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"1575 - 2100"}
-                ], gold:"42,000"
-            },
-            {
-                theme:"b-gold", title:"성당 2단계", node:"1720",
-                rows:[
-                    {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
-                    {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
-                ], gold:"40,000", goldTag:"귀속골드"
-            },
-            {
-                theme:"b-green", title:"종막 노말", node:"1710",
-                rows:[
-                    {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1190 - 1590"},
-                    {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"1050 - 1400"}
-                ], gold:"20,000", goldTag:"귀속 20,000"
-            },
-            {
-                theme:"b-green", title:"세르카 노말", node:"1710",
-                rows:[
-                    {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"1100 - 1480"},
-                    {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"1430 - 1900"}
-                ], gold:"17,500", goldTag:"귀속 17,500"
-            }
-        ]
-    },
-    "1730": {
-        sectionTitle: "1730 레이드",
-        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-        cards: [
-            {
-                theme:"b-gold", title:"세르카 하드", node:"1730",
-                rows:[
-                    {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"2300 - 3070"},
-                    {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"2980 - 3970"}
-                ], gold:"44,000"
-            },
-            {
-                theme:"b-gold", title:"종막 하드", node:"1730",
-                rows:[
-                    {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"2370 - 3170"},
-                    {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"},{text:"신", cls:"type-divine"}], range:"4200 - 5625"}
-                ], gold:"52,000"
-            },
-            {
-                theme:"b-gold", title:"4막 하드", node:"1720",
-                rows:[
-                    {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"1425 - 1900"},
-                    {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"1575 - 2100"}
-                ], gold:"42,000"
-            },
-            {
-                theme:"b-gold", title:"성당 2단계", node:"1720",
-                rows:[
-                    {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
-                    {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
-                ], gold:"40,000", goldTag:"귀속골드"
-            }
-        ]
-    },
-    "1740": {
-        sectionTitle: "1740 레이드",
-        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-        cards: [
-            {
-                theme:"b-purple", title:"세르카 나메", node:"1740",
-                rows:[
-                    {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"3580 - 4770"},
-                    {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"4620 - 6160"}
-                ], gold:"54,000"
-            },
-            {
-                theme:"b-gold", title:"종막 하드", node:"1730",
-                rows:[
-                    {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"2370 - 3170"},
-                    {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"},{text:"신", cls:"type-divine"}], range:"4200 - 5625"}
-                ], gold:"52,000"
-            },
-            {
-                theme:"b-gold", title:"4막 하드", node:"1720",
-                rows:[
-                    {gate:"1관", boss:"에키드나", badges:[{text:"악마", cls:"type-demon"}], range:"1425 - 1900"},
-                    {gate:"2관", boss:"아르모체", badges:[{text:"고대", cls:"type-ancient"},{text:"화속성 취약", cls:"attr-fire"}], range:"1575 - 2100"}
-                ], gold:"42,000"
-            },
-            {
-                theme:"b-gold", title:"성당 2단계", node:"1720",
-                rows:[
-                    {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2370 - 3160"},
-                    {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"2300 - 3060"}
-                ], gold:"40,000", goldTag:"귀속골드"
-            }
-        ]
-    },
-    "1750": {
-        sectionTitle: "1750 레이드",
-        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-        cards: [
-            {
-                theme:"b-gold", title:"에기르 EX 하드", node:"1750",
-                rows:[
-                    {gate:"1관", boss:"에기르", badges:[{text:"고대", cls:"type-ancient"}], range:"준비중"}
-                ], gold:"45,000", goldTag:"토큰 200"
-            },
-            {
-                theme:"b-purple", title:"세르카 나메", node:"1740",
-                rows:[
-                    {gate:"1관", boss:"세르카", badges:[{text:"인간", cls:"type-human"}], range:"3580 - 4770"},
-                    {gate:"2관", boss:"코르부스", badges:[{text:"고대", cls:"type-ancient"},{text:"성속성 취약", cls:"attr-holy"}], range:"4620 - 6160"}
-                ], gold:"54,000"
-            },
-            {
-                theme:"b-gold", title:"종막 하드", node:"1730",
-                rows:[
-                    {gate:"1관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"}], range:"2370 - 3170"},
-                    {gate:"2관", boss:"카제로스", badges:[{text:"대악마", cls:"type-archdemon"},{text:"신", cls:"type-divine"}], range:"4200 - 5625"}
-                ], gold:"52,000"
-            },
-            {
-                theme:"b-orange", title:"성당 3단계", node:"1750",
-                rows:[
-                    {gate:"1관", boss:"대주교", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"3840 - 5120"},
-                    {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간", cls:"type-human"},{text:"암속성 취약", cls:"attr-dark"}], range:"3780 - 5040"}
-                ], gold:"50,000", goldTag:"귀속골드"
-            }
-        ]
-    },
-        "1770": {
-        sectionTitle: "1770 레이드",
-        intro: "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>",
-        cards: [
-            {
-                theme:"b-purple", title:"에기르 EX 나이트메어", node:"1770",
-                rows:[
-                    {gate:"1관", boss:"에기르", badges:[{text:"고대", cls:"type-ancient"}], range:"준비중"}
-                ], gold:"45,000", goldTag:"토큰 200"
-            }
-        ]
-    }
-};
+        };
 
         const gato1730Bosses = ["루멘칼리고","가르가디스","스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
         const gato1750Bosses = ["루멘칼리고","가르가디스","스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
         const gato1750AvailableBosses = ["스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨"];
-
         const gato1730Layout = [
-            {boss:"루멘칼리고",startRow:66,shareCol:1,damageCol:3},
-            {boss:"가르가디스",startRow:66,shareCol:9,damageCol:11},
-            {boss:"스콜라키아",startRow:66,shareCol:17,damageCol:19},
-            {boss:"크라티오스",startRow:98,shareCol:1,damageCol:3},
-            {boss:"아게오로스",startRow:98,shareCol:9,damageCol:11},
-            {boss:"드렉탈라스",startRow:98,shareCol:17,damageCol:19},
-            {boss:"소나벨",startRow:130,shareCol:1,damageCol:3},
-            {boss:"베스칼",startRow:130,shareCol:9,damageCol:11}
+            {boss:"루멘칼리고",startRow:66,shareCol:1,damageCol:3},{boss:"가르가디스",startRow:66,shareCol:9,damageCol:11},
+            {boss:"스콜라키아",startRow:66,shareCol:17,damageCol:19},{boss:"크라티오스",startRow:98,shareCol:1,damageCol:3},
+            {boss:"아게오로스",startRow:98,shareCol:9,damageCol:11},{boss:"드렉탈라스",startRow:98,shareCol:17,damageCol:19},
+            {boss:"소나벨",startRow:130,shareCol:1,damageCol:3},{boss:"베스칼",startRow:130,shareCol:9,damageCol:11}
         ];
-
         const gato1750Layout = [
-            {boss:"루멘칼리고",startRow:167,shareCol:1,damageCol:3},
-            {boss:"가르가디스",startRow:167,shareCol:9,damageCol:11},
-            {boss:"스콜라키아",startRow:167,shareCol:17,damageCol:19},
-            {boss:"크라티오스",startRow:199,shareCol:1,damageCol:3},
-            {boss:"아게오로스",startRow:199,shareCol:9,damageCol:11},
-            {boss:"드렉탈라스",startRow:199,shareCol:17,damageCol:19},
-            {boss:"소나벨",startRow:231,shareCol:1,damageCol:3},
-            {boss:"베스칼",startRow:231,shareCol:9,damageCol:11}
+            {boss:"루멘칼리고",startRow:167,shareCol:1,damageCol:3},{boss:"가르가디스",startRow:167,shareCol:9,damageCol:11},
+            {boss:"스콜라키아",startRow:167,shareCol:17,damageCol:19},{boss:"크라티오스",startRow:199,shareCol:1,damageCol:3},
+            {boss:"아게오로스",startRow:199,shareCol:9,damageCol:11},{boss:"드렉탈라스",startRow:199,shareCol:17,damageCol:19},
+            {boss:"소나벨",startRow:231,shareCol:1,damageCol:3},{boss:"베스칼",startRow:231,shareCol:9,damageCol:11}
         ];
-
         const gatoMeta = {
             "루멘칼리고":{type:{text:"고대",cls:"type-ancient"},attr:{text:"암속성 취약",cls:"attr-dark"}},
             "가르가디스":{type:{text:"야수",cls:"type-beast"},attr:{text:"토속성 취약",cls:"attr-earth"}},
@@ -1636,448 +714,293 @@
         }
 
         function formatDateTime(date) {
-            const y=date.getFullYear(), m=String(date.getMonth()+1).padStart(2,"0"), d=String(date.getDate()).padStart(2,"0");
-            const h=String(date.getHours()).padStart(2,"0"), min=String(date.getMinutes()).padStart(2,"0"), s=String(date.getSeconds()).padStart(2,"0");
+            const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,"0"),d=String(date.getDate()).padStart(2,"0");
+            const h=String(date.getHours()).padStart(2,"0"),min=String(date.getMinutes()).padStart(2,"0"),s=String(date.getSeconds()).padStart(2,"0");
             return `${y} / ${m} / ${d} ${h}:${min}:${s}`;
         }
-
-        function updateTopDateTime() {
-            document.getElementById("topDateTime").textContent = formatDateTime(new Date());
-        }
-
-        function makeBadge(text, cls) {
-            return `<span class="badge ${cls}">${text}</span>`;
-        }
+        function updateTopDateTime() { document.getElementById("topDateTime").textContent = formatDateTime(new Date()); }
+        function makeBadge(text, cls) { return `<span class="badge ${cls}">${text}</span>`; }
 
         function updateTimeDisplay() {
-            let min = parseInt(document.getElementById("minutes").value||0, 10);
-            let sec = parseInt(document.getElementById("seconds").value||0, 10);
-            if (isNaN(min)||min<0) min=0;
-            if (isNaN(sec)||sec<0) sec=0;
-            if (sec>59) sec=59;
-            document.getElementById("minutes").value=min;
-            document.getElementById("seconds").value=sec;
+            let min=parseInt(document.getElementById("minutes").value||0,10);
+            let sec=parseInt(document.getElementById("seconds").value||0,10);
+            if(isNaN(min)||min<0)min=0; if(isNaN(sec)||sec<0)sec=0; if(sec>59)sec=59;
+            document.getElementById("minutes").value=min; document.getElementById("seconds").value=sec;
             document.getElementById("timeDisplay").textContent=`${String(min).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
         }
 
         function setBaseTimeByMenu(menu) {
-            const minInput=document.getElementById("minutes");
-            const secInput=document.getElementById("seconds");
-            const label=document.getElementById("timeBaseLabel");
-            if (menu==="gato1730"||menu==="gato1750") {
-                minInput.value=1; secInput.value=50;
-                label.textContent="기본값: 1분 50초(110초)";
-            } else {
-                minInput.value=10; secInput.value=0;
-                label.textContent="기본값: 10분(600초)";
-            }
+            const minInput=document.getElementById("minutes"),secInput=document.getElementById("seconds"),label=document.getElementById("timeBaseLabel");
+            if(menu==="gato1730"||menu==="gato1750"){minInput.value=1;secInput.value=50;label.textContent="기본값: 1분 50초(110초)";}
+            else{minInput.value=10;secInput.value=0;label.textContent="기본값: 10분(600초)";}
             updateTimeDisplay();
         }
 
         function getTotalSeconds() {
             let min=parseInt(document.getElementById("minutes").value||0,10);
             let sec=parseInt(document.getElementById("seconds").value||0,10);
-            if (isNaN(min)||min<0) min=0;
-            if (isNaN(sec)||sec<0) sec=0;
-            if (sec>59) sec=59;
-            document.getElementById("minutes").value=min;
-            document.getElementById("seconds").value=sec;
-            return Math.max(1, min*60+sec);
+            if(isNaN(min)||min<0)min=0; if(isNaN(sec)||sec<0)sec=0; if(sec>59)sec=59;
+            document.getElementById("minutes").value=min; document.getElementById("seconds").value=sec;
+            return Math.max(1,min*60+sec);
         }
 
-        function fmt(n) { return Number(n||0).toLocaleString("ko-KR"); }
-        function fmtPartyDps(n) { return `${Number(n||0).toLocaleString("ko-KR",{minimumFractionDigits:1,maximumFractionDigits:1})}억`; }
-
-        function toNum(v) {
-            if (v===undefined||v===null) return 0;
-            const s=String(v).replace(/,/g,"").replace(/"/g,"").trim();
-            const n=Number(s);
-            return isNaN(n)?0:n;
-        }
+        function fmt(n){return Number(n||0).toLocaleString("ko-KR");}
+        function fmtPartyDps(n){return `${Number(n||0).toLocaleString("ko-KR",{minimumFractionDigits:1,maximumFractionDigits:1})}억`;}
+        function toNum(v){if(v===undefined||v===null)return 0;const s=String(v).replace(/,/g,"").replace(/"/g,"").trim();const n=Number(s);return isNaN(n)?0:n;}
 
         function parseCSVLine(line) {
-            const result=[]; let cur=""; let inQuotes=false;
-            for (let i=0;i<line.length;i++) {
-                const ch=line[i];
-                if (ch==='"') { if(inQuotes&&line[i+1]==='"'){cur+='"';i++;}else{inQuotes=!inQuotes;} }
-                else if (ch===","&&!inQuotes) { result.push(cur); cur=""; }
-                else { cur+=ch; }
-            }
-            result.push(cur);
-            return result;
+            const result=[];let cur="";let inQuotes=false;
+            for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){if(inQuotes&&line[i+1]==='"'){cur+='"';i++;}else{inQuotes=!inQuotes;}}else if(ch===","&&!inQuotes){result.push(cur);cur="";}else{cur+=ch;}}
+            result.push(cur);return result;
         }
-
-        function percentNum(v) {
-            const m=String(v||"").match(/(\d+)%/);
-            return m?Number(m[1]):null;
-        }
+        function percentNum(v){const m=String(v||"").match(/(\d+)%/);return m?Number(m[1]):null;}
 
         function getComboTabs(menu) {
-            if (menu==="serka") return [
-                {key:"normal_gate1",label:"노말",sub:"1관"},{key:"normal_gate2",label:"노말",sub:"2관"},
-                {key:"hard_gate1",label:"하드",sub:"1관"},{key:"hard_gate2",label:"하드",sub:"2관"},
-                {key:"nightmare_gate1",label:"나메",sub:"1관"},{key:"nightmare_gate2",label:"나메",sub:"2관"}
-            ];
-            if (menu==="cathedral") return [
-                {key:"normal_gate1",label:"1단계",sub:"1관"},{key:"normal_gate2",label:"1단계",sub:"2관"},
-                {key:"hard_gate1",label:"2단계",sub:"1관"},{key:"hard_gate2",label:"2단계",sub:"2관"},
-                {key:"nightmare_gate1",label:"3단계",sub:"1관"},{key:"nightmare_gate2",label:"3단계",sub:"2관"}
-            ];
-            return [];
+            if(menu==="serka")return[{key:"normal_gate1",label:"노말",sub:"1관"},{key:"normal_gate2",label:"노말",sub:"2관"},{key:"hard_gate1",label:"하드",sub:"1관"},{key:"hard_gate2",label:"하드",sub:"2관"},{key:"nightmare_gate1",label:"나메",sub:"1관"},{key:"nightmare_gate2",label:"나메",sub:"2관"}];
+            if(menu==="cathedral")return[{key:"normal_gate1",label:"1단계",sub:"1관"},{key:"normal_gate2",label:"1단계",sub:"2관"},{key:"hard_gate1",label:"2단계",sub:"1관"},{key:"hard_gate2",label:"2단계",sub:"2관"},{key:"nightmare_gate1",label:"3단계",sub:"1관"},{key:"nightmare_gate2",label:"3단계",sub:"2관"}];
+            return[];
         }
 
         function getContentName() {
-            if (currentMenu === "simple") return "잔혈컷 간편보기 👀";
-            if (currentMenu==="serka"||currentMenu==="cathedral") {
-                const meta=raidMeta[currentMenu][currentCombo];
-                const menuName=currentMenu==="serka"?"세르카":"성당";
-                return `${menuName} : ${meta.title.replace(/\s*\(.+\)/,"")} ${meta.gateName}`;
-            }
-            if (currentMenu==="gato1730") return `1730 가디언 토벌 : ${currentGatoBoss}`;
-            if (currentMenu==="gato1750") return `1750 가디언 토벌 : ${currentGato1750Boss}`;
-            return "콘텐츠";
+            if(currentMenu==="simple")return currentSimpleLevel==="egir-ex"?"에기르 EX 레이드":"잔혈컷 간편보기 👀";
+            if(currentMenu==="serka"||currentMenu==="cathedral"){const meta=raidMeta[currentMenu][currentCombo];const menuName=currentMenu==="serka"?"세르카":"성당";return`${menuName} : ${meta.title.replace(/\s*\(.+\)/,"")} ${meta.gateName}`;}
+            if(currentMenu==="gato1730")return`1730 가디언 토벌 : ${currentGatoBoss}`;
+            if(currentMenu==="gato1750")return`1750 가디언 토벌 : ${currentGato1750Boss}`;
+            return"콘텐츠";
         }
 
         function getTableTitle() {
-            if (currentMenu === "simple") {
-                return simpleData[currentSimpleLevel]?.sectionTitle || "잔혈컷 간편보기";
-            }
-            if (currentMenu==="serka"||currentMenu==="cathedral") {
-                const meta=raidMeta[currentMenu][currentCombo];
-                const levelMatch=meta.title.match(/\((\d+)\)/);
-                const level=levelMatch?levelMatch[1]:"-";
-                return `입장레벨 : ${level}`;
-            }
-            if (currentMenu==="gato1730") return "잔영 1단계";
-            if (currentMenu==="gato1750") return "잔영 2단계";
-            return "";
+            if(currentMenu==="simple"){if(currentSimpleLevel==="egir-ex")return"에기르 EX · 노말/하드/나이트메어";return simpleData[currentSimpleLevel]?.sectionTitle||"잔혈컷 간편보기";}
+            if(currentMenu==="serka"||currentMenu==="cathedral"){const meta=raidMeta[currentMenu][currentCombo];const levelMatch=meta.title.match(/\((\d+)\)/);const level=levelMatch?levelMatch[1]:"-";return`입장레벨 : ${level}`;}
+            if(currentMenu==="gato1730")return"잔영 1단계";
+            if(currentMenu==="gato1750")return"잔영 2단계";
+            return"";
         }
 
         function applyMenuFromQuery() {
             const params=new URLSearchParams(window.location.search);
             const menu=params.get("menu");
-            if (!menu) return;
+            if(!menu)return;
             const validMenus=["serka","cathedral","gato1730","gato1750","simple"];
-            if (!validMenus.includes(menu)) return;
+            if(!validMenus.includes(menu))return;
             currentMenu=menu;
-            if (currentMenu==="serka")    currentCombo="hard_gate1";
-            else if (currentMenu==="cathedral") currentCombo="hard_gate1";
-            else if (currentMenu==="gato1730") currentGatoBoss="루멘칼리고";
-            else if (currentMenu==="gato1750") currentGato1750Boss="스콜라키아";
-            else if (currentMenu==="simple") currentSimpleLevel="1710";
-            document.querySelectorAll(".menu-item").forEach(btn=>{
-                btn.classList.toggle("active", btn.dataset.menu===currentMenu);
-            });
+            if(currentMenu==="serka")currentCombo="hard_gate1";
+            else if(currentMenu==="cathedral")currentCombo="hard_gate1";
+            else if(currentMenu==="gato1730")currentGatoBoss="루멘칼리고";
+            else if(currentMenu==="gato1750")currentGato1750Boss="스콜라키아";
+            else if(currentMenu==="simple")currentSimpleLevel="1710";
+            document.querySelectorAll(".menu-item").forEach(btn=>{btn.classList.toggle("active",btn.dataset.menu===currentMenu);});
             setBaseTimeByMenu(currentMenu);
         }
 
         function renderTitleMeta() {
             const titleMeta=document.getElementById("titleMeta");
-            if (currentMenu === "simple") {
-                titleMeta.innerHTML = "";
-                return;
-            }
-            if (currentMenu==="serka"||currentMenu==="cathedral") {
-                const meta=raidMeta[currentMenu][currentCombo];
-                titleMeta.innerHTML=`${makeBadge(meta.type.text,meta.type.cls)} ${makeBadge(meta.attr.text,meta.attr.cls)}`;
-                return;
-            }
-            if (currentMenu==="gato1730") {
-                const meta=gatoMeta[currentGatoBoss];
-                titleMeta.innerHTML=`${makeBadge(meta.type.text,meta.type.cls)} ${makeBadge(meta.attr.text,meta.attr.cls)}`;
-                return;
-            }
-            if (currentMenu==="gato1750") {
-                const meta=gatoMeta[currentGato1750Boss];
-                titleMeta.innerHTML=`${makeBadge(meta.type.text,meta.type.cls)} ${makeBadge(meta.attr.text,meta.attr.cls)}`;
-                return;
-            }
+            if(currentMenu==="simple"){titleMeta.innerHTML="";return;}
+            if(currentMenu==="serka"||currentMenu==="cathedral"){const meta=raidMeta[currentMenu][currentCombo];titleMeta.innerHTML=`${makeBadge(meta.type.text,meta.type.cls)} ${makeBadge(meta.attr.text,meta.attr.cls)}`;return;}
+            if(currentMenu==="gato1730"){const meta=gatoMeta[currentGatoBoss];titleMeta.innerHTML=`${makeBadge(meta.type.text,meta.type.cls)} ${makeBadge(meta.attr.text,meta.attr.cls)}`;return;}
+            if(currentMenu==="gato1750"){const meta=gatoMeta[currentGato1750Boss];titleMeta.innerHTML=`${makeBadge(meta.type.text,meta.type.cls)} ${makeBadge(meta.attr.text,meta.attr.cls)}`;return;}
             titleMeta.innerHTML="";
         }
 
-        function isGato1750Available(boss) { return gato1750AvailableBosses.includes(boss); }
+        function isGato1750Available(boss){return gato1750AvailableBosses.includes(boss);}
 
         function renderTabs() {
             const tabs=document.getElementById("tabs");
-            tabs.classList.remove("gato-grid");
-            tabs.classList.remove("simple-tabs");
+            tabs.classList.remove("gato-grid","simple-tabs");
 
-            if (currentMenu==="simple") {
+            if(currentMenu==="simple"){
                 tabs.classList.add("simple-tabs");
-                tabs.innerHTML = ["1710","1720","1730","1740","1750","1770"].map(level => `
-                    <button class="tab ${currentSimpleLevel===level?'active':''}" data-simple-level="${level}">
-                        <div class="tab-label">${level}</div>
+                // EX 탭 + 레벨 탭
+                const levels=["1710","1720","1730","1740","1750","1770"];
+                tabs.innerHTML=`
+                    <button class="tab tab-ex ${currentSimpleLevel==="egir-ex"?"active":""}" data-simple-level="egir-ex">
+                        <div class="tab-label">에기르 EX</div>
                     </button>
-                `).join("");
-
+                    <button class="tab tab-ex disabled" data-simple-level="abr-ex">
+                        <div class="tab-label">아브 EX</div>
+                        <div class="tab-open-date">5/20 오픈</div>
+                    </button>
+                    ${levels.map(level=>`
+                        <button class="tab ${currentSimpleLevel===level?"active":""}" data-simple-level="${level}">
+                            <div class="tab-label">${level}</div>
+                        </button>
+                    `).join("")}
+                `;
                 tabs.querySelectorAll(".tab[data-simple-level]").forEach(btn=>{
-                    btn.addEventListener("click", ()=>{
-                        currentSimpleLevel = btn.dataset.simpleLevel;
-                        renderTabs();
-                        renderTable();
+                    if(btn.classList.contains("disabled"))return;
+                    btn.addEventListener("click",()=>{
+                        currentSimpleLevel=btn.dataset.simpleLevel;
+                        if(currentSimpleLevel==="egir-ex")currentExDiff="normal";
+                        renderTabs();renderTable();
                     });
                 });
                 return;
             }
 
-            if (currentMenu==="gato1730") {
+            if(currentMenu==="gato1730"){
                 tabs.classList.add("gato-grid");
-                tabs.innerHTML=gato1730Bosses.map(name=>{
-                    const meta=gatoMeta[name];
-                    return `<button class="tab gato ${currentGatoBoss===name?'active':''}" data-boss="${name}">
-                        <div class="tab-label">${name}</div>
-                        <div class="tab-meta">${makeBadge(meta.type.text,meta.type.cls)}${makeBadge(meta.attr.text,meta.attr.cls)}</div>
-                    </button>`;
-                }).join("");
-                tabs.querySelectorAll(".tab[data-boss]").forEach(btn=>{
-                    btn.addEventListener("click",()=>{
-                        currentGatoBoss=btn.dataset.boss;
-                        trackEvent(`/이벤트/가토/잔영1단계/${currentGatoBoss}`,`보스 클릭 - 잔영 1단계 ${currentGatoBoss}`);
-                        renderTabs(); renderTable();
-                    });
-                });
+                tabs.innerHTML=gato1730Bosses.map(name=>{const meta=gatoMeta[name];return`<button class="tab gato ${currentGatoBoss===name?"active":""}" data-boss="${name}"><div class="tab-label">${name}</div><div class="tab-meta">${makeBadge(meta.type.text,meta.type.cls)}${makeBadge(meta.attr.text,meta.attr.cls)}</div></button>`;}).join("");
+                tabs.querySelectorAll(".tab[data-boss]").forEach(btn=>{btn.addEventListener("click",()=>{currentGatoBoss=btn.dataset.boss;trackEvent(`/이벤트/가토/잔영1단계/${currentGatoBoss}`,`보스 클릭 - 잔영 1단계 ${currentGatoBoss}`);renderTabs();renderTable();});});
                 return;
             }
-
-            if (currentMenu==="gato1750") {
+            if(currentMenu==="gato1750"){
                 tabs.classList.add("gato-grid");
-                tabs.innerHTML=gato1750Bosses.map(name=>{
-                    const meta=gatoMeta[name];
-                    const isAvailable=isGato1750Available(name);
-                    return `<button class="tab gato ${isAvailable?'':'pending'} ${currentGato1750Boss===name?'active':''}" data-boss1750="${name}">
-                        <div class="tab-label">${name}</div>
-                        <div class="tab-meta">${makeBadge(meta.type.text,meta.type.cls)}${makeBadge(meta.attr.text,meta.attr.cls)}</div>
-                        ${isAvailable?'':'<div class="tab-pending">준비중</div>'}
-                    </button>`;
-                }).join("");
-                tabs.querySelectorAll(".tab[data-boss1750]").forEach(btn=>{
-                    btn.addEventListener("click",()=>{
-                        currentGato1750Boss=btn.dataset.boss1750;
-                        trackEvent(`/이벤트/가토/잔영2단계/${currentGato1750Boss}`,`보스 클릭 - 잔영 2단계 ${currentGato1750Boss}`);
-                        renderTabs(); renderTable();
-                    });
-                });
+                tabs.innerHTML=gato1750Bosses.map(name=>{const meta=gatoMeta[name];const isAvailable=isGato1750Available(name);return`<button class="tab gato ${isAvailable?"":"pending"} ${currentGato1750Boss===name?"active":""}" data-boss1750="${name}"><div class="tab-label">${name}</div><div class="tab-meta">${makeBadge(meta.type.text,meta.type.cls)}${makeBadge(meta.attr.text,meta.attr.cls)}</div>${isAvailable?"":"<div class=\"tab-pending\">준비중</div>"}</button>`;}).join("");
+                tabs.querySelectorAll(".tab[data-boss1750]").forEach(btn=>{btn.addEventListener("click",()=>{currentGato1750Boss=btn.dataset.boss1750;trackEvent(`/이벤트/가토/잔영2단계/${currentGato1750Boss}`,`보스 클릭 - 잔영 2단계 ${currentGato1750Boss}`);renderTabs();renderTable();});});
                 return;
             }
 
             const comboTabs=getComboTabs(currentMenu);
-            tabs.innerHTML=comboTabs.map(item=>{
-                const meta=raidMeta[currentMenu][item.key];
-                return `<button class="tab ${meta.tierClass} ${currentCombo===item.key?'active':''}" data-combo="${item.key}">
-                    <div class="tab-label">${item.label}</div>
-                    <div class="tab-sub">${item.sub}</div>
-                </button>`;
-            }).join("");
-
-            tabs.querySelectorAll(".tab[data-combo]").forEach(btn=>{
-                btn.addEventListener("click",()=>{
-                    currentCombo=btn.dataset.combo;
-                    const meta=raidMeta[currentMenu][currentCombo];
-                    const menuName=currentMenu==="serka"?"세르카":"성당";
-                    const tabName=`${meta.title.replace(/\s*\(.+\)/,"")}_${meta.gateName}`;
-                    trackEvent(`/이벤트/탭/${menuName}/${tabName}`,`탭 클릭 - ${menuName} ${meta.title.replace(/\s*\(.+\)/,"")} ${meta.gateName}`);
-                    renderTabs(); renderTable();
-                });
-            });
+            tabs.innerHTML=comboTabs.map(item=>{const meta=raidMeta[currentMenu][item.key];return`<button class="tab ${meta.tierClass} ${currentCombo===item.key?"active":""}" data-combo="${item.key}"><div class="tab-label">${item.label}</div><div class="tab-sub">${item.sub}</div></button>`;}).join("");
+            tabs.querySelectorAll(".tab[data-combo]").forEach(btn=>{btn.addEventListener("click",()=>{currentCombo=btn.dataset.combo;const meta=raidMeta[currentMenu][currentCombo];const menuName=currentMenu==="serka"?"세르카":"성당";trackEvent(`/이벤트/탭/${menuName}/${meta.title.replace(/\s*\(.+\)/,"")}_${meta.gateName}`,`탭 클릭`);renderTabs();renderTable();});});
         }
 
         function clearAllData() {
-            parsedData.serka={normal:[],hard:[],nightmare:[]};
-            parsedData.cathedral={normal:[],hard:[],nightmare:[]};
-            parsedData.gato1730={};
-            parsedData.gato1750={};
+            parsedData.serka={normal:[],hard:[],nightmare:[]};parsedData.cathedral={normal:[],hard:[],nightmare:[]};parsedData.gato1730={};parsedData.gato1750={};
         }
 
-        function parseBlock(lines, startRow, type) {
-            for (let r=startRow+3;r<startRow+29;r++) {
-                const cols=parseCSVLine(lines[r]||"");
-                const share=percentNum(cols[1]);
-                if (!share) continue;
-                parsedData[type].normal.push({share,g1:toNum(cols[3]),g2:toNum(cols[6])});
-                parsedData[type].hard.push({share,g1:toNum(cols[11]),g2:toNum(cols[14])});
-                parsedData[type].nightmare.push({share,g1:toNum(cols[19]),g2:toNum(cols[22])});
+        function parseBlock(lines,startRow,type){
+            for(let r=startRow+3;r<startRow+29;r++){const cols=parseCSVLine(lines[r]||"");const share=percentNum(cols[1]);if(!share)continue;parsedData[type].normal.push({share,g1:toNum(cols[3]),g2:toNum(cols[6])});parsedData[type].hard.push({share,g1:toNum(cols[11]),g2:toNum(cols[14])});parsedData[type].nightmare.push({share,g1:toNum(cols[19]),g2:toNum(cols[22])});}
+        }
+        function parseCathedral(lines){for(let i=0;i<lines.length;i++){if((lines[i]||"").includes("지평의 성당 1~3단계 딜지분 상세")){parseBlock(lines,i+1,"cathedral");return;}}}
+        function parseSerka(lines){for(let i=0;i<lines.length;i++){if((lines[i]||"").includes("세르카 딜지분 상세")){parseBlock(lines,i+1,"serka");return;}}}
+        function parseGato1730(lines){gato1730Bosses.forEach(name=>{parsedData.gato1730[name]=[];});gato1730Layout.forEach(info=>{for(let r=info.startRow+3;r<=info.startRow+28;r++){const cols=parseCSVLine(lines[r]||"");const share=percentNum(cols[info.shareCol]);if(!share)continue;parsedData.gato1730[info.boss].push({share,damage:toNum(cols[info.damageCol])});}});}
+        function parseGato1750(lines){gato1750Bosses.forEach(name=>{parsedData.gato1750[name]=[];});gato1750Layout.forEach(info=>{for(let r=info.startRow+3;r<=info.startRow+28;r++){const cols=parseCSVLine(lines[r]||"");const share=percentNum(cols[info.shareCol]);if(!share)continue;parsedData.gato1750[info.boss].push({share,damage:toNum(cols[info.damageCol])});}});}
+
+        function renderShareCell(share){
+            if(share===30)return`<td class="share-cell"><div class="share-row"><span class="share-label label-30">강투컷</span><span class="share-value">30%</span></div></td>`;
+            if(share===33)return`<td class="share-cell"><div class="share-row"><span class="share-label label-33">1인분</span><span class="share-value">33%</span></div></td>`;
+            if(share===40)return`<td class="share-cell"><div class="share-row"><span class="share-label label-40">잔혈컷</span><span class="share-value">40%</span></div></td>`;
+            return`<td class="share-cell"><div class="share-row"><span class="share-label"></span><span class="share-value">${share}%</span></div></td>`;
+        }
+
+        function renderHead(){document.getElementById("tableHead").innerHTML=`<tr><th>딜지분</th><th>피해/억</th><th>DPS</th></tr>`;}
+        function renderComingSoon(messageTitle,messageDesc){document.getElementById("mainContent").innerHTML=`<div class="coming-soon"><h3>${messageTitle}</h3><p>${messageDesc}</p></div>`;}
+        function ensureTableWrap(){document.getElementById("mainContent").innerHTML=`<div class="table-wrap" id="tableWrap"><table id="dataTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>`;}
+
+        function setClearTimeDisabled(isDisabled){
+            const timeCard=document.getElementById("timeCard");if(!timeCard)return;
+            timeCard.classList.toggle("simple-disabled",isDisabled);
+            const inputs=timeCard.querySelectorAll("input, button");inputs.forEach(el=>{el.disabled=isDisabled;});
+            const sideNote=timeCard.querySelector(".side-note");if(sideNote)sideNote.textContent=isDisabled?"간편보기 상태에서는 비활성화":"시간 변경 시 즉시 반영";
+        }
+
+        // 골드 영역 렌더
+        function goldBarHtml(card) {
+            if (!card.gold) return "";
+            if (card.bindGold) {
+                // 클리어 + 귀속 + 합계
+                return `<div class="simple-goldbar">
+                    <div class="gold-item">
+                        <div class="gold-item-label">
+                            <svg width="10" height="10" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#f2c86b" stroke="#c8860a" stroke-width="1.5"/><text x="9" y="13" text-anchor="middle" font-size="8" font-weight="900" fill="#422700" font-family="Arial">G</text></svg>
+                            <span class="gold-clear-label">클리어 골드</span>
+                        </div>
+                        <div class="gold-item-value gold-clear-value">${card.gold}</div>
+                    </div>
+                    <div class="gold-operator">+</div>
+                    <div class="gold-item">
+                        <div class="gold-item-label">
+                            <svg width="10" height="10" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0c0c0" stroke="#888888" stroke-width="1.5"/><text x="9" y="13" text-anchor="middle" font-size="8" font-weight="900" fill="#333333" font-family="Arial">G</text></svg>
+                            <span class="gold-bind-label">귀속 골드</span>
+                        </div>
+                        <div class="gold-item-value gold-bind-value">${card.bindGold}</div>
+                    </div>
+                    <div class="gold-operator">=</div>
+                    <div class="gold-total">
+                        <div class="gold-total-label">합계</div>
+                        <div class="gold-total-value">${card.total}</div>
+                    </div>
+                </div>`;
+            } else {
+                // 클리어만
+                return `<div class="simple-goldbar">
+                    <div class="gold-item">
+                        <div class="gold-item-label">
+                            <svg width="10" height="10" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#f2c86b" stroke="#c8860a" stroke-width="1.5"/><text x="9" y="13" text-anchor="middle" font-size="8" font-weight="900" fill="#422700" font-family="Arial">G</text></svg>
+                            <span class="gold-clear-label">클리어 골드</span>
+                        </div>
+                        <div class="gold-item-value gold-clear-value">${card.gold}</div>
+                    </div>
+                </div>`;
             }
-        }
-
-        function parseCathedral(lines) {
-            for (let i=0;i<lines.length;i++) {
-                if ((lines[i]||"").includes("지평의 성당 1~3단계 딜지분 상세")) { parseBlock(lines,i+1,"cathedral"); return; }
-            }
-        }
-
-        function parseSerka(lines) {
-            for (let i=0;i<lines.length;i++) {
-                if ((lines[i]||"").includes("세르카 딜지분 상세")) { parseBlock(lines,i+1,"serka"); return; }
-            }
-        }
-
-        function parseGato1730(lines) {
-            gato1730Bosses.forEach(name=>{parsedData.gato1730[name]=[];});
-            gato1730Layout.forEach(info=>{
-                for (let r=info.startRow+3;r<=info.startRow+28;r++) {
-                    const cols=parseCSVLine(lines[r]||"");
-                    const share=percentNum(cols[info.shareCol]);
-                    if (!share) continue;
-                    parsedData.gato1730[info.boss].push({share,damage:toNum(cols[info.damageCol])});
-                }
-            });
-        }
-
-        function parseGato1750(lines) {
-            gato1750Bosses.forEach(name=>{parsedData.gato1750[name]=[];});
-            gato1750Layout.forEach(info=>{
-                for (let r=info.startRow+3;r<=info.startRow+28;r++) {
-                    const cols=parseCSVLine(lines[r]||"");
-                    const share=percentNum(cols[info.shareCol]);
-                    if (!share) continue;
-                    parsedData.gato1750[info.boss].push({share,damage:toNum(cols[info.damageCol])});
-                }
-            });
-        }
-
-        function renderShareCell(share) {
-            if (share===30) return `<td class="share-cell"><div class="share-row"><span class="share-label label-30">강투컷</span><span class="share-value">30%</span></div></td>`;
-            if (share===33) return `<td class="share-cell"><div class="share-row"><span class="share-label label-33">1인분</span><span class="share-value">33%</span></div></td>`;
-            if (share===40) return `<td class="share-cell"><div class="share-row"><span class="share-label label-40">잔혈컷</span><span class="share-value">40%</span></div></td>`;
-            return `<td class="share-cell"><div class="share-row"><span class="share-label"></span><span class="share-value">${share}%</span></div></td>`;
-        }
-
-        function renderHead() {
-            document.getElementById("tableHead").innerHTML=`<tr><th>딜지분</th><th>피해/억</th><th>DPS</th></tr>`;
-        }
-
-        function renderComingSoon(messageTitle, messageDesc) {
-            document.getElementById("mainContent").innerHTML=`<div class="coming-soon"><h3>${messageTitle}</h3><p>${messageDesc}</p></div>`;
-        }
-
-        function ensureTableWrap() {
-            document.getElementById("mainContent").innerHTML=`<div class="table-wrap" id="tableWrap"><table id="dataTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>`;
-        }
-
-        function setClearTimeDisabled(isDisabled) {
-            const timeCard = document.getElementById("timeCard");
-            if (!timeCard) return;
-            timeCard.classList.toggle("simple-disabled", isDisabled);
-            const inputs = timeCard.querySelectorAll("input, button");
-            inputs.forEach(el => { el.disabled = isDisabled; });
-            const sideNote = timeCard.querySelector(".side-note");
-            if (sideNote) sideNote.textContent = isDisabled ? "간편보기 상태에서는 비활성화" : "시간 변경 시 즉시 반영";
         }
 
         function simpleCardHtml(card) {
-            const rowsHtml = card.rows.map(row => {
-                const badgesHtml = (row.badges || []).map(badge => `
-                    <span class="badge ${badge.cls}">${badge.text}</span>
-                `).join("");
-
-                return `
-                    <div class="simple-row">
-                        <div class="simple-dot"></div>
-                        <div class="simple-row-left">
-                            <span class="gate-b">${row.gate}</span>
-                            <span class="boss-b">${row.boss}</span>
-                            <span class="simple-badges">${badgesHtml}</span>
-                        </div>
-                        <span class="range-b">${row.range}</span>
-                    </div>
-                `;
+            const rowsHtml=card.rows.map(row=>{
+                const badgesHtml=(row.badges||[]).map(badge=>`<span class="badge ${badge.cls}">${badge.text}</span>`).join("");
+                const isPreparing=row.range==="준비중";
+                return`<div class="simple-row"><div class="simple-dot"></div><div class="simple-row-left"><span class="gate-b">${row.gate}</span><span class="boss-b">${row.boss}</span><span class="simple-badges">${badgesHtml}</span></div><span class="range-b ${isPreparing?"preparing":""}">${row.range}</span></div>`;
             }).join("");
-
-            return `
-                <article class="simple-card ${card.theme}">
-                    <div class="simple-left">
-                        <div class="simple-node">${card.node}</div>
-                    </div>
-
-                    <div class="simple-right">
-                        <div class="simple-head">
-                            <h3 class="simple-title">${card.title}</h3>
-                        </div>
-
-                        <div class="simple-kind">강투 · 잔혈</div>
-
-                        <div class="simple-rows">
-                            ${rowsHtml}
-                        </div>
-
-                        <div class="simple-goldbar">
-                            <div class="left">
-                                <svg class="coin" viewBox="0 0 64 64" aria-hidden="true">
-                                    <circle cx="32" cy="32" r="28" fill="#f2c95e" stroke="#7f5206" stroke-width="2.5"/>
-                                    <circle cx="24" cy="20" r="10" fill="rgba(255,255,255,.25)"/>
-                                    <text x="50%" y="57%" text-anchor="middle" font-size="28" font-weight="900" fill="#422700" font-family="Arial">G</text>
-                                </svg>
-                                <div>
-                                    <div class="simple-gold-label">클리어 골드</div>
-                                    <div class="simple-gold-value">${card.gold}</div>
-                                </div>
-                            </div>
-                            ${card.goldTag ? `<span class="tag gold">${card.goldTag}</span>` : ``}
-                        </div>
-                    </div>
-                </article>
-            `;
+            return`<article class="simple-card ${card.theme}">
+                <div class="simple-left"><div class="simple-node">${card.node}</div></div>
+                <div class="simple-right">
+                    <div class="simple-head"><h3 class="simple-title">${card.title}</h3><div class="simple-kind">강투 · 잔혈</div></div>
+                    <div class="simple-rows">${rowsHtml}</div>
+                    ${goldBarHtml(card)}
+                </div>
+            </article>`;
         }
 
         function renderSimpleView() {
-            const data = simpleData[currentSimpleLevel];
-            document.getElementById("mainContent").innerHTML = `
+            // 에기르 EX
+            if (currentSimpleLevel === "egir-ex") {
+                const exData = simpleData["egir-ex"];
+                const diffCards = exData.diff[currentExDiff];
+                document.getElementById("mainContent").innerHTML = `
+                    <div class="simple-view">
+                        <div class="simple-intro">
+                            <div class="simple-intro-title"><b>에기르 EX 레이드 💠</b></div>
+                            <div class="simple-intro-sub">${exData.intro}</div>
+                        </div>
+                        <div style="display:flex;gap:8px;margin-bottom:4px;">
+                            <button class="ex-diff-tab ${currentExDiff==="normal"?"active-normal":""}" data-diff="normal">노말 (1720)</button>
+                            <button class="ex-diff-tab ${currentExDiff==="hard"?"active-hard":""}" data-diff="hard">하드 (1750)</button>
+                            <button class="ex-diff-tab ${currentExDiff==="nightmare"?"active-nightmare":""}" data-diff="nightmare">나이트메어 (1770)</button>
+                        </div>
+                        <div class="simple-stack">${diffCards.cards.map(simpleCardHtml).join("")}</div>
+                    </div>`;
+                document.querySelectorAll(".ex-diff-tab").forEach(btn=>{
+                    btn.addEventListener("click",()=>{currentExDiff=btn.dataset.diff;renderSimpleView();});
+                });
+                return;
+            }
+
+            const data=simpleData[currentSimpleLevel];
+            if (!data) { document.getElementById("mainContent").innerHTML=`<div class="coming-soon"><h3>준비중</h3><p>데이터 준비중입니다.</p></div>`; return; }
+            document.getElementById("mainContent").innerHTML=`
                 <div class="simple-view">
                     <div class="simple-intro">
                         <div class="simple-intro-title"><b>안내 : 잔혈컷 간편보기 페이지 입니다. 😎</b></div>
                         <div class="simple-intro-sub">${data.intro}</div>
                     </div>
-                    <div class="simple-stack">
-                        ${data.cards.map(simpleCardHtml).join("")}
-                    </div>
-                </div>
-            `;
+                    <div class="simple-stack">${data.cards.length>0?data.cards.map(simpleCardHtml).join(""):"<div class='coming-soon'><h3>준비중</h3><p>곧 업데이트 예정입니다.</p></div>"}</div>
+                </div>`;
         }
 
         function getCurrentRowsForPartyDps() {
-            if (currentMenu==="simple") return [];
-            if (currentMenu==="gato1730") return parsedData.gato1730[currentGatoBoss]||[];
-            if (currentMenu==="gato1750") { if(!isGato1750Available(currentGato1750Boss)) return []; return parsedData.gato1750[currentGato1750Boss]||[]; }
-            const meta=raidMeta[currentMenu][currentCombo];
-            return parsedData[currentMenu]?.[meta.diffKey]||[];
+            if(currentMenu==="simple")return[];
+            if(currentMenu==="gato1730")return parsedData.gato1730[currentGatoBoss]||[];
+            if(currentMenu==="gato1750"){if(!isGato1750Available(currentGato1750Boss))return[];return parsedData.gato1750[currentGato1750Boss]||[];}
+            const meta=raidMeta[currentMenu][currentCombo];return parsedData[currentMenu]?.[meta.diffKey]||[];
         }
 
-        function getDamageFromRow(row) {
-            if (!row) return 0;
-            if (currentMenu==="gato1730"||currentMenu==="gato1750") return row.damage||0;
-            const meta=raidMeta[currentMenu][currentCombo];
-            return meta.gateKey==="gate1"?(row.g1||0):(row.g2||0);
+        function getDamageFromRow(row){if(!row)return 0;if(currentMenu==="gato1730"||currentMenu==="gato1750")return row.damage||0;const meta=raidMeta[currentMenu][currentCombo];return meta.gateKey==="gate1"?(row.g1||0):(row.g2||0);}
+
+        function getPartyDpsValue(){
+            const rows=getCurrentRowsForPartyDps();if(!rows.length)return null;
+            const preferredShares=[33,30,40];let baseRow=null;
+            for(const share of preferredShares){baseRow=rows.find(row=>row.share===share&&getDamageFromRow(row)>0);if(baseRow)break;}
+            if(!baseRow)baseRow=rows.find(row=>getDamageFromRow(row)>0)||null;if(!baseRow)return null;
+            const damage=getDamageFromRow(baseRow);const shareRate=(baseRow.share||0)/100;if(!damage||!shareRate)return null;
+            return(damage/shareRate)/getTotalSeconds();
         }
 
-        function getPartyDpsValue() {
-            const rows=getCurrentRowsForPartyDps();
-            if (!rows.length) return null;
-            const preferredShares=[33,30,40];
-            let baseRow=null;
-            for (const share of preferredShares) {
-                baseRow=rows.find(row=>row.share===share&&getDamageFromRow(row)>0);
-                if (baseRow) break;
-            }
-            if (!baseRow) baseRow=rows.find(row=>getDamageFromRow(row)>0)||null;
-            if (!baseRow) return null;
-            const damage=getDamageFromRow(baseRow);
-            const shareRate=(baseRow.share||0)/100;
-            if (!damage||!shareRate) return null;
-            return (damage/shareRate)/getTotalSeconds();
-        }
-
-        function updatePartyDpsDisplay() {
+        function updatePartyDpsDisplay(){
             const el=document.getElementById("partyDpsDisplay");
-            if (currentMenu==="simple") {
-                el.innerHTML=`파티 DPS : <span class="party-dps-value">-</span>`;
-                return;
-            }
-            if (currentMenu==="gato1750"&&!isGato1750Available(currentGato1750Boss)) {
-                el.innerHTML=`파티 DPS : <span class="party-dps-value">-</span>`;
-                return;
-            }
-            const partyDps=getPartyDpsValue();
-            if (partyDps===null) { el.innerHTML=`파티 DPS : <span class="party-dps-value">-</span>`; return; }
+            if(currentMenu==="simple"){el.innerHTML=`파티 DPS : <span class="party-dps-value">-</span>`;return;}
+            if(currentMenu==="gato1750"&&!isGato1750Available(currentGato1750Boss)){el.innerHTML=`파티 DPS : <span class="party-dps-value">-</span>`;return;}
+            const partyDps=getPartyDpsValue();if(partyDps===null){el.innerHTML=`파티 DPS : <span class="party-dps-value">-</span>`;return;}
             el.innerHTML=`파티 DPS : <span class="party-dps-value">${fmtPartyDps(partyDps)}</span>`;
         }
 
@@ -2087,242 +1010,135 @@
             document.getElementById("tableTitle").textContent=getTableTitle();
             renderTitleMeta();
 
-            if (currentMenu === "simple") {
+            if(currentMenu==="simple"){
                 setClearTimeDisabled(true);
-                document.getElementById("infoHint").innerHTML = "<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>";
-                document.getElementById("partyDpsDisplay").innerHTML = `파티 DPS : <span class="party-dps-value">-</span>`;
-                renderSimpleView();
-                return;
+                document.getElementById("infoHint").innerHTML="<i>해당 레벨대에 입장할수있는 레이드를 나열하였습니다.</i>";
+                document.getElementById("partyDpsDisplay").innerHTML=`파티 DPS : <span class="party-dps-value">-</span>`;
+                renderSimpleView();return;
             }
 
             setClearTimeDisabled(false);
 
-            if (currentMenu==="gato1750"&&!isGato1750Available(currentGato1750Boss)) {
-                renderComingSoon(`${currentGato1750Boss} 준비중`,`해당 보스의 잔영 2단계 데이터는 아직 준비중입니다.<br>현재는 스콜라키아, 크라티오스, 아게오로스, 드렉탈라스가 우선 공개되어 있습니다.`);
-                document.getElementById("infoHint").innerHTML="1750 가디언 토벌은 일부 보스만 공개되었습니다.<br>준비중 보스는 순차적으로 반영됩니다.";
-                updatePartyDpsDisplay();
-                return;
+            if(currentMenu==="gato1750"&&!isGato1750Available(currentGato1750Boss)){
+                renderComingSoon(`${currentGato1750Boss} 준비중`,`해당 보스의 잔영 2단계 데이터는 아직 준비중입니다.`);
+                document.getElementById("infoHint").innerHTML="1750 가디언 토벌은 일부 보스만 공개되었습니다.";
+                updatePartyDpsDisplay();return;
             }
 
-            ensureTableWrap();
-            renderHead();
+            ensureTableWrap();renderHead();
             document.getElementById("infoHint").innerHTML="구글 시트 데이터를 읽어 옵니다.";
-
             const body=document.getElementById("tableBody");
             const totalSeconds=getTotalSeconds();
 
-            if (currentMenu==="gato1730") {
+            if(currentMenu==="gato1730"){
                 const rows=parsedData.gato1730[currentGatoBoss]||[];
-                if (!rows.length) { body.innerHTML=`<tr><td colspan="3">데이터 없음</td></tr>`; updatePartyDpsDisplay(); return; }
-                body.innerHTML=rows.map(row=>{
-                    let cls=""; if(row.share===30)cls="row-30"; if(row.share===33)cls="row-33"; if(row.share===40)cls="row-40";
-                    return `<tr class="${cls}">${renderShareCell(row.share)}<td>${fmt(row.damage)}</td><td class="dps-cell">${(row.damage/totalSeconds).toFixed(1)}</td></tr>`;
-                }).join("");
-                updatePartyDpsDisplay(); return;
+                if(!rows.length){body.innerHTML=`<tr><td colspan="3">데이터 없음</td></tr>`;updatePartyDpsDisplay();return;}
+                body.innerHTML=rows.map(row=>{let cls="";if(row.share===30)cls="row-30";if(row.share===33)cls="row-33";if(row.share===40)cls="row-40";return`<tr class="${cls}">${renderShareCell(row.share)}<td>${fmt(row.damage)}</td><td class="dps-cell">${(row.damage/totalSeconds).toFixed(1)}</td></tr>`;}).join("");
+                updatePartyDpsDisplay();return;
             }
 
-            if (currentMenu==="gato1750") {
+            if(currentMenu==="gato1750"){
                 const rows=parsedData.gato1750[currentGato1750Boss]||[];
-                if (!rows.length) { body.innerHTML=`<tr><td colspan="3">데이터 없음</td></tr>`; updatePartyDpsDisplay(); return; }
-                body.innerHTML=rows.map(row=>{
-                    let cls=""; if(row.share===30)cls="row-30"; if(row.share===33)cls="row-33"; if(row.share===40)cls="row-40";
-                    return `<tr class="${cls}">${renderShareCell(row.share)}<td>${fmt(row.damage)}</td><td class="dps-cell">${(row.damage/totalSeconds).toFixed(1)}</td></tr>`;
-                }).join("");
-                updatePartyDpsDisplay(); return;
+                if(!rows.length){body.innerHTML=`<tr><td colspan="3">데이터 없음</td></tr>`;updatePartyDpsDisplay();return;}
+                body.innerHTML=rows.map(row=>{let cls="";if(row.share===30)cls="row-30";if(row.share===33)cls="row-33";if(row.share===40)cls="row-40";return`<tr class="${cls}">${renderShareCell(row.share)}<td>${fmt(row.damage)}</td><td class="dps-cell">${(row.damage/totalSeconds).toFixed(1)}</td></tr>`;}).join("");
+                updatePartyDpsDisplay();return;
             }
 
             const meta=raidMeta[currentMenu][currentCombo];
             const rows=parsedData[currentMenu]?.[meta.diffKey]||[];
-            if (!rows.length) { body.innerHTML=`<tr><td colspan="3">데이터 없음</td></tr>`; updatePartyDpsDisplay(); return; }
-
-            body.innerHTML=rows.map(row=>{
-                let cls=""; if(row.share===30)cls="row-30"; if(row.share===33)cls="row-33"; if(row.share===40)cls="row-40";
-                const damage=meta.gateKey==="gate1"?row.g1:row.g2;
-                return `<tr class="${cls}">${renderShareCell(row.share)}<td>${fmt(damage)}</td><td class="dps-cell">${(damage/totalSeconds).toFixed(1)}</td></tr>`;
-            }).join("");
-
+            if(!rows.length){body.innerHTML=`<tr><td colspan="3">데이터 없음</td></tr>`;updatePartyDpsDisplay();return;}
+            body.innerHTML=rows.map(row=>{let cls="";if(row.share===30)cls="row-30";if(row.share===33)cls="row-33";if(row.share===40)cls="row-40";const damage=meta.gateKey==="gate1"?row.g1:row.g2;return`<tr class="${cls}">${renderShareCell(row.share)}<td>${fmt(damage)}</td><td class="dps-cell">${(damage/totalSeconds).toFixed(1)}</td></tr>`;}).join("");
             updatePartyDpsDisplay();
         }
 
-        async function loadCSV() {
+        async function loadCSV(){
             document.getElementById("status").textContent="시트 불러오는 중...";
-            try {
-                const res=await fetch(CSV_URL);
-                const text=await res.text();
-                const lines=text.split(/\r?\n/);
-                clearAllData();
-                parseCathedral(lines);
-                parseSerka(lines);
-                parseGato1730(lines);
-                parseGato1750(lines);
-                renderTabs();
-                renderTable();
-                document.getElementById("status").textContent="연동 완료";
-            } catch(e) {
-                console.error(e);
-                document.getElementById("status").textContent="불러오기 실패";
-            }
+            try{
+                const res=await fetch(CSV_URL);const text=await res.text();const lines=text.split(/\r?\n/);
+                clearAllData();parseCathedral(lines);parseSerka(lines);parseGato1730(lines);parseGato1750(lines);
+                renderTabs();renderTable();document.getElementById("status").textContent="연동 완료";
+            }catch(e){console.error(e);document.getElementById("status").textContent="불러오기 실패";}
         }
 
-        function changeTimeValue(targetId, delta) {
-            if (currentMenu === "simple") return;
-            const input=document.getElementById(targetId);
-            let value=parseInt(input.value||0,10);
-            if (isNaN(value)) value=0;
-            value+=delta;
-            if (targetId==="minutes") value=Math.max(0,value);
-            if (targetId==="seconds") value=Math.max(0,Math.min(59,value));
-            input.value=value;
-            renderTable();
-        }
-      
-
-        function initCalendar() {
-            const now=new Date(); calYear=now.getFullYear(); calMonth=now.getMonth(); renderCalendar();
+        function changeTimeValue(targetId,delta){
+            if(currentMenu==="simple")return;
+            const input=document.getElementById(targetId);let value=parseInt(input.value||0,10);if(isNaN(value))value=0;value+=delta;
+            if(targetId==="minutes")value=Math.max(0,value);if(targetId==="seconds")value=Math.max(0,Math.min(59,value));
+            input.value=value;renderTable();
         }
 
-        function renderCalendar() {
-            const now=new Date(), todayY=now.getFullYear(), todayM=now.getMonth(), todayD=now.getDate();
+        function initCalendar(){const now=new Date();calYear=now.getFullYear();calMonth=now.getMonth();renderCalendar();}
+        function renderCalendar(){
+            const now=new Date(),todayY=now.getFullYear(),todayM=now.getMonth(),todayD=now.getDate();
             const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
             document.getElementById("calMonth").textContent=`${monthNames[calMonth]} ${calYear}`;
             const grid=document.getElementById("calGrid");
             const dows=["Su","Mo","Tu","We","Th","Fr","Sa"];
             let html=dows.map((d,i)=>`<div class="cal-dow ${i===0?"sun":i===6?"sat":""}">${d}</div>`).join("");
-            const firstDay=new Date(calYear,calMonth,1).getDay();
-            const lastDate=new Date(calYear,calMonth+1,0).getDate();
-            const prevLast=new Date(calYear,calMonth,0).getDate();
-            for (let i=0;i<firstDay;i++) {
-                const d=prevLast-firstDay+1+i, dow=i;
-                html+=`<div class="cal-day other-month ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
-            }
-            for (let d=1;d<=lastDate;d++) {
-                const dow=(firstDay+d-1)%7;
-                const isToday=(d===todayD&&calMonth===todayM&&calYear===todayY);
-                html+=`<div class="cal-day ${isToday?"today":""} ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
-            }
-            const total=firstDay+lastDate, remain=total%7===0?0:7-(total%7);
-            for (let d=1;d<=remain;d++) {
-                const dow=(total+d-1)%7;
-                html+=`<div class="cal-day other-month ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;
-            }
+            const firstDay=new Date(calYear,calMonth,1).getDay();const lastDate=new Date(calYear,calMonth+1,0).getDate();const prevLast=new Date(calYear,calMonth,0).getDate();
+            for(let i=0;i<firstDay;i++){const d=prevLast-firstDay+1+i,dow=i;html+=`<div class="cal-day other-month ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;}
+            for(let d=1;d<=lastDate;d++){const dow=(firstDay+d-1)%7;const isToday=(d===todayD&&calMonth===todayM&&calYear===todayY);html+=`<div class="cal-day ${isToday?"today":""} ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;}
+            const total=firstDay+lastDate,remain=total%7===0?0:7-(total%7);
+            for(let d=1;d<=remain;d++){const dow=(total+d-1)%7;html+=`<div class="cal-day other-month ${dow===0?"sun":dow===6?"sat":""}">${d}</div>`;}
             grid.innerHTML=html;
         }
-
-        document.getElementById("calPrev").addEventListener("click",()=>{ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); });
-        document.getElementById("calNext").addEventListener("click",()=>{ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); });
+        document.getElementById("calPrev").addEventListener("click",()=>{calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();});
+        document.getElementById("calNext").addEventListener("click",()=>{calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();});
 
         document.querySelectorAll(".menu-item").forEach(btn=>{
             btn.addEventListener("click",()=>{
                 document.querySelectorAll(".menu-item").forEach(b=>b.classList.remove("active"));
-                btn.classList.add("active");
-                currentMenu=btn.dataset.menu;
-
-                if (currentMenu==="serka") {
-                    currentCombo="hard_gate1";
-                    trackEvent("/이벤트/메뉴/세르카","메뉴 클릭 - 세르카");
-                } else if (currentMenu==="cathedral") {
-                    currentCombo="hard_gate1";
-                    trackEvent("/이벤트/메뉴/성당","메뉴 클릭 - 성당");
-                } else if (currentMenu==="gato1730") {
-                    currentGatoBoss="루멘칼리고";
-                    trackEvent("/이벤트/메뉴/1730가토","메뉴 클릭 - 1730 가토");
-                } else if (currentMenu==="gato1750") {
-                    currentGato1750Boss="스콜라키아";
-                    trackEvent("/이벤트/메뉴/1750가토","메뉴 클릭 - 1750 가토");
-                } else if (currentMenu==="simple") {
-                    currentSimpleLevel="1710";
-                    trackEvent("/이벤트/메뉴/잔혈컷간편보기","메뉴 클릭 - 잔혈컷 간편보기");
-                }
-
-                setBaseTimeByMenu(currentMenu);
-                renderTabs();
-                renderTable();
+                btn.classList.add("active");currentMenu=btn.dataset.menu;
+                if(currentMenu==="serka"){currentCombo="hard_gate1";trackEvent("/이벤트/메뉴/세르카","메뉴 클릭 - 세르카");}
+                else if(currentMenu==="cathedral"){currentCombo="hard_gate1";trackEvent("/이벤트/메뉴/성당","메뉴 클릭 - 성당");}
+                else if(currentMenu==="gato1730"){currentGatoBoss="루멘칼리고";trackEvent("/이벤트/메뉴/1730가토","메뉴 클릭 - 1730 가토");}
+                else if(currentMenu==="gato1750"){currentGato1750Boss="스콜라키아";trackEvent("/이벤트/메뉴/1750가토","메뉴 클릭 - 1750 가토");}
+                else if(currentMenu==="simple"){currentSimpleLevel="1710";trackEvent("/이벤트/메뉴/잔혈컷간편보기","메뉴 클릭 - 잔혈컷 간편보기");}
+                setBaseTimeByMenu(currentMenu);renderTabs();renderTable();
             });
         });
 
-        document.querySelectorAll(".time-step-btn").forEach(btn=>{
-            btn.addEventListener("click",()=>{
-                changeTimeValue(btn.dataset.stepTarget, parseInt(btn.dataset.step,10));
-            });
-        });
+        document.querySelectorAll(".time-step-btn").forEach(btn=>{btn.addEventListener("click",()=>{changeTimeValue(btn.dataset.stepTarget,parseInt(btn.dataset.step,10));});});
+        document.getElementById("minutes").addEventListener("input",()=>{if(currentMenu!=="simple")renderTable();});
+        document.getElementById("seconds").addEventListener("input",()=>{if(currentMenu!=="simple")renderTable();});
 
-        document.getElementById("minutes").addEventListener("input",()=>{ if(currentMenu!=="simple") renderTable(); });
-        document.getElementById("seconds").addEventListener("input",()=>{ if(currentMenu!=="simple") renderTable(); });
-
-        const guideModal  = document.getElementById("guideModal");
-        const openGuideBtn  = document.getElementById("openGuideBtn");
-        const closeGuideBtn = document.getElementById("closeGuideBtn");
-
-        function openGuideModal()  { guideModal.classList.add("show"); document.body.style.overflow="hidden"; }
-        function closeGuideModal() { guideModal.classList.remove("show"); document.body.style.overflow=""; }
-
-        openGuideBtn.addEventListener("click",()=>{ trackEvent("/이벤트/가이드/DPS보는방법","가이드 클릭 - DPS 보는 방법"); openGuideModal(); });
+        const guideModal=document.getElementById("guideModal");
+        const openGuideBtn=document.getElementById("openGuideBtn");
+        const closeGuideBtn=document.getElementById("closeGuideBtn");
+        function openGuideModal(){guideModal.classList.add("show");document.body.style.overflow="hidden";}
+        function closeGuideModal(){guideModal.classList.remove("show");document.body.style.overflow="";}
+        openGuideBtn.addEventListener("click",()=>{trackEvent("/이벤트/가이드/DPS보는방법","가이드 클릭 - DPS 보는 방법");openGuideModal();});
         closeGuideBtn.addEventListener("click",closeGuideModal);
-        guideModal.addEventListener("click",e=>{ if(e.target===guideModal) closeGuideModal(); });
-        document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&guideModal.classList.contains("show")) closeGuideModal(); });
+        guideModal.addEventListener("click",e=>{if(e.target===guideModal)closeGuideModal();});
+        document.addEventListener("keydown",e=>{if(e.key==="Escape"&&guideModal.classList.contains("show"))closeGuideModal();});
 
-        updateTopDateTime();
-        setInterval(updateTopDateTime, 1000);
-        setBaseTimeByMenu("serka");
-        applyMenuFromQuery();
-        initCalendar();
-        loadCSV();
+        updateTopDateTime();setInterval(updateTopDateTime,1000);
+        setBaseTimeByMenu("simple");applyMenuFromQuery();initCalendar();loadCSV();
 
-        // ===== 경매 계산기 =====
-        function acFmt(n) { return Math.round(n).toLocaleString("ko-KR"); }
-        function calcBreakeven(price, members) { return price * 0.95 * (members - 1) / members; }
-        function calcRecommend(be, rate) { return be / (1 + rate); }
-
-        function acUpdate() {
-          const raw = (document.getElementById("ac-price").value||"").replace(/,/g,"");
-          const price = parseInt(raw) || 0;
-          if (!price) {
-            document.getElementById("ac-be").textContent = "-";
-            document.getElementById("ac-be-desc").textContent = "거래소 가격을 입력하세요";
-            [5,10].forEach(r => {
-              document.getElementById(`ac-v${r}`).textContent = "-";
-              document.getElementById(`ac-d${r}`).textContent = "가격 입력 시 표시";
-              document.getElementById(`ac-bar${r}`).style.width = "0%";
-            });
-            return;
-          }
-          const be = calcBreakeven(price, acMembers);
-          document.getElementById("ac-be").textContent = acFmt(be);
-          document.getElementById("ac-be-desc").textContent = "이 금액 이하로 입찰하면 이득";
-          const rec5 = calcRecommend(be, 0.05);
-          const rec10 = calcRecommend(be, 0.10);
-          document.getElementById("ac-v5").textContent = acFmt(rec5);
-          document.getElementById("ac-d5").textContent = `${acFmt(rec5)} 입찰 시 ${acFmt(be - rec5)} 이득`;
-          document.getElementById("ac-bar5").style.width = "60%";
-          document.getElementById("ac-v10").textContent = acFmt(rec10);
-          document.getElementById("ac-d10").textContent = `${acFmt(rec10)} 입찰 시 ${acFmt(be - rec10)} 이득`;
-          document.getElementById("ac-bar10").style.width = "100%";
+        // 경매 계산기
+        function acFmt(n){return Math.round(n).toLocaleString("ko-KR");}
+        function calcBreakeven(price,members){return price*0.95*(members-1)/members;}
+        function calcRecommend(be,rate){return be/(1+rate);}
+        function acUpdate(){
+            const raw=(document.getElementById("ac-price").value||"").replace(/,/g,"");const price=parseInt(raw)||0;
+            if(!price){document.getElementById("ac-be").textContent="-";document.getElementById("ac-be-desc").textContent="거래소 가격을 입력하세요";[5,10].forEach(r=>{document.getElementById(`ac-v${r}`).textContent="-";document.getElementById(`ac-d${r}`).textContent="가격 입력 시 표시";document.getElementById(`ac-bar${r}`).style.width="0%";});return;}
+            const be=calcBreakeven(price,acMembers);
+            document.getElementById("ac-be").textContent=acFmt(be);document.getElementById("ac-be-desc").textContent="이 금액 이하로 입찰하면 이득";
+            const rec5=calcRecommend(be,0.05),rec10=calcRecommend(be,0.10);
+            document.getElementById("ac-v5").textContent=acFmt(rec5);document.getElementById("ac-d5").textContent=`${acFmt(rec5)} 입찰 시 ${acFmt(be-rec5)} 이득`;document.getElementById("ac-bar5").style.width="60%";
+            document.getElementById("ac-v10").textContent=acFmt(rec10);document.getElementById("ac-d10").textContent=`${acFmt(rec10)} 입찰 시 ${acFmt(be-rec10)} 이득`;document.getElementById("ac-bar10").style.width="100%";
         }
-
-        document.querySelectorAll(".ac-toggle-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            document.querySelectorAll(".ac-toggle-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            acMembers = parseInt(btn.dataset.m);
-            acUpdate();
-          });
-        });
-
-        document.getElementById("ac-price").addEventListener("input", e => {
-          let v = e.target.value.replace(/,/g,"").replace(/[^0-9]/g,"");
-          e.target.value = v ? Number(v).toLocaleString("ko-KR") : "";
-          acUpdate();
-        });
-
+        document.querySelectorAll(".ac-toggle-btn").forEach(btn=>{btn.addEventListener("click",()=>{document.querySelectorAll(".ac-toggle-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");acMembers=parseInt(btn.dataset.m);acUpdate();});});
+        document.getElementById("ac-price").addEventListener("input",e=>{let v=e.target.value.replace(/,/g,"").replace(/[^0-9]/g,"");e.target.value=v?Number(v).toLocaleString("ko-KR"):"";acUpdate();});
         acUpdate();
     </script>
 
     <div class="footer-loiter">
-      <p>
-        © 2026 LOITER BASE · All Rights Reserved.<br>
-        Not associated with Smilegate RPG & Smilegate Stove.<br>
-        Data based on Google Sheets · Powered by Supabase · GitHub Pages · GoatCounter
-      </p>
+        <p>
+            © 2026 LOITER BASE · All Rights Reserved.<br>
+            Not associated with Smilegate RPG &amp; Smilegate Stove.<br>
+            Data based on Google Sheets · Powered by Supabase · GitHub Pages · GoatCounter
+        </p>
     </div>
 </body>
 </html>
