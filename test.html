@@ -66,6 +66,11 @@
     height: 18px;
 }
 
+@keyframes textShimmer {
+    0%   { background-position: 250% center; }
+    100% { background-position: 0% center; }
+}
+
 
         /* 간편보기 EX 탭 행 */
         .simple-ex-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:0; }
@@ -215,7 +220,7 @@
         .simple-badges{display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
         .simple-badges .badge{height:20px;padding:0 7px;font-size:10px;line-height:18px;}
         .simple-row .range-b{font-size:16px;font-weight:1000;color:#ffe6a8;white-space:nowrap;letter-spacing:.2px;}
-        .simple-row .range-b.preparing{color:#5a6a82;font-size:13px;font-style:italic;}
+        .simple-row .range-b.preparing { color:#ffe6a8; font-size:16px; font-style:italic; }
 
         /* 골드 영역 새 디자인 */
         .simple-goldbar{display:flex;align-items:center;gap:14px;padding:10px 11px;border-radius:14px;background:linear-gradient(135deg,rgba(255,232,160,.10),rgba(255,255,255,.03));border:1px solid rgba(255,232,160,.16);flex-wrap:wrap;}
@@ -292,7 +297,7 @@
                     <a href="#" class="active">DPS 계산기</a>
                     <a href="./tournament.html">직각 토너먼트</a>
                 </div>
-                <div class="mini-label">LOITER BASE · v21.2</div>
+                <div class="mini-label">LOITER BASE · v22</div>
                 <div class="hero">로아<br>DPS 계산기</div>
                 <div class="muted">전분으로 세르카, 성당, 가디언 토벌의 딜지분과 DPS를 확인할수 있습니다.</div>
                 <div class="guide-trigger-wrap">
@@ -306,7 +311,7 @@
                 <div class="sidebar-divider"></div>
                 <div class="menu">
                     <button class="menu-item" data-menu="serka">🟢 세르카 딜지분 보기</button>
-                    <button class="menu-item" data-menu="cathedral">🟢 성당 딜지분 보기</button>
+                    <button class="menu-item" data-menu="cathedral">🟢 성당 딜지분 보기 <span style="font-size:10px; background:rgba(255,196,90,0.20); color:#ffd48a; border:1px solid rgba(255,196,90,0.30); border-radius:999px; padding:2px 7px; font-weight:900; margin-left:4px;">04/22 적용</span></button>
                     <button class="menu-item" data-menu="gato1730">🟢 1730 가토 딜지분</button>
                     <button class="menu-item" data-menu="gato1750">🟢 1750 가토 딜지분</button>
                 </div>
@@ -477,17 +482,17 @@
     cards: [
         {
             theme:"b-green", title:"에기르 EX 노말", node:"1720",
-            rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
+            rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"2200 - 2900", dpscut:"1.72억 - 2.28억"}],
             gold:"20,000", bindGold:"", total:""
         },
         {
             theme:"b-gold", title:"에기르 EX 하드", node:"1750",
-            rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
+            rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"4400 - 5850", dpscut:"3.50억 - 4.65억"}],
             gold:"45,000", bindGold:"", total:""
         },
         {
             theme:"b-purple", title:"에기르 EX 나이트메어", node:"1770",
-            rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"준비중"}],
+            rows:[{gate:"1관", boss:"에기르", badges:[{text:"고대",cls:"type-ancient"}], range:"7900 - 10500", dpscut:"6.27억 - 8.33억"}],
             gold:"45,000", bindGold:"", total:""
         }
     ]
@@ -524,10 +529,10 @@
                     {
                         theme:"b-gray", title:"성당 1단계", node:"1700",
                         rows:[
-                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"995 - 1325"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"940 - 1250"}
+                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"994 - 1326"},
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"937 - 1250"}
                         ],
-                        gold:"0", bindGold:"30,000", total:"30,000"
+                        gold:"", bindGold:"30,000", total:""
                     }
                 ]
             },
@@ -546,10 +551,10 @@
                     {
                         theme:"b-gold", title:"성당 2단계", node:"1720",
                         rows:[
-                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2370 - 3160"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2300 - 3060"}
+                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2161 - 2882"},
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2089 - 2786"}
                         ],
-                        gold:"0", bindGold:"40,000", total:"40,000"
+                        gold:"", bindGold:"40,000", total:""
                     },
                     {
                         theme:"b-green", title:"종막 노말", node:"1710",
@@ -600,10 +605,10 @@
                     {
                         theme:"b-gray", title:"성당 2단계", node:"1720",
                         rows:[
-                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2370 - 3160"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2300 - 3060"}
+                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2161 - 2882"},
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2089 - 2786"}
                         ],
-                        gold:"0", bindGold:"40,000", total:"40,000"
+                        gold:"", bindGold:"40,000", total:""
                     }
                 ]
             },
@@ -638,10 +643,10 @@
                     {
                         theme:"b-gray", title:"성당 2단계", node:"1720",
                         rows:[
-                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2370 - 3160"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2300 - 3060"}
+                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2161 - 2882"},
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"2089 - 2786"}
                         ],
-                        gold:"0", bindGold:"40,000", total:"40,000"
+                        gold:"", bindGold:"40,000", total:""
                     }
                 ]
             },
@@ -668,10 +673,10 @@
                     {
                         theme:"b-orange", title:"성당 3단계", node:"1750",
                         rows:[
-                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"3840 - 5120"},
-                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"3780 - 5040"}
+                            {gate:"1관", boss:"대주교", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"3650 - 4866"},
+                            {gate:"2관", boss:"광신의 인도자", badges:[{text:"인간",cls:"type-human"},{text:"암속성 취약",cls:"attr-dark"}], range:"3594 - 4792"}
                         ],
-                        gold:"0", bindGold:"50,000", total:"50,000"
+                        gold:"", bindGold:"50,000", total:""
                     },
                     {
                         theme:"b-gray", title:"4막 하드", node:"1720",
@@ -687,7 +692,7 @@
 
         const gato1730Bosses = ["루멘칼리고","가르가디스","스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
         const gato1750Bosses = ["루멘칼리고","가르가디스","스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
-        const gato1750AvailableBosses = ["스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨"];
+        const gato1750AvailableBosses = ["스콜라키아","크라티오스","아게오로스","드렉탈라스","소나벨","베스칼"];
         const gato1730Layout = [
             {boss:"루멘칼리고",startRow:66,shareCol:1,damageCol:3},{boss:"가르가디스",startRow:66,shareCol:9,damageCol:11},
             {boss:"스콜라키아",startRow:66,shareCol:17,damageCol:19},{boss:"크라티오스",startRow:98,shareCol:1,damageCol:3},
@@ -766,7 +771,7 @@
         }
 
         function getContentName() {
-            if(currentMenu==="simple")return currentSimpleLevel==="egir-ex"?"에기르 EX 레이드 🚧 공사중 🚧":"잔혈컷 간편보기 👀";
+            if(currentMenu==="simple")return currentSimpleLevel==="egir-ex"?"에기르 EX 레이드 💠":"잔혈컷 간편보기 👀";
             if(currentMenu==="serka"||currentMenu==="cathedral"){const meta=raidMeta[currentMenu][currentCombo];const menuName=currentMenu==="serka"?"세르카":"성당";return`${menuName} : ${meta.title.replace(/\s*\(.+\)/,"")} ${meta.gateName}`;}
             if(currentMenu==="gato1730")return`1730 가디언 토벌 : ${currentGatoBoss}`;
             if(currentMenu==="gato1750")return`1750 가디언 토벌 : ${currentGato1750Boss}`;
@@ -774,7 +779,7 @@
         }
 
         function getTableTitle() {
-            if(currentMenu==="simple"){if(currentSimpleLevel==="egir-ex")return"에기르 EX · 노말/하드/나이트메어";return simpleData[currentSimpleLevel]?.sectionTitle||"잔혈컷 간편보기";}
+            if(currentMenu==="simple"){if(currentSimpleLevel==="egir-ex")return"DPS컷은 딱클 정도의 수치로 표기되었습니다.";return simpleData[currentSimpleLevel]?.sectionTitle||"잔혈컷 간편보기";}
             if(currentMenu==="serka"||currentMenu==="cathedral"){const meta=raidMeta[currentMenu][currentCombo];const levelMatch=meta.title.match(/\((\d+)\)/);const level=levelMatch?levelMatch[1]:"-";return`입장레벨 : ${level}`;}
             if(currentMenu==="gato1730")return"잔영 1단계";
             if(currentMenu==="gato1750")return"잔영 2단계";
@@ -891,7 +896,81 @@
 
       // 골드 영역 렌더
 function goldBarHtml(card) {
-    if (!card.gold) return "";
+    if (!card.gold && !card.bindGold) return "";
+    if (card.bindGold && card.gold) {
+    // 클리어 + 귀속 + 합계
+} else if (card.bindGold && !card.gold) {
+    // 귀속만
+    return `<div class="simple-goldbar">
+        <div class="gold-item">
+            <div class="gold-item-label">
+                <svg width="10" height="10" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0c0c0" stroke="#888888" stroke-width="1.5"/><text x="9" y="13" text-anchor="middle" font-size="8" font-weight="900" fill="#333333" font-family="Arial">G</text></svg>
+                <span class="gold-bind-label">귀속 골드</span>
+            </div>
+            <div class="gold-item-value gold-bind-value">${card.bindGold}</div>
+        </div>
+    </div>`;
+} else {
+    // 클리어만
+}
+
+function bossInfoHtml() {
+    return `
+    <div style="margin-top:12px;">
+      <div style="background:rgba(255,196,90,0.08);border:1px solid rgba(255,196,90,0.22);border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span>⚠️</span>
+        <span style="font-size:12px;color:#ffd48a;font-weight:700;">보스 체력정보 / 에스더 데미지는 직접 수작업으로 체크한 부분이라 정확하지 않을 수 있습니다.</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+        ${["나이트메어","하드","노말"].map((diff,i)=>{
+          const hp=[["4,943억","360억","716억","6,020억"],["2,755억","203억","399억","3,357억"],["1,352억","99억","195억","1,648억"]][i];
+          const total=[251,251,251];
+          const base=[160,163,163];
+          const shield=[60,61,61];
+          const zero=[31,27,27];
+          const bo=base[i], sh=shield[i], ze=zero[i];
+          return `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px;">
+            <div style="font-size:12px;color:#9fb0c7;margin-bottom:10px;font-weight:900;">${diff}</div>
+            <svg viewBox="0 0 100 100" width="80" height="80" style="display:block;margin:0 auto 10px;">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12"/>
+              <circle cx="50" cy="50" r="40" fill="none" stroke="#8F7FDD" stroke-width="12" stroke-dasharray="${bo} 251" stroke-dashoffset="63" stroke-linecap="round"/>
+              <circle cx="50" cy="50" r="40" fill="none" stroke="#5DCAA5" stroke-width="12" stroke-dasharray="${sh} 251" stroke-dashoffset="${-(bo-1)}" stroke-linecap="round"/>
+              <circle cx="50" cy="50" r="40" fill="none" stroke="#D85A30" stroke-width="12" stroke-dasharray="${ze} 251" stroke-dashoffset="${-(bo+sh-2)}" stroke-linecap="round"/>
+            </svg>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;"><div style="width:8px;height:8px;border-radius:50%;background:#8F7FDD;flex-shrink:0;"></div><span style="color:#9fb0c7;">기본체력</span><span style="margin-left:auto;font-weight:900;color:#fff;">${hp[0]}</span></div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;"><div style="width:8px;height:8px;border-radius:50%;background:#5DCAA5;flex-shrink:0;"></div><span style="color:#9fb0c7;">150줄 실드</span><span style="margin-left:auto;font-weight:900;color:#fff;">${hp[1]}</span></div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;"><div style="width:8px;height:8px;border-radius:50%;background:#D85A30;flex-shrink:0;"></div><span style="color:#9fb0c7;">0줄</span><span style="margin-left:auto;font-weight:900;color:#fff;">${hp[2]}</span></div>
+              <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:5px;margin-top:3px;display:flex;justify-content:space-between;font-size:11px;">
+                <span style="color:#9fb0c7;">총 체력</span><span style="font-weight:900;color:#fff;">${hp[3]}</span>
+              </div>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;">
+        <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;font-weight:900;color:#ffffff;">에스더 데미지</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead>
+            <tr style="background:rgba(255,255,255,0.02);">
+              <th style="padding:8px 14px;text-align:left;font-weight:900;color:#9fb0c7;border-bottom:1px solid rgba(255,255,255,0.06);">에스더</th>
+              <th style="padding:8px 14px;text-align:right;font-weight:900;color:#9fb0c7;border-bottom:1px solid rgba(255,255,255,0.06);">나이트메어</th>
+              <th style="padding:8px 14px;text-align:right;font-weight:900;color:#9fb0c7;border-bottom:1px solid rgba(255,255,255,0.06);">하드</th>
+              <th style="padding:8px 14px;text-align:right;font-weight:900;color:#9fb0c7;border-bottom:1px solid rgba(255,255,255,0.06);">노말</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:8px 14px;color:#fff;">히든 에아</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">3,690억</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">약 2,043억</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">997.5억</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:8px 14px;color:#fff;">아델 3칸</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">930억</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">약 514억</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">약 251억</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:8px 14px;color:#fff;">아델 1칸</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">700억</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">약 387억</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">약 189억</td></tr>
+            <tr><td style="padding:8px 14px;color:#fff;">에아 1칸</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">1,350억</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">약 747억</td><td style="padding:8px 14px;text-align:right;font-weight:900;color:#f3ead6;">약 365억</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+
 
     // ⭐ 에기르 EX 전용
     if (currentSimpleLevel === "egir-ex") {
@@ -959,8 +1038,20 @@ function goldBarHtml(card) {
         function simpleCardHtml(card) {
             const rowsHtml=card.rows.map(row=>{
                 const badgesHtml=(row.badges||[]).map(badge=>`<span class="badge ${badge.cls}">${badge.text}</span>`).join("");
-                const isPreparing=row.range==="준비중";
-                return`<div class="simple-row"><div class="simple-dot"></div><div class="simple-row-left"><span class="gate-b">${row.gate}</span><span class="boss-b">${row.boss}</span><span class="simple-badges">${badgesHtml}</span></div><span class="range-b ${isPreparing?"preparing":""}">${row.range}</span></div>`;
+                const isPreparing = row.range === "준비중";
+return`<div class="simple-row" style="${isPreparing?"min-height:56px;align-items:center;":""}">
+    <div class="simple-dot"></div>
+    <div class="simple-row-left">
+        <span class="gate-b">${row.gate}</span>
+        <span class="boss-b">${row.boss}</span>
+        <span class="simple-badges">${badgesHtml}</span>
+    </div>
+    <div style="text-align:right;">
+        <span class="range-b ${isPreparing?"preparing":""}">${row.range}</span>
+        ${row.dpscut ? `<div style="font-size:15px;color:#d4bf8a;font-style:italic;margin-top:3px;">${row.dpscut}</div>` : ""}
+    </div>
+</div>`;
+
             }).join("");
             return`<article class="simple-card ${card.theme}">
                 <div class="simple-left"><div class="simple-node">${card.node}</div></div>
@@ -986,7 +1077,319 @@ function goldBarHtml(card) {
                     </div>
                     <div class="simple-stack">${data.cards.length>0?data.cards.map(simpleCardHtml).join(""):"<div class='coming-soon'><h3>준비중</h3><p>곧 업데이트 예정입니다.</p></div>"}</div>
                 </div>`;
+
+document.getElementById("mainContent").innerHTML = `
+    <div class="simple-view">
+        ...기존 카드들...
+        <div class="simple-stack">
+            ${diffCards.cards.map(simpleCardHtml).join("")}
+        </div>
+        
+
+<div style="font-family:'Segoe UI','Malgun Gothic',sans-serif; color:var(--color-text-primary); padding:4px 0;">
+
+  <div style="background:var(--color-background-warning); border:0.5px solid var(--color-border-warning); border-radius:var(--border-radius-md); padding:10px 14px; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+    <span style="font-size:15px;">⚠️</span>
+    <span style="font-size:13px; color:var(--color-text-warning); font-weight:500;">보스 체력정보 / 에스더 데미지는 직접 수작업으로 체크한 부분이라 정확하지 않을 수 있습니다.</span>
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px;">
+
+    <div style="background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:14px;">
+      <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:10px; font-weight:500;">나이트메어</div>
+      <svg viewBox="0 0 100 100" width="80" height="80" style="display:block; margin:0 auto 10px;">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border-tertiary)" stroke-width="12"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#8F7FDD" stroke-width="12" stroke-dasharray="160 251" stroke-dashoffset="63" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#5DCAA5" stroke-width="12" stroke-dasharray="60 251" stroke-dashoffset="-97" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#D85A30" stroke-width="12" stroke-dasharray="31 251" stroke-dashoffset="-157" stroke-linecap="round"/>
+      </svg>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#8F7FDD;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">기본체력</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">4,943억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#5DCAA5;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">150줄 실드</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">360억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#D85A30;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">0줄</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">716억</span>
+        </div>
+        <div style="border-top:0.5px solid var(--color-border-tertiary); padding-top:5px; margin-top:3px; display:flex; justify-content:space-between; font-size:11px;">
+          <span style="color:var(--color-text-secondary);">총 체력</span>
+          <span style="font-weight:500;">6,020억</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:14px;">
+      <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:10px; font-weight:500;">하드</div>
+      <svg viewBox="0 0 100 100" width="80" height="80" style="display:block; margin:0 auto 10px;">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border-tertiary)" stroke-width="12"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#8F7FDD" stroke-width="12" stroke-dasharray="163 251" stroke-dashoffset="63" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#5DCAA5" stroke-width="12" stroke-dasharray="61 251" stroke-dashoffset="-100" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#D85A30" stroke-width="12" stroke-dasharray="27 251" stroke-dashoffset="-161" stroke-linecap="round"/>
+      </svg>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#8F7FDD;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">기본체력</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">2,755억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#5DCAA5;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">150줄 실드</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">203억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#D85A30;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">0줄</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">399억</span>
+        </div>
+        <div style="border-top:0.5px solid var(--color-border-tertiary); padding-top:5px; margin-top:3px; display:flex; justify-content:space-between; font-size:11px;">
+          <span style="color:var(--color-text-secondary);">총 체력</span>
+          <span style="font-weight:500;">3,357억</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:14px;">
+      <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:10px; font-weight:500;">노말</div>
+      <svg viewBox="0 0 100 100" width="80" height="80" style="display:block; margin:0 auto 10px;">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border-tertiary)" stroke-width="12"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#8F7FDD" stroke-width="12" stroke-dasharray="163 251" stroke-dashoffset="63" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#5DCAA5" stroke-width="12" stroke-dasharray="61 251" stroke-dashoffset="-100" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#D85A30" stroke-width="12" stroke-dasharray="27 251" stroke-dashoffset="-161" stroke-linecap="round"/>
+      </svg>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#8F7FDD;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">기본체력</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">1,352억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#5DCAA5;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">150줄 실드</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">99억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#D85A30;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">0줄</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">195억</span>
+        </div>
+        <div style="border-top:0.5px solid var(--color-border-tertiary); padding-top:5px; margin-top:3px; display:flex; justify-content:space-between; font-size:11px;">
+          <span style="color:var(--color-text-secondary);">총 체력</span>
+          <span style="font-weight:500;">1,648억</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); overflow:hidden;">
+    <div style="padding:12px 14px; border-bottom:0.5px solid var(--color-border-tertiary); font-size:13px; font-weight:500;">에스더 데미지</div>
+    <table style="width:100%; border-collapse:collapse; font-size:12px;">
+      <thead>
+        <tr style="background:var(--color-background-tertiary);">
+          <th style="padding:8px 14px; text-align:left; font-weight:500; color:var(--color-text-secondary); border-bottom:0.5px solid var(--color-border-tertiary);">에스더</th>
+          <th style="padding:8px 14px; text-align:right; font-weight:500; color:var(--color-text-secondary); border-bottom:0.5px solid var(--color-border-tertiary);">나이트메어</th>
+          <th style="padding:8px 14px; text-align:right; font-weight:500; color:var(--color-text-secondary); border-bottom:0.5px solid var(--color-border-tertiary);">하드</th>
+          <th style="padding:8px 14px; text-align:right; font-weight:500; color:var(--color-text-secondary); border-bottom:0.5px solid var(--color-border-tertiary);">노말</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:0.5px solid var(--color-border-tertiary);">
+          <td style="padding:8px 14px; color:var(--color-text-primary);">히든 에아</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">3,690억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 2,043억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">997.5억</td>
+        </tr>
+        <tr style="border-bottom:0.5px solid var(--color-border-tertiary);">
+          <td style="padding:8px 14px; color:var(--color-text-primary);">아델 3칸</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">930억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 514억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 251억</td>
+        </tr>
+        <tr style="border-bottom:0.5px solid var(--color-border-tertiary);">
+          <td style="padding:8px 14px; color:var(--color-text-primary);">아델 1칸</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">700억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 387억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 189억</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 14px; color:var(--color-text-primary);">에아 1칸</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">1,350억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 747억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 365억</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+        ${bossInfoHtml()}
+    </div>`;
+
+
         }
+
+function bossInfoHtml() {
+    return `
+
+<div style="font-family:'Segoe UI','Malgun Gothic',sans-serif; color:var(--color-text-primary); padding:4px 0;">
+
+  <div style="background:var(--color-background-warning); border:0.5px solid var(--color-border-warning); border-radius:var(--border-radius-md); padding:10px 14px; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+    <span style="font-size:15px;">⚠️</span>
+    <span style="font-size:13px; color:var(--color-text-warning); font-weight:500;">보스 체력정보 / 에스더 데미지는 직접 수작업으로 체크한 부분이라 정확하지 않을 수 있습니다.</span>
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px;">
+
+    <div style="background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:14px;">
+      <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:10px; font-weight:500;">나이트메어</div>
+      <svg viewBox="0 0 100 100" width="80" height="80" style="display:block; margin:0 auto 10px;">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border-tertiary)" stroke-width="12"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#8F7FDD" stroke-width="12" stroke-dasharray="160 251" stroke-dashoffset="63" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#5DCAA5" stroke-width="12" stroke-dasharray="60 251" stroke-dashoffset="-97" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#D85A30" stroke-width="12" stroke-dasharray="31 251" stroke-dashoffset="-157" stroke-linecap="round"/>
+      </svg>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#8F7FDD;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">기본체력</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">4,943억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#5DCAA5;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">150줄 실드</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">360억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#D85A30;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">0줄</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">716억</span>
+        </div>
+        <div style="border-top:0.5px solid var(--color-border-tertiary); padding-top:5px; margin-top:3px; display:flex; justify-content:space-between; font-size:11px;">
+          <span style="color:var(--color-text-secondary);">총 체력</span>
+          <span style="font-weight:500;">6,020억</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:14px;">
+      <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:10px; font-weight:500;">하드</div>
+      <svg viewBox="0 0 100 100" width="80" height="80" style="display:block; margin:0 auto 10px;">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border-tertiary)" stroke-width="12"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#8F7FDD" stroke-width="12" stroke-dasharray="163 251" stroke-dashoffset="63" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#5DCAA5" stroke-width="12" stroke-dasharray="61 251" stroke-dashoffset="-100" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#D85A30" stroke-width="12" stroke-dasharray="27 251" stroke-dashoffset="-161" stroke-linecap="round"/>
+      </svg>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#8F7FDD;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">기본체력</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">2,755억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#5DCAA5;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">150줄 실드</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">203억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#D85A30;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">0줄</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">399억</span>
+        </div>
+        <div style="border-top:0.5px solid var(--color-border-tertiary); padding-top:5px; margin-top:3px; display:flex; justify-content:space-between; font-size:11px;">
+          <span style="color:var(--color-text-secondary);">총 체력</span>
+          <span style="font-weight:500;">3,357억</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:14px;">
+      <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:10px; font-weight:500;">노말</div>
+      <svg viewBox="0 0 100 100" width="80" height="80" style="display:block; margin:0 auto 10px;">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border-tertiary)" stroke-width="12"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#8F7FDD" stroke-width="12" stroke-dasharray="163 251" stroke-dashoffset="63" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#5DCAA5" stroke-width="12" stroke-dasharray="61 251" stroke-dashoffset="-100" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#D85A30" stroke-width="12" stroke-dasharray="27 251" stroke-dashoffset="-161" stroke-linecap="round"/>
+      </svg>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#8F7FDD;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">기본체력</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">1,352억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#5DCAA5;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">150줄 실드</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">99억</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#D85A30;flex-shrink:0;"></div>
+          <span style="color:var(--color-text-secondary);">0줄</span>
+          <span style="margin-left:auto; font-weight:500; font-size:11px;">195억</span>
+        </div>
+        <div style="border-top:0.5px solid var(--color-border-tertiary); padding-top:5px; margin-top:3px; display:flex; justify-content:space-between; font-size:11px;">
+          <span style="color:var(--color-text-secondary);">총 체력</span>
+          <span style="font-weight:500;">1,648억</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); overflow:hidden;">
+    <div style="padding:12px 14px; border-bottom:0.5px solid var(--color-border-tertiary); font-size:13px; font-weight:500;">에스더 데미지</div>
+    <table style="width:100%; border-collapse:collapse; font-size:12px;">
+      <thead>
+        <tr style="background:var(--color-background-tertiary);">
+          <th style="padding:8px 14px; text-align:left; font-weight:500; color:var(--color-text-secondary); border-bottom:0.5px solid var(--color-border-tertiary);">에스더</th>
+          <th style="padding:8px 14px; text-align:right; font-weight:500; color:var(--color-text-secondary); border-bottom:0.5px solid var(--color-border-tertiary);">나이트메어</th>
+          <th style="padding:8px 14px; text-align:right; font-weight:500; color:var(--color-text-secondary); border-bottom:0.5px solid var(--color-border-tertiary);">하드</th>
+          <th style="padding:8px 14px; text-align:right; font-weight:500; color:var(--color-text-secondary); border-bottom:0.5px solid var(--color-border-tertiary);">노말</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:0.5px solid var(--color-border-tertiary);">
+          <td style="padding:8px 14px; color:var(--color-text-primary);">히든 에아</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">3,690억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 2,043억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">997.5억</td>
+        </tr>
+        <tr style="border-bottom:0.5px solid var(--color-border-tertiary);">
+          <td style="padding:8px 14px; color:var(--color-text-primary);">아델 3칸</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">930억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 514억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 251억</td>
+        </tr>
+        <tr style="border-bottom:0.5px solid var(--color-border-tertiary);">
+          <td style="padding:8px 14px; color:var(--color-text-primary);">아델 1칸</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">700억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 387억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 189억</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 14px; color:var(--color-text-primary);">에아 1칸</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">1,350억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 747억</td>
+          <td style="padding:8px 14px; text-align:right; font-weight:500;">약 365억</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+`;
+}
+
+
 
         function getCurrentRowsForPartyDps() {
             if(currentMenu==="simple")return[];
@@ -1016,7 +1419,11 @@ function goldBarHtml(card) {
 
         function renderTable() {
             updateTimeDisplay();
-            document.getElementById("contentTitle").textContent=getContentName();
+            if(currentMenu==="simple" && currentSimpleLevel==="egir-ex"){
+    document.getElementById("contentTitle").innerHTML=`<span style="background:linear-gradient(90deg,#ff6b6b 0%,#ffd700 15%,#fffacd 30%,#6bcb77 45%,#ffd700 60%,#fffacd 75%,#ff9ff3 90%,#ffd700 100%);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:textShimmer 2s linear infinite;filter:drop-shadow(0 0 7px rgba(255,215,0,0.85));">에기르 EX 레이드</span>`;
+} else {
+    document.getElementById("contentTitle").textContent=getContentName();
+}
             document.getElementById("tableTitle").textContent=getTableTitle();
             renderTitleMeta();
 
