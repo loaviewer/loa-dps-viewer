@@ -499,14 +499,64 @@
 
 
 extraHtml: `
-<div style="margin-top:14px; font-family:'Segoe UI','Malgun Gothic',sans-serif; color:#fff; background:#121212; padding:24px; border-radius:24px; max-width:100%; box-sizing:border-box; overflow:hidden;">
+<style>
+  .boss-wrap{margin-top:14px;font-family:'Segoe UI','Malgun Gothic',sans-serif;color:#fff;background:#121212;padding:24px;border-radius:24px;max-width:100%;box-sizing:border-box;overflow:hidden}
+  .boss-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+  .boss-card{background:rgba(30,30,35,0.8);border:1px solid rgba(255,255,255,0.05);border-radius:20px;padding:16px;display:flex;flex-direction:column;min-width:0;box-sizing:border-box}
+  .boss-chart-row{display:flex;align-items:center;gap:10px}
+  .boss-labels{display:flex;flex-direction:column;gap:10px;flex-shrink:0}
+  .boss-donut-wrap{margin-left:auto;flex-shrink:0}
+  .boss-donut{width:100px;height:100px}
+  .boss-donut-inner{inset:18px}
+  .boss-donut-title{font-size:10px}
+  .boss-donut-val{font-size:11px}
+  .boss-label-name{font-size:11px}
+  .boss-label-pct{font-size:14px}
+  .boss-legend{display:flex;flex-direction:column;gap:8px;font-size:12px;margin-bottom:12px;color:#ddd}
+  .boss-legend-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .boss-total-row{margin-top:auto;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;align-items:baseline}
+  .esther-table{background:rgba(30,30,35,0.8);border:1px solid rgba(255,255,255,0.05);border-radius:20px;overflow:hidden}
+  .esther-row{display:flex;padding:14px 24px;border-top:1px solid rgba(255,255,255,0.03);font-size:14px;align-items:center}
+  .esther-row div{flex:1;text-align:right;font-weight:700}
+  .esther-row div:first-child{flex:1.2;text-align:left;font-weight:400;color:#ccc}
+
+  @media(max-width:900px){
+    .boss-grid{grid-template-columns:1fr !important;gap:16px}
+    .boss-card{padding:20px}
+    .boss-chart-row{gap:16px}
+    .boss-donut{width:110px;height:110px}
+    .boss-donut-inner{inset:20px}
+    .boss-donut-title{font-size:11px}
+    .boss-donut-val{font-size:12px}
+    .boss-label-name{font-size:12px}
+    .boss-label-pct{font-size:16px}
+    .boss-legend{font-size:13px}
+    .boss-legend-text{white-space:normal;overflow:visible}
+    .boss-total-row span:last-child{font-size:20px}
+    .esther-row{padding:12px 16px;font-size:12px}
+  }
+  @media(max-width:480px){
+    .boss-wrap{padding:14px}
+    .boss-card{padding:16px}
+    .boss-donut{width:90px;height:90px}
+    .boss-donut-inner{inset:16px}
+    .boss-donut-title{font-size:9px}
+    .boss-donut-val{font-size:10px}
+    .boss-label-pct{font-size:14px}
+    .boss-label-name{font-size:11px}
+    .esther-row{padding:10px 12px;font-size:11px;gap:4px}
+    .esther-row div{min-width:0}
+  }
+</style>
+
+<div class="boss-wrap">
 
 <!-- 상단 안내 바 -->
 <div style="
   position:relative;
   margin-bottom:20px;
   padding:12px 20px;
-  background: linear-gradient(135deg, rgba(143,127,221,0.15) 0%, rgba(30,30,35,0.9) 50%, rgba(255,107,61,0.15) 100%);
+  background:linear-gradient(135deg,rgba(143,127,221,0.15) 0%,rgba(30,30,35,0.9) 50%,rgba(255,107,61,0.15) 100%);
   border:1px solid rgba(143,127,221,0.3);
   border-radius:12px;
   display:flex;
@@ -514,107 +564,73 @@ extraHtml: `
   gap:10px;
   overflow:hidden;
 ">
-  <div style="
-    position:absolute;
-    top:0; left:0; right:0; height:1px;
-    background: linear-gradient(90deg, transparent, rgba(143,127,221,0.6), rgba(255,107,61,0.6), transparent);
-  "></div>
-  <div style="
-    position:absolute;
-    bottom:0; left:0; right:0; height:1px;
-    background: linear-gradient(90deg, transparent, rgba(143,127,221,0.3), rgba(255,107,61,0.3), transparent);
-  "></div>
-  <div style="
-    width:6px; height:6px;
-    background:#8F7FDD;
-    border-radius:50%;
-    box-shadow: 0 0 6px rgba(143,127,221,0.8);
-    flex-shrink:0;
-  "></div>
-  <div style="font-size:12px; color:#bbb; font-weight:600; letter-spacing:0.3px; line-height:1.4;">
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(143,127,221,0.6),rgba(255,107,61,0.6),transparent);"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(143,127,221,0.3),rgba(255,107,61,0.3),transparent);"></div>
+  <div style="width:6px;height:6px;background:#8F7FDD;border-radius:50%;box-shadow:0 0 6px rgba(143,127,221,0.8);flex-shrink:0;"></div>
+  <div style="font-size:12px;color:#bbb;font-weight:600;letter-spacing:0.3px;line-height:1.4;">
     <span style="color:#ccc;">⚠</span>&nbsp; 보스 체력정보 / 에스더 데미지는 직접 수작업으로 체크한 부분이라 정확하지 않을 수 있습니다.
   </div>
-  <div style="
-    width:6px; height:6px;
-    background:#ff6b3d;
-    border-radius:50%;
-    box-shadow: 0 0 6px rgba(255,107,61,0.8);
-    flex-shrink:0;
-    margin-left:auto;
-  "></div>
+  <div style="width:6px;height:6px;background:#ff6b3d;border-radius:50%;box-shadow:0 0 6px rgba(255,107,61,0.8);flex-shrink:0;margin-left:auto;"></div>
 </div>
 
-<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px;">
+<div class="boss-grid">
 
 ${[
-  {name:"나이트메어", color:"#8F7FDD", hp:["4조 9,436억","3,604억","7,163억","6조 204억"], p:[82.1, 6.0, 11.9]},
-  {name:"하드", color:"#f1c40f", hp:["2조 7,551억","2,033억","3,992억","3조 3,576억"], p:[81.9, 6.0, 11.9]},
-  {name:"노말", color:"#7DDB7D", hp:["1조 3,523억","998억","1,959억","1조 6,481억"], p:[82.1, 6.1, 11.9]}
+  {name:"나이트메어",color:"#8F7FDD",hp:["4조 9,436억","3,604억","7,163억","6조 204억"],p:[82.1,6.0,11.9]},
+  {name:"하드",color:"#f1c40f",hp:["2조 7,551억","2,033억","3,992억","3조 3,576억"],p:[81.9,6.0,11.9]},
+  {name:"노말",color:"#7DDB7D",hp:["1조 3,523억","998억","1,959억","1조 6,481억"],p:[82.1,6.1,11.9]}
 ].map(d=>{
-const [hp, sh, ze] = d.p;
-const shieldColor = "#D3D3D3";
-const zeroColor = "#ff6b3d";
-const total = hp + sh + ze;
-const hpEnd = ((hp / total) * 100).toFixed(2);
-const shEnd = (((hp + sh) / total) * 100).toFixed(2);
+const [hp,sh,ze]=d.p;
+const shieldColor="#D3D3D3";
+const zeroColor="#ff6b3d";
+const total=hp+sh+ze;
+const hpEnd=((hp/total)*100).toFixed(2);
+const shEnd=(((hp+sh)/total)*100).toFixed(2);
 
 return `
-<div style="background:rgba(30,30,35,0.8); border:1px solid rgba(255,255,255,0.05); border-radius:20px; padding:16px; display:flex; flex-direction:column; min-width:0; box-sizing:border-box;">
+<div class="boss-card">
 
-  <div style="color:${d.color}; font-weight:900; font-size:16px; margin-bottom:16px; display:flex; align-items:center; gap:6px;">
-    <div style="width:4px; height:14px; background:${d.color}; border-radius:2px; flex-shrink:0;"></div>
+  <div style="color:${d.color};font-weight:900;font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:6px;">
+    <div style="width:4px;height:14px;background:${d.color};border-radius:2px;flex-shrink:0;"></div>
     ${d.name}
   </div>
 
   <div style="margin-bottom:20px;">
-    <div style="display:flex; align-items:center; gap:10px;">
+    <div class="boss-chart-row">
 
-      <!-- 왼쪽 퍼센트 라벨 -->
-      <div style="display:flex; flex-direction:column; gap:10px; flex-shrink:0;">
-        <div style="display:flex; align-items:center; gap:5px;">
-          <div style="width:7px; height:7px; border-radius:50%; background:${d.color}; flex-shrink:0;"></div>
+      <div class="boss-labels">
+        <div style="display:flex;align-items:center;gap:5px;">
+          <div style="width:7px;height:7px;border-radius:50%;background:${d.color};flex-shrink:0;"></div>
           <div>
-            <div style="font-size:9px; color:#999; line-height:1;">체력</div>
-            <div style="font-size:14px; font-weight:900; color:${d.color}; line-height:1.3;">${hp}%</div>
+            <div class="boss-label-name" style="color:#999;line-height:1;">체력</div>
+            <div class="boss-label-pct" style="font-weight:900;color:${d.color};line-height:1.3;">${hp}%</div>
           </div>
         </div>
-        <div style="display:flex; align-items:center; gap:5px;">
-          <div style="width:7px; height:7px; border-radius:50%; background:${shieldColor}; flex-shrink:0;"></div>
+        <div style="display:flex;align-items:center;gap:5px;">
+          <div style="width:7px;height:7px;border-radius:50%;background:${shieldColor};flex-shrink:0;"></div>
           <div>
-            <div style="font-size:9px; color:#999; line-height:1;">실드</div>
-            <div style="font-size:14px; font-weight:900; color:${shieldColor}; line-height:1.3;">${sh}%</div>
+            <div class="boss-label-name" style="color:#999;line-height:1;">실드</div>
+            <div class="boss-label-pct" style="font-weight:900;color:${shieldColor};line-height:1.3;">${sh}%</div>
           </div>
         </div>
-        <div style="display:flex; align-items:center; gap:5px;">
-          <div style="width:7px; height:7px; border-radius:50%; background:${zeroColor}; flex-shrink:0;"></div>
+        <div style="display:flex;align-items:center;gap:5px;">
+          <div style="width:7px;height:7px;border-radius:50%;background:${zeroColor};flex-shrink:0;"></div>
           <div>
-            <div style="font-size:9px; color:#999; line-height:1;">0줄</div>
-            <div style="font-size:14px; font-weight:900; color:${zeroColor}; line-height:1.3;">${ze}%</div>
+            <div class="boss-label-name" style="color:#999;line-height:1;">0줄</div>
+            <div class="boss-label-pct" style="font-weight:900;color:${zeroColor};line-height:1.3;">${ze}%</div>
           </div>
         </div>
       </div>
 
-      <!-- 오른쪽 도넛 그래프 -->
-      <div style="margin-left:auto; flex-shrink:0;">
-        <div style="position:relative; width:100px; height:100px;">
-          <div style="
-            width:100px;
-            height:100px;
+      <div class="boss-donut-wrap">
+        <div style="position:relative;" class="boss-donut">
+          <div class="boss-donut" style="
             border-radius:50%;
-            background:
-              conic-gradient(
-                from -90deg,
-                ${d.color} 0% ${hpEnd}%,
-                ${shieldColor} ${hpEnd}% ${shEnd}%,
-                ${zeroColor} ${shEnd}% 100%
-              );
-            box-shadow:
-              0 0 0 4px rgba(255,255,255,0.03),
-              0 4px 16px rgba(0,0,0,0.4);
+            background:conic-gradient(from -90deg,${d.color} 0% ${hpEnd}%,${shieldColor} ${hpEnd}% ${shEnd}%,${zeroColor} ${shEnd}% 100%);
+            box-shadow:0 0 0 4px rgba(255,255,255,0.03),0 4px 16px rgba(0,0,0,0.4);
           ">
-            <div style="
+            <div class="boss-donut-inner" style="
               position:absolute;
-              inset:18px;
               border-radius:50%;
               background:#1e1e23;
               display:flex;
@@ -624,8 +640,8 @@ return `
               text-align:center;
               box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06);
             ">
-              <div style="font-size:9px; color:#777; margin-bottom:1px;">총 체력</div>
-              <div style="font-size:10px; font-weight:800; color:#eee; line-height:1.2;">${d.hp[3]}</div>
+              <div class="boss-donut-title" style="color:#777;margin-bottom:1px;">총 체력</div>
+              <div class="boss-donut-val" style="font-weight:800;color:#eee;line-height:1.2;">${d.hp[3]}</div>
             </div>
           </div>
         </div>
@@ -634,55 +650,55 @@ return `
     </div>
   </div>
 
-  <div style="display:flex; flex-direction:column; gap:8px; font-size:12px; margin-bottom:12px; color:#ddd;">
-    <div style="display:flex; align-items:center;">
-      <div style="width:8px; height:8px; border-radius:2px; background:${d.color}; margin-right:6px; flex-shrink:0;"></div>
-      <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">기본체력 (300줄)</span>
-      <span style="margin-left:auto; font-weight:700; flex-shrink:0;">${d.hp[0]}</span>
+  <div class="boss-legend">
+    <div style="display:flex;align-items:center;">
+      <div style="width:8px;height:8px;border-radius:2px;background:${d.color};margin-right:6px;flex-shrink:0;"></div>
+      <span class="boss-legend-text">기본체력 (300줄)</span>
+      <span style="margin-left:auto;font-weight:700;flex-shrink:0;">${d.hp[0]}</span>
     </div>
-    <div style="display:flex; align-items:center;">
-      <div style="width:8px; height:8px; border-radius:2px; background:${shieldColor}; margin-right:6px; flex-shrink:0;"></div>
-      <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">165실드 (22줄)</span>
-      <span style="margin-left:auto; font-weight:700; flex-shrink:0;">${d.hp[1]}</span>
+    <div style="display:flex;align-items:center;">
+      <div style="width:8px;height:8px;border-radius:2px;background:${shieldColor};margin-right:6px;flex-shrink:0;"></div>
+      <span class="boss-legend-text">165실드 (22줄)</span>
+      <span style="margin-left:auto;font-weight:700;flex-shrink:0;">${d.hp[1]}</span>
     </div>
-    <div style="display:flex; align-items:center;">
-      <div style="width:8px; height:8px; border-radius:2px; background:${zeroColor}; margin-right:6px; flex-shrink:0;"></div>
-      <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">0줄 발악 (44줄)</span>
-      <span style="margin-left:auto; font-weight:700; flex-shrink:0;">${d.hp[2]}</span>
+    <div style="display:flex;align-items:center;">
+      <div style="width:8px;height:8px;border-radius:2px;background:${zeroColor};margin-right:6px;flex-shrink:0;"></div>
+      <span class="boss-legend-text">0줄 발악 (44줄)</span>
+      <span style="margin-left:auto;font-weight:700;flex-shrink:0;">${d.hp[2]}</span>
     </div>
   </div>
 
-  <div style="margin-top:auto; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:baseline;">
-    <span style="font-size:13px; color:#777;">총 체력</span>
-    <span style="font-size:18px; font-weight:900; color:${d.color};">${d.hp[3]}</span>
+  <div class="boss-total-row">
+    <span style="font-size:13px;color:#777;">총 체력</span>
+    <span style="font-size:18px;font-weight:900;color:${d.color};">${d.hp[3]}</span>
   </div>
 </div>
 `;
 }).join("")}
 </div>
 
-<div style="background:rgba(30,30,35,0.8); border:1px solid rgba(255,255,255,0.05); border-radius:20px; overflow:hidden;">
-  <div style="padding:18px 24px; border-bottom:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; gap:10px;">
-    <div style="width:4px; height:18px; background:#8F7FDD; border-radius:2px;"></div>
-    <span style="font-weight:900; font-size:16px;">에스더 데미지 기대값</span>
+<div class="esther-table">
+  <div style="padding:18px 24px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:10px;">
+    <div style="width:4px;height:18px;background:#8F7FDD;border-radius:2px;"></div>
+    <span style="font-weight:900;font-size:16px;">에스더 데미지 기대값</span>
   </div>
-  <div style="display:flex; padding:12px 24px; background:rgba(255,255,255,0.02); font-size:13px; color:#888; font-weight:700;">
+  <div style="display:flex;padding:12px 24px;background:rgba(255,255,255,0.02);font-size:13px;color:#888;font-weight:700;">
     <div style="flex:1.2;">에스더 스킬</div>
-    <div style="flex:1; text-align:right; color:#8F7FDD;">나이트메어</div>
-    <div style="flex:1; text-align:right; color:#f1c40f;">하드</div>
-    <div style="flex:1; text-align:right; color:#7DDB7D;">노말</div>
+    <div style="flex:1;text-align:right;color:#8F7FDD;">나이트메어</div>
+    <div style="flex:1;text-align:right;color:#f1c40f;">하드</div>
+    <div style="flex:1;text-align:right;color:#7DDB7D;">노말</div>
   </div>
   ${[
-    ["에아달린 히든 3칸  ", "약 3,690억", "약 2,043억", "약 997.5억"],
-    ["아델         3칸 ", "약 930억", "약 514억", "약 251억"],
-    ["아델         1칸 ", "약 700억", "약 387억", "약 189억"],
-    ["에아달린     1칸", "약 1,350억", "약 747억", "약 365억"]
-  ].map(row => `
-    <div style="display:flex; padding:14px 24px; border-top:1px solid rgba(255,255,255,0.03); font-size:14px; align-items:center;">
-      <div style="flex:1.2; color:#ccc;">${row[0]}</div>
-      <div style="flex:1; text-align:right; font-weight:700;">${row[1]}</div>
-      <div style="flex:1; text-align:right; font-weight:700;">${row[2]}</div>
-      <div style="flex:1; text-align:right; font-weight:700;">${row[3]}</div>
+    ["에아달린 히든 3칸","약 3,690억","약 2,043억","약 997.5억"],
+    ["아델 3칸","약 930억","약 514억","약 251억"],
+    ["아델 1칸","약 700억","약 387억","약 189억"],
+    ["에아달린 1칸","약 1,350억","약 747억","약 365억"]
+  ].map(row=>`
+    <div class="esther-row">
+      <div>${row[0]}</div>
+      <div>${row[1]}</div>
+      <div>${row[2]}</div>
+      <div>${row[3]}</div>
     </div>
   `).join("")}
 </div>
