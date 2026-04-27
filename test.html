@@ -310,24 +310,27 @@
     overflow-x:hidden;
   }
 
-  .app{
-    width:100%;
+    .app{
+    width:calc(100% - 20px); /* 직각 토너먼트의 기본 폭 계산식 */
     max-width:100%;
-    margin:0 auto;
+    margin:0 auto; /* 위아래 마진 제거 */
     border-radius:20px;
     overflow-x:hidden;
   }
 
   .workspace{
-    grid-template-columns:1fr;
+    display:flex; /* 그리드 대신 플렉스로 꽉 채우기 */
+    flex-direction:column;
+    width:100%;
     max-width:100%;
     overflow-x:hidden;
   }
 
   .sidebar{
-    padding:16px;
+    padding:24px 16px 16px; /* 패딩을 직각 토너먼트랑 맞춤 */
     border-right:none;
     border-bottom:1px solid rgba(255,255,255,0.06);
+    width:100%;
     max-width:100%;
     overflow-x:hidden;
   }
