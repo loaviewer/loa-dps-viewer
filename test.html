@@ -304,99 +304,77 @@
         .rate-5{color:#8ef0c9;} .bar-5{background:linear-gradient(90deg,#4bd3ff,#8ef0c9);}
         .rate-10{color:#7fc6ff;} .bar-10{background:linear-gradient(90deg,#7a8cff,#4bd3ff);}
 
-@media(max-width:768px){
-  body{padding:8px;}
-  .app{width:100%;margin:0 auto 8px;border-radius:20px;}
-  .sidebar{padding:16px;}
-  .main{padding:14px;}
-  .hero{font-size:26px;}
-  .menu{grid-template-columns:1fr;}
-  .menu-item{font-size:15px;padding:13px 14px;}
-  .menu-item.simple-entry{font-size:15px;padding:13px 14px;}
-  .title{font-size:22px;}
-  .tabs{gap:8px;}
-  .tab{min-width:92px;min-height:48px;font-size:12px;padding:10px 10px;}
-  .tab-sub{font-size:10px;}
-  .tab.gato{min-width:0;width:100%;}
-  .tabs.gato-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;}
-  .time-main{font-size:32px;}
-  .time-input-box{width:64px;height:44px;font-size:18px;}
-  .time-stepper{height:44px;width:24px;}
-  .party-dps{font-size:14px;padding:9px 10px;}
-  .modal-card{padding:24px 18px 18px;border-radius:22px;}
-  .modal-title{font-size:24px;}
-  .modal-content{font-size:14px;line-height:1.8;}
-  table{min-width:100%;font-size:12px;}
-  thead th,tbody td{padding:10px 8px;}
-  .share-cell{font-size:13px;padding:10px 8px;}
-  .share-row{grid-template-columns:46px 1fr;column-gap:5px;}
-  .share-label{font-size:10px;}
-  .share-value{font-size:13px;}
-  .dps-cell{font-size:13px;}
-  .sidebar-calendar{display:none;}
-  .simple-card{grid-template-columns:1fr;}
-  .simple-left{min-height:0;padding:6px 0 4px;}
-  .simple-left::before{left:50%;transform:translateX(-50%);top:0;bottom:0;}
 
-  /* 토글 버튼만 최소 수정 */
-  .switch-wrap a{
-    min-height:34px;
-    font-size:11px;
-    padding:0 8px;
-    white-space:nowrap;
-  }
-}
+ @media (max-width: 1180px) {
+      .workspace { grid-template-columns: 280px 1fr; }
+      .rank-row { grid-template-columns: 72px minmax(0,1fr); gap: 10px; }
+      .rank-row .metric-block { grid-column: 2 / -1; }
+    }
+    @media (max-width: 1024px) {
+      .workspace { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .duo-grid, .summary-cards { grid-template-columns: 1fr; }
+      .battle-choice-grid { grid-template-columns: 1fr; }
+      .sidebar-calendar { display: none; }
+    }
+    @media (max-width: 768px) {
+      body { padding: 8px; }
+      .app { width: 100%; margin: 0 auto; border-radius: 20px; }
+      .sidebar { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 16px; }
+      .main { padding: 14px; gap: 14px; }
+      .panel { padding: 16px; border-radius: 20px; }
+      .hero { font-size: 26px; margin-bottom: 10px; }
+      .muted { font-size: 13px; }
+      .intro-title { font-size: 24px; }
+      .intro-desc { font-size: 13px; max-width: 100%; margin-top: 12px; }
+      .duo-grid { grid-template-columns: 1fr; gap: 14px; }
+      .tournament-card { min-height: 208px; padding: 18px; gap: 14px; border-radius: 20px; }
+      .card-title { font-size: 22px; }
+      .card-desc { font-size: 13px; min-height: auto; max-width: 100%; }
+      .stamp { width: 92px; height: 92px; right: 12px; bottom: 12px; border-width: 4px; }
+      .stamp .date { font-size: 10px; } .stamp .grade-text { font-size: 16px; } .stamp .done { font-size: 11px; }
+      .ranking-title { font-size: 22px; }
+      .mini-tab { min-width: 96px; min-height: 56px; font-size: 13px; padding: 10px 12px; border-radius: 12px; }
+      .summary-cards { grid-template-columns: 1fr; gap: 12px; margin-bottom: 14px; }
+      .summary-card { padding: 16px; border-radius: 18px; }
+      .summary-inner { grid-template-columns: 60px 1fr; gap: 12px; }
+      .summary-icon { width: 60px; height: 60px; font-size: 34px; border-radius: 16px; }
+      .summary-main { font-size: 26px; }
+      .rank-row { grid-template-columns: 60px 1fr; gap: 8px; padding: 12px; border-radius: 16px; }
+      .rank-row .metric-block { grid-column: 2 / -1; }
+      .flow-card { width: 100%; max-height: calc(100vh - 32px); overflow-y: auto; padding: 18px 14px; border-radius: 20px; }
+      .flow-title { font-size: 22px; }
+      .class-row { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
+      .battle-top-title { font-size: 22px; margin-top: 2px; }
+      .battle-vs { margin: 12px 0 10px; font-size: 26px; letter-spacing: 3px; }
+      .battle-choice-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 10px; }
+      .battle-choice { width: 100%; max-width: 170px; height: 250px; padding: 12px 8px; border-radius: 18px; }
+      .battle-choice-content { padding: 14px 8px; }
+      .battle-choice-class { font-size: 13px; margin-bottom: 12px; }
+      .battle-choice-name  { font-size: 24px; padding: 0 4px; }
+      .winner-card { width: 100%; padding: 22px 16px 20px; border-radius: 22px; }
+      .winner-title { font-size: 28px; }
+      .grade-stamp { width: 110px; height: 110px; }
+      .grade-stamp .gs-grade { font-size: 22px; }
+      .sidebar-calendar { display: none; }
+    }
+    @media (max-width: 480px) {
+      body { padding: 0; }
+      .app { width: 100%; margin: 0; border-radius: 0; border-left: none; border-right: none; }
+      .sidebar, .main { padding: 12px; }
+      .hero { font-size: 24px; }
+      .intro-title { font-size: 22px; }
+      .tournament-card { padding: 16px; min-height: 196px; }
+      .card-title { font-size: 21px; }
+      .stamp { width: 84px; height: 84px; }
+      .battle-top-title { font-size: 20px; }
+      .battle-vs { font-size: 22px; margin: 10px 0 8px; }
+      .battle-choice { max-width: 148px; height: 220px; padding: 10px 6px; }
+      .battle-choice-name { font-size: 21px; }
+      .sidebar-calendar { display: none; }
+    }
 
-    
-  /* 모바일 토글 버튼 핏 맞추기 */
-  .switch-wrap { margin-bottom: 16px; }
-  .switch-wrap a { min-height: 34px; font-size: 11px; padding: 0 8px; }
-
-  /* 기존 DPS 전용 코드 유지 */
-  .menu{grid-template-columns:1fr;}
-  .menu-item{font-size:15px;padding:13px 14px;}
-  .menu-item.simple-entry{font-size:15px;padding:13px 14px;}
-  .title{font-size:22px;}
-  .tabs{gap:8px;}
-  .tab{min-width:92px;min-height:48px;font-size:12px;padding:10px 10px;}
-  .tab-sub{font-size:10px;}
-  .tab.gato{min-width:0;width:100%;}
-  .tabs.gato-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;}
-  .time-main{font-size:32px;}
-  .time-input-box{width:64px;height:44px;font-size:18px;}
-  .time-stepper{height:44px;width:24px;}
-  .party-dps{font-size:14px;padding:9px 10px;}
-  .modal-card{padding:24px 18px 18px;border-radius:22px;}
-  .modal-title{font-size:24px;}
-  .modal-content{font-size:14px;line-height:1.8;}
-  table{min-width:100%;font-size:12px;}
-  thead th,tbody td{padding:10px 8px;}
-  .share-cell{font-size:13px;padding:10px 8px;}
-  .share-row{grid-template-columns:46px 1fr;column-gap:5px;}
-  .share-label{font-size:10px;}
-  .share-value{font-size:13px;}
-  .dps-cell{font-size:13px;}
-  .sidebar-calendar{display:none;}
-  .simple-card{grid-template-columns:1fr;}
-  .simple-left{min-height:0;padding:6px 0 4px;}
-  .simple-left::before{left:50%;transform:translateX(-50%);top:0;bottom:0;}
-}
-
-@media(max-width:480px){
-  .title{font-size:19px;}
-  .hero{font-size:23px;}
-  .subtitle,.info-text,.muted{font-size:12px;}
-  .tab{min-width:84px;font-size:11px;}
-  .time-main{font-size:28px;}
-  .time-input-box{width:58px;height:42px;font-size:17px;}
-  .time-stepper{height:42px;}
-  .guide-trigger{font-size:15px;padding:18px 16px 16px;}
-  .modal-title{font-size:22px;}
-  .simple-title{font-size:19px;}
-  .simple-row .range-b{font-size:14px;}
-  .gold-item-value{font-size:15px;}
-}
-      
+        
     </style>
 </head>
 <body>
