@@ -307,7 +307,21 @@
         @media(max-width:1180px){.workspace{grid-template-columns:280px 1fr;}.content-grid{grid-template-columns:1fr 260px;}}
         @media(max-width:1024px){.workspace{grid-template-columns:1fr;}.sidebar{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06);}.menu{grid-template-columns:repeat(2,minmax(0,1fr));}.content-grid{grid-template-columns:1fr;}.topline{flex-direction:column;align-items:flex-start;}.date{align-self:flex-start;}.sidebar-calendar{display:none;}.auction-calc{display:none;}}
         @media(max-width:768px){body{padding:8px;}.app{width:100%;margin:0 auto 8px;border-radius:20px;}.sidebar{padding:16px;}.main{padding:14px;}.hero{font-size:26px;}.menu{grid-template-columns:1fr;}.menu-item{font-size:15px;padding:13px 14px;}.menu-item.simple-entry{font-size:15px;padding:13px 14px;}.title{font-size:22px;}.tabs{gap:8px;}.tab{min-width:92px;min-height:48px;font-size:12px;padding:10px 10px;}.tab-sub{font-size:10px;}.tab.gato{min-width:0;width:100%;}.tabs.gato-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;}.time-main{font-size:32px;}.time-input-box{width:64px;height:44px;font-size:18px;}.time-stepper{height:44px;width:24px;}.party-dps{font-size:14px;padding:9px 10px;}.modal-card{padding:24px 18px 18px;border-radius:22px;}.modal-title{font-size:24px;}.modal-content{font-size:14px;line-height:1.8;}table{min-width:100%;font-size:12px;}thead th,tbody td{padding:10px 8px;}.share-cell{font-size:13px;padding:10px 8px;}.share-row{grid-template-columns:46px 1fr;column-gap:5px;}.share-label{font-size:10px;}.share-value{font-size:13px;}.dps-cell{font-size:13px;}.sidebar-calendar{display:none;}.simple-card{grid-template-columns:1fr;}.simple-left{min-height:0;padding:6px 0 4px;}.simple-left::before{left:50%;transform:translateX(-50%);top:0;bottom:0;}}
-        @media(max-width:480px){.app{width:100%;margin:0;border-radius:0;border-left:none;border-right:none;}.title{font-size:19px;}.hero{font-size:23px;}.subtitle,.info-text,.muted{font-size:12px;}.tab{min-width:84px;font-size:11px;}.time-main{font-size:28px;}.time-input-box{width:58px;height:42px;font-size:17px;}.time-stepper{height:42px;}.guide-trigger{font-size:15px;padding:18px 16px 16px;}.modal-title{font-size:22px;}.simple-title{font-size:19px;}.simple-row .range-b{font-size:14px;}.gold-item-value{font-size:15px;}}
+        @media (max-width: 480px) {
+      body { padding: 0; }
+      .app { width: 100%; margin: 0; border-radius: 0; border-left: none; border-right: none; }
+      .sidebar, .main { padding: 12px; }
+      .hero { font-size: 24px; }
+      .intro-title { font-size: 22px; }
+      .tournament-card { padding: 16px; min-height: 196px; }
+      .card-title { font-size: 21px; }
+      .stamp { width: 84px; height: 84px; }
+      .battle-top-title { font-size: 20px; }
+      .battle-vs { font-size: 22px; margin: 10px 0 8px; }
+      .battle-choice { max-width: 148px; height: 220px; padding: 10px 6px; }
+      .battle-choice-name { font-size: 21px; }
+      .sidebar-calendar { display: none; }
+    }
     </style>
 </head>
 <body>
