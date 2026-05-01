@@ -3521,6 +3521,7 @@ function setBattleCardVisuals(side, candidate) {
   const nameEl  = side === "left" ? leftChoiceName : rightChoiceName;
   const classEl = side === "left" ? leftChoiceClass : rightChoiceClass;
 
+  iconEl.style.opacity = "1";
   auraEl.className = "battle-aura-outer " + getAuraClass(candidate.class_name);
   iconEl.src = getIconPath(candidate.engraving_name);
   iconEl.alt = candidate.engraving_name;
@@ -3719,10 +3720,14 @@ async function loadRankingDataByPeriod(mode, period) {
 
     function closeClassModal() { classModal.classList.remove("show"); }
 
-    function resetBattleCardEffects() {
-      leftChoiceBtn.className=rightChoiceBtn.className="battle-choice";
-      leftChoiceBtn.disabled=rightChoiceBtn.disabled=false;
-    }
+   function resetBattleCardEffects() {
+  leftChoiceBtn.className=rightChoiceBtn.className="battle-choice";
+  leftChoiceBtn.disabled=rightChoiceBtn.disabled=false;
+  leftChoiceIcon.style.opacity="1";
+  rightChoiceIcon.style.opacity="1";
+  leftChoiceBtn.style.filter="";
+  rightChoiceBtn.style.filter="";
+}
 
     async function startBattle(type,selectedClassName) {
       let pool=type==="favor"?allCandidates.filter(i=>i.enabled||FAVOR_ONLY_IDS.includes(i.id)):allCandidates.filter(i=>i.enabled);
