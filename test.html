@@ -3501,7 +3501,7 @@ const rightAuraOuter     = document.getElementById("rightAuraOuter");
     }
 
 function getIconPath(engravingName) {
-  return `./icon/${getShortName(engravingName)}.png`;
+  return `./icon/${getShortName(engravingName).replace(/\s+/g, "")}.png`;
 }
 
 function getAuraClass(className) {
@@ -3515,6 +3515,20 @@ function getAuraClass(className) {
   return "aura-holy";
 }
 
+function preloadBattleIcons() {
+  if (!allCandidates || !allCandidates.length) return;
+
+  const uniquePaths = [...new Set(
+    allCandidates.map(c => getIconPath(c.engraving_name))
+  )];
+
+  uniquePaths.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+}
+
+    
 function setBattleCardVisuals(side, candidate) {
   const auraEl  = side === "left" ? leftAuraOuter : rightAuraOuter;
   const iconEl  = side === "left" ? leftChoiceIcon : rightChoiceIcon;
@@ -3993,18 +4007,19 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
   }
 });
 
-    async function init() {
-      visitorKey=getVisitorKey();
-      initCalendar();
-      await loadCandidates();
-      await loadTodayParticipation();
-      // 주간 탭 날짜 세팅
+   async function init() {
+  visitorKey=getVisitorKey();
+  initCalendar();
+  await loadCandidates();
+  preloadBattleIcons();
+  await loadTodayParticipation();
+  // 주간 탭 날짜 세팅
 const now = new Date();
 const weekAgo = new Date(now);
 weekAgo.setDate(weekAgo.getDate() - 7);
 const fmt = d => `${String(d.getFullYear()).slice(2)}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
 document.getElementById("weekTabDate").textContent = `${fmt(weekAgo)} ~ 오늘`;
-    }
+}
     // ===== 경매 계산기 =====
     function acFmt(n) { return Math.round(n).toLocaleString("ko-KR"); }
     function calcBreakeven(price, members) { return price * 0.95 * (members - 1) / members; }
