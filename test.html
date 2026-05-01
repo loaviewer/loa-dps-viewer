@@ -1862,22 +1862,27 @@
         box-shadow: none !important;
       }
 
-            .battle-choice * {
-        backface-visibility: hidden;
+                 .battle-choice,
+      .battle-choice * {
+        transition: none !important;
+        animation: none !important;
+        backface-visibility: visible !important;
       }
 
       .anim-win {
-        animation: none !important;
         border-color: rgba(100,255,120,0.65) !important;
-        filter: brightness(1.1) !important;
-        transform: scale(1.02) !important;
+        transform: none !important;
+        filter: none !important;
+        opacity: 1 !important;
+        box-shadow: none !important;
       }
 
       .anim-lose-right,
       .anim-lose-left {
-        animation: none !important;
         opacity: 0 !important;
-        transition: opacity 0.3s ease !important;
+        transform: none !important;
+        filter: none !important;
+        box-shadow: none !important;
       }
 
       .battle-choice.stage-green,
