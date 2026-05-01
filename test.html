@@ -3467,6 +3467,7 @@ const rightAuraOuter     = document.getElementById("rightAuraOuter");
     let visitorKey    = null;
     let completedState= {op:false,favor:false};
     let currentBoardMode=null, allCandidates=[], currentTournamentType=null, selectedClass=null, todayOpGrade=null;
+    let battleIconsReady = null;
     let workingCandidates=[], currentRoundCandidates=[], nextRoundCandidates=[];
     let currentIndex=0, currentLeft=null, currentRight=null;
     let totalMatches=0, completedMatches=0, battleLogs=[], pendingWinner=null;
@@ -3515,17 +3516,26 @@ function getAuraClass(className) {
   return "aura-holy";
 }
 
-function preloadBattleIcons() {
+async function preloadBattleIcons() {
   if (!allCandidates || !allCandidates.length) return;
 
   const uniquePaths = [...new Set(
     allCandidates.map(c => getIconPath(c.engraving_name))
   )];
 
-  uniquePaths.forEach(src => {
-    const img = new Image();
-    img.src = src;
-  });
+  await Promise.all(
+    uniquePaths.map(src => new Promise(resolve => {
+      const img = new Image();
+      img.onload = async () => {
+        try {
+          if (img.decode) await img.decode();
+        } catch {}
+        resolve();
+      };
+      img.onerror = () => resolve();
+      img.src = src;
+    }))
+  );
 }
 
     
@@ -3745,6 +3755,7 @@ async function loadRankingDataByPeriod(mode, period) {
 
     async function startBattle(type,selectedClassName) {
       let pool=type==="favor"?allCandidates.filter(i=>i.enabled||FAVOR_ONLY_IDS.includes(i.id)):allCandidates.filter(i=>i.enabled);
+        if (battleIconsReady) await battleIconsReady;
       if (type==="op") await loadRecentWinRates("op");
       const filtered=pool.filter(i=>i.class_name!==selectedClassName);
       workingCandidates=shuffle(filtered); currentRoundCandidates=[...workingCandidates]; nextRoundCandidates=[];
@@ -4011,8 +4022,10 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
   visitorKey=getVisitorKey();
   initCalendar();
   await loadCandidates();
-  preloadBattleIcons();
+  battleIconsReady = preloadBattleIcons();
+  await battleIconsReady;
   await loadTodayParticipation();
+     
   // 주간 탭 날짜 세팅
 const now = new Date();
 const weekAgo = new Date(now);
