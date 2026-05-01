@@ -3439,6 +3439,10 @@ function renderOpRateContent(rows, prevRows) {
     const rightChoiceClass   = document.getElementById("rightChoiceClass");
     const leftChoiceName     = document.getElementById("leftChoiceName");
     const rightChoiceName    = document.getElementById("rightChoiceName");
+    const leftChoiceIcon     = document.getElementById("leftChoiceIcon");
+const rightChoiceIcon    = document.getElementById("rightChoiceIcon");
+const leftAuraOuter      = document.getElementById("leftAuraOuter");
+const rightAuraOuter     = document.getElementById("rightAuraOuter");
     const quitBattleBtn      = document.getElementById("quitBattleBtn");
     const winnerModal        = document.getElementById("winnerModal");
     const winnerModeLabel    = document.getElementById("winnerModeLabel");
@@ -3496,6 +3500,40 @@ function renderOpRateContent(rows, prevRows) {
       return k;
     }
 
+function getIconPath(engravingName) {
+  return `./icon/${getShortName(engravingName)}.png`;
+}
+
+function getAuraClass(className) {
+  if (["워로드","버서커","디스트로이어","슬레이어"].includes(className)) return "aura-power";
+  if (["배틀마스터","인파이터","기공사","창술사","스트라이커","브레이커"].includes(className)) return "aura-ki";
+  if (["데빌헌터","블래스터","호크아이","스카우터","건슬링어"].includes(className)) return "aura-gun";
+  if (["블레이드","데모닉","리퍼","소울이터"].includes(className)) return "aura-dark";
+  if (["서머너","아르카나","소서리스","가디언나이트"].includes(className)) return "aura-element";
+  if (["환수사","도화가","기상술사"].includes(className)) return "aura-flower";
+  if (["바드","홀리나이트","발키리"].includes(className)) return "aura-holy";
+  return "aura-holy";
+}
+
+function setBattleCardVisuals(side, candidate) {
+  const auraEl  = side === "left" ? leftAuraOuter : rightAuraOuter;
+  const iconEl  = side === "left" ? leftChoiceIcon : rightChoiceIcon;
+  const nameEl  = side === "left" ? leftChoiceName : rightChoiceName;
+  const classEl = side === "left" ? leftChoiceClass : rightChoiceClass;
+
+  auraEl.className = "battle-aura-outer " + getAuraClass(candidate.class_name);
+  iconEl.src = getIconPath(candidate.engraving_name);
+  iconEl.alt = candidate.engraving_name;
+  iconEl.onerror = () => { iconEl.style.opacity = "0.25"; };
+
+  nameEl.textContent = getShortName(candidate.engraving_name);
+  nameEl.className = `battle-choice-name ${getColorClass(candidate.class_name)}`;
+
+  classEl.textContent = candidate.class_name;
+}
+
+
+    
     function getNow() { return new Date(); }
     function getDateKey()  { const n=getNow(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`; }
     function getMonthKey() { const n=getNow(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`; }
@@ -3716,12 +3754,8 @@ async function loadRankingDataByPeriod(mode, period) {
       leftChoiceBtn.classList.add(sc); rightChoiceBtn.classList.add(sc);
       battleRoundTitle.textContent=`${getShortName(currentLeft.engraving_name)} vs ${getShortName(currentRight.engraving_name)}`;
       battleSubText.textContent=`${selectedClass} 제외 상태 · ${getRoundLabel(currentRoundCandidates.length)} 진행 중`;
-      leftChoiceClass.textContent=currentLeft.class_name;
-      leftChoiceName.textContent=getShortName(currentLeft.engraving_name);
-      leftChoiceName.className=`battle-choice-name ${getColorClass(currentLeft.class_name)}`;
-      rightChoiceClass.textContent=currentRight.class_name;
-      rightChoiceName.textContent=getShortName(currentRight.engraving_name);
-      rightChoiceName.className=`battle-choice-name ${getColorClass(currentRight.class_name)}`;
+            setBattleCardVisuals("left", currentLeft);
+      setBattleCardVisuals("right", currentRight);
       updateBattleProgress();
     }
 
