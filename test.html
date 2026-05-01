@@ -3846,21 +3846,58 @@ async function loadRankingDataByPeriod(mode, period) {
     }
 
     function chooseBattleWinner(side) {
-      if (!currentLeft||!currentRight||isChoosing) return;
-      isChoosing=true; playFlipSound();
-      const winner=side==="left"?currentLeft:currentRight;
-      const loser=side==="left"?currentRight:currentLeft;
-      const winBtn=side==="left"?leftChoiceBtn:rightChoiceBtn;
-      const loseBtn=side==="left"?rightChoiceBtn:leftChoiceBtn;
-      const loseSide=side==="left"?"right":"left";
-      if (currentTournamentType==="op") { const wrW=getWinRate(winner.engraving_name),wrL=getWinRate(loser.engraving_name); opMaxScore++; if(wrW>=wrL)opScore++; }
-      leftChoiceBtn.disabled=rightChoiceBtn.disabled=true;
-      winBtn.classList.add("anim-win");
-      loseBtn.classList.add(loseSide==="right"?"anim-lose-right":"anim-lose-left");
-      battleLogs.push({left_engraving:currentLeft.engraving_name,right_engraving:currentRight.engraving_name,winner_engraving:winner.engraving_name,loser_engraving:loser.engraving_name,round_label:getRoundLabel(currentRoundCandidates.length)});
-      nextRoundCandidates.push(winner); completedMatches++; currentIndex+=2;
-      setTimeout(()=>{ isChoosing=false; renderNextBattle(); },500);
-    }
+  if (!currentLeft || !currentRight || isChoosing) return;
+
+  isChoosing = true;
+  playFlipSound();
+
+  const winner   = side === "left" ? currentLeft  : currentRight;
+  const loser    = side === "left" ? currentRight : currentLeft;
+  const winBtn   = side === "left" ? leftChoiceBtn  : rightChoiceBtn;
+  const loseBtn  = side === "left" ? rightChoiceBtn : leftChoiceBtn;
+  const loseSide = side === "left" ? "right" : "left";
+
+  if (currentTournamentType === "op") {
+    const wrW = getWinRate(winner.engraving_name);
+    const wrL = getWinRate(loser.engraving_name);
+    opMaxScore++;
+    if (wrW >= wrL) opScore++;
+  }
+
+  leftChoiceBtn.disabled = rightChoiceBtn.disabled = true;
+
+  battleLogs.push({
+    left_engraving: currentLeft.engraving_name,
+    right_engraving: currentRight.engraving_name,
+    winner_engraving: winner.engraving_name,
+    loser_engraving: loser.engraving_name,
+    round_label: getRoundLabel(currentRoundCandidates.length)
+  });
+
+  nextRoundCandidates.push(winner);
+  completedMatches++;
+  currentIndex += 2;
+
+  const isMobileBattle = window.matchMedia("(max-width: 768px)").matches;
+
+  if (isMobileBattle) {
+    // 모바일에서는 애니메이션 완전 생략
+    setTimeout(() => {
+      isChoosing = false;
+      renderNextBattle();
+    }, 60);
+    return;
+  }
+
+  // PC에서는 기존 애니메이션 유지
+  winBtn.classList.add("anim-win");
+  loseBtn.classList.add(loseSide === "right" ? "anim-lose-right" : "anim-lose-left");
+
+  setTimeout(() => {
+    isChoosing = false;
+    renderNextBattle();
+  }, 500);
+}
 
     function showWinnerModal(winner) {
       battleModal.classList.remove("show"); playWinnerSound();
