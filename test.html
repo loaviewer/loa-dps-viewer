@@ -896,26 +896,118 @@
 
     .ranking-list { display: grid; gap: 12px; }
 
+
     .rank-row {
       display: grid;
-      grid-template-columns: 84px minmax(0, 1.4fr) 120px 160px 160px;
-      gap: 12px; align-items: center;
-      border-radius: 18px; padding: 16px 18px;
+      grid-template-columns: 50px 44px minmax(0, 1.4fr) 110px 130px 130px;
+      gap: 10px;
+      align-items: center;
+      border-radius: 16px;
+      padding: 12px 14px;
       background: rgba(255,255,255,0.035);
       border: 1px solid rgba(255,255,255,0.06);
+      transition: 0.12s ease;
+    }
+
+    .rank-row:hover {
+      background: rgba(255,255,255,0.055);
+      border-color: rgba(255,255,255,0.10);
     }
 
     .rank-row.dimmed { opacity: 0.33; filter: blur(2px); }
-    .rank-col    { min-width: 0; }
-    .rank-num    { font-size: 22px; font-weight: 900; color: #7fd2ff; }
-    .rank-name   { font-size: 20px; font-weight: 900; color: #ffffff; line-height: 1.3; word-break: keep-all; }
-    .rank-job    { margin-top: 4px; font-size: 13px; color: #aeb8cb; }
-    .metric-title{ font-size: 12px; color: #98a9c5; margin-bottom: 6px; font-weight: 800; }
-    .metric-main { font-size: 20px; font-weight: 900; color: #ffffff; }
-    .metric-sub  { margin-top: 4px; font-size: 12px; color: #b6c2d6; line-height: 1.6; }
+    .rank-col { min-width: 0; }
 
-    .meter       { margin-top: 8px; width: 100%; height: 12px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
-    .meter-fill  { height: 100%; border-radius: 999px; }
+    .rank-num {
+      font-size: 18px;
+      font-weight: 900;
+      color: #7fd2ff;
+      text-align: center;
+    }
+
+    .rank-name {
+      font-size: 17px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.2;
+      word-break: keep-all;
+    }
+
+    .rank-job {
+      margin-top: 2px;
+      font-size: 11px;
+      color: #aeb8cb;
+    }
+
+    .metric-title {
+      font-size: 10px;
+      color: #98a9c5;
+      margin-bottom: 4px;
+      font-weight: 800;
+    }
+
+    .metric-main {
+      font-size: 16px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .metric-sub {
+      margin-top: 3px;
+      font-size: 10px;
+      color: #b6c2d6;
+      line-height: 1.4;
+    }
+
+    .meter {
+      margin-top: 4px;
+      width: 100%;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .meter-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .rank-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1.5px solid rgba(217,181,111,0.32);
+      background: linear-gradient(180deg, rgba(30,35,50,0.94), rgba(15,20,35,0.98));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .rank-icon-wrap img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,.30));
+    }
+
+    .rank-icon-wrap.icon-1st {
+      border-color: rgba(255,215,0,0.50);
+      box-shadow: 0 0 6px rgba(255,215,0,0.12);
+    }
+
+    .rank-icon-wrap.icon-2nd {
+      border-color: rgba(192,192,192,0.42);
+    }
+
+    .rank-icon-wrap.icon-3rd {
+      border-color: rgba(205,127,50,0.42);
+    }
+
+    
     .meter-fill.win  { background: linear-gradient(90deg, #ff8ca5, #ff5f8f); }
     .meter-fill.rate { background: linear-gradient(90deg, #6bc3ff, #3fa6ff); }
 
@@ -1813,8 +1905,19 @@
       .summary-inner { grid-template-columns: 60px 1fr; gap: 12px; }
       .summary-icon { width: 60px; height: 60px; font-size: 34px; border-radius: 16px; }
       .summary-main { font-size: 26px; }
-      .rank-row { grid-template-columns: 60px 1fr; gap: 8px; padding: 12px; border-radius: 16px; }
+
+            .rank-row { grid-template-columns: 40px 36px 1fr; gap: 8px; padding: 12px; border-radius: 16px; }
       .rank-row .metric-block { grid-column: 2 / -1; }
+      .rank-icon-wrap { width: 36px; height: 36px; border-radius: 7px; }
+      .rank-icon-wrap img { width: 28px; height: 28px; }
+      .rank-num { font-size: 16px; }
+      .rank-name { font-size: 16px; }
+      .rank-job { font-size: 10px; }
+      .metric-main { font-size: 15px; }
+      .metric-title { font-size: 9px; }
+      .metric-sub { font-size: 9px; }
+      .meter { height: 8px; }
+      
       .flow-card { width: 100%; max-height: calc(100vh - 32px); overflow-y: auto; padding: 18px 14px; border-radius: 20px; }
       .flow-title { font-size: 22px; }
       .class-row { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
@@ -3528,6 +3631,7 @@ const rightAuraOuter     = document.getElementById("rightAuraOuter");
     let currentIndex=0, currentLeft=null, currentRight=null;
     let totalMatches=0, completedMatches=0, battleLogs=[], pendingWinner=null;
     let opScore=0, opMaxScore=0, isChoosing=false;
+    let isFinalizingTournament = false;
 
     const classColorMap = {
       "워로드":"engr-warrior","버서커":"engr-warrior","디스트로이어":"engr-warrior","홀리나이트":"engr-warrior","슬레이어":"engr-warrior","발키리":"engr-warrior",
@@ -3917,19 +4021,33 @@ gradeStampEl.classList.add(getStampClass(grade));
     }
 
     async function finalizeTournamentSave() {
-      if (!pendingWinner) return;
+  if (!pendingWinner) return;
+  if (isFinalizingTournament) return;
+
+  isFinalizingTournament = true;
+  winnerConfirmBtn.disabled = true;
       const clientIP=await getClientIP();
       const grade=currentTournamentType==="op"?calcGrade(opScore,opMaxScore):null;
       const score=currentTournamentType==="op"?opScore:0;
       const maxScore=currentTournamentType==="op"?opMaxScore:0;
       const sessionPayload={visitor_key:visitorKey,client_ip:clientIP,selected_class:selectedClass,winner_engraving:pendingWinner.engraving_name,tournament_type:currentTournamentType,date_key:getDateKey(),week_key:getWeekKey(),month_key:getMonthKey(),grade,score,max_score:maxScore};
       const {data:sessionData,error:sessionError}=await supabase.from("sessions").insert([sessionPayload]).select();
-      if (sessionError) { alert("sessions 저장 실패: "+sessionError.message); return; }
+      if (sessionError) {
+  alert("sessions 저장 실패: " + sessionError.message);
+  isFinalizingTournament = false;
+  winnerConfirmBtn.disabled = false;
+  return;
+}
       const sessionId=sessionData[0].id;
       if (battleLogs.length>0) {
         const matchPayload=battleLogs.map(log=>({session_id:sessionId,left_engraving:log.left_engraving,right_engraving:log.right_engraving,winner_engraving:log.winner_engraving,loser_engraving:log.loser_engraving,round_label:log.round_label,tournament_type:currentTournamentType,date_key:getDateKey(),week_key:getWeekKey(),month_key:getMonthKey()}));
         const {error:matchError}=await supabase.from("match_logs").insert(matchPayload);
-        if (matchError) { alert("match_logs 저장 실패: "+matchError.message); return; }
+        if (matchError) {
+  alert("match_logs 저장 실패: " + matchError.message);
+  isFinalizingTournament = false;
+  winnerConfirmBtn.disabled = false;
+  return;
+}
       }
       if (currentTournamentType==="op") {
         completedState.op=true; todayOpGrade=grade;
@@ -3944,6 +4062,8 @@ gradeStampEl.classList.add(getStampClass(grade));
       updateLockIcons();
       updateRankingLockState();
       rankingBoard.scrollIntoView({behavior:"smooth",block:"start"});
+      isFinalizingTournament = false;
+      winnerConfirmBtn.disabled = false;
     }
 
     async function handleStart(type) {
@@ -3972,11 +4092,15 @@ gradeStampEl.classList.add(getStampClass(grade));
       if (!completedState.op) { alert("OP 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다."); return; }
       currentBoardMode="op"; await loadRankingData("op");
       rankingBoard.classList.remove("locked"); rankingBoard.scrollIntoView({behavior:"smooth",block:"start"});
+    isFinalizingTournament = false;
+    winnerConfirmBtn.disabled = false;
     });
     favorRankBtn.addEventListener("click",async()=>{
       if (!completedState.favor) { alert("호감 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다."); return; }
       currentBoardMode="favor"; await loadRankingData("favor");
       rankingBoard.classList.remove("locked"); rankingBoard.scrollIntoView({behavior:"smooth",block:"start"});
+      isFinalizingTournament = false;
+      winnerConfirmBtn.disabled = false;
     });
 
     modeOpBtn.addEventListener("click",async()=>{
