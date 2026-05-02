@@ -836,6 +836,7 @@
     .ranking-title-favor { color: #ffd48a !important; }
     .ranking-sub         { margin-top: 8px; color: #aeb9cb; font-size: 13px; line-height: 1.75; }
 
+
     .mode-tabs, .period-tabs { display: flex; gap: 10px; flex-wrap: wrap; }
 
     .mini-tab {
@@ -859,9 +860,66 @@
     .mini-tab.active-op     { background: linear-gradient(135deg, #6ff0b7, #35c77c); color: #0c1a13; border-color: transparent; }
     .mini-tab.active-favor  { background: linear-gradient(135deg, #ffd48a, #ffac55); color: #2a1400; border-color: transparent; }
     .mini-tab.disabled      { opacity: 0.36; filter: grayscale(0.3); cursor: not-allowed; }
-    .mini-tab.active-period { background: linear-gradient(135deg, #7a8cff, #4bd3ff); color: #08111e; border-color: transparent; }
     .mini-tab .tab-date     { font-size: 12px; font-weight: 800; line-height: 1.2; opacity: 0.95; }
 
+    /* ===== 기간 탭 D안 (세그먼트형) ===== */
+    .period-tabs {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      flex-wrap: nowrap;
+    }
+
+    .period-tabs .mini-tab {
+      min-width: 92px;
+      min-height: auto;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: #7a8da8;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.2;
+      cursor: pointer;
+      transition: 0.16s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .period-tabs .mini-tab:hover {
+      color: #c6d4e8;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .period-tabs .mini-tab.active-period {
+      background: rgba(255,255,255,0.08);
+      color: #ffffff;
+      box-shadow: 0 0 8px rgba(127,198,255,0.08);
+    }
+
+    .period-tabs .mini-tab.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      background: transparent;
+    }
+
+    .period-tabs .mini-tab .tab-date {
+      font-size: 10px;
+      font-weight: 800;
+      opacity: 0.65;
+    }
+
+    .period-tabs .mini-tab.active-period .tab-date {
+      opacity: 0.90;
+    }
+
+    
     .summary-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 18px; }
 
      /* ===== TOP3 포디움 요약 ===== */
@@ -2224,6 +2282,11 @@
       .stamp .date { font-size: 10px; } .stamp .grade-text { font-size: 16px; } .stamp .done { font-size: 11px; }
       .ranking-title { font-size: 22px; }
       .mini-tab { min-width: 96px; min-height: 56px; font-size: 13px; padding: 10px 12px; border-radius: 12px; }
+       .period-tabs .mini-tab {
+        min-width: 80px;
+        padding: 7px 10px;
+        font-size: 12px;
+      }
       .summary-cards { grid-template-columns: 1fr; gap: 12px; margin-bottom: 14px; }
       .summary-card { padding: 16px; border-radius: 18px; }
       .summary-inner { grid-template-columns: 60px 1fr; gap: 12px; }
