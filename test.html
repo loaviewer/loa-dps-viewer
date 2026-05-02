@@ -864,6 +864,274 @@
 
     .summary-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 18px; }
 
+     /* ===== TOP3 포디움 요약 ===== */
+    .podium-section {
+      border-radius: 16px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .podium-section-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .ps-champ .podium-section-title { color: #ff8ca5; }
+    .ps-rate  .podium-section-title { color: #6bc3ff; }
+
+    .podium-trio {
+      display: grid;
+      grid-template-columns: 1fr 1.08fr 1fr;
+      gap: 6px;
+      align-items: end;
+    }
+
+    .pod-card {
+      border-radius: 12px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-align: center;
+      transition: 0.15s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pod-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* ===== 왼쪽 위 모서리 박지 ===== */
+    .pod-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 28px;
+      height: 28px;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .pod-1st::before {
+      background: linear-gradient(135deg,
+        rgba(255,225,100,0.65) 0%,
+        rgba(255,200,60,0.40) 30%,
+        rgba(255,215,0,0.18) 50%,
+        transparent 50%);
+      border-radius: 12px 0 0 0;
+    }
+
+    .pod-2nd::before {
+      background: linear-gradient(135deg,
+        rgba(220,225,235,0.55) 0%,
+        rgba(192,200,215,0.32) 30%,
+        rgba(192,192,192,0.14) 50%,
+        transparent 50%);
+      border-radius: 12px 0 0 0;
+    }
+
+    .pod-3rd::before {
+      background: linear-gradient(135deg,
+        rgba(220,160,80,0.55) 0%,
+        rgba(205,140,60,0.32) 30%,
+        rgba(205,127,50,0.14) 50%,
+        transparent 50%);
+      border-radius: 12px 0 0 0;
+    }
+
+    /* ===== 박지 빛반사 ===== */
+    .pod-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 22px;
+      height: 22px;
+      pointer-events: none;
+      z-index: 6;
+    }
+
+    .pod-1st::after {
+      background: linear-gradient(135deg,
+        rgba(255,255,255,0.35) 0%,
+        rgba(255,255,255,0.12) 20%,
+        transparent 42%);
+      border-radius: 12px 0 0 0;
+    }
+
+    .pod-2nd::after {
+      background: linear-gradient(135deg,
+        rgba(255,255,255,0.28) 0%,
+        rgba(255,255,255,0.10) 20%,
+        transparent 42%);
+      border-radius: 12px 0 0 0;
+    }
+
+    .pod-3rd::after {
+      background: linear-gradient(135deg,
+        rgba(255,255,255,0.25) 0%,
+        rgba(255,255,255,0.08) 20%,
+        transparent 42%);
+      border-radius: 12px 0 0 0;
+    }
+
+    /* ===== 1등 ===== */
+    .pod-1st {
+      order: 2;
+      min-height: 112px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,220,100,0.10), transparent 55%),
+        linear-gradient(180deg, rgba(40,35,18,0.96), rgba(22,20,12,0.98));
+      border: 1.5px solid rgba(255,215,0,0.26);
+      animation: goldPulse 3s ease-in-out infinite;
+    }
+
+    /* ===== 2등 ===== */
+    .pod-2nd {
+      order: 1;
+      min-height: 96px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(192,200,220,0.08), transparent 55%),
+        linear-gradient(180deg, rgba(32,34,42,0.96), rgba(18,20,28,0.98));
+      border: 1.5px solid rgba(192,192,192,0.20);
+      animation: silverPulse 3.2s ease-in-out infinite;
+    }
+
+    /* ===== 3등 ===== */
+    .pod-3rd {
+      order: 3;
+      min-height: 96px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(205,140,60,0.08), transparent 55%),
+        linear-gradient(180deg, rgba(36,28,18,0.96), rgba(20,16,12,0.98));
+      border: 1.5px solid rgba(205,127,50,0.20);
+      animation: bronzePulse 3.4s ease-in-out infinite;
+    }
+
+    .pod-rank {
+      font-weight: 900;
+      line-height: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    .pod-1st .pod-rank { font-size: 15px; color: #ffd700; }
+    .pod-2nd .pod-rank { font-size: 13px; color: #dcdcdc; }
+    .pod-3rd .pod-rank { font-size: 13px; color: #e8a860; }
+
+    .pod-icon {
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .pod-icon img {
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,.30));
+    }
+
+    .pod-1st .pod-icon {
+      width: 46px;
+      height: 46px;
+      border: 2px solid rgba(255,215,0,0.45);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,215,0,0.10), transparent 50%),
+        linear-gradient(180deg, rgba(50,44,20,0.95), rgba(24,22,10,0.98));
+    }
+    .pod-1st .pod-icon img { width: 36px; height: 36px; }
+
+    .pod-2nd .pod-icon,
+    .pod-3rd .pod-icon {
+      width: 40px;
+      height: 40px;
+    }
+
+    .pod-2nd .pod-icon {
+      border: 1.5px solid rgba(192,192,192,0.38);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(192,192,192,0.08), transparent 50%),
+        linear-gradient(180deg, rgba(36,38,46,0.95), rgba(20,22,28,0.98));
+    }
+    .pod-2nd .pod-icon img { width: 30px; height: 30px; }
+
+    .pod-3rd .pod-icon {
+      border: 1.5px solid rgba(205,127,50,0.38);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(205,127,50,0.08), transparent 50%),
+        linear-gradient(180deg, rgba(40,30,18,0.95), rgba(22,18,12,0.98));
+    }
+    .pod-3rd .pod-icon img { width: 30px; height: 30px; }
+
+    .pod-name {
+      font-weight: 900;
+      line-height: 1.15;
+      word-break: keep-all;
+      position: relative;
+      z-index: 2;
+    }
+
+    .pod-1st .pod-name {
+      font-size: 14px;
+      color: #fff8e0;
+      text-shadow: 0 0 4px rgba(255,215,0,0.12);
+    }
+
+    .pod-2nd .pod-name {
+      font-size: 12px;
+      color: #f0f0f8;
+    }
+
+    .pod-3rd .pod-name {
+      font-size: 12px;
+      color: #ffe8d0;
+    }
+
+    .pod-val {
+      font-weight: 900;
+      line-height: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    .ps-champ .pod-1st .pod-val { font-size: 16px; color: #ff8ca5; }
+    .ps-champ .pod-2nd .pod-val,
+    .ps-champ .pod-3rd .pod-val { font-size: 14px; color: #ffb8c8; }
+
+    .ps-rate .pod-1st .pod-val { font-size: 16px; color: #6bc3ff; }
+    .ps-rate .pod-2nd .pod-val,
+    .ps-rate .pod-3rd .pod-val { font-size: 14px; color: #a8d8ff; }
+
+    @keyframes goldPulse {
+      0%,100% { box-shadow: 0 0 8px rgba(255,215,0,0.16), 0 0 16px rgba(255,200,60,0.06); }
+      50% { box-shadow: 0 0 14px rgba(255,215,0,0.26), 0 0 28px rgba(255,200,60,0.12); }
+    }
+
+    @keyframes silverPulse {
+      0%,100% { box-shadow: 0 0 6px rgba(192,192,192,0.12), 0 0 12px rgba(180,200,220,0.05); }
+      50% { box-shadow: 0 0 10px rgba(192,192,192,0.22), 0 0 20px rgba(180,200,220,0.08); }
+    }
+
+    @keyframes bronzePulse {
+      0%,100% { box-shadow: 0 0 6px rgba(205,127,50,0.12), 0 0 12px rgba(220,160,80,0.05); }
+      50% { box-shadow: 0 0 10px rgba(205,127,50,0.22), 0 0 20px rgba(220,160,80,0.08); }
+    }
+    
+
     .summary-card {
       position: relative; overflow: hidden;
       border-radius: 22px; padding: 22px 20px 20px;
@@ -1973,6 +2241,17 @@
       .metric-title { font-size: 9px; }
       .metric-sub { font-size: 9px; }
       .meter { height: 8px; }
+
+      .pod-1st { min-height: 104px; }
+      .pod-2nd, .pod-3rd { min-height: 90px; }
+      .pod-1st .pod-icon { width: 42px; height: 42px; }
+      .pod-1st .pod-icon img { width: 32px; height: 32px; }
+      .pod-2nd .pod-icon, .pod-3rd .pod-icon { width: 36px; height: 36px; }
+      .pod-2nd .pod-icon img, .pod-3rd .pod-icon img { width: 28px; height: 28px; }
+      .pod-1st .pod-name { font-size: 13px; }
+      .pod-2nd .pod-name, .pod-3rd .pod-name { font-size: 11px; }
+      .pod-card::before { width: 24px; height: 24px; }
+      .pod-card::after { width: 18px; height: 18px; }
       
       .flow-card { width: 100%; max-height: calc(100vh - 32px); overflow-y: auto; padding: 18px 14px; border-radius: 20px; }
       .flow-title { font-size: 22px; }
@@ -3832,21 +4111,61 @@ function setBattleCardVisuals(side, candidate) {
       const rateTop=rateSorted[0]||championTop;
       const latestUpdatedAt=filteredRows.length>0?filteredRows[0].updated_at:null;
       rankingFooterNote.textContent=`※ 전체 랭킹은 매시간 정각 집계됩니다. 최근 집계: ${formatUpdatedAt(latestUpdatedAt)}`;
-      summaryCards.innerHTML=`
-        <div class="summary-card"><div class="summary-inner">
-          <div class="summary-icon">🏆</div>
-          <div><div class="summary-label">직각 우승 횟수</div>
-          <div class="summary-main">${championTop?getShortName(championTop.engraving_name):"-"}</div>
-          <div class="summary-rank">최다 우승 1위</div>
-          <div class="summary-meta">${championTop?`${championTop.class_name} · 우승 ${championTop.champion_count}회`:"데이터 없음"}</div></div>
-        </div></div>
-        <div class="summary-card"><div class="summary-inner">
-          <div class="summary-icon">⚔️</div>
-          <div><div class="summary-label">직각 승률</div>
-          <div class="summary-main">${rateTop?getShortName(rateTop.engraving_name):"-"}</div>
-          <div class="summary-rank">최다 1:1 승률 1위</div>
-          <div class="summary-meta">${rateTop?`${rateTop.class_name} · 1:1 승률 ${Number(rateTop.win_rate).toFixed(2)}%`:"데이터 없음"}</div></div>
-        </div></div>`;
+
+      const championTop3 = sorted.slice(0, 3);
+      const rateTop3 = rateSorted.slice(0, 3);
+
+      function podiumCard(item, rank, kind) {
+        if (!item) return "";
+
+        const podClass =
+          rank === 1 ? "pod-1st" :
+          rank === 2 ? "pod-2nd" :
+          "pod-3rd";
+
+        const valueText =
+          kind === "champ"
+            ? `${item.champion_count}회`
+            : `${Number(item.win_rate).toFixed(2)}%`;
+
+        return `
+          <div class="pod-card ${podClass}">
+            <div class="pod-rank">${rank}위</div>
+            <div class="pod-icon">
+              <img src="${getIconPath(item.engraving_name)}" alt="${item.engraving_name}" onerror="this.style.opacity='0.2';">
+            </div>
+            <div class="pod-name">${getShortName(item.engraving_name)}</div>
+            <div class="pod-val">${valueText}</div>
+          </div>
+        `;
+      }
+
+      summaryCards.innerHTML = `
+        <div class="podium-section ps-champ">
+          <div class="podium-section-title">
+            <span>🏆</span>
+            <span>우승 TOP 3</span>
+          </div>
+          <div class="podium-trio">
+            ${podiumCard(championTop3[0], 1, "champ")}
+            ${podiumCard(championTop3[1], 2, "champ")}
+            ${podiumCard(championTop3[2], 3, "champ")}
+          </div>
+        </div>
+
+        <div class="podium-section ps-rate">
+          <div class="podium-section-title">
+            <span>⚔️</span>
+            <span>승률 TOP 3</span>
+          </div>
+          <div class="podium-trio">
+            ${podiumCard(rateTop3[0], 1, "rate")}
+            ${podiumCard(rateTop3[1], 2, "rate")}
+            ${podiumCard(rateTop3[2], 3, "rate")}
+          </div>
+        </div>
+      `;
+      
       if (sorted.length===0) {
         rankingList.innerHTML=`<div class="rank-row"><div class="rank-col"><div class="rank-num">-</div></div><div class="rank-col"><div class="rank-name">데이터 없음</div><div class="rank-job">집계 이후 자동 반영됩니다.</div></div></div>`;
         return;
