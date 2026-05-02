@@ -3825,7 +3825,7 @@ async function loadOpRatePrevData() {
 
 function renderOpRateContent(rows, prevRows) {
   if (!rows || rows.length === 0) {
-    opRateContent.innerHTML = `<div class="loading-text">데이터를 불러오지 못했어요 😢</div>`;
+    opRateContent.innerHTML = '<div class="loading-text">데이터를 불러오지 못했어요 😢</div>';
     return;
   }
 
@@ -3850,6 +3850,81 @@ function renderOpRateContent(rows, prevRows) {
       prevRateMap[r.engraving_name] = Number(r.win_rate);
     });
   }
+
+  function getRowClass(i) {
+    if (i === 0) return "row-top1";
+    if (i === 1) return "row-top2";
+    if (i === 2) return "row-top3";
+    return "";
+  }
+
+  function getClassName(engraving) {
+    const cand = allCandidates.find(c => c.engraving_name === engraving);
+    return cand ? cand.class_name : "";
+  }
+
+  function getDeltaHTML(engName, currentRank, currentRate) {
+    const prevRank = prevRankMap[engName];
+    const prevRate = prevRateMap[engName];
+
+    if (prevRank === undefined || prevRate === undefined) {
+      return '<div class="delta-wrap"><span class="delta-new">🆕 신규</span></div>';
+    }
+
+    const rankDiff = prevRank - currentRank;
+    const rateDiff = (currentRate - prevRate).toFixed(2);
+
+    let rankHTML = '';
+    let rateHTML = '';
+
+    if (rankDiff > 0) {
+      rankHTML = '<span class="delta-up">▲ +' + rankDiff + '</span>';
+    } else if (rankDiff < 0) {
+      rankHTML = '<span class="delta-down">▼ ' + rankDiff + '</span>';
+    } else {
+      rankHTML = '<span class="delta-same">─</span>';
+    }
+
+    if (Number(rateDiff) > 0) {
+      rateHTML = '<span class="delta-rate-up">+' + rateDiff + '%</span>';
+    } else if (Number(rateDiff) < 0) {
+      rateHTML = '<span class="delta-rate-down">' + rateDiff + '%</span>';
+    }
+
+    if (rankDiff === 0 && Number(rateDiff) === 0) return '';
+    return '<div class="delta-wrap">' + rankHTML + ' ' + rateHTML + '</div>';
+  }
+
+  let html = '<div class="rate-list-wrap">';
+
+  sorted.forEach((row, i) => {
+    const delta = getDeltaHTML(row.engraving_name, i + 1, Number(row.win_rate));
+
+    html +=
+      '<div class="rate-row-item ' + getRowClass(i) + '">' +
+        '<div class="rate-rank">' + (i + 1) + '</div>' +
+        '<div class="rate-icon">' +
+          '<img src="' + getIconPath(row.engraving_name) + '" alt="' + row.engraving_name + '" onerror="this.style.opacity=\'0.2\';">' +
+        '</div>' +
+        '<div class="rate-info">' +
+          '<div class="rate-name">' + row.engraving_name + '</div>' +
+          '<div class="rate-class">' + getClassName(row.engraving_name) + '</div>' +
+          '<div class="rate-bar-bg">' +
+            '<div class="rate-bar-fill bar-fill-op" style="width:' + Math.min(100, Number(row.win_rate)) + '%"></div>' +
+          '</div>' +
+          delta +
+        '</div>' +
+        '<div class="rate-right">' +
+          '<div class="rate-value">' + Number(row.win_rate).toFixed(1) + '%</div>' +
+          '<div class="rate-record">' + row.total_matches + '전 ' + row.win_count + '승 ' + row.lose_count + '패</div>' +
+        '</div>' +
+      '</div>';
+  });
+
+  html += '</div>';
+  opRateContent.innerHTML = html;
+}
+    
 
   function getRowClass(i) {
     if (i === 0) return "row-top1";
