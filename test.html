@@ -3196,7 +3196,7 @@
 
       <div class="modal-top-label">OP TOURNAMENT</div>
       <div class="modal-title" style="color:#4bd3ff;">OP직각 승률표 📈</div>
-      <div class="modal-sub" id="opRateSub">최근 10일간 1:1 승률 순위</div>
+      <div class="modal-sub" id="opRateSub">최근 밸패 전후 1:1 승률 순위비교</div>
       <div class="modal-divider"></div>
 
       <div id="opRateContent"><div class="loading-text">데이터 불러오는 중...</div></div>
@@ -3909,13 +3909,16 @@ function setBattleCardVisuals(side, candidate) {
         </div>`;
       }).join("");
       
-            if (!bothCompleted&&oneCompleted&&sorted.length>10) {
-        rankingList.insertAdjacentHTML("beforeend",`
-          <div class="locked-notice">
-            <div class="locked-notice-icon">🔒</div>
-            <div class="locked-notice-text">OP / 호감 토너먼트를 <strong>모두 완료</strong>하면 전체 랭킹이 오픈됩니다!</div>
-          </div>
-        `);
+                 if (!bothCompleted&&oneCompleted&&sorted.length>10) {
+        const dimmedRows = rankingList.querySelectorAll(".rank-row.dimmed");
+        if (dimmedRows.length > 0) {
+          dimmedRows[0].insertAdjacentHTML("beforebegin",`
+            <div class="locked-notice">
+              <div class="locked-notice-icon">🔒</div>
+              <div class="locked-notice-text">OP / 호감 토너먼트를 <strong>모두 완료</strong>하면 전체 랭킹이 오픈됩니다!</div>
+            </div>
+          `);
+        }
       }
     }
 
