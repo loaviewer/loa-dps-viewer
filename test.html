@@ -914,6 +914,21 @@
       border-color: rgba(255,255,255,0.10);
     }
 
+    .rank-row.row-1st {
+      background: linear-gradient(135deg, rgba(255,215,0,0.06), rgba(255,180,60,0.03));
+      border-color: rgba(255,215,0,0.18);
+    }
+
+    .rank-row.row-2nd {
+      background: linear-gradient(135deg, rgba(192,192,192,0.05), rgba(160,170,190,0.02));
+      border-color: rgba(192,192,192,0.14);
+    }
+
+    .rank-row.row-3rd {
+      background: linear-gradient(135deg, rgba(205,127,50,0.06), rgba(180,120,60,0.02));
+      border-color: rgba(205,127,50,0.14);
+    }
+    
     .rank-row.dimmed { opacity: 0.33; filter: blur(2px); }
     .rank-col { min-width: 0; }
 
@@ -924,6 +939,10 @@
       text-align: center;
     }
 
+    .rank-num.top1 { color: #ffd700; }
+    .rank-num.top2 { color: #c0c0c0; }
+    .rank-num.top3 { color: #cd7f32; }
+    
     .rank-name {
       font-size: 17px;
       font-weight: 900;
@@ -3799,16 +3818,29 @@ function setBattleCardVisuals(side, candidate) {
       const oneCompleted=completedState.op||completedState.favor;
       const revealLimit=bothCompleted?Infinity:(oneCompleted?10:0);
 
-      rankingList.innerHTML=sorted.map((row,index)=>{
+            rankingList.innerHTML=sorted.map((row,index)=>{
         const hidden=index>=revealLimit;
 
         let iconClass = "";
-        if (index === 0) iconClass = "icon-1st";
-        else if (index === 1) iconClass = "icon-2nd";
-        else if (index === 2) iconClass = "icon-3rd";
+        let rowClass = "";
+        let rankClass = "";
 
-        return `<div class="rank-row ${hidden?"dimmed":""}">
-          <div class="rank-col"><div class="rank-num">${index+1}위</div></div>
+        if (index === 0) {
+          iconClass = "icon-1st";
+          rowClass = "row-1st";
+          rankClass = "top1";
+        } else if (index === 1) {
+          iconClass = "icon-2nd";
+          rowClass = "row-2nd";
+          rankClass = "top2";
+        } else if (index === 2) {
+          iconClass = "icon-3rd";
+          rowClass = "row-3rd";
+          rankClass = "top3";
+        }
+
+        return `<div class="rank-row ${rowClass} ${hidden?"dimmed":""}">
+          <div class="rank-col"><div class="rank-num ${rankClass}">${index+1}위</div></div>
 
           <div class="rank-col">
             <div class="rank-icon-wrap ${iconClass}">
