@@ -3900,9 +3900,12 @@ function renderOpRateContent(rows, prevRows) {
   sorted.forEach(function(row, i) {
     var delta = getDeltaHTML(row.engraving_name, i + 1, Number(row.win_rate));
 
-    html +=
+       html +=
       '<div class="rate-row-item ' + getRowClass(i) + '">' +
         '<div class="rate-rank">' + (i + 1) + '</div>' +
+        '<div class="rate-icon">' +
+          '<img src="' + getIconPath(row.engraving_name) + '" alt="' + row.engraving_name + '" onerror="this.style.opacity=\'0.2\';">' +
+        '</div>' +
         '<div class="rate-info">' +
           '<div class="rate-name">' + row.engraving_name + '</div>' +
           '<div class="rate-class">' + getClassName(row.engraving_name) + '</div>' +
