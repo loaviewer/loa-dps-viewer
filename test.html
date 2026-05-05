@@ -174,11 +174,50 @@
       border: 1px solid rgba(255,215,0,0.50);
     }
 
-    .new-badge-rate {
-      top: -8px;
-      right: -8px;
-      z-index: 6;
-    }
+    .oprate-btn-wrap {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.new-badge-rate {
+  top: -10px;
+  right: -10px;
+  z-index: 8;
+}
+
+.tier-btn-op-rate .tier-btn-main {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.oprate-main-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(130,100,255,0.30), rgba(80,180,255,0.26));
+  border: 1px solid rgba(180,220,255,0.28);
+  box-shadow:
+    0 0 10px rgba(100,200,255,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.14);
+  flex-shrink: 0;
+}
+
+.oprate-main-icon {
+  display: inline-block;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  color: initial !important;
+  font-size: 14px;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(120,210,255,0.35));
+}
     
     @keyframes newShimmer {
       0%   { background-position: 250% center; }
@@ -3285,17 +3324,23 @@
           </div>
         </button>
 
-       <button class="tier-btn tier-btn-op-rate" id="openOpRateBtn">
-  <div class="oprate-spark-glow"></div>
-  <div class="oprate-spark-sweep"></div>
+       <div class="oprate-btn-wrap">
   <span class="new-badge new-badge-rate">NEW</span>
-  <div class="tier-lock-icon" id="opRateLockIcon" style="display:none;">🔒</div>
-  <div class="tier-btn-content">
-    <span class="tier-btn-small">밸패 전후 승률 변화</span>
-    <span class="tier-btn-main">승률 변동 📈</span>
-    <span class="tier-badge-solid badge-s-solid">S 도장 이상 열람 가능</span>
-  </div>
-</button>
+
+  <button class="tier-btn tier-btn-op-rate" id="openOpRateBtn">
+    <div class="oprate-spark-glow"></div>
+    <div class="oprate-spark-sweep"></div>
+    <div class="tier-lock-icon" id="opRateLockIcon" style="display:none;">🔒</div>
+    <div class="tier-btn-content">
+      <span class="tier-btn-small">밸패 전후 승률 변화</span>
+      <span class="tier-btn-main">
+        승률 변동
+        <span class="oprate-main-icon-wrap"><span class="oprate-main-icon">📈</span></span>
+      </span>
+      <span class="tier-badge-solid badge-s-solid">S 도장 이상 열람 가능</span>
+    </div>
+  </button>
+</div>
 
         <div class="sidebar-divider"></div>
         <!-- 경매 계산기 -->
