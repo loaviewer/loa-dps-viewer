@@ -174,6 +174,12 @@
       border: 1px solid rgba(255,215,0,0.50);
     }
 
+    .new-badge-rate {
+      top: -8px;
+      right: -8px;
+      z-index: 6;
+    }
+    
     @keyframes newShimmer {
       0%   { background-position: 250% center; }
       100% { background-position: 0% center; }
@@ -3282,13 +3288,11 @@
        <button class="tier-btn tier-btn-op-rate" id="openOpRateBtn">
   <div class="oprate-spark-glow"></div>
   <div class="oprate-spark-sweep"></div>
+  <span class="new-badge new-badge-rate">NEW</span>
   <div class="tier-lock-icon" id="opRateLockIcon" style="display:none;">🔒</div>
   <div class="tier-btn-content">
     <span class="tier-btn-small">밸패 전후 승률 변화</span>
-    <span class="tier-btn-main">
-  OP직각 승률표
-  <span class="oprate-icon-wrap"><span class="oprate-icon">📈</span></span>
-</span>
+    <span class="tier-btn-main">승률 변동 📈</span>
     <span class="tier-badge-solid badge-s-solid">S 도장 이상 열람 가능</span>
   </div>
 </button>
@@ -3674,11 +3678,11 @@
       </div>
 
       <div class="modal-top-label">OP TOURNAMENT</div>
-      <div class="modal-title" style="color:#4bd3ff;">OP직각 승률표 📈</div>
+      <div class="modal-title" style="color:#4bd3ff;">OP직각 승률표 변화 📈</div>
             <div class="modal-sub" id="opRateSub">최근 10일간 1:1 승률 순위</div>
 
       <div class="oprate-compare-wrap">
-        <div class="oprate-compare-base">기준 데이터 · 26.04.12 ~ 26.04.22</div>
+        <div class="oprate-compare-base">밸패전 데이터 · 26.04.12 ~ 26.04.22</div>
         <div class="oprate-compare-vs">VS</div>
         <div class="oprate-compare-tabs" id="opRateCompareTabs">
           <button class="oprate-compare-btn active" data-mode="postpatch">4/22 이후 비교</button>
