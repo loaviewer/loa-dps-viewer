@@ -2770,6 +2770,86 @@
   color: rgba(200,180,120,0.35);
 }
 
+    .oprate-compare-wrap {
+      position: relative;
+      z-index: 1;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .oprate-compare-base {
+      font-size: 11px;
+      font-weight: 900;
+      color: #d7c7a6;
+      letter-spacing: 0.6px;
+    }
+
+    .oprate-compare-vs {
+      font-size: 14px;
+      font-weight: 900;
+      color: #ffd48a;
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+
+    .oprate-compare-tabs {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .oprate-compare-btn {
+      min-width: 110px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: #7a8da8;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.2;
+      cursor: pointer;
+      transition: 0.16s ease;
+    }
+
+    .oprate-compare-btn:hover {
+      color: #c6d4e8;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .oprate-compare-btn.active {
+      background: rgba(255,255,255,0.08);
+      color: #ffffff;
+      box-shadow: 0 0 8px rgba(127,198,255,0.08);
+    }
+
+    @media (max-width: 768px) {
+      .oprate-compare-tabs {
+        width: 100%;
+      }
+
+      .oprate-compare-btn {
+        flex: 1 1 calc(50% - 4px);
+        min-width: 0;
+        padding: 8px 10px;
+        font-size: 11px;
+      }
+
+      .oprate-compare-base {
+        font-size: 10px;
+      }
+    }
+    
 /* ===== OP 승률표 리스트 ===== */
 .rate-list-wrap {
   position: relative;
@@ -3595,7 +3675,18 @@
 
       <div class="modal-top-label">OP TOURNAMENT</div>
       <div class="modal-title" style="color:#4bd3ff;">OP직각 승률표 📈</div>
-      <div class="modal-sub" id="opRateSub">최근 밸패 전후 1:1 승률 순위비교</div>
+            <div class="modal-sub" id="opRateSub">최근 10일간 1:1 승률 순위</div>
+
+      <div class="oprate-compare-wrap">
+        <div class="oprate-compare-base">기준 데이터 · 26.04.12 ~ 26.04.22</div>
+        <div class="oprate-compare-vs">VS</div>
+        <div class="oprate-compare-tabs" id="opRateCompareTabs">
+          <button class="oprate-compare-btn active" data-mode="postpatch">4/22 이후 비교</button>
+          <button class="oprate-compare-btn" data-mode="recent10">최근 10일 비교</button>
+          <button class="oprate-compare-btn" data-mode="recent5">최근 5일 비교</button>
+        </div>
+      </div>
+
       <div class="modal-divider"></div>
 
       <div id="opRateContent"><div class="loading-text">데이터 불러오는 중...</div></div>
