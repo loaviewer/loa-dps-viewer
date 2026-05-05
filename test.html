@@ -3883,7 +3883,52 @@ async function loadOpRatePrevData() {
   if (error || !data) return null;
   return data.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
 }
-      
+
+
+async function loadOpRateCompareData(mode) {
+  if (mode === "recent10") {
+    const {data, error} = await supabase.rpc("get_tier_data", {
+      p_type: "op",
+      p_days: 10
+    });
+    if (error || !data) return null;
+    return data.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
+  }
+
+  if (mode === "recent5") {
+    const {data, error} = await supabase.rpc("get_tier_data", {
+      p_type: "op",
+      p_days: 5
+    });
+    if (error || !data) return null;
+    return data.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
+  }
+
+  // 기본값 = 4/22 ~ 현재
+  return await loadOpRateData();
+}
+
+async function refreshOpRateModal(mode = "postpatch") {
+  opRateContent.innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
+
+  const rows = await loadOpRateCompareData(mode);
+  const prevRows = await loadOpRatePrevData();
+
+  const now = new Date();
+  const stamp = `${String(now.getFullYear()).slice(2)}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+
+  if (mode === "recent10") {
+    opRateSub.textContent = `OP 직각 1:1 승률 · 최근 10일 비교 🕙 ${stamp}`;
+  } else if (mode === "recent5") {
+    opRateSub.textContent = `OP 직각 1:1 승률 · 최근 5일 비교 🕔 ${stamp}`;
+  } else {
+    opRateSub.textContent = `OP 직각 1:1 승률 · 4/22 ~ 현재 비교 🕙 ${stamp}`;
+  }
+
+  renderOpRateContent(rows, prevRows);
+}
+
+    
 
     function calcTiers(entries) {
       if (!entries.length) return [[],[],[],[],[],[]];
@@ -4843,7 +4888,16 @@ document.getElementById("favorTierSub").textContent=`4/22 ~ 현재 호감 1:1 �
 document.getElementById("closeOpRateBtn").addEventListener("click",()=>{ opRateModal.classList.remove("show"); });
 opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal.classList.remove("show"); });
 
-    document.getElementById("openOpRateBtn").addEventListener("click",async(e)=>{
+    document.querySelectorAll("#opRateCompareTabs .oprate-compare-btn").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    document.querySelectorAll("#opRateCompareTabs .oprate-compare-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    await refreshOpRateModal(btn.dataset.mode);
+  });
+});
+    
+
+   document.getElementById("openOpRateBtn").addEventListener("click", async (e) => {
   const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
 
   if (!opRateUnlocked) {
@@ -4856,17 +4910,13 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
   }
 
   opRateModal.classList.add("show");
-  opRateContent.innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
 
-  const rows = await loadOpRateData();
-  const prevRows = await loadOpRatePrevData();
+  const compareBtns = document.querySelectorAll("#opRateCompareTabs .oprate-compare-btn");
+  compareBtns.forEach(btn => btn.classList.remove("active"));
+  const defaultBtn = document.querySelector('#opRateCompareTabs .oprate-compare-btn[data-mode="postpatch"]');
+  if (defaultBtn) defaultBtn.classList.add("active");
 
-  const now = new Date();
-  const stamp = `${String(now.getFullYear()).slice(2)}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
-  opRateSub.textContent = `OP 직각 1:1 승률 · 4/22 ~ 현재 🕙 ${stamp}`;
-
-  renderOpRateContent(rows, prevRows);
-        
+  await refreshOpRateModal("postpatch");
 });
 
     document.addEventListener("keydown",e=>{
