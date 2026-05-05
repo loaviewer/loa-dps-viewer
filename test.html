@@ -3775,6 +3775,7 @@
     const SUPPORT_ENGRAVINGS = ["절실한 구원","만개","축복의 오라","해방자"];
     const A_MINUS_AND_ABOVE  = ["SS+","SS","SS-","S+","S","S-","A+","A","A-"];
     const S_AND_ABOVE = ["SS+","SS","SS-","S+","S","S-"];
+    const A_LINE_ONLY = ["A+","A","A-"];
 
     const GRADE_TABLE = [
       {grade:"SS+",min:100,max:100},{grade:"SS",min:98,max:99},{grade:"SS-",min:96,max:97},
@@ -4373,10 +4374,24 @@ function setBattleCardVisuals(side, candidate) {
       return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
     }
 
-    function updateLockIcons() {
+
+
+function isOpRateUnlocked() {
+  return !!(
+    completedState.op &&
+    todayOpGrade &&
+    (
+      S_AND_ABOVE.includes(todayOpGrade) ||
+      (A_LINE_ONLY.includes(todayOpGrade) && completedState.favor)
+    )
+  );
+}
+
+    
+   function updateLockIcons() {
   const opUnlocked      = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
   const favorUnlocked   = completedState.op || completedState.favor;
-  const opRateUnlocked  = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+  const opRateUnlocked  = isOpRateUnlocked();
 
   opLockIcon.style.display     = opUnlocked ? "none" : "flex";
   favorLockIcon.style.display  = favorUnlocked ? "none" : "flex";
@@ -4947,7 +4962,7 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
     
 
    document.getElementById("openOpRateBtn").addEventListener("click", async (e) => {
-  const opRateUnlocked = completedState.op && todayOpGrade && S_AND_ABOVE.includes(todayOpGrade);
+  const opRateUnlocked = isOpRateUnlocked();
 
   if (!opRateUnlocked) {
     showMiniPopup(
