@@ -3900,6 +3900,48 @@
       color: #c4b5fd;
     }
 
+    .inq-read-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .inq-read-title-text {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.3;
+      word-break: keep-all;
+    }
+
+    .inq-edit-title-inline {
+      flex: 1;
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.3;
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(160,120,255,0.25);
+      background: rgba(255,255,255,0.06);
+      outline: none;
+      transition: 0.15s ease;
+    }
+
+    .inq-edit-title-inline:focus {
+      border-color: rgba(160,120,255,0.50);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .inq-read-id {
+      font-size: 16px;
+      font-weight: 900;
+      color: #c4b5fd;
+      flex-shrink: 0;
+    }
+
+    
     .inq-read-badges {
       display: flex;
       gap: 4px;
@@ -6008,24 +6050,29 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
 
                      const canEdit = row.status !== "답변완료";
 
+                const canEdit = row.status !== "답변완료";
+
+        let titleHTML = "";
+        if (canEdit) {
+          titleHTML =
+            '<input class="inq-edit-title-inline" type="text" id="inqEditTitle" value="' + row.title.replace(/"/g, '&quot;') + '" />';
+        } else {
+          titleHTML =
+            '<div class="inq-read-title-text">' + row.title + '</div>';
+        }
+
         let editHTML = "";
         if (canEdit) {
           editHTML =
             '<div class="inq-edit-section">' +
               '<div class="inq-edit-label">✏️ 수정하기</div>' +
-              '<div class="inq-edit-row">' +
-                '<div class="inq-edit-field">' +
-                  '<div class="inq-edit-field-label">문의 유형</div>' +
-                  '<select class="inq-edit-select" id="inqEditType">' +
-                    '<option value="오류제보"' + (row.inquiry_type === "오류제보" ? " selected" : "") + '>오류제보</option>' +
-                    '<option value="질문하기"' + (row.inquiry_type === "질문하기" ? " selected" : "") + '>질문하기</option>' +
-                    '<option value="기타"' + (row.inquiry_type === "기타" ? " selected" : "") + '>기타</option>' +
-                  '</select>' +
-                '</div>' +
-                '<div class="inq-edit-field">' +
-                  '<div class="inq-edit-field-label">제목</div>' +
-                  '<input class="inq-edit-input" type="text" id="inqEditTitle" value="' + row.title.replace(/"/g, '&quot;') + '" />' +
-                '</div>' +
+              '<div class="inq-edit-field">' +
+                '<div class="inq-edit-field-label">문의 유형</div>' +
+                '<select class="inq-edit-select" id="inqEditType">' +
+                  '<option value="오류제보"' + (row.inquiry_type === "오류제보" ? " selected" : "") + '>오류제보</option>' +
+                  '<option value="질문하기"' + (row.inquiry_type === "질문하기" ? " selected" : "") + '>질문하기</option>' +
+                  '<option value="기타"' + (row.inquiry_type === "기타" ? " selected" : "") + '>기타</option>' +
+                '</select>' +
               '</div>' +
               '<div class="inq-edit-field">' +
                 '<div class="inq-edit-field-label">내용</div>' +
@@ -6038,16 +6085,15 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
         inquiryReadResult.innerHTML =
           '<div class="inquiry-read-card">' +
             '<div class="inq-read-top">' +
-              '<div class="inq-read-id">#' + row.id + '</div>' +
               '<div class="inq-read-badges">' +
                 '<span class="inq-badge-secret">비밀글</span>' +
                 '<span class="inq-badge-type">' + row.inquiry_type + '</span>' +
               '</div>' +
+              '<div class="inq-read-date">' + dateStr + '</div>' +
             '</div>' +
-            '<div class="inq-read-date" style="margin-bottom:12px;">' + dateStr + '</div>' +
-            '<div class="inq-edit-field">' +
-              '<div class="inq-edit-field-label">제목</div>' +
-              '<div class="inq-read-field-value">' + row.title + '</div>' +
+            '<div class="inq-read-title-wrap">' +
+              '<div class="inq-read-id">#' + row.id + '</div>' +
+              titleHTML +
             '</div>' +
             '<div class="inq-edit-field">' +
               '<div class="inq-edit-field-label">내용</div>' +
