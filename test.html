@@ -594,10 +594,11 @@
       z-index: 1;
     }
 
-    .intro-panel {
-      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-      text-align: center;
-    }
+   .intro-panel {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  text-align: center;
+  position: relative;
+}
 
     .intro-title {
       margin: 0;
@@ -630,6 +631,48 @@
       line-height: 1.8;
     }
 
+    .intro-actions {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 2;
+    }
+
+    .intro-inquiry-btn {
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04)),
+        linear-gradient(135deg, rgba(160,120,255,0.10), rgba(124,58,237,0.06));
+      color: #f3ead6;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.18s ease;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.16);
+    }
+
+    .intro-inquiry-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(160,120,255,0.24);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05)),
+        linear-gradient(135deg, rgba(160,120,255,0.14), rgba(124,58,237,0.08));
+    }
+
+    .intro-inquiry-icon {
+      font-size: 14px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    
     .section-divider {
       width: 100%;
       height: 3px;
@@ -2350,6 +2393,9 @@
       .metric-sub { font-size: 9px; }
       .meter { height: 8px; }
 
+
+      
+
       .pod-1st { min-height: 104px; }
       .pod-2nd, .pod-3rd { min-height: 90px; }
       .pod-1st .pod-icon { width: 42px; height: 42px; }
@@ -2400,6 +2446,12 @@
       .grade-stamp { width: 110px; height: 110px; }
       .grade-stamp .gs-grade { font-size: 22px; }
       .sidebar-calendar { display: none; }
+     
+      .intro-actions {
+        display: none;
+      }
+
+      
       /* ===== 모바일 배틀 카드 경량화 ===== */
       .battle-choice {
         transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease, filter 0.14s ease;
@@ -4213,10 +4265,6 @@
         </div>
         <div class="sidebar-divider"></div>
 
-<button class="guide-trigger" id="openInquiryBtn" style="margin-bottom:10px;">
-  <span class="guide-small">CONTACT</span>
-  <span>문의하기 💬</span>
-</button>
         
         <div class="sidebar-calendar">
           <div class="cal-header">
@@ -4229,9 +4277,16 @@
       </aside>
 
       <main class="main">
-                <section class="panel intro-panel">
-          <h1 class="intro-title">로아 직업 각인 토너먼트</h1>
-          <div class="intro-desc">
+               <section class="panel intro-panel">
+  <div class="intro-actions">
+    <button class="intro-inquiry-btn" id="openInquiryBtn" type="button">
+      <span class="intro-inquiry-icon">📩</span>
+      <span>간편 문의하기</span>
+    </button>
+  </div>
+
+  <h1 class="intro-title">로아 직업 각인 토너먼트</h1>
+  <div class="intro-desc">
             로스트아크 현 메타의 <span class="accent-red">OP 직각</span>과 매력적인 <span class="accent-red">호감 직각</span>을 직접 선정해 보세요!<br>
             ⚔️ <span class="accent-green">규칙:</span> 토너먼트는 <span class="accent-green">하루 1회</span>씩 참여 가능합니다.<br>
             📊 <span class="accent-green">집계:</span> 여러분의 선택은 <span class="accent-green">전체 랭킹</span>에 반영되며, (매시간 정각 갱신)<br>
