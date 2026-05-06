@@ -3828,7 +3828,7 @@
 
     .inq-edit-textarea {
       width: 100%;
-      min-height: 80px;
+      min-height: 160px;
       padding: 12px 14px;
       border-radius: 10px;
       border: 1px solid rgba(160,120,255,0.18);
@@ -3870,10 +3870,17 @@
       cursor: not-allowed;
       transform: none;
     }
-    .inq-bottom-actions {
+
+        .inq-bottom-actions {
       display: flex;
       gap: 8px;
       margin-top: 8px;
+      align-items: stretch;
+    }
+
+    .inq-bottom-actions .inq-read-close-btn {
+      flex: 1;
+      margin-top: 0;
     }
 
     .inq-delete-btn {
