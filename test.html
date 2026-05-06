@@ -6048,24 +6048,29 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
           replyHTML = '<div class="inq-no-reply">⏳ 아직 답변이 등록되지 않았습니다</div>';
         }
 
-                     const canEdit = row.status !== "답변완료";
+                            const canEdit = row.status !== "답변완료";
 
-                
-        let titleHTML = "";
-        if (canEdit) {
-          titleHTML =
-            '<input class="inq-edit-title-inline" type="text" id="inqEditTitle" value="' + row.title.replace(/"/g, '&quot;') + '" />';
+        let statusHTML = "";
+        if (row.status === "답변완료" && row.admin_reply) {
+          const replyDate = new Date(row.replied_at).toLocaleDateString("ko-KR", {
+            year: "numeric", month: "2-digit", day: "2-digit",
+            hour: "2-digit", minute: "2-digit"
+          });
+          statusHTML =
+            '<div class="inq-reply-section">' +
+              '<div class="inq-reply-label">✅ 관리자 답변</div>' +
+              '<div class="inq-reply-text">' + row.admin_reply + '</div>' +
+              '<div class="inq-reply-date">' + replyDate + '</div>' +
+            '</div>';
         } else {
-          titleHTML =
-            '<div class="inq-read-title-text">' + row.title + '</div>';
+          statusHTML = '<div class="inq-no-reply">⏳ 아직 답변이 등록되지 않았습니다</div>';
         }
 
-        let editHTML = "";
         if (canEdit) {
-          editHTML =
-            '<div class="inq-edit-section">' +
-              '<div class="inq-edit-label">✏️ 수정하기</div>' +
-              '<div class="inq-edit-field">' +
+          inquiryReadResult.innerHTML =
+            '<div class="inquiry-read-card">' +
+              statusHTML +
+              '<div class="inq-edit-field" style="margin-top:12px;">' +
                 '<div class="inq-edit-field-label">문의 유형</div>' +
                 '<select class="inq-edit-select" id="inqEditType">' +
                   '<option value="오류제보"' + (row.inquiry_type === "오류제보" ? " selected" : "") + '>오류제보</option>' +
@@ -6074,34 +6079,35 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
                 '</select>' +
               '</div>' +
               '<div class="inq-edit-field">' +
+                '<div class="inq-edit-field-label">제목</div>' +
+                '<input class="inq-edit-input" type="text" id="inqEditTitle" value="' + row.title.replace(/"/g, '&quot;') + '" />' +
+              '</div>' +
+              '<div class="inq-edit-field">' +
                 '<div class="inq-edit-field-label">내용</div>' +
                 '<textarea class="inq-edit-textarea" id="inqEditContent">' + row.content + '</textarea>' +
               '</div>' +
               '<button class="inq-edit-save-btn" id="inqEditSaveBtn">수정 저장</button>' +
+              '<button class="inq-read-close-btn" id="inqReadCloseBtn">닫기</button>' +
+            '</div>';
+        } else {
+          inquiryReadResult.innerHTML =
+            '<div class="inquiry-read-card">' +
+              statusHTML +
+              '<div class="inq-read-top" style="margin-top:12px;">' +
+                '<div class="inq-read-badges">' +
+                  '<span class="inq-badge-secret">비밀글</span>' +
+                  '<span class="inq-badge-type">' + row.inquiry_type + '</span>' +
+                '</div>' +
+                '<div class="inq-read-date">' + dateStr + '</div>' +
+              '</div>' +
+              '<div class="inq-read-title-wrap">' +
+                '<div class="inq-read-id">#' + row.id + '</div>' +
+                '<div class="inq-read-title-text">' + row.title + '</div>' +
+              '</div>' +
+              '<div class="inq-read-content">' + row.content + '</div>' +
+              '<button class="inq-read-close-btn" id="inqReadCloseBtn">닫기</button>' +
             '</div>';
         }
-
-        inquiryReadResult.innerHTML =
-          '<div class="inquiry-read-card">' +
-            '<div class="inq-read-top">' +
-              '<div class="inq-read-badges">' +
-                '<span class="inq-badge-secret">비밀글</span>' +
-                '<span class="inq-badge-type">' + row.inquiry_type + '</span>' +
-              '</div>' +
-              '<div class="inq-read-date">' + dateStr + '</div>' +
-            '</div>' +
-            '<div class="inq-read-title-wrap">' +
-              '<div class="inq-read-id">#' + row.id + '</div>' +
-              titleHTML +
-            '</div>' +
-            '<div class="inq-edit-field">' +
-              '<div class="inq-edit-field-label">내용</div>' +
-              '<div class="inq-read-content">' + row.content + '</div>' +
-            '</div>' +
-            replyHTML +
-            editHTML +
-            '<button class="inq-read-close-btn" id="inqReadCloseBtn">닫기</button>' +
-          '</div>';
 
         inquiryReadResult.style.display = "block";
         inqPwPopup.classList.remove("show");
