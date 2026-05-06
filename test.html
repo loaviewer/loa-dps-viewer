@@ -5508,17 +5508,27 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
 
 
     // ===== 문의 게시판 =====
-    const inquiryModal = document.getElementById("inquiryModal");
 
-    document.getElementById("openInquiryBtn").addEventListener("click", () => {
-      inquiryModal.classList.add("show");
-      switchInquiryTab("list");
-      loadInquiryList();
-    });
+const inquiryModal = document.getElementById("inquiryModal");
+const openInquiryBtn = document.getElementById("openInquiryBtn");
+const closeInquiryBtn = document.getElementById("closeInquiryBtn");
 
-    document.getElementById("closeInquiryBtn").addEventListener("click", () => {
-      inquiryModal.classList.remove("show");
-    });
+if (inquiryModal && openInquiryBtn && closeInquiryBtn) {
+  openInquiryBtn.addEventListener("click", () => {
+    inquiryModal.classList.add("show");
+    switchInquiryTab("list");
+    loadInquiryList();
+  });
+
+  closeInquiryBtn.addEventListener("click", () => {
+    inquiryModal.classList.remove("show");
+  });
+
+  inquiryModal.addEventListener("click", e => {
+    if (e.target === inquiryModal) inquiryModal.classList.remove("show");
+  });
+}
+    
 
     inquiryModal.addEventListener("click", e => {
       if (e.target === inquiryModal) inquiryModal.classList.remove("show");
