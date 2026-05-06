@@ -3283,6 +3283,436 @@
   border-radius: 999px;
 }
 
+
+
+    /* ===== 문의 게시판 모달 ===== */
+    .inquiry-modal-card {
+      width: min(560px, 100%);
+      max-height: 88vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: linear-gradient(180deg, rgba(24,20,36,0.98), rgba(14,12,24,0.98));
+      border: 1px solid rgba(160,120,255,0.18);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45), 0 0 40px rgba(160,120,255,0.06);
+    }
+
+    .inquiry-modal-card .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 5;
+    }
+
+    /* ===== 탭 ===== */
+    .inquiry-tabs {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 16px;
+      width: 100%;
+    }
+
+    .inquiry-tab {
+      flex: 1;
+      padding: 9px 14px;
+      border-radius: 9px;
+      border: none;
+      background: transparent;
+      color: #7a8da8;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.16s ease;
+      text-align: center;
+    }
+
+    .inquiry-tab:hover {
+      color: #c6d4e8;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .inquiry-tab.active {
+      background: rgba(160,120,255,0.15);
+      color: #ffffff;
+      box-shadow: 0 0 8px rgba(160,120,255,0.10);
+    }
+
+    /* ===== 비밀번호 확인 영역 ===== */
+    .inquiry-pw-check {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(160,120,255,0.06);
+      border: 1px solid rgba(160,120,255,0.14);
+      margin-bottom: 14px;
+    }
+
+    .inquiry-pw-label {
+      font-size: 12px;
+      font-weight: 900;
+      color: #c4b5fd;
+      margin-bottom: 8px;
+    }
+
+    .inquiry-pw-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .inquiry-pw-input {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(160,120,255,0.18);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      outline: none;
+      transition: 0.15s ease;
+    }
+
+    .inquiry-pw-input:focus {
+      border-color: rgba(160,120,255,0.45);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .inquiry-pw-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.15s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .inquiry-pw-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .inquiry-list-divider {
+      width: 100%;
+      height: 1px;
+      margin: 0 0 14px;
+      background: linear-gradient(90deg, transparent, rgba(160,120,255,0.18), transparent);
+    }
+
+    /* ===== 문의 목록 ===== */
+    .inquiry-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .inquiry-item {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: 0.12s ease;
+    }
+
+    .inquiry-item:hover {
+      background: rgba(255,255,255,0.045);
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .inq-no {
+      font-size: 12px;
+      font-weight: 900;
+      color: #5a6a82;
+      text-align: center;
+    }
+
+    .inq-info {
+      min-width: 0;
+    }
+
+    .inq-title-text {
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .inq-meta {
+      margin-top: 3px;
+      font-size: 10px;
+      color: #5a6a82;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .inq-type-badge {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      background: rgba(160,120,255,0.12);
+      color: #c4b5fd;
+    }
+
+    .inq-status {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .inq-status-waiting {
+      background: rgba(255,196,90,0.12);
+      color: #ffd48a;
+      border: 1px solid rgba(255,196,90,0.22);
+    }
+
+    .inq-status-replied {
+      background: rgba(62,220,125,0.12);
+      color: #8ef0c9;
+      border: 1px solid rgba(62,220,125,0.22);
+    }
+
+    /* ===== 본인 글 확인 결과 ===== */
+    .inquiry-read-card {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 14px;
+      background: rgba(160,120,255,0.06);
+      border: 1px solid rgba(160,120,255,0.18);
+    }
+
+    .inq-read-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .inq-read-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .inq-read-date {
+      font-size: 10px;
+      color: #5a6a82;
+    }
+
+    .inq-read-content {
+      font-size: 13px;
+      color: #d7cfee;
+      line-height: 1.7;
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .inq-reply-section {
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(62,220,125,0.06);
+      border: 1px solid rgba(62,220,125,0.16);
+    }
+
+    .inq-reply-label {
+      font-size: 11px;
+      font-weight: 900;
+      color: #8ef0c9;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+
+    .inq-reply-text {
+      font-size: 13px;
+      color: #d0f0e0;
+      line-height: 1.7;
+    }
+
+    .inq-reply-date {
+      margin-top: 6px;
+      font-size: 10px;
+      color: #5a8a6a;
+    }
+
+    .inq-no-reply {
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255,196,90,0.06);
+      border: 1px solid rgba(255,196,90,0.14);
+      font-size: 12px;
+      color: #ffd48a;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .inq-read-close-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.55);
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .inq-read-close-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+
+    /* ===== 작성 폼 ===== */
+    .inq-form-group {
+      margin-bottom: 14px;
+    }
+
+    .inq-form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #c4b5fd;
+      margin-bottom: 6px;
+    }
+
+    .inq-form-input,
+    .inq-form-textarea,
+    .inq-form-select {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(160,120,255,0.15);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      outline: none;
+      transition: 0.15s ease;
+    }
+
+    .inq-form-input:focus,
+    .inq-form-textarea:focus,
+    .inq-form-select:focus {
+      border-color: rgba(160,120,255,0.45);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .inq-form-textarea {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .inq-form-select option {
+      background: #141a28;
+      color: #fff;
+    }
+
+    .inq-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .inq-form-hint {
+      font-size: 10px;
+      color: #5a6a82;
+      margin-top: 4px;
+    }
+
+    .inq-submit-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.18s ease;
+      margin-top: 6px;
+      box-shadow: 0 6px 18px rgba(168,85,247,0.20);
+    }
+
+    .inq-submit-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .inq-submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .inq-pw-notice {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(160,120,255,0.08);
+      border: 1px solid rgba(160,120,255,0.16);
+      font-size: 11px;
+      color: #c4b5fd;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .inq-empty {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #5a6a82;
+    }
+
+    @media (max-width: 768px) {
+      .inquiry-modal-card {
+        max-height: 85vh;
+      }
+
+      .inq-form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .inquiry-pw-row {
+        flex-wrap: wrap;
+      }
+
+      .inquiry-pw-input {
+        min-width: 0;
+      }
+
+      .inquiry-item {
+        grid-template-columns: 30px 1fr auto;
+        gap: 8px;
+        padding: 9px 10px;
+      }
+    }
+
+
+    
   </style>
 </head>
 <body>
@@ -3677,6 +4107,89 @@
     </div>
   </div>
 
+
+  <!-- 문의 모달 -->
+  <div class="modal-backdrop" id="inquiryModal">
+    <div class="modal-card inquiry-modal-card">
+      <button class="modal-close" id="closeInquiryBtn">×</button>
+
+      <div class="modal-top-label" style="color:#c4b5fd;">📝 INQUIRY</div>
+      <div class="modal-title" style="color:#fff;">문의 게시판</div>
+      <div class="modal-sub" style="color:#8a7fae;">비밀번호를 설정하면 나중에 답변을 확인할 수 있습니다.</div>
+      <div class="modal-divider"></div>
+
+      <!-- 탭: 목록 / 작성 -->
+      <div class="inquiry-tabs">
+        <button class="inquiry-tab active" data-tab="list">문의 목록</button>
+        <button class="inquiry-tab" data-tab="write">문의 작성</button>
+      </div>
+
+      <!-- 목록 탭 -->
+      <div class="inquiry-panel" id="inquiryListPanel">
+        <div class="inquiry-pw-check">
+          <div class="inquiry-pw-label">🔒 내 문의 확인</div>
+          <div class="inquiry-pw-row">
+            <input class="inquiry-pw-input" type="number" id="inquiryCheckId" placeholder="문의 번호" />
+            <input class="inquiry-pw-input" type="password" id="inquiryCheckPw" placeholder="비밀번호" />
+            <button class="inquiry-pw-btn" id="inquiryCheckBtn">확인</button>
+          </div>
+        </div>
+
+        <div class="inquiry-list-divider"></div>
+
+        <div id="inquiryListContent">
+          <div class="loading-text">불러오는 중...</div>
+        </div>
+
+        <!-- 비밀번호 확인 후 내용 표시 -->
+        <div id="inquiryReadResult" style="display:none;"></div>
+      </div>
+
+      <!-- 작성 탭 -->
+      <div class="inquiry-panel" id="inquiryWritePanel" style="display:none;">
+        <div class="inq-form-group">
+          <label class="inq-form-label">문의 유형</label>
+          <select class="inq-form-select" id="inqType">
+            <option value="오류제보">오류제보</option>
+            <option value="질문하기">질문하기</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+
+        <div class="inq-form-group">
+          <label class="inq-form-label">제목</label>
+          <input class="inq-form-input" type="text" id="inqTitle" placeholder="제목을 입력하세요" />
+        </div>
+
+        <div class="inq-form-group">
+          <label class="inq-form-label">내용</label>
+          <textarea class="inq-form-textarea" id="inqContent" placeholder="문의 내용을 작성해 주세요"></textarea>
+        </div>
+
+        <div class="inq-form-row">
+          <div class="inq-form-group">
+            <label class="inq-form-label">비밀번호 🔒</label>
+            <input class="inq-form-input" type="password" id="inqPw1" placeholder="4~8자리" />
+            <div class="inq-form-hint">답변 확인 시 필요합니다</div>
+          </div>
+          <div class="inq-form-group">
+            <label class="inq-form-label">비밀번호 확인</label>
+            <input class="inq-form-input" type="password" id="inqPw2" placeholder="다시 입력" />
+          </div>
+        </div>
+
+        <button class="inq-submit-btn" id="inqSubmitBtn">문의 등록하기</button>
+
+        <div class="inq-pw-notice">
+          💡 비밀번호를 잊으면 문의 내용을 확인할 수 없습니다.<br>
+          관리자 답변은 비밀번호 입력 후 확인 가능합니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
    <!-- OP 승률표 모달 -->
   <div class="modal-backdrop" id="opRateModal">
     <div class="modal-card oprate-modal-card">
@@ -4989,9 +5502,204 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
     opTierModal.classList.remove("show");
     favorTierModal.classList.remove("show");
     opRateModal.classList.remove("show");
+    document.getElementById("inquiryModal").classList.remove("show");
   }
 });
 
+
+    // ===== 문의 게시판 =====
+    const inquiryModal = document.getElementById("inquiryModal");
+
+    document.getElementById("openInquiryBtn").addEventListener("click", () => {
+      inquiryModal.classList.add("show");
+      switchInquiryTab("list");
+      loadInquiryList();
+    });
+
+    document.getElementById("closeInquiryBtn").addEventListener("click", () => {
+      inquiryModal.classList.remove("show");
+    });
+
+    inquiryModal.addEventListener("click", e => {
+      if (e.target === inquiryModal) inquiryModal.classList.remove("show");
+    });
+
+    // 탭 전환
+    document.querySelectorAll(".inquiry-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        switchInquiryTab(tab.dataset.tab);
+      });
+    });
+
+    function switchInquiryTab(tabName) {
+      document.querySelectorAll(".inquiry-tab").forEach(t => t.classList.remove("active"));
+      document.querySelector('.inquiry-tab[data-tab="' + tabName + '"]').classList.add("active");
+
+      document.getElementById("inquiryListPanel").style.display = tabName === "list" ? "block" : "none";
+      document.getElementById("inquiryWritePanel").style.display = tabName === "write" ? "block" : "none";
+
+      if (tabName === "list") {
+        document.getElementById("inquiryReadResult").style.display = "none";
+      }
+    }
+
+    // 목록 로드
+    async function loadInquiryList() {
+      var listEl = document.getElementById("inquiryListContent");
+      listEl.innerHTML = '<div class="loading-text">불러오는 중...</div>';
+
+      var result = await supabase.rpc("list_inquiries");
+
+      if (result.error || !result.data || result.data.length === 0) {
+        listEl.innerHTML = '<div class="inq-empty">아직 문의가 없습니다 📭</div>';
+        return;
+      }
+
+      var html = '<div class="inquiry-list">';
+
+      result.data.forEach(function(row) {
+        var dateStr = new Date(row.created_at).toLocaleDateString("ko-KR", {
+          year: "2-digit", month: "2-digit", day: "2-digit"
+        });
+
+        var statusClass = row.status === "답변완료" ? "inq-status-replied" : "inq-status-waiting";
+
+        html +=
+          '<div class="inquiry-item">' +
+            '<div class="inq-no">#' + row.id + '</div>' +
+            '<div class="inq-info">' +
+              '<div class="inq-title-text">' + row.title + '</div>' +
+              '<div class="inq-meta">' +
+                '<span class="inq-type-badge">' + row.inquiry_type + '</span>' +
+                '<span>' + dateStr + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="inq-status ' + statusClass + '">' + row.status + '</div>' +
+          '</div>';
+      });
+
+      html += '</div>';
+      listEl.innerHTML = html;
+    }
+
+    // 비밀번호로 본인 글 확인
+    document.getElementById("inquiryCheckBtn").addEventListener("click", async function() {
+      var inqId = parseInt(document.getElementById("inquiryCheckId").value);
+      var inqPw = document.getElementById("inquiryCheckPw").value.trim();
+      var resultEl = document.getElementById("inquiryReadResult");
+
+      if (!inqId || !inqPw) {
+        alert("문의 번호와 비밀번호를 입력해 주세요.");
+        return;
+      }
+
+      resultEl.style.display = "none";
+      resultEl.innerHTML = '<div class="loading-text">확인 중...</div>';
+      resultEl.style.display = "block";
+
+      var result = await supabase.rpc("read_inquiry", {
+        p_id: inqId,
+        p_password: inqPw
+      });
+
+      if (result.error || !result.data || result.data.length === 0) {
+        resultEl.innerHTML = '<div class="inq-empty">문의 번호 또는 비밀번호가 일치하지 않습니다 🔒</div>';
+        return;
+      }
+
+      var row = result.data[0];
+
+      var dateStr = new Date(row.created_at).toLocaleDateString("ko-KR", {
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit"
+      });
+
+      var replyHTML = "";
+
+      if (row.status === "답변완료" && row.admin_reply) {
+        var replyDate = new Date(row.replied_at).toLocaleDateString("ko-KR", {
+          year: "numeric", month: "2-digit", day: "2-digit",
+          hour: "2-digit", minute: "2-digit"
+        });
+
+        replyHTML =
+          '<div class="inq-reply-section">' +
+            '<div class="inq-reply-label">✅ 관리자 답변</div>' +
+            '<div class="inq-reply-text">' + row.admin_reply + '</div>' +
+            '<div class="inq-reply-date">' + replyDate + '</div>' +
+          '</div>';
+      } else {
+        replyHTML = '<div class="inq-no-reply">⏳ 아직 답변이 등록되지 않았습니다</div>';
+      }
+
+      resultEl.innerHTML =
+        '<div class="inquiry-read-card">' +
+          '<div class="inq-read-header">' +
+            '<div class="inq-read-title">#' + row.id + ' ' + row.title + '</div>' +
+            '<div class="inq-read-date">' + dateStr + '</div>' +
+          '</div>' +
+          '<div class="inq-read-content">' + row.content + '</div>' +
+          replyHTML +
+          '<button class="inq-read-close-btn" id="inqReadCloseBtn">닫기</button>' +
+        '</div>';
+
+      document.getElementById("inqReadCloseBtn").addEventListener("click", function() {
+        resultEl.style.display = "none";
+      });
+    });
+
+    // 문의 작성
+    var isSubmittingInquiry = false;
+
+    document.getElementById("inqSubmitBtn").addEventListener("click", async function() {
+      if (isSubmittingInquiry) return;
+
+      var type = document.getElementById("inqType").value;
+      var title = document.getElementById("inqTitle").value.trim();
+      var content = document.getElementById("inqContent").value.trim();
+      var pw1 = document.getElementById("inqPw1").value;
+      var pw2 = document.getElementById("inqPw2").value;
+
+      if (!title) { alert("제목을 입력해 주세요."); return; }
+      if (!content) { alert("내용을 입력해 주세요."); return; }
+      if (!pw1 || pw1.length < 4 || pw1.length > 8) { alert("비밀번호는 4~8자리로 입력해 주세요."); return; }
+      if (pw1 !== pw2) { alert("비밀번호가 일치하지 않습니다."); return; }
+
+      isSubmittingInquiry = true;
+      document.getElementById("inqSubmitBtn").disabled = true;
+
+      var result = await supabase.rpc("create_inquiry", {
+        p_type: type,
+        p_title: title,
+        p_content: content,
+        p_password: pw1
+      });
+
+      if (result.error) {
+        alert("문의 등록 실패: " + result.error.message);
+        isSubmittingInquiry = false;
+        document.getElementById("inqSubmitBtn").disabled = false;
+        return;
+      }
+
+      var newId = result.data;
+      alert("문의가 등록되었습니다!\n\n문의 번호: #" + newId + "\n이 번호와 비밀번호로 나중에 답변을 확인할 수 있습니다.");
+
+      // 폼 초기화
+      document.getElementById("inqTitle").value = "";
+      document.getElementById("inqContent").value = "";
+      document.getElementById("inqPw1").value = "";
+      document.getElementById("inqPw2").value = "";
+
+      isSubmittingInquiry = false;
+      document.getElementById("inqSubmitBtn").disabled = false;
+
+      // 목록으로 전환
+      switchInquiryTab("list");
+      loadInquiryList();
+    });
+
+    
    async function init() {
   visitorKey=getVisitorKey();
   initCalendar();
