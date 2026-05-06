@@ -3782,7 +3782,94 @@
       cursor: pointer;
     }
 
+    .inq-read-field {
+      margin-bottom: 10px;
+    }
 
+    .inq-read-field-label {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #c4b5fd;
+      margin-bottom: 4px;
+    }
+
+    .inq-read-field-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .inq-read-content {
+      font-size: 14px;
+      color: #d7cfee;
+      line-height: 1.7;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      min-height: 80px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .inq-edit-section {
+      margin-top: 12px;
+    }
+
+    .inq-edit-label {
+      font-size: 11px;
+      font-weight: 900;
+      color: #c4b5fd;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+
+    .inq-edit-textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(160,120,255,0.18);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      transition: 0.15s ease;
+      margin-bottom: 8px;
+    }
+
+    .inq-edit-textarea:focus {
+      border-color: rgba(160,120,255,0.45);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .inq-edit-save-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .inq-edit-save-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .inq-edit-save-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
     
     @media (max-width: 768px) {
       .inquiry-modal-card {
@@ -5794,19 +5881,47 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
           replyHTML = '<div class="inq-no-reply">⏳ 아직 답변이 등록되지 않았습니다</div>';
         }
 
+              const canEdit = row.status !== "답변완료";
+
+        let editBtnHTML = "";
+        if (canEdit) {
+          editBtnHTML =
+            '<div class="inq-edit-section">' +
+              '<div class="inq-edit-label">✏️ 내용 수정</div>' +
+              '<textarea class="inq-edit-textarea" id="inqEditContent">' + row.content + '</textarea>' +
+              '<button class="inq-edit-save-btn" id="inqEditSaveBtn">수정 저장</button>' +
+            '</div>';
+        }
+
         inquiryReadResult.innerHTML =
           '<div class="inquiry-read-card">' +
             '<div class="inq-read-header">' +
-              '<div class="inq-read-title">#' + row.id + ' ' + row.title + '</div>' +
+              '<div class="inq-read-title">#' + row.id + '</div>' +
               '<div class="inq-read-date">' + dateStr + '</div>' +
             '</div>' +
-            '<div class="inq-read-content">' + row.content + '</div>' +
+            '<div class="inq-read-field">' +
+              '<div class="inq-read-field-label">유형</div>' +
+              '<div class="inq-read-field-value">' + row.inquiry_type + '</div>' +
+            '</div>' +
+            '<div class="inq-read-field">' +
+              '<div class="inq-read-field-label">제목</div>' +
+              '<div class="inq-read-field-value">' + row.title + '</div>' +
+            '</div>' +
+            '<div class="inq-read-field">' +
+              '<div class="inq-read-field-label">내용</div>' +
+              '<div class="inq-read-content">' + row.content + '</div>' +
+            '</div>' +
             replyHTML +
+            editBtnHTML +
             '<button class="inq-read-close-btn" id="inqReadCloseBtn">닫기</button>' +
           '</div>';
 
         inquiryReadResult.style.display = "block";
         inqPwPopup.classList.remove("show");
+
+        const savedPw = inqPwPopupInput.value.trim();
+        const savedId = selectedInquiryId;
+
         inqPwPopupInput.value = "";
         selectedInquiryId = null;
 
@@ -5814,6 +5929,37 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
         if (inqReadCloseBtn) {
           inqReadCloseBtn.addEventListener("click", function() {
             inquiryReadResult.style.display = "none";
+          });
+        }
+
+        const inqEditSaveBtn = document.getElementById("inqEditSaveBtn");
+        if (inqEditSaveBtn && canEdit) {
+          inqEditSaveBtn.addEventListener("click", async function() {
+            const newContent = document.getElementById("inqEditContent").value.trim();
+            if (!newContent) {
+              alert("내용을 입력해 주세요.");
+              return;
+            }
+
+            inqEditSaveBtn.disabled = true;
+            inqEditSaveBtn.textContent = "저장 중...";
+
+            const updateResult = await supabase.rpc("update_inquiry_content", {
+              p_id: savedId,
+              p_password: savedPw,
+              p_content: newContent
+            });
+
+            if (updateResult.error || updateResult.data === false) {
+              alert("수정 실패: 비밀번호가 일치하지 않거나 이미 답변된 글입니다.");
+              inqEditSaveBtn.disabled = false;
+              inqEditSaveBtn.textContent = "수정 저장";
+              return;
+            }
+
+            alert("내용이 수정되었습니다.");
+            inquiryReadResult.style.display = "none";
+            loadInquiryList();
           });
         }
       }
