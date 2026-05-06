@@ -3870,6 +3870,129 @@
       cursor: not-allowed;
       transform: none;
     }
+
+
+    .inq-secret-notice {
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(160,120,255,0.08);
+      border: 1px solid rgba(160,120,255,0.16);
+      font-size: 12px;
+      font-weight: 800;
+      color: #c4b5fd;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .inq-read-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .inq-read-id {
+      font-size: 14px;
+      font-weight: 900;
+      color: #c4b5fd;
+    }
+
+    .inq-read-badges {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .inq-badge-secret {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 900;
+      background: rgba(160,120,255,0.15);
+      color: #d8b4fe;
+      border: 1px solid rgba(160,120,255,0.25);
+    }
+
+    .inq-badge-type {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 900;
+      background: rgba(255,196,90,0.12);
+      color: #ffd48a;
+      border: 1px solid rgba(255,196,90,0.22);
+    }
+
+    .inq-edit-field {
+      margin-bottom: 12px;
+    }
+
+    .inq-edit-field-label {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #c4b5fd;
+      margin-bottom: 5px;
+    }
+
+    .inq-edit-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(160,120,255,0.18);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      outline: none;
+      transition: 0.15s ease;
+    }
+
+    .inq-edit-input:focus {
+      border-color: rgba(160,120,255,0.45);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .inq-edit-select {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(160,120,255,0.18);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      outline: none;
+      transition: 0.15s ease;
+    }
+
+    .inq-edit-select:focus {
+      border-color: rgba(160,120,255,0.45);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .inq-edit-select option {
+      background: #141a28;
+      color: #fff;
+    }
+
+    .inq-edit-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .inq-edit-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     
     @media (max-width: 768px) {
       .inquiry-modal-card {
@@ -4343,6 +4466,7 @@
 
       <!-- 작성 탭 -->
       <div class="inquiry-panel" id="inquiryWritePanel" style="display:none;">
+                <div class="inq-secret-notice">🔒 해당 글은 자동으로 비밀글 상태가 됩니다</div>
         <div class="inq-form-group">
           <label class="inq-form-label">문의 유형</label>
           <select class="inq-form-select" id="inqType">
@@ -5801,13 +5925,14 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
 
           const statusClass = row.status === "답변완료" ? "inq-status-replied" : "inq-status-waiting";
 
-          html +=
+                    html +=
             '<div class="inquiry-item" data-inquiry-id="' + row.id + '">' +
               '<div class="inq-no">#' + row.id + '</div>' +
               '<div class="inq-info">' +
                 '<div class="inq-title-text">' + row.title + '</div>' +
                 '<div class="inq-meta">' +
-                  '<span class="inq-type-badge">' + row.inquiry_type + '</span>' +
+                  '<span class="inq-badge-secret">비밀글</span>' +
+                  '<span class="inq-badge-type">' + row.inquiry_type + '</span>' +
                   '<span>' + dateStr + '</span>' +
                 '</div>' +
               '</div>' +
@@ -5881,38 +6006,55 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
           replyHTML = '<div class="inq-no-reply">⏳ 아직 답변이 등록되지 않았습니다</div>';
         }
 
-              const canEdit = row.status !== "답변완료";
+                     const canEdit = row.status !== "답변완료";
 
-        let editBtnHTML = "";
+        let editHTML = "";
         if (canEdit) {
-          editBtnHTML =
+          editHTML =
             '<div class="inq-edit-section">' +
-              '<div class="inq-edit-label">✏️ 내용 수정</div>' +
-              '<textarea class="inq-edit-textarea" id="inqEditContent">' + row.content + '</textarea>' +
+              '<div class="inq-edit-label">✏️ 수정하기</div>' +
+              '<div class="inq-edit-row">' +
+                '<div class="inq-edit-field">' +
+                  '<div class="inq-edit-field-label">문의 유형</div>' +
+                  '<select class="inq-edit-select" id="inqEditType">' +
+                    '<option value="오류제보"' + (row.inquiry_type === "오류제보" ? " selected" : "") + '>오류제보</option>' +
+                    '<option value="질문하기"' + (row.inquiry_type === "질문하기" ? " selected" : "") + '>질문하기</option>' +
+                    '<option value="기타"' + (row.inquiry_type === "기타" ? " selected" : "") + '>기타</option>' +
+                  '</select>' +
+                '</div>' +
+                '<div class="inq-edit-field">' +
+                  '<div class="inq-edit-field-label">제목</div>' +
+                  '<input class="inq-edit-input" type="text" id="inqEditTitle" value="' + row.title.replace(/"/g, '&quot;') + '" />' +
+                '</div>' +
+              '</div>' +
+              '<div class="inq-edit-field">' +
+                '<div class="inq-edit-field-label">내용</div>' +
+                '<textarea class="inq-edit-textarea" id="inqEditContent">' + row.content + '</textarea>' +
+              '</div>' +
               '<button class="inq-edit-save-btn" id="inqEditSaveBtn">수정 저장</button>' +
             '</div>';
         }
 
         inquiryReadResult.innerHTML =
           '<div class="inquiry-read-card">' +
-            '<div class="inq-read-header">' +
-              '<div class="inq-read-title">#' + row.id + '</div>' +
-              '<div class="inq-read-date">' + dateStr + '</div>' +
+            '<div class="inq-read-top">' +
+              '<div class="inq-read-id">#' + row.id + '</div>' +
+              '<div class="inq-read-badges">' +
+                '<span class="inq-badge-secret">비밀글</span>' +
+                '<span class="inq-badge-type">' + row.inquiry_type + '</span>' +
+              '</div>' +
             '</div>' +
-            '<div class="inq-read-field">' +
-              '<div class="inq-read-field-label">유형</div>' +
-              '<div class="inq-read-field-value">' + row.inquiry_type + '</div>' +
-            '</div>' +
-            '<div class="inq-read-field">' +
-              '<div class="inq-read-field-label">제목</div>' +
+            '<div class="inq-read-date" style="margin-bottom:12px;">' + dateStr + '</div>' +
+            '<div class="inq-edit-field">' +
+              '<div class="inq-edit-field-label">제목</div>' +
               '<div class="inq-read-field-value">' + row.title + '</div>' +
             '</div>' +
-            '<div class="inq-read-field">' +
-              '<div class="inq-read-field-label">내용</div>' +
+            '<div class="inq-edit-field">' +
+              '<div class="inq-edit-field-label">내용</div>' +
               '<div class="inq-read-content">' + row.content + '</div>' +
             '</div>' +
             replyHTML +
-            editBtnHTML +
+            editHTML +
             '<button class="inq-read-close-btn" id="inqReadCloseBtn">닫기</button>' +
           '</div>';
 
@@ -5932,14 +6074,15 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
           });
         }
 
-        const inqEditSaveBtn = document.getElementById("inqEditSaveBtn");
+           const inqEditSaveBtn = document.getElementById("inqEditSaveBtn");
         if (inqEditSaveBtn && canEdit) {
           inqEditSaveBtn.addEventListener("click", async function() {
+            const newType = document.getElementById("inqEditType").value;
+            const newTitle = document.getElementById("inqEditTitle").value.trim();
             const newContent = document.getElementById("inqEditContent").value.trim();
-            if (!newContent) {
-              alert("내용을 입력해 주세요.");
-              return;
-            }
+
+            if (!newTitle) { alert("제목을 입력해 주세요."); return; }
+            if (!newContent) { alert("내용을 입력해 주세요."); return; }
 
             inqEditSaveBtn.disabled = true;
             inqEditSaveBtn.textContent = "저장 중...";
@@ -5947,6 +6090,8 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
             const updateResult = await supabase.rpc("update_inquiry_content", {
               p_id: savedId,
               p_password: savedPw,
+              p_type: newType,
+              p_title: newTitle,
               p_content: newContent
             });
 
