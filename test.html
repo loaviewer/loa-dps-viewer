@@ -3870,7 +3870,35 @@
       cursor: not-allowed;
       transform: none;
     }
+    .inq-bottom-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
 
+    .inq-delete-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,80,80,0.25);
+      background: rgba(255,80,80,0.08);
+      color: #ff8888;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .inq-delete-btn:hover {
+      background: rgba(255,80,80,0.15);
+      border-color: rgba(255,80,80,0.40);
+      color: #ff6666;
+    }
+
+    .inq-delete-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
     .inq-secret-notice {
       margin-bottom: 14px;
@@ -6086,8 +6114,11 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
                 '<div class="inq-edit-field-label">내용</div>' +
                 '<textarea class="inq-edit-textarea" id="inqEditContent">' + row.content + '</textarea>' +
               '</div>' +
-              '<button class="inq-edit-save-btn" id="inqEditSaveBtn">수정 저장</button>' +
-              '<button class="inq-read-close-btn" id="inqReadCloseBtn">닫기</button>' +
+                            '<button class="inq-edit-save-btn" id="inqEditSaveBtn">수정 저장</button>' +
+              '<div class="inq-bottom-actions">' +
+                '<button class="inq-delete-btn" id="inqDeleteBtn">삭제하기</button>' +
+                '<button class="inq-read-close-btn" id="inqReadCloseBtn">닫기</button>' +
+              '</div>' +
             '</div>';
         } else {
           inquiryReadResult.innerHTML =
@@ -6125,6 +6156,33 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
           });
         }
 
+
+        const inqDeleteBtn = document.getElementById("inqDeleteBtn");
+        if (inqDeleteBtn && canEdit) {
+          inqDeleteBtn.addEventListener("click", async function() {
+            if (!confirm("정말 이 문의를 삭제하시겠습니까?\n삭제 후 복구할 수 없습니다.")) return;
+
+            inqDeleteBtn.disabled = true;
+            inqDeleteBtn.textContent = "삭제 중...";
+
+            const deleteResult = await supabase.rpc("delete_inquiry", {
+              p_id: savedId,
+              p_password: savedPw
+            });
+
+            if (deleteResult.error || deleteResult.data === false) {
+              alert("삭제 실패: 비밀번호가 일치하지 않거나 이미 답변된 글입니다.");
+              inqDeleteBtn.disabled = false;
+              inqDeleteBtn.textContent = "삭제하기";
+              return;
+            }
+
+            alert("문의가 삭제되었습니다.");
+            inquiryReadResult.style.display = "none";
+            loadInquiryList();
+          });
+        }
+        
            const inqEditSaveBtn = document.getElementById("inqEditSaveBtn");
         if (inqEditSaveBtn && canEdit) {
           inqEditSaveBtn.addEventListener("click", async function() {
