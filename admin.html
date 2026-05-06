@@ -1,1416 +1,177 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!doctype html>
+<html lang=ko>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>로이터 베이스 | 관리자</title>
-  <link rel="icon" href='data:image/svg+xml;utf8,
+<meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>로이터 베이스 | 관리자</title>
+<link rel=icon href='data:image/svg+xml;utf8,
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
     <rect width="64" height="64" rx="12" fill="%23121925"/>
     <circle cx="32" cy="32" r="24" fill="none" stroke="%23f6d18b" stroke-width="2"/>
     <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle"
           font-size="26" font-weight="900" fill="%23f6d18b" font-family="Arial">DP</text>
   </svg>'>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; min-height: 100vh;
-      font-family: "Segoe UI", "Malgun Gothic", sans-serif;
-      background: linear-gradient(135deg, #0b1018 0%, #0d1320 45%, #121927 100%);
-      color: #f3ead6;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    /* ===== 시계 ===== */
-    .admin-clock {
-      position: fixed; top: 16px; right: 20px;
-      text-align: right; z-index: 999;
-      background: rgba(13,18,30,0.85);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px; padding: 10px 16px;
-      backdrop-filter: blur(8px);
-    }
-    .clock-date { font-size: 11px; color: #7fc6ff; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px; }
-    .clock-time { font-size: 22px; font-weight: 900; color: #ffffff; letter-spacing: 2px; }
-
-    /* ===== 비밀번호 화면 ===== */
-    .lock-screen {
-      text-align: center; padding: 40px; border-radius: 26px;
-      background: linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
-      border: 1px solid rgba(255,255,255,0.10);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
-      width: min(400px, 90%);
-    }
-    .lock-icon { font-size: 48px; margin-bottom: 16px; }
-    .lock-title { font-size: 24px; font-weight: 900; color: #ffffff; margin-bottom: 6px; }
-    .lock-sub { font-size: 13px; color: #7a8da8; margin-bottom: 24px; }
-    .lock-input {
-      width: 100%; padding: 12px 16px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.06); color: #ffffff;
-      font-size: 18px; font-weight: 900; text-align: center;
-      outline: none; letter-spacing: 4px; margin-bottom: 14px; transition: 0.18s ease;
-    }
-    .lock-input:focus { border-color: rgba(122,140,255,0.60); background: rgba(255,255,255,0.09); }
-    .lock-btn {
-      width: 100%; padding: 13px; border-radius: 12px; border: none; cursor: pointer;
-      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
-      color: #08111e; font-size: 16px; font-weight: 900; transition: 0.18s ease;
-    }
-    .lock-btn:hover { transform: translateY(-1px); }
-    .lock-error { color: #ff8f8f; font-size: 13px; margin-top: 10px; display: none; }
-
-    /* ===== 관리자 페이지 ===== */
-    .admin-page { display: none; width: 100%; min-height: 100vh; padding: 24px; align-items: flex-start; justify-content: center; }
-    .admin-page.show { display: flex; }
-    .admin-wrap { width: min(1600px, 100%); padding-top: 70px; }
-
-    .admin-header {
-      text-align: center; margin-bottom: 30px; padding: 24px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-    .admin-header-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #7fc6ff; margin-bottom: 8px; font-weight: 900; }
-    .admin-header-title { font-size: 30px; font-weight: 900; color: #ffffff; }
-    .admin-header-sub { font-size: 13px; color: #7a8da8; margin-top: 6px; }
-
-    /* ===== 섹션 ===== */
-    .section-wrap { margin-bottom: 36px; }
-    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .section-title { font-size: 20px; font-weight: 900; color: #ffffff; }
-    .section-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 900; padding: 4px 12px; border-radius: 999px; }
-    .label-op    { background: rgba(62,220,125,0.18); color: #8ef0c9; }
-    .label-favor { background: rgba(255,196,90,0.18); color: #ffd48a; }
-
-    /* ===== 3단 그리드 ===== */
-    .triple-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-
-    /* ===== 카드 ===== */
-    .admin-card {
-      border-radius: 20px; padding: 18px;
-      background: linear-gradient(180deg, rgba(20,26,40,0.98), rgba(13,18,30,0.98));
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 14px 36px rgba(0,0,0,0.28);
-    }
-
-    .card-head { margin-bottom: 14px; }
-    .card-period-badge {
-      display: inline-block; padding: 4px 12px; border-radius: 999px;
-      font-size: 11px; font-weight: 900; margin-bottom: 6px;
-    }
-    .badge-5d  { background: rgba(122,140,255,0.18); color: #7a8cff; }
-    .badge-7d  { background: rgba(255,140,165,0.18); color: #ff8ca5; }
-    .badge-all { background: rgba(255,215,0,0.14);   color: #ffd700; }
-    .card-title { font-size: 15px; font-weight: 900; color: #ffffff; }
-
-    /* ===== 테이블 ===== */
-    .rate-table { width: 100%; border-collapse: collapse; }
-    .rate-table th {
-      font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
-      color: #5a6a82; font-weight: 900; padding: 7px 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.06); text-align: left;
-    }
-    .rate-table td { padding: 8px 8px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
-    .rate-table tr:last-child td { border-bottom: none; }
-    .rate-table tr:hover td { background: rgba(255,255,255,0.03); }
-
-    .rank-num { font-size: 12px; font-weight: 900; color: #5a6a82; }
-    .rank-num.top1 { color: #ffd700; }
-    .rank-num.top2 { color: #c0c0c0; }
-    .rank-num.top3 { color: #cd7f32; }
-
-    .eng-name { font-weight: 900; color: #ffffff; font-size: 13px; }
-    .cls-name { font-size: 10px; color: #7a8da8; margin-top: 1px; }
-
-    .rate-bar-wrap { display: flex; align-items: center; gap: 6px; }
-    .rate-bar { flex: 1; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; min-width: 40px; }
-    .rate-fill { height: 100%; border-radius: 999px; }
-    .fill-op    { background: linear-gradient(90deg, #3edc7d, #6ff0b7); }
-    .fill-favor { background: linear-gradient(90deg, #ffac55, #ffd48a); }
-    .rate-val { font-size: 12px; font-weight: 900; color: #ffffff; min-width: 42px; text-align: right; }
-    .record-text { font-size: 10px; color: #5a6a82; margin-top: 2px; }
-
-    .champ-badge {
-      display: inline-flex; align-items: center; gap: 3px;
-      background: rgba(255,215,0,0.12); border: 1px solid rgba(255,215,0,0.22);
-      border-radius: 7px; padding: 2px 7px;
-      font-size: 11px; font-weight: 900; color: #ffd700;
-    }
-
-    /* ===== 등급 분포 ===== */
-    .grade-divider { width: 100%; height: 1px; background: rgba(255,255,255,0.06); margin: 14px 0; }
-    .grade-section-title { font-size: 12px; font-weight: 900; color: #7fc6ff; margin-bottom: 10px; letter-spacing: 1px; text-transform: uppercase; }
-    .grade-list { display: flex; flex-direction: column; gap: 5px; }
-    .grade-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 6px 10px; border-radius: 9px;
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-    }
-    .grade-name-text { font-size: 13px; font-weight: 900; }
-    .grade-count { font-size: 12px; color: #7a8da8; font-weight: 900; }
-    .grade-count span { color: #ffffff; }
-    .grade-total { font-size: 11px; color: #5a6a82; margin-bottom: 8px; }
-
-    .loading-text { text-align: center; color: #5a6a82; font-size: 13px; padding: 20px 0; }
-
-    /* ===== 클래스별 우승 직각 분석 ===== */
-    .class-pick-wrap {
-      margin-top: 10px;
-    }
-
-    .pick-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .pick-toggle {
-      display: flex;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 3px;
-      gap: 2px;
-    }
-
-    .pick-toggle-btn {
-      padding: 6px 14px;
-      border-radius: 8px;
-      border: none;
-      background: none;
-      color: #5a6a82;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: pointer;
-      transition: 0.15s ease;
-    }
-
-    .pick-toggle-btn:hover {
-      color: #c6d4e8;
-    }
-
-    .pick-toggle-btn.active {
-      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
-      color: #08111e;
-      box-shadow: 0 2px 8px rgba(78,168,255,0.22);
-    }
-
-    .pick-select-wrap {
-      flex: 1;
-    }
-
-    .pick-select {
-      width: 100%;
-      padding: 7px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.06);
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 900;
-      cursor: pointer;
-      outline: none;
-      transition: 0.15s ease;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
-    .pick-select:focus {
-      border-color: rgba(122,140,255,0.50);
-      background: rgba(255,255,255,0.09);
-    }
-
-    .pick-select option,
-    .pick-select optgroup {
-      background: #141a28;
-      color: #ffffff;
-    }
-
-    .pick-select optgroup {
-      font-weight: 900;
-      color: #7fc6ff;
-    }
-
-    /* ===== 우승 직각 결과 리스트 ===== */
-    .pick-result-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .pick-result-row {
-      display: grid;
-      grid-template-columns: 28px 1fr 52px;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(255,255,255,0.04);
-      transition: 0.15s ease;
-    }
-
-    .pick-result-row:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(255,255,255,0.08);
-    }
-
-    .pick-result-row.pick-top1 {
-      background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,180,60,0.04));
-      border-color: rgba(255,215,0,0.18);
-    }
-
-    .pick-result-row.pick-top2 {
-      background: linear-gradient(135deg, rgba(192,192,192,0.06), rgba(160,170,190,0.03));
-      border-color: rgba(192,192,192,0.14);
-    }
-
-    .pick-result-row.pick-top3 {
-      background: linear-gradient(135deg, rgba(205,127,50,0.06), rgba(180,120,60,0.03));
-      border-color: rgba(205,127,50,0.14);
-    }
-
-    .pick-rank {
-      font-size: 12px;
-      font-weight: 900;
-      color: #5a6a82;
-      text-align: center;
-    }
-
-    .pick-rank.ptop1 { color: #ffd700; }
-    .pick-rank.ptop2 { color: #c0c0c0; }
-    .pick-rank.ptop3 { color: #cd7f32; }
-
-    .pick-info {
-      min-width: 0;
-    }
-
-    .pick-eng-name {
-      font-size: 12px;
-      font-weight: 900;
-      color: #ffffff;
-      margin-bottom: 4px;
-    }
-
-    .pick-bar-bg {
-      width: 100%;
-      height: 4px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      overflow: hidden;
-    }
-
-    .pick-bar-fill {
-      height: 100%;
-      border-radius: 999px;
-    }
-
-    .pick-bar-op {
-      background: linear-gradient(90deg, #3edc7d, #6ff0b7);
-    }
-
-    .pick-bar-favor {
-      background: linear-gradient(90deg, #ffac55, #ffd48a);
-    }
-
-    .pick-count-text {
-      font-size: 9px;
-      color: #5a6a82;
-      margin-top: 3px;
-      font-weight: 800;
-    }
-
-    .pick-rate-val {
-      font-size: 13px;
-      font-weight: 900;
-      color: #ffffff;
-      text-align: right;
-    }
-
-    .pick-rate-val.ptop1 { color: #ffd700; }
-    .pick-rate-val.ptop2 { color: #dcdcdc; }
-    .pick-rate-val.ptop3 { color: #e8a860; }
-
-    .pick-summary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      margin-bottom: 8px;
-    }
-
-    .pick-summary-label {
-      font-size: 11px;
-      color: #7fc6ff;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .pick-summary-value {
-      font-size: 14px;
-      font-weight: 900;
-      color: #ffffff;
-    }
-
-    .pick-summary-sub {
-      font-size: 10px;
-      color: #5a6a82;
-      margin-top: 2px;
-    }
-    
-        /* ===== 2단 그리드 ===== */
-    .dual-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-
-    /* ===== 기간 토글 버튼 ===== */
-    .period-toggle-wrap {
-      display: flex;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 3px;
-      gap: 2px;
-      margin-bottom: 8px;
-    }
-
-    .period-toggle-btn {
-      flex: 1;
-      padding: 6px 14px;
-      border-radius: 8px;
-      border: none;
-      background: none;
-      color: #5a6a82;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: pointer;
-      transition: 0.15s ease;
-    }
-
-    .period-toggle-btn:hover {
-      color: #c6d4e8;
-    }
-
-    .period-toggle-btn.active {
-      background: linear-gradient(135deg, #7a8cff, #4bd3ff);
-      color: #08111e;
-      box-shadow: 0 2px 8px rgba(78,168,255,0.22);
-    }
-
-
-    /* ===== 관리자 문의 관리 ===== */
-    .inq-admin-summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .inq-summary-box {
-      border-radius: 10px;
-      padding: 10px 12px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .inq-summary-label {
-      font-size: 10px;
-      color: #7a8da8;
-      margin-bottom: 4px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .inq-summary-value {
-      font-size: 18px;
-      font-weight: 900;
-      color: #ffffff;
-    }
-
-    .inq-admin-list {
-      display: grid;
-      gap: 6px;
-      margin-bottom: 12px;
-      max-height: 260px;
-      overflow-y: auto;
-    }
-
-    .inq-admin-list::-webkit-scrollbar { width: 4px; }
-    .inq-admin-list::-webkit-scrollbar-track { background: transparent; }
-    .inq-admin-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 999px; }
-
-    .inq-admin-item {
-      display: grid;
-      grid-template-columns: 42px 1fr auto;
-      gap: 10px;
-      align-items: center;
-      padding: 9px 10px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(255,255,255,0.05);
-      cursor: pointer;
-      transition: 0.12s ease;
-    }
-
-    .inq-admin-item:hover {
-      background: rgba(255,255,255,0.045);
-      border-color: rgba(255,255,255,0.08);
-    }
-
-    .inq-admin-item.active {
-      background: rgba(160,120,255,0.08);
-      border-color: rgba(160,120,255,0.18);
-    }
-
-    .inq-admin-no {
-      font-size: 12px;
-      font-weight: 900;
-      color: #5a6a82;
-      text-align: center;
-    }
-
-    .inq-admin-info { min-width: 0; }
-
-    .inq-admin-title {
-      font-size: 12px;
-      font-weight: 900;
-      color: #ffffff;
-      line-height: 1.2;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .inq-admin-meta {
-      margin-top: 3px;
-      display: flex;
-      gap: 5px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .inq-admin-badge-secret {
-      padding: 2px 6px;
-      border-radius: 5px;
-      font-size: 10px;
-      font-weight: 900;
-      background: rgba(160,120,255,0.14);
-      color: #d8b4fe;
-    }
-
-    .inq-admin-badge-type {
-      padding: 2px 6px;
-      border-radius: 5px;
-      font-size: 10px;
-      font-weight: 900;
-      background: rgba(255,196,90,0.12);
-      color: #ffd48a;
-    }
-
-    .inq-admin-date {
-      font-size: 10px;
-      color: #5a6a82;
-    }
-
-    .inq-admin-badge-status {
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 900;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .inq-admin-badge-status.wait {
-      background: rgba(255,196,90,0.10);
-      color: #ffd48a;
-      border: 1px solid rgba(255,196,90,0.18);
-    }
-
-    .inq-admin-badge-status.done {
-      background: rgba(62,220,125,0.10);
-      color: #8ef0c9;
-      border: 1px solid rgba(62,220,125,0.18);
-    }
-
-    .inq-admin-detail {
-      border-radius: 12px;
-      padding: 14px;
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.06);
-      margin-bottom: 12px;
-    }
-
-    .inq-detail-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .inq-detail-title {
-      font-size: 15px;
-      font-weight: 900;
-      color: #ffffff;
-      line-height: 1.3;
-    }
-
-    .inq-detail-sub {
-      margin-top: 4px;
-      display: flex;
-      gap: 5px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .inq-detail-content {
-      margin-top: 8px;
-      padding: 12px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.05);
-      color: #d7cfee;
-      font-size: 13px;
-      line-height: 1.7;
-      min-height: 84px;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    .inq-reply-box { margin-top: 12px; }
-
-    .inq-reply-label {
-      font-size: 11px;
-      font-weight: 900;
-      color: #c4b5fd;
-      margin-bottom: 6px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .inq-reply-textarea {
-      width: 100%;
-      min-height: 90px;
-      resize: vertical;
-      border-radius: 10px;
-      border: 1px solid rgba(160,120,255,0.18);
-      background: rgba(255,255,255,0.06);
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 12px 14px;
-      outline: none;
-      line-height: 1.6;
-      transition: 0.15s ease;
-    }
-
-    .inq-reply-textarea:focus {
-      border-color: rgba(160,120,255,0.45);
-      background: rgba(255,255,255,0.09);
-    }
-
-    .inq-reply-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .inq-admin-btn {
-      flex: 1;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: none;
-      font-size: 13px;
-      font-weight: 900;
-      cursor: pointer;
-      transition: 0.15s ease;
-    }
-
-    .inq-admin-btn:hover { transform: translateY(-1px); }
-
-    .inq-admin-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .inq-admin-btn.primary {
-      background: linear-gradient(135deg, #a855f7, #7c3aed);
-      color: #ffffff;
-      box-shadow: 0 6px 18px rgba(168,85,247,0.18);
-    }
-
-    .inq-admin-btn.ghost {
-      background: rgba(255,255,255,0.04);
-      color: rgba(255,255,255,0.55);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .inq-admin-btn.danger {
-      background: rgba(255,80,80,0.08);
-      color: #ff8888;
-      border: 1px solid rgba(255,80,80,0.25);
-    }
-
-    .inq-admin-btn.danger:hover {
-      background: rgba(255,80,80,0.15);
-    }
-
-    .inq-existing-reply {
-      margin-top: 8px;
-      padding: 12px;
-      border-radius: 10px;
-      background: rgba(62,220,125,0.06);
-      border: 1px solid rgba(62,220,125,0.16);
-    }
-
-    .inq-existing-reply-label {
-      font-size: 11px;
-      font-weight: 900;
-      color: #8ef0c9;
-      margin-bottom: 6px;
-    }
-
-    .inq-existing-reply-text {
-      font-size: 13px;
-      color: #d0f0e0;
-      line-height: 1.7;
-      white-space: pre-wrap;
-    }
-
-    .inq-existing-reply-date {
-      margin-top: 6px;
-      font-size: 10px;
-      color: #5a8a6a;
-    }
-
-    @media (max-width: 1100px) {
-      .triple-grid { grid-template-columns: 1fr; }
-      .dual-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+<style>*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif;background:linear-gradient(135deg,#0b1018 0,#0d1320 45%,#121927 100%);color:#f3ead6;display:flex;align-items:center;justify-content:center}.admin-clock{position:fixed;top:16px;right:20px;text-align:right;z-index:999;background:rgba(13,18,30,.85);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 16px;backdrop-filter:blur(8px)}.clock-date{font-size:11px;color:#7fc6ff;font-weight:900;letter-spacing:1px;margin-bottom:2px}.clock-time{font-size:22px;font-weight:900;color:#fff;letter-spacing:2px}.lock-screen{text-align:center;padding:40px;border-radius:26px;background:linear-gradient(180deg,rgba(20,26,40,.98),rgba(13,18,30,.98));border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 80px rgba(0,0,0,.45);width:min(400px,90%)}.lock-icon{font-size:48px;margin-bottom:16px}.lock-title{font-size:24px;font-weight:900;color:#fff;margin-bottom:6px}.lock-sub{font-size:13px;color:#7a8da8;margin-bottom:24px}.lock-input{width:100%;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#fff;font-size:18px;font-weight:900;text-align:center;outline:0;letter-spacing:4px;margin-bottom:14px;transition:.18s ease}.lock-input:focus{border-color:rgba(122,140,255,.6);background:rgba(255,255,255,.09)}.lock-btn{width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#7a8cff,#4bd3ff);color:#08111e;font-size:16px;font-weight:900;transition:.18s ease}.lock-btn:hover{transform:translateY(-1px)}.lock-error{color:#ff8f8f;font-size:13px;margin-top:10px;display:none}.admin-page{display:none;width:100%;min-height:100vh;padding:24px;align-items:flex-start;justify-content:center}.admin-page.show{display:flex}.admin-wrap{width:min(1600px,100%);padding-top:70px}.admin-header{text-align:center;margin-bottom:30px;padding:24px;border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08)}.admin-header-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#7fc6ff;margin-bottom:8px;font-weight:900}.admin-header-title{font-size:30px;font-weight:900;color:#fff}.admin-header-sub{font-size:13px;color:#7a8da8;margin-top:6px}.section-wrap{margin-bottom:36px}.section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}.section-title{font-size:20px;font-weight:900;color:#fff}.section-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:900;padding:4px 12px;border-radius:999px}.label-op{background:rgba(62,220,125,.18);color:#8ef0c9}.label-favor{background:rgba(255,196,90,.18);color:#ffd48a}.triple-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.admin-card{border-radius:20px;padding:18px;background:linear-gradient(180deg,rgba(20,26,40,.98),rgba(13,18,30,.98));border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.28)}.card-head{margin-bottom:14px}.card-period-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:900;margin-bottom:6px}.badge-5d{background:rgba(122,140,255,.18);color:#7a8cff}.badge-7d{background:rgba(255,140,165,.18);color:#ff8ca5}.badge-all{background:rgba(255,215,0,.14);color:gold}.card-title{font-size:15px;font-weight:900;color:#fff}.rate-table{width:100%;border-collapse:collapse}.rate-table th{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#5a6a82;font-weight:900;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}.rate-table td{padding:8px 8px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}.rate-table tr:last-child td{border-bottom:none}.rate-table tr:hover td{background:rgba(255,255,255,.03)}.rank-num{font-size:12px;font-weight:900;color:#5a6a82}.rank-num.top1{color:gold}.rank-num.top2{color:silver}.rank-num.top3{color:#cd7f32}.eng-name{font-weight:900;color:#fff;font-size:13px}.cls-name{font-size:10px;color:#7a8da8;margin-top:1px}.rate-bar-wrap{display:flex;align-items:center;gap:6px}.rate-bar{flex:1;height:5px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;min-width:40px}.rate-fill{height:100%;border-radius:999px}.fill-op{background:linear-gradient(90deg,#3edc7d,#6ff0b7)}.fill-favor{background:linear-gradient(90deg,#ffac55,#ffd48a)}.rate-val{font-size:12px;font-weight:900;color:#fff;min-width:42px;text-align:right}.record-text{font-size:10px;color:#5a6a82;margin-top:2px}.champ-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.22);border-radius:7px;padding:2px 7px;font-size:11px;font-weight:900;color:gold}.grade-divider{width:100%;height:1px;background:rgba(255,255,255,.06);margin:14px 0}.grade-section-title{font-size:12px;font-weight:900;color:#7fc6ff;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase}.grade-list{display:flex;flex-direction:column;gap:5px}.grade-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05)}.grade-name-text{font-size:13px;font-weight:900}.grade-count{font-size:12px;color:#7a8da8;font-weight:900}.grade-count span{color:#fff}.grade-total{font-size:11px;color:#5a6a82;margin-bottom:8px}.loading-text{text-align:center;color:#5a6a82;font-size:13px;padding:20px 0}.class-pick-wrap{margin-top:10px}.pick-controls{display:flex;align-items:center;gap:10px;margin-bottom:12px}.pick-toggle{display:flex;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:3px;gap:2px}.pick-toggle-btn{padding:6px 14px;border-radius:8px;border:none;background:0 0;color:#5a6a82;font-size:12px;font-weight:900;cursor:pointer;transition:.15s ease}.pick-toggle-btn:hover{color:#c6d4e8}.pick-toggle-btn.active{background:linear-gradient(135deg,#7a8cff,#4bd3ff);color:#08111e;box-shadow:0 2px 8px rgba(78,168,255,.22)}.pick-select-wrap{flex:1}.pick-select{width:100%;padding:7px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#fff;font-size:13px;font-weight:900;cursor:pointer;outline:0;transition:.15s ease;appearance:none;-webkit-appearance:none}.pick-select:focus{border-color:rgba(122,140,255,.5);background:rgba(255,255,255,.09)}.pick-select optgroup,.pick-select option{background:#141a28;color:#fff}.pick-select optgroup{font-weight:900;color:#7fc6ff}.pick-result-list{display:flex;flex-direction:column;gap:4px}.pick-result-row{display:grid;grid-template-columns:28px 1fr 52px;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);transition:.15s ease}.pick-result-row:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}.pick-result-row.pick-top1{background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,180,60,.04));border-color:rgba(255,215,0,.18)}.pick-result-row.pick-top2{background:linear-gradient(135deg,rgba(192,192,192,.06),rgba(160,170,190,.03));border-color:rgba(192,192,192,.14)}.pick-result-row.pick-top3{background:linear-gradient(135deg,rgba(205,127,50,.06),rgba(180,120,60,.03));border-color:rgba(205,127,50,.14)}.pick-rank{font-size:12px;font-weight:900;color:#5a6a82;text-align:center}.pick-rank.ptop1{color:gold}.pick-rank.ptop2{color:silver}.pick-rank.ptop3{color:#cd7f32}.pick-info{min-width:0}.pick-eng-name{font-size:12px;font-weight:900;color:#fff;margin-bottom:4px}.pick-bar-bg{width:100%;height:4px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}.pick-bar-fill{height:100%;border-radius:999px}.pick-bar-op{background:linear-gradient(90deg,#3edc7d,#6ff0b7)}.pick-bar-favor{background:linear-gradient(90deg,#ffac55,#ffd48a)}.pick-count-text{font-size:9px;color:#5a6a82;margin-top:3px;font-weight:800}.pick-rate-val{font-size:13px;font-weight:900;color:#fff;text-align:right}.pick-rate-val.ptop1{color:gold}.pick-rate-val.ptop2{color:#dcdcdc}.pick-rate-val.ptop3{color:#e8a860}.pick-summary{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);margin-bottom:8px}.pick-summary-label{font-size:11px;color:#7fc6ff;font-weight:900;letter-spacing:1px;text-transform:uppercase}.pick-summary-value{font-size:14px;font-weight:900;color:#fff}.pick-summary-sub{font-size:10px;color:#5a6a82;margin-top:2px}.dual-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.period-toggle-wrap{display:flex;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:3px;gap:2px;margin-bottom:8px}.period-toggle-btn{flex:1;padding:6px 14px;border-radius:8px;border:none;background:0 0;color:#5a6a82;font-size:12px;font-weight:900;cursor:pointer;transition:.15s ease}.period-toggle-btn:hover{color:#c6d4e8}.period-toggle-btn.active{background:linear-gradient(135deg,#7a8cff,#4bd3ff);color:#08111e;box-shadow:0 2px 8px rgba(78,168,255,.22)}.inq-admin-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.inq-summary-box{border-radius:10px;padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05)}.inq-summary-label{font-size:10px;color:#7a8da8;margin-bottom:4px;font-weight:800;letter-spacing:1px;text-transform:uppercase}.inq-summary-value{font-size:18px;font-weight:900;color:#fff}.inq-admin-list{display:grid;gap:6px;margin-bottom:12px;max-height:260px;overflow-y:auto}.inq-admin-list::-webkit-scrollbar{width:4px}.inq-admin-list::-webkit-scrollbar-track{background:0 0}.inq-admin-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:999px}.inq-admin-item{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);cursor:pointer;transition:.12s ease}.inq-admin-item:hover{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.08)}.inq-admin-item.active{background:rgba(160,120,255,.08);border-color:rgba(160,120,255,.18)}.inq-admin-no{font-size:12px;font-weight:900;color:#5a6a82;text-align:center}.inq-admin-info{min-width:0}.inq-admin-title{font-size:12px;font-weight:900;color:#fff;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.inq-admin-meta{margin-top:3px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}.inq-admin-badge-secret{padding:2px 6px;border-radius:5px;font-size:10px;font-weight:900;background:rgba(160,120,255,.14);color:#d8b4fe}.inq-admin-badge-type{padding:2px 6px;border-radius:5px;font-size:10px;font-weight:900;background:rgba(255,196,90,.12);color:#ffd48a}.inq-admin-date{font-size:10px;color:#5a6a82}.inq-admin-badge-status{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap;flex-shrink:0}.inq-admin-badge-status.wait{background:rgba(255,196,90,.1);color:#ffd48a;border:1px solid rgba(255,196,90,.18)}.inq-admin-badge-status.done{background:rgba(62,220,125,.1);color:#8ef0c9;border:1px solid rgba(62,220,125,.18)}.inq-admin-detail{border-radius:12px;padding:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);margin-bottom:12px}.inq-detail-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}.inq-detail-title{font-size:15px;font-weight:900;color:#fff;line-height:1.3}.inq-detail-sub{margin-top:4px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}.inq-detail-content{margin-top:8px;padding:12px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);color:#d7cfee;font-size:13px;line-height:1.7;min-height:84px;white-space:pre-wrap;word-break:break-all}.inq-reply-box{margin-top:12px}.inq-reply-label{font-size:11px;font-weight:900;color:#c4b5fd;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}.inq-reply-textarea{width:100%;min-height:90px;resize:vertical;border-radius:10px;border:1px solid rgba(160,120,255,.18);background:rgba(255,255,255,.06);color:#fff;font-size:13px;font-weight:700;padding:12px 14px;outline:0;line-height:1.6;transition:.15s ease}.inq-reply-textarea:focus{border-color:rgba(160,120,255,.45);background:rgba(255,255,255,.09)}.inq-reply-actions{display:flex;gap:8px;margin-top:10px}.inq-admin-btn{flex:1;padding:10px 12px;border-radius:10px;border:none;font-size:13px;font-weight:900;cursor:pointer;transition:.15s ease}.inq-admin-btn:hover{transform:translateY(-1px)}.inq-admin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}.inq-admin-btn.primary{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;box-shadow:0 6px 18px rgba(168,85,247,.18)}.inq-admin-btn.ghost{background:rgba(255,255,255,.04);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.08)}.inq-admin-btn.danger{background:rgba(255,80,80,.08);color:#f88;border:1px solid rgba(255,80,80,.25)}.inq-admin-btn.danger:hover{background:rgba(255,80,80,.15)}.inq-existing-reply{margin-top:8px;padding:12px;border-radius:10px;background:rgba(62,220,125,.06);border:1px solid rgba(62,220,125,.16)}.inq-existing-reply-label{font-size:11px;font-weight:900;color:#8ef0c9;margin-bottom:6px}.inq-existing-reply-text{font-size:13px;color:#d0f0e0;line-height:1.7;white-space:pre-wrap}.inq-existing-reply-date{margin-top:6px;font-size:10px;color:#5a8a6a}@media (max-width:1100px){.triple-grid{grid-template-columns:1fr}.dual-grid{grid-template-columns:1fr}}</style>
 </head>
 <body>
-
-  <!-- 시계 -->
-  <div class="admin-clock">
-    <div class="clock-date" id="clockDate"></div>
-    <div class="clock-time" id="clockTime"></div>
-  </div>
-
-  <!-- 비밀번호 화면 -->
-  <div class="lock-screen" id="lockScreen">
-    <div class="lock-icon">🔐</div>
-    <div class="lock-title">관리자 페이지</div>
-    <div class="lock-sub">접근 권한이 필요합니다</div>
-    <input class="lock-input" type="password" id="pwInput" placeholder="••••" maxlength="20" />
-    <button class="lock-btn" id="pwBtn">확인</button>
-    <div class="lock-error" id="pwError">비밀번호가 틀렸습니다 🔒</div>
-  </div>
-
-  <!-- 관리자 페이지 -->
-  <div class="admin-page" id="adminPage">
-    <div class="admin-wrap">
-      <div class="admin-header">
-        <div class="admin-header-label">LOITER BASE · ADMIN</div>
-        <div class="admin-header-title">관리자 대시보드 🛠️</div>
-        <div class="admin-header-sub">각인별 승률 모니터링 · 5일 / 7일 / 전체 비교</div>
-      </div>
-
-           <!-- OP 섹션 -->
-      <div class="section-wrap">
-        <div class="section-header">
-          <span class="section-label label-op">OP TOURNAMENT</span>
-          <span class="section-title">OP 직각 승률</span>
-        </div>
-        <div class="triple-grid">
-          <!-- 1칸: 5일/7일 토글 -->
-          <div class="admin-card">
-            <div class="card-head">
-                            <div class="period-toggle-wrap">
-                <button class="period-toggle-btn active" data-target="op" data-days="5">5일</button>
-                <button class="period-toggle-btn" data-target="op" data-days="7">7일</button>
-                <button class="period-toggle-btn" data-target="op" data-days="custom">4/22~</button>
-              </div>
-
-              <div class="card-title" id="opPeriodTitle">5일 기준 승률</div>
-            </div>
-            <div id="opPeriodTable"><div class="loading-text">불러오는 중...</div></div>
-          </div>
-          <!-- 2칸: 전체 -->
-          <div class="admin-card">
-            <div class="card-head">
-              <div class="card-period-badge badge-all">전체</div>
-              <div class="card-title">전체 기준 승률 + 우승</div>
-            </div>
-            <div id="opAllTable"><div class="loading-text">불러오는 중...</div></div>
-          </div>
-                    <!-- 3칸: 문의 관리 + 등급분포 + 클래스별 우승 분석 -->
-          <div class="admin-card">
-            <div class="card-head">
-              <div class="card-period-badge badge-all">분석</div>
-              <div class="card-title">문의 관리 + 등급 분포 + 우승 직각 분석</div>
-            </div>
-
-            <!-- 문의 관리 -->
-            <div class="grade-section-title">💬 문의 관리</div>
-
-            <div class="inq-admin-summary">
-              <div class="inq-summary-box">
-                <div class="inq-summary-label">전체 문의</div>
-                <div class="inq-summary-value" id="inqTotalCount">-</div>
-              </div>
-              <div class="inq-summary-box">
-                <div class="inq-summary-label">대기중</div>
-                <div class="inq-summary-value" id="inqWaitingCount">-</div>
-              </div>
-              <div class="inq-summary-box">
-                <div class="inq-summary-label">답변완료</div>
-                <div class="inq-summary-value" id="inqDoneCount">-</div>
-              </div>
-            </div>
-
-            <div id="inqAdminList"><div class="loading-text">불러오는 중...</div></div>
-
-            <div class="inq-admin-detail" id="inqAdminDetail">
-              <div class="loading-text">문의글을 선택하면 여기서 확인하고 답변할 수 있습니다.</div>
-            </div>
-
-            <div class="grade-divider"></div>
-
-            <!-- 등급 분포 -->
-            <div class="grade-section-title">📊 등급 분포</div>
-            <div id="opGradeList"><div class="loading-text">불러오는 중...</div></div>
-
-            <div class="grade-divider"></div>
-
-            <!-- 클래스별 우승 직각 분석 -->
-            <div class="grade-section-title">🏆 클래스별 우승 직각 분석</div>
-            <div class="class-pick-wrap">
-              <div class="pick-controls">
-                <div class="pick-toggle">
-                  <button class="pick-toggle-btn active" data-type="op">OP</button>
-                  <button class="pick-toggle-btn" data-type="favor">호감</button>
-                </div>
-                <div class="pick-select-wrap">
-                  <select class="pick-select" id="classPickSelect">
-                    <option value="">클래스 선택 ▼</option>
-                    <optgroup label="전사">
-                      <option value="워로드">워로드</option>
-                      <option value="버서커">버서커</option>
-                      <option value="디스트로이어">디스트로이어</option>
-                      <option value="홀리나이트">홀리나이트</option>
-                      <option value="슬레이어">슬레이어</option>
-                      <option value="발키리">발키리</option>
-                    </optgroup>
-                    <optgroup label="무도가">
-                      <option value="배틀마스터">배틀마스터</option>
-                      <option value="인파이터">인파이터</option>
-                      <option value="기공사">기공사</option>
-                      <option value="창술사">창술사</option>
-                      <option value="스트라이커">스트라이커</option>
-                      <option value="브레이커">브레이커</option>
-                    </optgroup>
-                    <optgroup label="헌터">
-                      <option value="데빌헌터">데빌헌터</option>
-                      <option value="블래스터">블래스터</option>
-                      <option value="호크아이">호크아이</option>
-                      <option value="스카우터">스카우터</option>
-                      <option value="건슬링어">건슬링어</option>
-                    </optgroup>
-                    <optgroup label="마법사">
-                      <option value="서머너">서머너</option>
-                      <option value="아르카나">아르카나</option>
-                      <option value="바드">바드</option>
-                      <option value="소서리스">소서리스</option>
-                    </optgroup>
-                    <optgroup label="암살자">
-                      <option value="블레이드">블레이드</option>
-                      <option value="데모닉">데모닉</option>
-                      <option value="리퍼">리퍼</option>
-                      <option value="소울이터">소울이터</option>
-                    </optgroup>
-                    <optgroup label="스페셜리스트">
-                      <option value="도화가">도화가</option>
-                      <option value="기상술사">기상술사</option>
-                      <option value="환수사">환수사</option>
-                    </optgroup>
-                    <optgroup label="가디언나이트">
-                      <option value="가디언나이트">가디언나이트</option>
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
-              <div id="classPickResult"><div class="loading-text">클래스를 선택하세요 🎯</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-            <!-- 호감 섹션 -->
-      <div class="section-wrap">
-        <div class="section-header">
-          <span class="section-label label-favor">FAVOR TOURNAMENT</span>
-          <span class="section-title">호감 직각 승률</span>
-        </div>
-                <div class="triple-grid">
-          <!-- 1칸: 5일/7일 토글 -->
-          <div class="admin-card">
-            <div class="card-head">
-                           <div class="period-toggle-wrap">
-                <button class="period-toggle-btn active" data-target="favor" data-days="5">5일</button>
-                <button class="period-toggle-btn" data-target="favor" data-days="7">7일</button>
-                <button class="period-toggle-btn" data-target="favor" data-days="custom">4/22~</button>
-              </div> 
-
-              <div class="card-title" id="favorPeriodTitle">5일 기준 승률</div>
-            </div>
-            <div id="favorPeriodTable"><div class="loading-text">불러오는 중...</div></div>
-          </div>
-          <!-- 2칸: 전체 -->
-          <div class="admin-card">
-            <div class="card-head">
-              <div class="card-period-badge badge-all">전체</div>
-              <div class="card-title">전체 기준 승률 + 우승</div>
-            </div>
-            <div id="favorAllTable"><div class="loading-text">불러오는 중...</div></div>
-          </div>
-        </div>
-      </div>
-
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-    const SUPABASE_URL = "https://khszfukekudyripouifm.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // ===== 시계 =====
-    const DAYS = ["일","월","화","수","목","금","토"];
-    function updateClock() {
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth()+1).padStart(2,"0");
-      const d = String(now.getDate()).padStart(2,"0");
-      const dow = DAYS[now.getDay()];
-      const h = String(now.getHours()).padStart(2,"0");
-      const mi = String(now.getMinutes()).padStart(2,"0");
-      const s = String(now.getSeconds()).padStart(2,"0");
-      document.getElementById("clockDate").textContent = `${y}.${m}.${d} (${dow})`;
-      document.getElementById("clockTime").textContent = `${h}:${mi}:${s}`;
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    // ===== 비밀번호 =====
-    const pwInput    = document.getElementById("pwInput");
-    const pwBtn      = document.getElementById("pwBtn");
-    const pwError    = document.getElementById("pwError");
-    const lockScreen = document.getElementById("lockScreen");
-    const adminPage  = document.getElementById("adminPage");
-
-    
-
-
-    async function checkPassword() {
-      const pw = pwInput.value.trim();
-      if (!pw) return;
-      const {data, error} = await supabase.rpc("check_admin_password", {
-        input_pw: pw
-      });
-
-      if (error) { pwError.style.display="block"; return; }
-
-      if (data === true) {
-        setAdminPw(pw);
-        lockScreen.style.display="none";
-        document.body.style.alignItems="flex-start";
-        adminPage.classList.add("show");
-        loadAllData();
-        loadAdminInquiries();
-      } else {
-        pwError.style.display="block";
-        pwInput.value="";
-        pwInput.focus();
-      }
-    }
-
-
-
-    pwBtn.addEventListener("click", checkPassword);
-    pwInput.addEventListener("keydown", e => { if(e.key==="Enter") checkPassword(); });
-
-    // ===== 등급 =====
-    const GRADE_TABLE = [
-      {grade:"SS+",min:100,max:100},{grade:"SS",min:98,max:99},{grade:"SS-",min:96,max:97},
-      {grade:"S+",min:94,max:95},{grade:"S",min:92,max:93},{grade:"S-",min:90,max:91},
-      {grade:"A+",min:85,max:89},{grade:"A",min:80,max:84},{grade:"A-",min:75,max:79},
-      {grade:"B+",min:70,max:74},{grade:"B",min:65,max:69},{grade:"B-",min:60,max:64},
-      {grade:"C+",min:55,max:59},{grade:"C",min:50,max:54},{grade:"C-",min:45,max:49},
-      {grade:"D+",min:40,max:44},{grade:"D",min:35,max:39},{grade:"D-",min:30,max:34},
-      {grade:"E+",min:25,max:29},{grade:"E",min:20,max:24},{grade:"E-",min:15,max:19},
-      {grade:"F+",min:10,max:14},{grade:"F",min:5,max:9},{grade:"F-",min:0,max:4},
-    ];
-    const GRADE_COLORS = {
-      "SS+":"#ffd700","SS":"#ffd700","SS-":"#ffd700",
-      "S+":"#7fc6ff","S":"#7fc6ff","S-":"#7fc6ff",
-      "A+":"#ff7755","A":"#ff7755","A-":"#ff7755",
-      "B+":"#ffb060","B":"#ffb060","B-":"#ffb060",
-      "C+":"#c79cff","C":"#c79cff","C-":"#c79cff",
-      "D+":"#a9dfff","D":"#a9dfff","D-":"#a9dfff",
-      "E+":"#8ee8b0","E":"#8ee8b0","E-":"#8ee8b0",
-      "F+":"#999999","F":"#999999","F-":"#999999",
-    };
-
-    // ===== 렌더 테이블 (5일/7일) =====
-    function renderPeriodTable(containerId, data, type) {
-      const container = document.getElementById(containerId);
-      if (!data||data.length===0) { container.innerHTML=`<div class="loading-text">데이터 없음 😢</div>`; return; }
-      const fillClass = type==="op" ? "fill-op" : "fill-favor";
-      const sorted = [...data].sort((a,b) => Number(b.win_rate) - Number(a.win_rate));
-      container.innerHTML = `
-        <table class="rate-table">
-          <thead><tr><th>#</th><th>각인</th><th>승률 / 전적</th></tr></thead>
-          <tbody>
-            ${sorted.map((row,i) => `
-              <tr>
-                <td><div class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</div></td>
-                <td><div class="eng-name">${row.engraving_name}</div></td>
-                <td>
-                  <div class="rate-bar-wrap">
-                    <div class="rate-bar"><div class="rate-fill ${fillClass}" style="width:${Math.min(100,Number(row.win_rate))}%"></div></div>
-                    <div class="rate-val">${Number(row.win_rate).toFixed(1)}%</div>
-                  </div>
-                  <div class="record-text">${row.total_matches}전 ${row.win_count}승 ${row.lose_count}패</div>
-                </td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>`;
-    }
-
-    // ===== 렌더 테이블 (전체) =====
-    function renderAllTable(containerId, data, type) {
-      const container = document.getElementById(containerId);
-      if (!data||data.length===0) { container.innerHTML=`<div class="loading-text">데이터 없음 😢</div>`; return; }
-      const fillClass = type==="op" ? "fill-op" : "fill-favor";
-      const sorted = [...data].sort((a,b) => {
-        if (b.champion_count !== a.champion_count) return b.champion_count - a.champion_count;
-        return Number(b.win_rate) - Number(a.win_rate);
-      });
-      container.innerHTML = `
-        <table class="rate-table">
-          <thead><tr><th>#</th><th>각인</th><th>우승</th><th>승률 / 전적</th></tr></thead>
-          <tbody>
-            ${sorted.map((row,i) => `
-              <tr>
-                <td><div class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</div></td>
-                <td>
-                  <div class="eng-name">${row.engraving_name}</div>
-                  ${row.class_name && row.class_name!=="-" ? `<div class="cls-name">${row.class_name}</div>` : ""}
-                </td>
-                <td><span class="champ-badge">🏆 ${row.champion_count}회</span></td>
-                <td>
-                  <div class="rate-bar-wrap">
-                    <div class="rate-bar"><div class="rate-fill ${fillClass}" style="width:${Math.min(100,Number(row.win_rate))}%"></div></div>
-                    <div class="rate-val">${Number(row.win_rate).toFixed(1)}%</div>
-                  </div>
-                  <div class="record-text">${row.total_matches}전 ${row.win_count}승 ${row.lose_count}패</div>
-                </td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>`;
-    }
-
-    // ===== 등급 렌더 =====
-    function renderGrade(containerId, counts) {
-  const container = document.getElementById(containerId);
-  const total = Object.values(counts).reduce((a,b)=>a+b,0);
-  if (total===0) { container.innerHTML=`<div class="loading-text">데이터 없음 😢</div>`; return; }
-  container.innerHTML = `
-    <div class="grade-total">실시간 집계중</div>
-    <div class="grade-list">
-      ${GRADE_TABLE.map(g => {
-        const count = counts[g.grade]||0;
-        if (count===0) return "";
-        const pct = (count / total * 100).toFixed(2);
-        return `<div class="grade-row">
-          <div class="grade-name-text" style="color:${GRADE_COLORS[g.grade]}">${g.grade}</div>
-          <div class="grade-count"><span>${pct}%</span></div>
-        </div>`;
-      }).join("")}
-    </div>`;
-}
-
-    // ===== 데이터 로드 =====
-       async function loadAllData() {
-      const SUPPORT_ENGRAVINGS = ["해방자","절실한 구원","만개","축복의 오라"];
-
-      // OP 5일 (기본)
-      const {data: op5} = await supabase.rpc("get_tier_data", {p_type:"op", p_days:5});
-      renderPeriodTable("opPeriodTable", op5, "op");
-
-      // OP 전체
-      const {data: opAll} = await supabase.from("ranking_overall")
-        .select("engraving_name,class_name,win_count,lose_count,total_matches,win_rate,champion_count")
-        .eq("tournament_type","op");
-      const opFiltered = opAll.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
-      renderAllTable("opAllTable", opFiltered, "op");
-
-      // OP 등급
-      const {data: gradeSessions} = await supabase.from("sessions").select("grade").eq("tournament_type","op");
-      const counts = {};
-      if (gradeSessions) { for (const r of gradeSessions) { if(!r.grade) continue; counts[r.grade]=(counts[r.grade]||0)+1; } }
-      renderGrade("opGradeList", counts);
-
-      // 호감 5일 (기본)
-      const {data: favor5} = await supabase.rpc("get_tier_data", {p_type:"favor", p_days:5});
-      renderPeriodTable("favorPeriodTable", favor5, "favor");
-
-      // 호감 전체
-      const {data: favorAll} = await supabase.from("ranking_overall")
-        .select("engraving_name,class_name,win_count,lose_count,total_matches,win_rate,champion_count")
-        .eq("tournament_type","favor");
-      renderAllTable("favorAllTable", favorAll, "favor");
-
-      // 기간 토글 이벤트
-      initPeriodToggle();
-
-      // 클래스별 우승 직각 분석
-      initClassPicker();
-    }
-
-    // ===== 기간 토글 (5일/7일) =====
-    
-    function initPeriodToggle() {
-      document.querySelectorAll(".period-toggle-btn").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const target = btn.dataset.target;
-          const daysRaw = btn.dataset.days;
-
-          // 같은 그룹 토글 처리
-          btn.closest(".period-toggle-wrap").querySelectorAll(".period-toggle-btn").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-
-          const titleEl = document.getElementById(target + "PeriodTitle");
-          const tableId = target + "PeriodTable";
-          document.getElementById(tableId).innerHTML = `<div class="loading-text">불러오는 중...</div>`;
-
-          if (daysRaw === "custom") {
-            // 4월 22일부터 현재까지 일수 계산
-            const start = new Date("2026-04-22");
-            const now = new Date();
-            const diffDays = Math.ceil((now - start) / (1000 * 60 * 60 * 24)) + 1;
-
-            titleEl.textContent = `4/22 ~ 현재 기준 승률`;
-
-            const {data, error} = await supabase.rpc("get_tier_data", {p_type: target, p_days: diffDays});
-            if (error) {
-              document.getElementById(tableId).innerHTML = `<div class="loading-text">조회 실패 😢</div>`;
-              return;
-            }
-            renderPeriodTable(tableId, data, target);
-          } else {
-            const days = Number(daysRaw);
-            titleEl.textContent = `${days}일 기준 승률`;
-
-            const {data, error} = await supabase.rpc("get_tier_data", {p_type: target, p_days: days});
-            if (error) {
-              document.getElementById(tableId).innerHTML = `<div class="loading-text">조회 실패 😢</div>`;
-              return;
-            }
-            renderPeriodTable(tableId, data, target);
-          }
-        });
-      });
-    }
-
-
-
-    // ===== 클래스별 우승 직각 분석 =====
-    let currentPickType = "op";
-
-    function initClassPicker() {
-      const toggleBtns = document.querySelectorAll(".pick-toggle-btn");
-      const select = document.getElementById("classPickSelect");
-
-      toggleBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          toggleBtns.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          currentPickType = btn.dataset.type;
-          if (select.value) loadClassPickData(select.value, currentPickType);
-        });
-      });
-
-      select.addEventListener("change", () => {
-        if (select.value) loadClassPickData(select.value, currentPickType);
-        else document.getElementById("classPickResult").innerHTML = `<div class="loading-text">클래스를 선택하세요 🎯</div>`;
-      });
-    }
-
-    async function loadClassPickData(className, type) {
-      const resultDiv = document.getElementById("classPickResult");
-      resultDiv.innerHTML = `<div class="loading-text">불러오는 중...</div>`;
-
-      const {data, error} = await supabase.rpc("get_class_winner_stats", {
-        p_class: className,
-        p_type: type
-      });
-
-      if (error) {
-        resultDiv.innerHTML = `<div class="loading-text">조회 실패 😢</div>`;
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        resultDiv.innerHTML = `<div class="loading-text">데이터 없음 😢<br>${className} 유저의 ${type === "op" ? "OP" : "호감"} 참여 기록이 없습니다.</div>`;
-        return;
-      }
-
-      const totalPicks = data.reduce((sum, r) => sum + Number(r.pick_count), 0);
-      const barClass = type === "op" ? "pick-bar-op" : "pick-bar-favor";
-      const typeLabel = type === "op" ? "OP 토너먼트" : "호감 토너먼트";
-
-      resultDiv.innerHTML = `
-        <div class="pick-summary">
-          <div>
-            <div class="pick-summary-label">📊 ${className} · ${typeLabel}</div>
-            <div class="pick-summary-sub">총 ${totalPicks}명 참여</div>
-          </div>
-          <div class="pick-summary-value">${data.length}개 직각</div>
-        </div>
-        <div class="pick-result-list">
-          ${data.map((row, i) => {
-            const rankClass = i === 0 ? "ptop1" : i === 1 ? "ptop2" : i === 2 ? "ptop3" : "";
-            const rowClass = i === 0 ? "pick-top1" : i === 1 ? "pick-top2" : i === 2 ? "pick-top3" : "";
-            return `
-              <div class="pick-result-row ${rowClass}">
-                <div class="pick-rank ${rankClass}">${i + 1}</div>
-                <div class="pick-info">
-                  <div class="pick-eng-name">${row.winner_engraving}</div>
-                  <div class="pick-bar-bg">
-                    <div class="pick-bar-fill ${barClass}" style="width:${Math.min(100, Number(row.pick_rate))}%"></div>
-                  </div>
-                  <div class="pick-count-text">${row.pick_count}명 선택</div>
-                </div>
-                <div class="pick-rate-val ${rankClass}">${Number(row.pick_rate).toFixed(1)}%</div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      `;
-    }
-
-
-    // ===== 관리자 문의 관리 =====
-    let adminPw = null;
-    let selectedAdminInqId = null;
-
-    function setAdminPw(pw) {
-      adminPw = pw;
-    }
-
-    async function loadAdminInquiries() {
-      if (!adminPw) return;
-
-      var listEl = document.getElementById("inqAdminList");
-      if (!listEl) return;
-
-      listEl.innerHTML = '<div class="loading-text">불러오는 중...</div>';
-
-      var result = await supabase.rpc("list_inquiries");
-
-      if (result.error || !result.data || result.data.length === 0) {
-        listEl.innerHTML = '<div class="loading-text">문의가 없습니다 📭</div>';
-        document.getElementById("inqTotalCount").textContent = "0";
-        document.getElementById("inqWaitingCount").textContent = "0";
-        document.getElementById("inqDoneCount").textContent = "0";
-        return;
-      }
-
-      var rows = result.data;
-      var total = rows.length;
-      var waiting = rows.filter(function(r) { return r.status === "대기중"; }).length;
-      var done = rows.filter(function(r) { return r.status === "답변완료"; }).length;
-
-      document.getElementById("inqTotalCount").textContent = total;
-      document.getElementById("inqWaitingCount").textContent = waiting;
-      document.getElementById("inqDoneCount").textContent = done;
-
-      var html = "";
-
-      rows.forEach(function(row) {
-        var dateStr = new Date(row.created_at).toLocaleDateString("ko-KR", {
-          year: "2-digit", month: "2-digit", day: "2-digit"
-        });
-
-        var statusClass = row.status === "답변완료" ? "done" : "wait";
-        var activeClass = selectedAdminInqId === row.id ? "active" : "";
-
-        html +=
-          '<div class="inq-admin-item ' + activeClass + '" data-inq-id="' + row.id + '">' +
-            '<div class="inq-admin-no">#' + row.id + '</div>' +
-            '<div class="inq-admin-info">' +
-              '<div class="inq-admin-title">' + row.title + '</div>' +
-              '<div class="inq-admin-meta">' +
-                '<span class="inq-admin-badge-secret">비밀글</span>' +
-                '<span class="inq-admin-badge-type">' + row.inquiry_type + '</span>' +
-                '<span class="inq-admin-date">' + dateStr + '</span>' +
-              '</div>' +
-            '</div>' +
-            '<div class="inq-admin-badge-status ' + statusClass + '">' + row.status + '</div>' +
-          '</div>';
-      });
-
-      listEl.innerHTML = html;
-    }
-
-    async function loadAdminInquiryDetail(inqId) {
-      if (!adminPw) return;
-
-      selectedAdminInqId = inqId;
-      var detailEl = document.getElementById("inqAdminDetail");
-      detailEl.innerHTML = '<div class="loading-text">불러오는 중...</div>';
-
-      var result = await supabase.rpc("admin_read_inquiry", {
-        p_id: inqId,
-        p_admin_pw: adminPw
-      });
-
-      if (result.error || !result.data || result.data.length === 0) {
-        detailEl.innerHTML = '<div class="loading-text">문의를 불러올 수 없습니다 😢</div>';
-        return;
-      }
-
-      var row = result.data[0];
-
-      var dateStr = new Date(row.created_at).toLocaleDateString("ko-KR", {
-        year: "numeric", month: "2-digit", day: "2-digit",
-        hour: "2-digit", minute: "2-digit"
-      });
-
-      var existingReplyHTML = "";
-
-      if (row.status === "답변완료" && row.admin_reply) {
-        var replyDate = new Date(row.replied_at).toLocaleDateString("ko-KR", {
-          year: "numeric", month: "2-digit", day: "2-digit",
-          hour: "2-digit", minute: "2-digit"
-        });
-
-        existingReplyHTML =
-          '<div class="inq-existing-reply">' +
-            '<div class="inq-existing-reply-label">✅ 기존 답변</div>' +
-            '<div class="inq-existing-reply-text">' + row.admin_reply + '</div>' +
-            '<div class="inq-existing-reply-date">' + replyDate + '</div>' +
-          '</div>';
-      }
-
-      detailEl.innerHTML =
-        '<div class="inq-detail-top">' +
-          '<div>' +
-            '<div class="inq-detail-title">#' + row.id + ' ' + row.title + '</div>' +
-            '<div class="inq-detail-sub">' +
-              '<span class="inq-admin-badge-secret">비밀글</span>' +
-              '<span class="inq-admin-badge-type">' + row.inquiry_type + '</span>' +
-            '</div>' +
-          '</div>' +
-          '<div class="inq-admin-date">' + dateStr + '</div>' +
-        '</div>' +
-        '<div class="inq-detail-content">' + row.content + '</div>' +
-        existingReplyHTML +
-        '<div class="inq-reply-box">' +
-          '<div class="inq-reply-label">' + (row.status === "답변완료" ? "답변 수정" : "답변 작성") + '</div>' +
-          '<textarea class="inq-reply-textarea" id="adminReplyText" placeholder="답변을 작성하세요...">' + (row.admin_reply || "") + '</textarea>' +
-          '<div class="inq-reply-actions">' +
-            '<button class="inq-admin-btn danger" id="adminDeleteInqBtn">삭제</button>' +
-            '<button class="inq-admin-btn ghost" id="adminResetReplyBtn">초기화</button>' +
-            '<button class="inq-admin-btn primary" id="adminSubmitReplyBtn">답변 등록</button>' +
-          '</div>' +
-        '</div>';
-
-      // 목록 active 표시 갱신
-      document.querySelectorAll(".inq-admin-item").forEach(function(item) {
-        item.classList.remove("active");
-        if (Number(item.dataset.inqId) === inqId) item.classList.add("active");
-      });
-
-      // 답변 등록
-      document.getElementById("adminSubmitReplyBtn").addEventListener("click", async function() {
-        var replyText = document.getElementById("adminReplyText").value.trim();
-        if (!replyText) { alert("답변 내용을 입력해 주세요."); return; }
-
-        this.disabled = true;
-        this.textContent = "등록 중...";
-
-        var res = await supabase.rpc("reply_inquiry", {
-          p_id: inqId,
-          p_admin_pw: adminPw,
-          p_reply: replyText
-        });
-
-        if (res.error || res.data === false) {
-          alert("답변 등록 실패");
-          this.disabled = false;
-          this.textContent = "답변 등록";
-          return;
-        }
-
-        alert("답변이 등록되었습니다.");
-        await loadAdminInquiries();
-        await loadAdminInquiryDetail(inqId);
-      });
-
-      // 초기화
-      document.getElementById("adminResetReplyBtn").addEventListener("click", function() {
-        document.getElementById("adminReplyText").value = "";
-      });
-
-      // 삭제
-      document.getElementById("adminDeleteInqBtn").addEventListener("click", async function() {
-        if (!confirm("정말 이 문의를 삭제하시겠습니까?\n삭제 후 복구할 수 없습니다.")) return;
-
-        this.disabled = true;
-        this.textContent = "삭제 중...";
-
-        var res = await supabase.rpc("admin_delete_inquiry", {
-          p_id: inqId,
-          p_admin_pw: adminPw
-        });
-
-        if (res.error || res.data === false) {
-          alert("삭제 실패");
-          this.disabled = false;
-          this.textContent = "삭제";
-          return;
-        }
-
-        alert("문의가 삭제되었습니다.");
-        selectedAdminInqId = null;
-        detailEl.innerHTML = '<div class="loading-text">문의글을 선택하면 여기서 확인하고 답변할 수 있습니다.</div>';
-        await loadAdminInquiries();
-      });
-    }
-
-    // 목록 클릭 이벤트 (이벤트 위임)
-    var inqAdminListEl = document.getElementById("inqAdminList");
-    if (inqAdminListEl) {
-      inqAdminListEl.addEventListener("click", function(e) {
-        var item = e.target.closest(".inq-admin-item");
-        if (!item) return;
-        var inqId = Number(item.dataset.inqId);
-        loadAdminInquiryDetail(inqId);
-      });
-    }
-
-    
-  </script>
-</body>
+<div class=admin-clock>
+<div class=clock-date id=clockDate></div>
+<div class=clock-time id=clockTime></div>
+</div>
+<div class=lock-screen id=lockScreen>
+<div class=lock-icon>🔐</div>
+<div class=lock-title>관리자 페이지</div>
+<div class=lock-sub>접근 권한이 필요합니다</div>
+<input class=lock-input type=password id=pwInput placeholder=•••• maxlength=20>
+<button class=lock-btn id=pwBtn>확인</button>
+<div class=lock-error id=pwError>비밀번호가 틀렸습니다 🔒</div>
+</div>
+<div class=admin-page id=adminPage>
+<div class=admin-wrap>
+<div class=admin-header>
+<div class=admin-header-label>LOITER BASE · ADMIN</div>
+<div class=admin-header-title>관리자 대시보드 🛠️</div>
+<div class=admin-header-sub>각인별 승률 모니터링 · 5일 / 7일 / 전체 비교</div>
+</div>
+<div class=section-wrap>
+<div class=section-header>
+<span class="section-label label-op">OP TOURNAMENT</span>
+<span class=section-title>OP 직각 승률</span>
+</div>
+<div class=triple-grid>
+<div class=admin-card>
+<div class=card-head>
+<div class=period-toggle-wrap>
+<button class="period-toggle-btn active" data-target=op data-days=5>5일</button>
+<button class=period-toggle-btn data-target=op data-days=7>7일</button>
+<button class=period-toggle-btn data-target=op data-days=custom>4/22~</button>
+</div>
+<div class=card-title id=opPeriodTitle>5일 기준 승률</div>
+</div>
+<div id=opPeriodTable><div class=loading-text>불러오는 중...</div></div>
+</div>
+<div class=admin-card>
+<div class=card-head>
+<div class="card-period-badge badge-all">전체</div>
+<div class=card-title>전체 기준 승률 + 우승</div>
+</div>
+<div id=opAllTable><div class=loading-text>불러오는 중...</div></div>
+</div>
+<div class=admin-card>
+<div class=card-head>
+<div class="card-period-badge badge-all">분석</div>
+<div class=card-title>문의 관리 + 등급 분포 + 우승 직각 분석</div>
+</div>
+<div class=grade-section-title>💬 문의 관리</div>
+<div class=inq-admin-summary>
+<div class=inq-summary-box>
+<div class=inq-summary-label>전체 문의</div>
+<div class=inq-summary-value id=inqTotalCount>-</div>
+</div>
+<div class=inq-summary-box>
+<div class=inq-summary-label>대기중</div>
+<div class=inq-summary-value id=inqWaitingCount>-</div>
+</div>
+<div class=inq-summary-box>
+<div class=inq-summary-label>답변완료</div>
+<div class=inq-summary-value id=inqDoneCount>-</div>
+</div>
+</div>
+<div id=inqAdminList><div class=loading-text>불러오는 중...</div></div>
+<div class=inq-admin-detail id=inqAdminDetail>
+<div class=loading-text>문의글을 선택하면 여기서 확인하고 답변할 수 있습니다.</div>
+</div>
+<div class=grade-divider></div>
+<div class=grade-section-title>📊 등급 분포</div>
+<div id=opGradeList><div class=loading-text>불러오는 중...</div></div>
+<div class=grade-divider></div>
+<div class=grade-section-title>🏆 클래스별 우승 직각 분석</div>
+<div class=class-pick-wrap>
+<div class=pick-controls>
+<div class=pick-toggle>
+<button class="pick-toggle-btn active" data-type=op>OP</button>
+<button class=pick-toggle-btn data-type=favor>호감</button>
+</div>
+<div class=pick-select-wrap>
+<select class=pick-select id=classPickSelect>
+<option value="">클래스 선택 ▼</option>
+<optgroup label=전사>
+<option value=워로드>워로드</option>
+<option value=버서커>버서커</option>
+<option value=디스트로이어>디스트로이어</option>
+<option value=홀리나이트>홀리나이트</option>
+<option value=슬레이어>슬레이어</option>
+<option value=발키리>발키리</option>
+</optgroup>
+<optgroup label=무도가>
+<option value=배틀마스터>배틀마스터</option>
+<option value=인파이터>인파이터</option>
+<option value=기공사>기공사</option>
+<option value=창술사>창술사</option>
+<option value=스트라이커>스트라이커</option>
+<option value=브레이커>브레이커</option>
+</optgroup>
+<optgroup label=헌터>
+<option value=데빌헌터>데빌헌터</option>
+<option value=블래스터>블래스터</option>
+<option value=호크아이>호크아이</option>
+<option value=스카우터>스카우터</option>
+<option value=건슬링어>건슬링어</option>
+</optgroup>
+<optgroup label=마법사>
+<option value=서머너>서머너</option>
+<option value=아르카나>아르카나</option>
+<option value=바드>바드</option>
+<option value=소서리스>소서리스</option>
+</optgroup>
+<optgroup label=암살자>
+<option value=블레이드>블레이드</option>
+<option value=데모닉>데모닉</option>
+<option value=리퍼>리퍼</option>
+<option value=소울이터>소울이터</option>
+</optgroup>
+<optgroup label=스페셜리스트>
+<option value=도화가>도화가</option>
+<option value=기상술사>기상술사</option>
+<option value=환수사>환수사</option>
+</optgroup>
+<optgroup label=가디언나이트>
+<option value=가디언나이트>가디언나이트</option>
+</optgroup>
+</select>
+</div>
+</div>
+<div id=classPickResult><div class=loading-text>클래스를 선택하세요 🎯</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class=section-wrap>
+<div class=section-header>
+<span class="section-label label-favor">FAVOR TOURNAMENT</span>
+<span class=section-title>호감 직각 승률</span>
+</div>
+<div class=triple-grid>
+<div class=admin-card>
+<div class=card-head>
+<div class=period-toggle-wrap>
+<button class="period-toggle-btn active" data-target=favor data-days=5>5일</button>
+<button class=period-toggle-btn data-target=favor data-days=7>7일</button>
+<button class=period-toggle-btn data-target=favor data-days=custom>4/22~</button>
+</div>
+<div class=card-title id=favorPeriodTitle>5일 기준 승률</div>
+</div>
+<div id=favorPeriodTable><div class=loading-text>불러오는 중...</div></div>
+</div>
+<div class=admin-card>
+<div class=card-head>
+<div class="card-period-badge badge-all">전체</div>
+<div class=card-title>전체 기준 승률 + 우승</div>
+</div>
+<div id=favorAllTable><div class=loading-text>불러오는 중...</div></div>
+</div>
+</div>
+</div>
+<script type=module>import{createClient}from"https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";const SUPABASE_URL="https://khszfukekudyripouifm.supabase.co",SUPABASE_KEY="sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb",supabase=createClient(SUPABASE_URL,SUPABASE_KEY),DAYS=["일","월","화","수","목","금","토"];function updateClock(){const t=new Date,e=t.getFullYear(),n=String(t.getMonth()+1).padStart(2,"0"),a=String(t.getDate()).padStart(2,"0"),i=DAYS[t.getDay()],d=String(t.getHours()).padStart(2,"0"),s=String(t.getMinutes()).padStart(2,"0"),r=String(t.getSeconds()).padStart(2,"0");document.getElementById("clockDate").textContent=`${e}.${n}.${a} (${i})`,document.getElementById("clockTime").textContent=`${d}:${s}:${r}`}updateClock(),setInterval(updateClock,1e3);const pwInput=document.getElementById("pwInput"),pwBtn=document.getElementById("pwBtn"),pwError=document.getElementById("pwError"),lockScreen=document.getElementById("lockScreen"),adminPage=document.getElementById("adminPage");async function checkPassword(){const t=pwInput.value.trim();if(!t)return;const{data:e,error:n}=await supabase.rpc("check_admin_password",{input_pw:t});n?pwError.style.display="block":!0===e?(setAdminPw(t),lockScreen.style.display="none",document.body.style.alignItems="flex-start",adminPage.classList.add("show"),loadAllData(),loadAdminInquiries()):(pwError.style.display="block",pwInput.value="",pwInput.focus())}pwBtn.addEventListener("click",checkPassword),pwInput.addEventListener("keydown",(t=>{"Enter"===t.key&&checkPassword()}));const GRADE_TABLE=[{grade:"SS+",min:100,max:100},{grade:"SS",min:98,max:99},{grade:"SS-",min:96,max:97},{grade:"S+",min:94,max:95},{grade:"S",min:92,max:93},{grade:"S-",min:90,max:91},{grade:"A+",min:85,max:89},{grade:"A",min:80,max:84},{grade:"A-",min:75,max:79},{grade:"B+",min:70,max:74},{grade:"B",min:65,max:69},{grade:"B-",min:60,max:64},{grade:"C+",min:55,max:59},{grade:"C",min:50,max:54},{grade:"C-",min:45,max:49},{grade:"D+",min:40,max:44},{grade:"D",min:35,max:39},{grade:"D-",min:30,max:34},{grade:"E+",min:25,max:29},{grade:"E",min:20,max:24},{grade:"E-",min:15,max:19},{grade:"F+",min:10,max:14},{grade:"F",min:5,max:9},{grade:"F-",min:0,max:4}],GRADE_COLORS={"SS+":"#ffd700",SS:"#ffd700","SS-":"#ffd700","S+":"#7fc6ff",S:"#7fc6ff","S-":"#7fc6ff","A+":"#ff7755",A:"#ff7755","A-":"#ff7755","B+":"#ffb060",B:"#ffb060","B-":"#ffb060","C+":"#c79cff",C:"#c79cff","C-":"#c79cff","D+":"#a9dfff",D:"#a9dfff","D-":"#a9dfff","E+":"#8ee8b0",E:"#8ee8b0","E-":"#8ee8b0","F+":"#999999",F:"#999999","F-":"#999999"};function renderPeriodTable(t,e,n){const a=document.getElementById(t);if(!e||0===e.length)return void(a.innerHTML='<div class="loading-text">데이터 없음 😢</div>');const i="op"===n?"fill-op":"fill-favor",d=[...e].sort(((t,e)=>Number(e.win_rate)-Number(t.win_rate)));a.innerHTML=`\n        <table class="rate-table">\n          <thead><tr><th>#</th><th>각인</th><th>승률 / 전적</th></tr></thead>\n          <tbody>\n            ${d.map(((t,e)=>`\n              <tr>\n                <td><div class="rank-num ${0===e?"top1":1===e?"top2":2===e?"top3":""}">${e+1}</div></td>\n                <td><div class="eng-name">${t.engraving_name}</div></td>\n                <td>\n                  <div class="rate-bar-wrap">\n                    <div class="rate-bar"><div class="rate-fill ${i}" style="width:${Math.min(100,Number(t.win_rate))}%"></div></div>\n                    <div class="rate-val">${Number(t.win_rate).toFixed(1)}%</div>\n                  </div>\n                  <div class="record-text">${t.total_matches}전 ${t.win_count}승 ${t.lose_count}패</div>\n                </td>\n              </tr>\n            `)).join("")}\n          </tbody>\n        </table>`}function renderAllTable(t,e,n){const a=document.getElementById(t);if(!e||0===e.length)return void(a.innerHTML='<div class="loading-text">데이터 없음 😢</div>');const i="op"===n?"fill-op":"fill-favor",d=[...e].sort(((t,e)=>e.champion_count!==t.champion_count?e.champion_count-t.champion_count:Number(e.win_rate)-Number(t.win_rate)));a.innerHTML=`\n        <table class="rate-table">\n          <thead><tr><th>#</th><th>각인</th><th>우승</th><th>승률 / 전적</th></tr></thead>\n          <tbody>\n            ${d.map(((t,e)=>`\n              <tr>\n                <td><div class="rank-num ${0===e?"top1":1===e?"top2":2===e?"top3":""}">${e+1}</div></td>\n                <td>\n                  <div class="eng-name">${t.engraving_name}</div>\n                  ${t.class_name&&"-"!==t.class_name?`<div class="cls-name">${t.class_name}</div>`:""}\n                </td>\n                <td><span class="champ-badge">🏆 ${t.champion_count}회</span></td>\n                <td>\n                  <div class="rate-bar-wrap">\n                    <div class="rate-bar"><div class="rate-fill ${i}" style="width:${Math.min(100,Number(t.win_rate))}%"></div></div>\n                    <div class="rate-val">${Number(t.win_rate).toFixed(1)}%</div>\n                  </div>\n                  <div class="record-text">${t.total_matches}전 ${t.win_count}승 ${t.lose_count}패</div>\n                </td>\n              </tr>\n            `)).join("")}\n          </tbody>\n        </table>`}function renderGrade(t,e){const n=document.getElementById(t),a=Object.values(e).reduce(((t,e)=>t+e),0);n.innerHTML=0!==a?`\n    <div class="grade-total">실시간 집계중</div>\n    <div class="grade-list">\n      ${GRADE_TABLE.map((t=>{const n=e[t.grade]||0;if(0===n)return"";const i=(n/a*100).toFixed(2);return`<div class="grade-row">\n          <div class="grade-name-text" style="color:${GRADE_COLORS[t.grade]}">${t.grade}</div>\n          <div class="grade-count"><span>${i}%</span></div>\n        </div>`})).join("")}\n    </div>`:'<div class="loading-text">데이터 없음 😢</div>'}async function loadAllData(){const t=["해방자","절실한 구원","만개","축복의 오라"],{data:e}=await supabase.rpc("get_tier_data",{p_type:"op",p_days:5});renderPeriodTable("opPeriodTable",e,"op");const{data:n}=await supabase.from("ranking_overall").select("engraving_name,class_name,win_count,lose_count,total_matches,win_rate,champion_count").eq("tournament_type","op");renderAllTable("opAllTable",n.filter((e=>!t.includes(e.engraving_name))),"op");const{data:a}=await supabase.from("sessions").select("grade").eq("tournament_type","op"),i={};if(a)for(const t of a)t.grade&&(i[t.grade]=(i[t.grade]||0)+1);renderGrade("opGradeList",i);const{data:d}=await supabase.rpc("get_tier_data",{p_type:"favor",p_days:5});renderPeriodTable("favorPeriodTable",d,"favor");const{data:s}=await supabase.from("ranking_overall").select("engraving_name,class_name,win_count,lose_count,total_matches,win_rate,champion_count").eq("tournament_type","favor");renderAllTable("favorAllTable",s,"favor"),initPeriodToggle(),initClassPicker()}function initPeriodToggle(){document.querySelectorAll(".period-toggle-btn").forEach((t=>{t.addEventListener("click",(async()=>{const e=t.dataset.target,n=t.dataset.days;t.closest(".period-toggle-wrap").querySelectorAll(".period-toggle-btn").forEach((t=>t.classList.remove("active"))),t.classList.add("active");const a=document.getElementById(e+"PeriodTitle"),i=e+"PeriodTable";if(document.getElementById(i).innerHTML='<div class="loading-text">불러오는 중...</div>',"custom"===n){const t=new Date("2026-04-22"),n=new Date,d=Math.ceil((n-t)/864e5)+1;a.textContent="4/22 ~ 현재 기준 승률";const{data:s,error:r}=await supabase.rpc("get_tier_data",{p_type:e,p_days:d});if(r)return void(document.getElementById(i).innerHTML='<div class="loading-text">조회 실패 😢</div>');renderPeriodTable(i,s,e)}else{const t=Number(n);a.textContent=`${t}일 기준 승률`;const{data:d,error:s}=await supabase.rpc("get_tier_data",{p_type:e,p_days:t});if(s)return void(document.getElementById(i).innerHTML='<div class="loading-text">조회 실패 😢</div>');renderPeriodTable(i,d,e)}}))}))}let currentPickType="op";function initClassPicker(){const t=document.querySelectorAll(".pick-toggle-btn"),e=document.getElementById("classPickSelect");t.forEach((n=>{n.addEventListener("click",(()=>{t.forEach((t=>t.classList.remove("active"))),n.classList.add("active"),currentPickType=n.dataset.type,e.value&&loadClassPickData(e.value,currentPickType)}))})),e.addEventListener("change",(()=>{e.value?loadClassPickData(e.value,currentPickType):document.getElementById("classPickResult").innerHTML='<div class="loading-text">클래스를 선택하세요 🎯</div>'}))}async function loadClassPickData(t,e){const n=document.getElementById("classPickResult");n.innerHTML='<div class="loading-text">불러오는 중...</div>';const{data:a,error:i}=await supabase.rpc("get_class_winner_stats",{p_class:t,p_type:e});if(i)return void(n.innerHTML='<div class="loading-text">조회 실패 😢</div>');if(!a||0===a.length)return void(n.innerHTML=`<div class="loading-text">데이터 없음 😢<br>${t} 유저의 ${"op"===e?"OP":"호감"} 참여 기록이 없습니다.</div>`);const d=a.reduce(((t,e)=>t+Number(e.pick_count)),0),s="op"===e?"pick-bar-op":"pick-bar-favor",r="op"===e?"OP 토너먼트":"호감 토너먼트";n.innerHTML=`\n        <div class="pick-summary">\n          <div>\n            <div class="pick-summary-label">📊 ${t} · ${r}</div>\n            <div class="pick-summary-sub">총 ${d}명 참여</div>\n          </div>\n          <div class="pick-summary-value">${a.length}개 직각</div>\n        </div>\n        <div class="pick-result-list">\n          ${a.map(((t,e)=>{const n=0===e?"ptop1":1===e?"ptop2":2===e?"ptop3":"";return`\n              <div class="pick-result-row ${0===e?"pick-top1":1===e?"pick-top2":2===e?"pick-top3":""}">\n                <div class="pick-rank ${n}">${e+1}</div>\n                <div class="pick-info">\n                  <div class="pick-eng-name">${t.winner_engraving}</div>\n                  <div class="pick-bar-bg">\n                    <div class="pick-bar-fill ${s}" style="width:${Math.min(100,Number(t.pick_rate))}%"></div>\n                  </div>\n                  <div class="pick-count-text">${t.pick_count}명 선택</div>\n                </div>\n                <div class="pick-rate-val ${n}">${Number(t.pick_rate).toFixed(1)}%</div>\n              </div>\n            `})).join("")}\n        </div>\n      `}let adminPw=null,selectedAdminInqId=null;function setAdminPw(t){adminPw=t}async function loadAdminInquiries(){if(adminPw){var t=document.getElementById("inqAdminList");if(t){t.innerHTML='<div class="loading-text">불러오는 중...</div>';var e=await supabase.rpc("list_inquiries");if(e.error||!e.data||0===e.data.length)return t.innerHTML='<div class="loading-text">문의가 없습니다 📭</div>',document.getElementById("inqTotalCount").textContent="0",document.getElementById("inqWaitingCount").textContent="0",void(document.getElementById("inqDoneCount").textContent="0");var n=e.data,a=n.length,i=n.filter((function(t){return"대기중"===t.status})).length,d=n.filter((function(t){return"답변완료"===t.status})).length;document.getElementById("inqTotalCount").textContent=a,document.getElementById("inqWaitingCount").textContent=i,document.getElementById("inqDoneCount").textContent=d;var s="";n.forEach((function(t){var e=new Date(t.created_at).toLocaleDateString("ko-KR",{year:"2-digit",month:"2-digit",day:"2-digit"}),n="답변완료"===t.status?"done":"wait",a=selectedAdminInqId===t.id?"active":"";s+='<div class="inq-admin-item '+a+'" data-inq-id="'+t.id+'"><div class="inq-admin-no">#'+t.id+'</div><div class="inq-admin-info"><div class="inq-admin-title">'+t.title+'</div><div class="inq-admin-meta"><span class="inq-admin-badge-secret">비밀글</span><span class="inq-admin-badge-type">'+t.inquiry_type+'</span><span class="inq-admin-date">'+e+'</span></div></div><div class="inq-admin-badge-status '+n+'">'+t.status+"</div></div>"})),t.innerHTML=s}}}async function loadAdminInquiryDetail(t){if(adminPw){selectedAdminInqId=t;var e=document.getElementById("inqAdminDetail");e.innerHTML='<div class="loading-text">불러오는 중...</div>';var n=await supabase.rpc("admin_read_inquiry",{p_id:t,p_admin_pw:adminPw});if(!n.error&&n.data&&0!==n.data.length){var a=n.data[0],i=new Date(a.created_at).toLocaleDateString("ko-KR",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}),d="";if("답변완료"===a.status&&a.admin_reply){var s=new Date(a.replied_at).toLocaleDateString("ko-KR",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});d='<div class="inq-existing-reply"><div class="inq-existing-reply-label">✅ 기존 답변</div><div class="inq-existing-reply-text">'+a.admin_reply+'</div><div class="inq-existing-reply-date">'+s+"</div></div>"}e.innerHTML='<div class="inq-detail-top"><div><div class="inq-detail-title">#'+a.id+" "+a.title+'</div><div class="inq-detail-sub"><span class="inq-admin-badge-secret">비밀글</span><span class="inq-admin-badge-type">'+a.inquiry_type+'</span></div></div><div class="inq-admin-date">'+i+'</div></div><div class="inq-detail-content">'+a.content+"</div>"+d+'<div class="inq-reply-box"><div class="inq-reply-label">'+("답변완료"===a.status?"답변 수정":"답변 작성")+'</div><textarea class="inq-reply-textarea" id="adminReplyText" placeholder="답변을 작성하세요...">'+(a.admin_reply||"")+'</textarea><div class="inq-reply-actions"><button class="inq-admin-btn danger" id="adminDeleteInqBtn">삭제</button><button class="inq-admin-btn ghost" id="adminResetReplyBtn">초기화</button><button class="inq-admin-btn primary" id="adminSubmitReplyBtn">답변 등록</button></div></div>',document.querySelectorAll(".inq-admin-item").forEach((function(e){e.classList.remove("active"),Number(e.dataset.inqId)===t&&e.classList.add("active")})),document.getElementById("adminSubmitReplyBtn").addEventListener("click",(async function(){var e=document.getElementById("adminReplyText").value.trim();if(e){this.disabled=!0,this.textContent="등록 중...";var n=await supabase.rpc("reply_inquiry",{p_id:t,p_admin_pw:adminPw,p_reply:e});if(n.error||!1===n.data)return alert("답변 등록 실패"),this.disabled=!1,void(this.textContent="답변 등록");alert("답변이 등록되었습니다."),await loadAdminInquiries(),await loadAdminInquiryDetail(t)}else alert("답변 내용을 입력해 주세요.")})),document.getElementById("adminResetReplyBtn").addEventListener("click",(function(){document.getElementById("adminReplyText").value=""})),document.getElementById("adminDeleteInqBtn").addEventListener("click",(async function(){if(confirm("정말 이 문의를 삭제하시겠습니까?\n삭제 후 복구할 수 없습니다.")){this.disabled=!0,this.textContent="삭제 중...";var n=await supabase.rpc("admin_delete_inquiry",{p_id:t,p_admin_pw:adminPw});if(n.error||!1===n.data)return alert("삭제 실패"),this.disabled=!1,void(this.textContent="삭제");alert("문의가 삭제되었습니다."),selectedAdminInqId=null,e.innerHTML='<div class="loading-text">문의글을 선택하면 여기서 확인하고 답변할 수 있습니다.</div>',await loadAdminInquiries()}}))}else e.innerHTML='<div class="loading-text">문의를 불러올 수 없습니다 😢</div>'}}var inqAdminListEl=document.getElementById("inqAdminList");inqAdminListEl&&inqAdminListEl.addEventListener("click",(function(t){var e=t.target.closest(".inq-admin-item");e&&loadAdminInquiryDetail(Number(e.dataset.inqId))}))</script>
+</div></div></body>
 </html>
