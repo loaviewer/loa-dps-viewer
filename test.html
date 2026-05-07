@@ -5242,6 +5242,7 @@ const rightAuraOuter     = document.getElementById("rightAuraOuter");
 
     let visitorKey    = null;
     let completedState= {op:false,favor:false};
+    const rankingCache = {};
     let currentBoardMode=null, allCandidates=[], currentTournamentType=null, selectedClass=null, todayOpGrade=null;
     let battleIconsReady = null;
     let workingCandidates=[], currentRoundCandidates=[], nextRoundCandidates=[];
@@ -5542,12 +5543,28 @@ function isOpRateUnlocked() {
     }
 
     async function loadRankingData(mode) {
+  const cacheKey = "all_" + mode;
+
+  if (rankingCache[cacheKey]) {
+    renderBoardFromRows(rankingCache[cacheKey], mode);
+    return;
+  }
+
   const {data,error}=await supabase.from("ranking_overall").select("tournament_type,class_name,engraving_name,champion_count,win_count,lose_count,total_matches,win_rate,updated_at").eq("tournament_type",mode);
   if (error) { alert("랭킹 조회 실패: "+error.message); return; }
+
+  rankingCache[cacheKey] = data;
   renderBoardFromRows(data,mode);
 }
 
 async function loadRankingDataByPeriod(mode, period) {
+  const cacheKey = "week_" + mode;
+
+  if (rankingCache[cacheKey]) {
+    renderBoardFromRows(rankingCache[cacheKey], mode);
+    return;
+  }
+
   const weekKey = getWeekKey();
 
   const {data, error} = await supabase.rpc("get_weekly_ranking", {
@@ -5557,10 +5574,18 @@ async function loadRankingDataByPeriod(mode, period) {
 
   if (error) { alert("주간 랭킹 조회 실패: " + error.message); return; }
 
+  rankingCache[cacheKey] = data;
   renderBoardFromRows(data, mode);
 }
 
 async function loadRankingDataByMonth(mode) {
+  const cacheKey = "month_" + mode;
+
+  if (rankingCache[cacheKey]) {
+    renderBoardFromRows(rankingCache[cacheKey], mode);
+    return;
+  }
+
   const monthKey = getMonthKey();
 
   const {data, error} = await supabase.rpc("get_monthly_ranking", {
@@ -5570,6 +5595,7 @@ async function loadRankingDataByMonth(mode) {
 
   if (error) { alert("월간 랭킹 조회 실패: " + error.message); return; }
 
+  rankingCache[cacheKey] = data;
   renderBoardFromRows(data, mode);
 }
     
