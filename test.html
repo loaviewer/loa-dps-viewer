@@ -4938,6 +4938,27 @@ async function loadOpRatePrevData() {
   return data.filter(r => !SUPPORT_ENGRAVINGS.includes(r.engraving_name));
 }
 
+async function preloadAllOpRateModes() {
+  if (opRatePreloadPromise) return opRatePreloadPromise;
+
+  opRatePreloadPromise = (async () => {
+    const prevRows = await loadOpRatePrevData();
+
+    const [postpatchRows, recent10Rows, recent5Rows] = await Promise.all([
+      loadOpRateCompareData("postpatch"),
+      loadOpRateCompareData("recent10"),
+      loadOpRateCompareData("recent5")
+    ]);
+
+    opRateCache["postpatch"] = { rows: postpatchRows, prevRows: prevRows };
+    opRateCache["recent10"]  = { rows: recent10Rows,  prevRows: prevRows };
+    opRateCache["recent5"]   = { rows: recent5Rows,   prevRows: prevRows };
+  })();
+
+  return opRatePreloadPromise;
+}
+
+    
 
 async function loadOpRateCompareData(mode) {
   if (mode === "recent10") {
@@ -4962,8 +4983,6 @@ async function loadOpRateCompareData(mode) {
   return await loadOpRateData();
 }
 
-const opRateCache = {};
-
 async function refreshOpRateModal(mode = "postpatch") {
   const now = new Date();
   const stamp = `${String(now.getFullYear()).slice(2)}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
@@ -4976,19 +4995,12 @@ async function refreshOpRateModal(mode = "postpatch") {
     opRateSub.textContent = `OP 직각 1:1 승률 · 4/22 ~ 현재 비교 🕙 ${stamp}`;
   }
 
-  if (opRateCache[mode]) {
-    renderOpRateContent(opRateCache[mode].rows, opRateCache[mode].prevRows);
-    return;
+  if (!opRateCache["postpatch"] || !opRateCache["recent10"] || !opRateCache["recent5"]) {
+    opRateContent.innerHTML = '<div class="loading-text">데이터 불러오는 중...</div>';
+    await preloadAllOpRateModes();
   }
 
-  opRateContent.innerHTML = '<div class="loading-text">데이터 불러오는 중...</div>';
-
-  const rows = await loadOpRateCompareData(mode);
-  const prevRows = await loadOpRatePrevData();
-
-  opRateCache[mode] = { rows: rows, prevRows: prevRows };
-
-  renderOpRateContent(rows, prevRows);
+  renderOpRateContent(opRateCache[mode].rows, opRateCache[mode].prevRows);
 }
 
     
@@ -5280,6 +5292,8 @@ const rightAuraOuter     = document.getElementById("rightAuraOuter");
     let visitorKey    = null;
     let completedState= {op:false,favor:false};
     const rankingCache = {};
+    const opRateCache = {};
+let opRatePreloadPromise = null;
     let currentBoardMode=null, allCandidates=[], currentTournamentType=null, selectedClass=null, todayOpGrade=null;
     let battleIconsReady = null;
     let workingCandidates=[], currentRoundCandidates=[], nextRoundCandidates=[];
@@ -6457,6 +6471,7 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
   battleIconsReady = preloadBattleIcons();
   await battleIconsReady;
   await loadTodayParticipation();
+     preloadAllOpRateModes();
      
   // 주간 탭 날짜 세팅
 const now = new Date();
