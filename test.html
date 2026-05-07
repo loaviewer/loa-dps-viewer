@@ -609,6 +609,53 @@
       word-break: keep-all;
     }
 
+    .intro-logo-wrap {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .intro-logo-sub {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.40);
+      font-weight: 800;
+    }
+
+    .intro-logo-title {
+      margin: 0;
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.2;
+      text-align: center;
+      background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 30%, #7fc6ff 60%, #8ef0c9 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textShimmer 4s linear infinite;
+      filter: drop-shadow(0 0 12px rgba(122,140,255,0.15));
+    }
+
+    .intro-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(122,140,255,0.10);
+      border: 1px solid rgba(122,140,255,0.18);
+      font-size: 11px;
+      font-weight: 900;
+      color: #7fc6ff;
+      letter-spacing: 1px;
+    }
+    
+
     .intro-desc {
       margin-top: 14px;
       color: #c6d1e0;
@@ -2380,6 +2427,10 @@
       .hero { font-size: 26px; margin-bottom: 10px; }
       .muted { font-size: 13px; }
       .intro-title { font-size: 24px; }
+            .intro-logo-title { font-size: 26px; }
+      .intro-logo-sub { font-size: 10px; letter-spacing: 2px; }
+      .intro-logo-badge { font-size: 10px; padding: 4px 10px; }
+      
       .intro-desc { font-size: 13px; max-width: 100%; margin-top: 12px; }
       .duo-grid { grid-template-columns: 1fr; gap: 14px; }
       .tournament-card { min-height: 208px; padding: 18px; gap: 14px; border-radius: 20px; }
@@ -2534,6 +2585,8 @@
       .sidebar, .main { padding: 12px; }
       .hero { font-size: 24px; }
       .intro-title { font-size: 22px; }
+            .intro-logo-title { font-size: 23px; }
+      .intro-logo-badge { font-size: 9px; }
       .tournament-card { padding: 16px; min-height: 196px; }
       .card-title { font-size: 21px; }
       .stamp { width: 84px; height: 84px; }
@@ -4318,7 +4371,11 @@
     </button>
   </div>
 
-  <h1 class="intro-title">로아 직업 각인 토너먼트</h1>
+  <div class="intro-logo-wrap">
+  <div class="intro-logo-sub">LOITER BASE · TOURNAMENT</div>
+  <h1 class="intro-logo-title">로아 직업 각인 토너먼트</h1>
+  <div class="intro-logo-badge">⚔️ 유저 참여 기반 · 자동 집계</div>
+</div>
   <div class="intro-desc">
     로스트아크 유저들의 <span class="accent-purple">선택과 인식</span>이 쌓여 완성되는 직각 토너먼트입니다.<br>
     <span class="accent-op">OP</span> / <span class="accent-favor">호감</span> 토너먼트는 각각
