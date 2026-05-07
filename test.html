@@ -991,6 +991,20 @@
       box-shadow: 0 0 8px rgba(127,198,255,0.08);
     }
 
+        .period-tabs .mini-tab.active-period::after {
+      content: "✔";
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      font-size: 10px;
+      color: rgba(127,198,255,0.70);
+      pointer-events: none;
+    }
+
+    .period-tabs .mini-tab {
+      position: relative;
+    }
+
     .period-tabs .mini-tab.disabled {
       opacity: 0.35;
       cursor: not-allowed;
