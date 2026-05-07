@@ -4351,10 +4351,21 @@
                 <button class="mini-tab disabled" id="modeFavorBtn">호감 직각</button>
               </div>
             </div>
-            <div class="period-tabs" style="margin-bottom:18px;">
-              <button class="mini-tab" id="periodWeekBtn"><span>주간</span><span class="tab-date" id="weekTabDate"></span></button>
-              <button class="mini-tab disabled"><span>월간</span><span class="tab-date">집계중</span></button>
-              <button class="mini-tab active-period" id="periodAllBtn"><span>전체</span><span class="tab-date">26.04.07 ~ 오늘</span></button>
+                        <div class="period-tabs" style="margin-bottom:18px;">
+              <button class="mini-tab" id="periodWeekBtn">
+                <span>주간</span>
+                <span class="tab-date" id="weekTabDate"></span>
+              </button>
+
+              <button class="mini-tab" id="periodMonthBtn">
+                <span>월간</span>
+                <span class="tab-date" id="monthTabDate"></span>
+              </button>
+
+              <button class="mini-tab active-period" id="periodAllBtn">
+                <span>전체</span>
+                <span class="tab-date">26.04.07 ~ 오늘</span>
+              </button>
             </div>
             <div class="summary-cards" id="summaryCards"></div>
             <div class="ranking-list"  id="rankingList"></div>
@@ -5548,6 +5559,19 @@ async function loadRankingDataByPeriod(mode, period) {
 
   renderBoardFromRows(data, mode);
 }
+
+async function loadRankingDataByMonth(mode) {
+  const monthKey = getMonthKey();
+
+  const {data, error} = await supabase.rpc("get_monthly_ranking", {
+    p_type: mode,
+    p_month: monthKey
+  });
+
+  if (error) { alert("월간 랭킹 조회 실패: " + error.message); return; }
+
+  renderBoardFromRows(data, mode);
+}
     
     function updateRankingLockState() {
       const bothCompleted=completedState.op&&completedState.favor;
@@ -5820,37 +5844,55 @@ gradeStampEl.classList.add(getStampClass(grade));
       winnerConfirmBtn.disabled = false;
     });
 
-    modeOpBtn.addEventListener("click",async()=>{
-  if(!completedState.op) return;
-  currentBoardMode="op";
-  if(document.getElementById("periodWeekBtn").classList.contains("active-period")) {
-    await loadRankingDataByPeriod("op","week");
+   modeOpBtn.addEventListener("click", async () => {
+  if (!completedState.op) return;
+  currentBoardMode = "op";
+  if (document.getElementById("periodWeekBtn").classList.contains("active-period")) {
+    await loadRankingDataByPeriod("op", "week");
+  } else if (document.getElementById("periodMonthBtn").classList.contains("active-period")) {
+    await loadRankingDataByMonth("op");
   } else {
     await loadRankingData("op");
   }
 });
-modeFavorBtn.addEventListener("click",async()=>{
-  if(!completedState.favor) return;
-  currentBoardMode="favor";
-  if(document.getElementById("periodWeekBtn").classList.contains("active-period")) {
-    await loadRankingDataByPeriod("favor","week");
+
+modeFavorBtn.addEventListener("click", async () => {
+  if (!completedState.favor) return;
+  currentBoardMode = "favor";
+  if (document.getElementById("periodWeekBtn").classList.contains("active-period")) {
+    await loadRankingDataByPeriod("favor", "week");
+  } else if (document.getElementById("periodMonthBtn").classList.contains("active-period")) {
+    await loadRankingDataByMonth("favor");
   } else {
     await loadRankingData("favor");
   }
 });
 
-    document.getElementById("periodAllBtn").addEventListener("click", async () => {
-  if (!completedState.op && !completedState.favor) return;
-  document.getElementById("periodAllBtn").classList.add("active-period");
+    function clearPeriodTabs() {
   document.getElementById("periodWeekBtn").classList.remove("active-period");
+  document.getElementById("periodMonthBtn").classList.remove("active-period");
+  document.getElementById("periodAllBtn").classList.remove("active-period");
+}
+
+document.getElementById("periodAllBtn").addEventListener("click", async () => {
+  if (!completedState.op && !completedState.favor) return;
+  clearPeriodTabs();
+  document.getElementById("periodAllBtn").classList.add("active-period");
   await loadRankingData(currentBoardMode || "op");
 });
 
 document.getElementById("periodWeekBtn").addEventListener("click", async () => {
   if (!completedState.op && !completedState.favor) return;
+  clearPeriodTabs();
   document.getElementById("periodWeekBtn").classList.add("active-period");
-  document.getElementById("periodAllBtn").classList.remove("active-period");
   await loadRankingDataByPeriod(currentBoardMode || "op", "week");
+});
+
+document.getElementById("periodMonthBtn").addEventListener("click", async () => {
+  if (!completedState.op && !completedState.favor) return;
+  clearPeriodTabs();
+  document.getElementById("periodMonthBtn").classList.add("active-period");
+  await loadRankingDataByMonth(currentBoardMode || "op");
 });
     
     closeClassModalBtn.addEventListener("click",closeClassModal);
@@ -6359,6 +6401,7 @@ const weekAgo = new Date(now);
 weekAgo.setDate(weekAgo.getDate() - 7);
 const fmt = d => `${String(d.getFullYear()).slice(2)}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
 document.getElementById("weekTabDate").textContent = `${fmt(weekAgo)} ~ 오늘`;
+     document.getElementById("monthTabDate").textContent = `${now.getFullYear()}년 ${now.getMonth()+1}월`;
 }
     // ===== 경매 계산기 =====
     function acFmt(n) { return Math.round(n).toLocaleString("ko-KR"); }
