@@ -4948,12 +4948,9 @@ async function loadOpRateCompareData(mode) {
   return await loadOpRateData();
 }
 
+const opRateCache = {};
+
 async function refreshOpRateModal(mode = "postpatch") {
-  opRateContent.innerHTML = `<div class="loading-text">데이터 불러오는 중...</div>`;
-
-  const rows = await loadOpRateCompareData(mode);
-  const prevRows = await loadOpRatePrevData();
-
   const now = new Date();
   const stamp = `${String(now.getFullYear()).slice(2)}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
 
@@ -4964,6 +4961,18 @@ async function refreshOpRateModal(mode = "postpatch") {
   } else {
     opRateSub.textContent = `OP 직각 1:1 승률 · 4/22 ~ 현재 비교 🕙 ${stamp}`;
   }
+
+  if (opRateCache[mode]) {
+    renderOpRateContent(opRateCache[mode].rows, opRateCache[mode].prevRows);
+    return;
+  }
+
+  opRateContent.innerHTML = '<div class="loading-text">데이터 불러오는 중...</div>';
+
+  const rows = await loadOpRateCompareData(mode);
+  const prevRows = await loadOpRatePrevData();
+
+  opRateCache[mode] = { rows: rows, prevRows: prevRows };
 
   renderOpRateContent(rows, prevRows);
 }
