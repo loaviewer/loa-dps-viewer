@@ -6664,7 +6664,7 @@ async function historyFetchAndRender() {
 
   historyChartSvg.innerHTML = svg;
 
-  historyChartSvg.querySelectorAll("circle[data-name]").forEach(circle => {
+    historyChartSvg.querySelectorAll("circle[data-name]").forEach(circle => {
     const isSymbol = circle.classList.contains("history-symbol-hover");
 
     circle.addEventListener("mousemove", (e) => {
@@ -6691,7 +6691,9 @@ async function historyFetchAndRender() {
       });
     }
   });
+}
 
+      
 function historyShowTooltip(event, html) {
   const rect = historyChartWrap.getBoundingClientRect();
   historyTooltip.style.display = "block";
