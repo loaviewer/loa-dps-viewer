@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>승률 기록표 실데이터 미리보기</title>
+  <title>승률 기록표</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -18,19 +18,6 @@
     }
 
     .wrap { max-width: 1600px; margin: 0 auto; }
-
-    .title-box { margin-bottom: 18px; }
-
-    .title-box h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-      font-weight: 900;
-      background: linear-gradient(90deg, #98ffb8, #79dcff, #c39aff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .title-box p { margin: 0; color: #98a4b9; font-size: 14px; }
 
     .history-modal {
       width: 100%;
@@ -65,7 +52,7 @@
 
     .tag {
       padding: 7px 10px; border-radius: 999px; font-size: 12px; font-weight: 800;
-      color: #eefcff; background: rgba(89,199,255,0.14); border: 1px solid rgba(89,199,255,0.2);
+      border: 1px solid rgba(255,255,255,0.15);
     }
 
     .search-box {
@@ -223,11 +210,6 @@
 </head>
 <body>
   <div class="wrap">
-    <div class="title-box">
-      <h1>승률 기록표 · 실데이터 미리보기</h1>
-      <p>Supabase에서 실제 match_logs 데이터를 가져와 일별 승률 그래프를 그립니다.</p>
-    </div>
-
     <div class="history-modal">
       <aside class="left-panel">
         <div class="left-head">
@@ -349,6 +331,44 @@
 
     const MAX_SELECT = 5;
 
+    // 직각명 → 줄임명 매핑
+    const SHORT_NAMES = {
+      "전투 태세": "전태", "고독한 기사": "고기", "광기": "광기", "광전사의 비기": "비기",
+      "분노의 망치": "분망", "중력 수련": "중수", "포식자": "포식",
+      "오의 강화": "오의", "초심": "초심", "체술": "체술", "충단": "충단",
+      "세맥타통": "세맥", "역천지체": "역천",
+      "절정": "절정", "절제": "절제",
+      "권왕파천무": "권왕", "수라의 길": "수라",
+      "일격필살": "일격", "오의난무": "오난",
+      "강화 무기": "강무", "핸드거너": "핸건",
+      "화력 강화": "화강", "포격 강화": "포강",
+      "사냥의 시간": "사시", "피스메이커": "피메",
+      "죽음의 습격": "죽습", "아르데타인의 기술": "아르데",
+      "진화의 유산": "진유", "아르데타인의 기술": "아르데",
+      "두 번째 동료": "두동",
+      "점화": "점화", "환류": "환류",
+      "넘치는 교감": "교감", "상급 소환사": "상소",
+      "황제의 칙령": "황제", "황후의 은총": "황후",
+      "잔재된 기운": "잔재", "버스트": "버스트",
+      "완벽한 억제": "억제", "멈출 수 없는 충동": "충동",
+      "갈증": "갈증", "달의 소리": "달소",
+      "만월의 집행자": "만월", "그믐의 경계": "그믐",
+      "리퍼": "리퍼", "탈출의 명수": "탈명", "감행": "감행",
+      "피스메이커": "피메",
+      "그림자": "그림자",
+      "야성": "야성", "쿠나이": "쿠나이",
+      "절실한 구원": "절구", "축복의 오라": "축오",
+      "해방자": "해방자", "만개": "만개",
+      "빛의 기사": "빛기사",
+      "발키리": "발키리",
+      "회귀": "회귀", "만개": "만개",
+      "처단자": "처단", "포식자": "포식"
+    };
+
+    function getShortName(fullName) {
+      return SHORT_NAMES[fullName] || fullName;
+    }
+
     // ==============================
     // DOM
     // ==============================
@@ -367,10 +387,19 @@
     const noticeText = document.getElementById("noticeText");
 
     // ==============================
-    // 선택 상태 관리 (검색해도 유지)
+    // 선택 상태 관리
     // ==============================
     let allCandidates = [];
     const selectedEngravingSet = new Set();
+
+    // 선택 순서 유지용 배열
+    let selectedOrder = [];
+
+    function getColorForEngraving(name) {
+      const idx = selectedOrder.indexOf(name);
+      if (idx === -1) return COLORS[0];
+      return COLORS[idx % COLORS.length];
+    }
 
     // ==============================
     // 날짜 초기화 (어제까지만)
@@ -457,11 +486,11 @@
     // 선택 관련 함수
     // ==============================
     function getSelectedEngravings() {
-      return Array.from(selectedEngravingSet);
+      return Array.from(selectedOrder);
     }
 
     function getSelectedWithClass() {
-      return Array.from(selectedEngravingSet).map(name => {
+      return selectedOrder.map(name => {
         const found = allCandidates.find(c => c.engraving_name === name);
         return {
           engraving_name: name,
@@ -480,8 +509,10 @@
           return;
         }
         selectedEngravingSet.add(name);
+        selectedOrder.push(name);
       } else {
         selectedEngravingSet.delete(name);
+        selectedOrder = selectedOrder.filter(n => n !== name);
       }
 
       e.target.closest(".engraving-item").classList.toggle("checked", e.target.checked);
@@ -491,10 +522,13 @@
     function updateSelectedTags() {
       const selected = getSelectedEngravings();
       if (!selected.length) {
-        selectedTagsEl.innerHTML = '<span class="tag">선택 없음</span>';
+        selectedTagsEl.innerHTML = '<span class="tag" style="color:#7a8a9f; background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.08);">선택 없음</span>';
         return;
       }
-      selectedTagsEl.innerHTML = selected.map(name => `<span class="tag">${name}</span>`).join("");
+      selectedTagsEl.innerHTML = selected.map(name => {
+        const color = getColorForEngraving(name);
+        return `<span class="tag" style="color:${color}; background:${color}18; border-color:${color}40;">${name}</span>`;
+      }).join("");
     }
 
     searchInput.addEventListener("input", () => {
@@ -548,6 +582,7 @@
 
           return {
             name,
+            shortName: getShortName(name),
             class_name: classInfo ? classInfo.class_name : "",
             color: COLORS[idx % COLORS.length],
             values,
@@ -624,6 +659,7 @@
 
       let svg = `<rect width="${W}" height="${H}" fill="#0f1520"/>`;
 
+      // Y축 그리드 + 라벨
       const yTickCount = 5;
       const yStep = (yMaxRaw - yMinRaw) / yTickCount;
 
@@ -634,9 +670,11 @@
         svg += `<text x="${pad.left - 10}" y="${y + 4}" text-anchor="end" fill="#94a3b8" font-size="11" font-weight="700">${Math.round(val)}%</text>`;
       }
 
+      // 축선
       svg += `<line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${H - pad.bottom}" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
       svg += `<line x1="${pad.left}" y1="${H - pad.bottom}" x2="${W - pad.right}" y2="${H - pad.bottom}" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
 
+      // X축 날짜 라벨
       const maxLabels = 20;
       const labelStep = labels.length <= maxLabels ? 1 : Math.ceil(labels.length / maxLabels);
 
@@ -646,6 +684,7 @@
         svg += `<text x="${x}" y="${H - 18}" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700">${label}</text>`;
       });
 
+      // 데이터 라인 + 점 + 시작점 줄임명
       datasets.forEach(ds => {
         const points = [];
         ds.values.forEach((v, i) => {
@@ -657,6 +696,12 @@
         if (points.length > 1) {
           const pathD = points.map((p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(" ");
           svg += `<path d="${pathD}" fill="none" stroke="${ds.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+        }
+
+        // 시작점 왼쪽에 줄임명 표시
+        if (points.length > 0) {
+          const firstPt = points[0];
+          svg += `<text x="${firstPt.x - 8}" y="${firstPt.y + 4}" text-anchor="end" fill="${ds.color}" font-size="10" font-weight="800" opacity="0.85">${ds.shortName}</text>`;
         }
 
         points.forEach(pt => {
@@ -671,6 +716,7 @@
 
       chartSvg.innerHTML = svg;
 
+      // 이벤트
       chartSvg.querySelectorAll("circle").forEach(circle => {
         circle.addEventListener("mousemove", (e) => {
           const name = circle.getAttribute("data-name");
