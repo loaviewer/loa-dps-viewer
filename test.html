@@ -6340,13 +6340,22 @@ function historyOnCheckboxChange(e) {
   historyUpdateSelectedTags();
 }
 
+
 async function loadHistoryCandidates() {
-  if (historyCandidates.length) {
-    historyRenderEngravingList(historySearchInput.value || "");
+  const listEl = document.getElementById("historyEngravingList");
+  const searchEl = document.getElementById("historySearchInput");
+
+  if (!listEl) {
+    console.error("historyEngravingList 요소를 찾지 못했습니다.");
     return;
   }
 
-  historyEngravingList.innerHTML = `<div style="padding:20px; text-align:center; color:#7a8a9f;">로딩 중...</div>`;
+  if (historyCandidates.length) {
+    historyRenderEngravingList(searchEl ? (searchEl.value || "") : "");
+    return;
+  }
+
+  listEl.innerHTML = `<div style="padding:20px; text-align:center; color:#7a8a9f;">로딩 중...</div>`;
 
   try {
     const res = await fetch(
@@ -6354,22 +6363,29 @@ async function loadHistoryCandidates() {
       {
         headers: {
           "apikey": SUPABASE_KEY,
-"Authorization": `Bearer ${SUPABASE_KEY}`
+          "Authorization": `Bearer ${SUPABASE_KEY}`
         }
       }
     );
 
     if (!res.ok) {
-      throw new Error("candidates fetch failed");
+      const errText = await res.text();
+      throw new Error(`candidates fetch failed: ${res.status} ${errText}`);
     }
 
     historyCandidates = await res.json();
-    historyRenderEngravingList(historySearchInput.value || "");
+
+    if (!Array.isArray(historyCandidates)) {
+      throw new Error("candidates 응답이 배열이 아닙니다.");
+    }
+
+    historyRenderEngravingList(searchEl ? (searchEl.value || "") : "");
   } catch (err) {
-    console.error(err);
-    historyEngravingList.innerHTML = `<div style="padding:20px; text-align:center; color:#ff9b9b;">각인 목록 로드 실패</div>`;
+    console.error("loadHistoryCandidates error:", err);
+    listEl.innerHTML = `<div style="padding:20px; text-align:center; color:#ff9b9b;">각인 목록 로드 실패<br><small style="color:#c7a6a6;">${err.message}</small></div>`;
   }
 }
+    
 
 function resetHistorySummaryTable() {
   historySummaryBody.innerHTML = `<tr><td colspan="7" style="color:#7a8a9f;">조회 결과가 여기에 표시됩니다.</td></tr>`;
