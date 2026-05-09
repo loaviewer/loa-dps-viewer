@@ -4824,7 +4824,9 @@
     height: 300px;
   }
 }
-    
+    body.history-modal-open {
+  overflow: hidden;
+}
     
   </style>
 </head>
@@ -6198,6 +6200,7 @@ const closeHistoryRateBtn = document.getElementById("closeHistoryRateBtn");
 if (closeHistoryRateBtn) {
   closeHistoryRateBtn.addEventListener("click", () => {
     historyRateModal.style.display = "none";
+document.body.classList.remove("history-modal-open");
   });
 }
 
@@ -6205,6 +6208,7 @@ if (historyRateModal) {
   historyRateModal.addEventListener("click", (e) => {
     if (e.target === historyRateModal) {
       historyRateModal.style.display = "none";
+document.body.classList.remove("history-modal-open");
     }
   });
 }
@@ -6423,6 +6427,7 @@ function openHistoryRateModalPanel() {
   if (!historyRateModal) return;
 
   historyRateModal.style.display = "flex";
+  document.body.classList.add("history-modal-open");
   initHistoryDates();
   historyUpdateSelectedTags();
   resetHistoryChart();
