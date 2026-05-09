@@ -4234,24 +4234,44 @@
     }
 .historyrate-btn-wrap {
   position: relative;
+  margin-bottom: 10px;
+}
+
+.historyrate-btn-wrap::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -14px;
+  height: 30px;
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(132, 102, 214, 0.30) 0%,
+    rgba(132, 102, 214, 0.14) 42%,
+    rgba(132, 102, 214, 0.00) 72%
+  );
+  filter: blur(12px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .tier-btn-history-rate {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border: 1px solid rgba(156, 132, 214, 0.30);
+  border: 1px solid transparent;
   background:
-    radial-gradient(circle at 52% 28%, rgba(170, 142, 232, 0.22), transparent 34%),
-    linear-gradient(180deg, rgba(73, 58, 112, 0.96) 0%, rgba(58, 45, 94, 0.98) 46%, rgba(43, 34, 74, 0.99) 100%);
+    radial-gradient(circle at 52% 28%, rgba(186, 166, 240, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(70, 54, 114, 0.96) 0%, rgba(50, 39, 86, 0.98) 50%, rgba(34, 27, 62, 0.99) 100%);
   box-shadow:
-    0 10px 22px rgba(43, 28, 78, 0.26),
+    0 12px 24px rgba(33, 22, 62, 0.30),
+    0 0 22px rgba(106, 82, 174, 0.14),
     0 0 0 1px rgba(255,255,255,0.02) inset,
     inset 0 1px 0 rgba(255,255,255,0.08);
   transition:
     transform .18s ease,
     box-shadow .22s ease,
-    border-color .22s ease,
     filter .22s ease;
 }
 
@@ -4262,40 +4282,44 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 18%, rgba(228, 214, 255, 0.16), transparent 26%),
-    radial-gradient(circle at 18% 100%, rgba(122, 94, 196, 0.12), transparent 34%),
-    radial-gradient(circle at 84% 100%, rgba(96, 134, 225, 0.10), transparent 32%);
+    radial-gradient(circle at 50% 14%, rgba(233, 224, 255, 0.18), transparent 24%),
+    radial-gradient(circle at 20% 100%, rgba(132, 104, 206, 0.14), transparent 34%),
+    radial-gradient(circle at 82% 100%, rgba(110, 148, 230, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,0.03), transparent 40%);
 }
 
 .tier-btn-history-rate::after {
   content: "";
   position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: -14px;
-  height: 32px;
-  border-radius: 999px;
-  z-index: 0;
+  inset: -1px;
+  border-radius: 19px;
+  z-index: 1;
   pointer-events: none;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(132, 102, 214, 0.28) 0%,
-    rgba(132, 102, 214, 0.12) 42%,
-    rgba(132, 102, 214, 0.00) 72%
+  background: conic-gradient(
+    from var(--angle, 0deg),
+    rgba(190, 170, 242, 0.85) 0deg,
+    rgba(160, 132, 229, 0.92) 70deg,
+    rgba(118, 162, 236, 0.88) 140deg,
+    rgba(178, 150, 242, 0.90) 220deg,
+    rgba(126, 104, 214, 0.86) 290deg,
+    rgba(190, 170, 242, 0.85) 360deg
   );
-  filter: blur(10px);
-  opacity: 0.95;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  animation: borderRotate 5.8s linear infinite;
 }
 
 .tier-btn-history-rate:hover {
-  border-color: rgba(184, 164, 234, 0.46);
   box-shadow:
-    0 14px 28px rgba(49, 32, 88, 0.30),
-    0 0 20px rgba(120, 92, 196, 0.14),
+    0 16px 30px rgba(40, 26, 74, 0.34),
+    0 0 26px rgba(126, 104, 214, 0.18),
+    0 0 54px rgba(116, 146, 226, 0.10),
     0 0 0 1px rgba(255,255,255,0.03) inset,
     inset 0 1px 0 rgba(255,255,255,0.10);
-  transform: translateY(-1px);
-  filter: brightness(1.02);
+  transform: translateY(-2px);
+  filter: brightness(1.03);
 }
 
 .tier-btn-history-rate .tier-btn-content {
@@ -4315,46 +4339,58 @@
 
 .historyrate-main-text {
   display: inline-block;
-  background: linear-gradient(90deg, #f4efff 0%, #d7cbf6 40%, #b8c9f2 72%, #f4efff 100%);
-  background-size: 220% auto;
+  background: linear-gradient(90deg, #f8f4ff 0%, #ded3fb 34%, #b8c9f2 68%, #f8f4ff 100%);
+  background-size: 240% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: historyRateTextShift 6s linear infinite;
+  filter: drop-shadow(0 0 6px rgba(178,150,242,0.14));
 }
-
+    
 .historyrate-main-icon-wrap {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(161,132,229,0.24), rgba(102,150,228,0.18));
+  border: 1px solid rgba(210, 200, 245, 0.18);
+  box-shadow:
+    0 0 10px rgba(161,132,229,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.10);
+  flex-shrink: 0;
 }
 
 .historyrate-main-icon {
   display: inline-block;
+  font-size: 13px;
+  line-height: 1;
   filter:
-    drop-shadow(0 0 6px rgba(161, 132, 229, 0.18))
-    drop-shadow(0 0 12px rgba(102, 150, 228, 0.12));
+    drop-shadow(0 0 5px rgba(161,132,229,0.18))
+    drop-shadow(0 0 10px rgba(102,150,228,0.10));
   transform: translateY(0.5px);
 }
 
 .tier-btn-history-rate .oprate-spark-glow {
   position: absolute;
   top: -18px;
-  right: -12px;
-  width: 96px;
-  height: 96px;
+  right: -10px;
+  width: 104px;
+  height: 104px;
   border-radius: 50%;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(188, 166, 238, 0.18) 0%, rgba(188, 166, 238, 0.07) 42%, rgba(188, 166, 238, 0) 72%);
-  filter: blur(6px);
+  background: radial-gradient(circle, rgba(196, 176, 244, 0.20) 0%, rgba(196, 176, 244, 0.08) 42%, rgba(196, 176, 244, 0) 72%);
+  filter: blur(8px);
 }
 
 .tier-btn-history-rate .oprate-spark-sweep {
   position: absolute;
   top: -38%;
-  left: -40%;
-  width: 34%;
+  left: -42%;
+  width: 36%;
   height: 180%;
   z-index: 1;
   pointer-events: none;
@@ -4362,27 +4398,28 @@
     115deg,
     rgba(255,255,255,0) 0%,
     rgba(255,255,255,0.00) 34%,
-    rgba(255,255,255,0.04) 46%,
-    rgba(255,255,255,0.12) 50%,
-    rgba(255,255,255,0.04) 54%,
+    rgba(255,255,255,0.05) 46%,
+    rgba(255,255,255,0.16) 50%,
+    rgba(255,255,255,0.05) 54%,
     rgba(255,255,255,0.00) 68%,
     rgba(255,255,255,0) 100%
   );
   transform: rotate(14deg) translateX(-220%);
   animation: historyRateSweep 5.8s ease-in-out infinite;
   mix-blend-mode: screen;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .badge-history-solid {
-  background: linear-gradient(180deg, rgba(160, 124, 228, 0.96), rgba(124, 92, 196, 0.96));
-  color: #1b1328;
+  background: linear-gradient(180deg, rgba(166, 132, 234, 0.98), rgba(126, 96, 204, 0.98));
+  color: #f8f3ff;
   border: 1px solid rgba(255,255,255,0.12);
   box-shadow:
-    0 4px 10px rgba(91, 63, 158, 0.20),
+    0 4px 10px rgba(91, 63, 158, 0.24),
+    0 0 10px rgba(126,96,204,0.10),
     inset 0 1px 0 rgba(255,255,255,0.10);
 }
-
+    
 @keyframes historyRateSweep {
   0%   { transform: rotate(14deg) translateX(-220%); opacity: 0; }
   10%  { opacity: 0; }
