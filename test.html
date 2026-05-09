@@ -6229,6 +6229,14 @@ const historyLegendBox = document.getElementById("historyLegendBox");
 const historySummaryBody = document.getElementById("historySummaryBody");
 
 const HISTORY_MAX_SELECT = 5;
+const HISTORY_COLORS = [
+  "#7effae",
+  "#59c7ff",
+  "#ffb86b",
+  "#d48fff",
+  "#ffd85c"
+];
+    
 let historyCandidates = [];
 const historySelectedSet = new Set();
 let historySelectedOrder = [];
@@ -6261,7 +6269,7 @@ function initHistoryDates() {
 function historyGetColor(name) {
   const idx = historySelectedOrder.indexOf(name);
   if (idx === -1) return "#8d6cff";
-  return COLORS[idx % COLORS.length];
+  return HISTORY_COLORS[idx % HISTORY_COLORS.length];
 }
 
 function historyGetSelectedEngravings() {
