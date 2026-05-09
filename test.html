@@ -4896,6 +4896,40 @@
   text-overflow: ellipsis;
 }
 
+.history-unit-tabs {
+  display: flex;
+  gap: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(156, 132, 214, 0.28);
+}
+
+.history-unit-btn {
+  border: 0;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #9ba5bc;
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: .18s ease;
+  white-space: nowrap;
+}
+
+.history-unit-btn:not(:last-child) {
+  border-right: 1px solid rgba(156, 132, 214, 0.18);
+}
+
+.history-unit-btn:hover {
+  color: #ddd8f0;
+  background: rgba(156, 132, 214, 0.10);
+}
+
+.history-unit-btn.active {
+  color: #f7f1ff;
+  background: linear-gradient(135deg, rgba(131, 97, 207, 0.92), rgba(97, 129, 220, 0.88));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+}
     
   </style>
 </head>
@@ -5378,7 +5412,15 @@
             <label>종료일</label>
             <input type="date" id="historyEndDate" min="2026-04-07">
           </div>
-
+          
+            <div class="history-field">
+  <label>단위</label>
+  <div class="history-unit-tabs" id="historyUnitTabs">
+    <button class="history-unit-btn active" data-unit="1">1일</button>
+    <button class="history-unit-btn" data-unit="3">3일</button>
+    <button class="history-unit-btn" data-unit="7">7일</button>
+  </div>
+</div>
           <button class="history-confirm-btn" id="historyApplyBtn">확인</button>
         </div>
 
@@ -6502,9 +6544,17 @@ async function historyFetchAndRender() {
   const endStr = historyEndDate.value;
   const mode = historyModeSelect.value;
 
-  if (!startStr || !endStr) return alert("시작일과 종료일을 입력해줘.");
-  if (startStr > endStr) return alert("시작일이 종료일보다 늦을 수 없어.");
-  if (!selected.length) return alert("최소 1개 각인을 선택해줘.");
+ if (!startStr || !endStr) return alert("시작일과 종료일을 입력해줘.");
+if (startStr > endStr) return alert("시작일이 종료일보다 늦을 수 없어.");
+if (!selected.length) return alert("최소 1개 각인을 선택해줘.");
+
+const dayDiff = Math.ceil((new Date(endStr) - new Date(startStr)) / (1000 * 60 * 60 * 24)) + 1;
+const maxDays = HISTORY_UNIT_LIMITS[historyCurrentUnit] || 15;
+
+if (dayDiff > maxDays) {
+  alert(`${historyCurrentUnit}일 단위는 최대 ${maxDays}일까지 조회할 수 있어요.\n현재 선택: ${dayDiff}일`);
+  return;
+}
 
   historyApplyBtn.disabled = true;
   historyApplyBtn.textContent = "조회 중...";
@@ -6536,18 +6586,39 @@ async function historyFetchAndRender() {
 
     const data = await res.json();
     const filteredData = data.filter(row => selected.includes(row.engraving_name));
-    const dates = [...new Set(data.map(r => r.date_key))].sort();
+const allDates = [...new Set(data.map(r => r.date_key))].sort();
+
+// 단위별 날짜 묶음
+const dates = [];
+const dateGroups = [];
+
+for (let i = 0; i < allDates.length; i += historyCurrentUnit) {
+  const group = allDates.slice(i, i + historyCurrentUnit);
+  dateGroups.push(group);
+  dates.push(group[group.length - 1]);
+}
 
     const datasets = selected.map((name, idx) => {
       const rows = filteredData.filter(r => r.engraving_name === name);
       const found = historyCandidates.find(c => c.engraving_name === name);
 
-      const values = dates.map(d => {
-        const match = rows.find(r => r.date_key === d);
-        return match && match.win_rate !== null ? parseFloat(match.win_rate) : null;
-      });
+     const values = dateGroups.map(group => {
+  let wins = 0;
+  let total = 0;
 
-      const totalMatches = rows.reduce((sum, r) => sum + (parseInt(r.total_matches) || 0), 0);
+  group.forEach(d => {
+    const match = rows.find(r => r.date_key === d);
+    if (match) {
+      wins += parseInt(match.win_count) || 0;
+      total += parseInt(match.total_matches) || 0;
+    }
+  });
+
+  if (total === 0) return null;
+  return Math.round((wins / total) * 1000) / 10;
+});
+
+const totalMatches = rows.reduce((sum, r) => sum + (parseInt(r.total_matches) || 0), 0);
 
       return {
         name,
@@ -6771,6 +6842,26 @@ document.addEventListener("click", (e) => {
   }
 });
 
+let historyCurrentUnit = 1;
+
+const HISTORY_UNIT_LIMITS = {
+  1: 15,
+  3: 31,
+  7: 93
+};
+
+document.addEventListener("click", (e) => {
+  const unitBtn = e.target.closest(".history-unit-btn");
+  if (!unitBtn) return;
+
+  const tabs = document.getElementById("historyUnitTabs");
+  if (!tabs || !tabs.contains(unitBtn)) return;
+
+  tabs.querySelectorAll(".history-unit-btn").forEach(b => b.classList.remove("active"));
+  unitBtn.classList.add("active");
+
+  historyCurrentUnit = parseInt(unitBtn.getAttribute("data-unit"));
+});
     
 function openHistoryRateModalPanel() {
   if (!historyRateModal) return;
