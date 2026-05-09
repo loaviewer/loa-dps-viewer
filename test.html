@@ -6206,12 +6206,12 @@ if (historyRateModal) {
     }
   });
 }
-
-if (historySearchInput) {
-  historySearchInput.addEventListener("input", () => {
-    historyRenderEngravingList(historySearchInput.value || "");
-  });
-}
+    
+document.addEventListener("input", (e) => {
+  if (e.target && e.target.id === "historySearchInput") {
+    historyRenderEngravingList(e.target.value || "");
+  }
+});
 
     
     const historyModeSelect = document.getElementById("historyModeSelect");
