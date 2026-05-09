@@ -6423,6 +6423,322 @@ function resetHistoryChart() {
   resetHistorySummaryTable();
 }
 
+async function historyFetchAndRender() {
+  const selected = historyGetSelectedEngravings();
+  const startStr = historyStartDate.value;
+  const endStr = historyEndDate.value;
+  const mode = historyModeSelect.value;
+
+  if (!startStr || !endStr) return alert("시작일과 종료일을 입력해줘.");
+  if (startStr > endStr) return alert("시작일이 종료일보다 늦을 수 없어.");
+  if (!selected.length) return alert("최소 1개 각인을 선택해줘.");
+
+  historyApplyBtn.disabled = true;
+  historyApplyBtn.textContent = "조회 중...";
+
+  const loadingDiv = document.createElement("div");
+  loadingDiv.className = "history-loading-overlay";
+  loadingDiv.textContent = "데이터 불러오는 중...";
+  historyChartWrap.appendChild(loadingDiv);
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_daily_winrate_history`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
+      },
+      body: JSON.stringify({
+        p_type: mode,
+        p_start: startStr,
+        p_end: endStr
+      })
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`RPC 실패: ${res.status} ${errText}`);
+    }
+
+    const data = await res.json();
+    const filteredData = data.filter(row => selected.includes(row.engraving_name));
+    const dates = [...new Set(data.map(r => r.date_key))].sort();
+
+    const datasets = selected.map((name, idx) => {
+      const rows = filteredData.filter(r => r.engraving_name === name);
+      const found = historyCandidates.find(c => c.engraving_name === name);
+
+      const values = dates.map(d => {
+        const match = rows.find(r => r.date_key === d);
+        return match && match.win_rate !== null ? parseFloat(match.win_rate) : null;
+      });
+
+      const totalMatches = rows.reduce((sum, r) => sum + (parseInt(r.total_matches) || 0), 0);
+
+      return {
+        name,
+        shortName: getShortName(name),
+        class_name: found ? found.class_name : "",
+        color: HISTORY_COLORS[idx % HISTORY_COLORS.length],
+        values,
+        totalMatches
+      };
+    });
+
+    const labels = dates.map(d => {
+      const parts = d.split("-");
+      return `${parseInt(parts[1])}/${parseInt(parts[2])}`;
+    });
+
+    historyRenderSvgChart(datasets, labels, dates);
+    historyRenderLegend(datasets);
+    historyRenderSummaryTable(datasets);
+
+    historyNoticeText.textContent =
+      `${mode === "op" ? "OP" : "호감"} · ${startStr} ~ ${endStr} · ${selected.length}개 각인 조회 완료`;
+
+  } catch (err) {
+    alert("조회 실패: " + err.message);
+    console.error(err);
+  } finally {
+    historyApplyBtn.disabled = false;
+    historyApplyBtn.textContent = "확인";
+    const overlay = historyChartWrap.querySelector(".history-loading-overlay");
+    if (overlay) overlay.remove();
+  }
+}
+
+function historyRenderSvgChart(datasets, labels, dates) {
+  const W = 1000;
+  const H = 380;
+  const pad = { top: 28, right: 30, bottom: 46, left: 60 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  let allValues = [];
+  datasets.forEach(ds => {
+    ds.values.forEach(v => { if (v !== null) allValues.push(v); });
+  });
+
+  if (!allValues.length) {
+    historyChartSvg.innerHTML = `
+      <rect width="${W}" height="${H}" fill="#0f1520"/>
+      <text x="${W/2}" y="${H/2}" text-anchor="middle" fill="#7a8a9f" font-size="15" font-weight="700">
+        선택한 기간에 데이터가 없습니다.
+      </text>
+    `;
+    return;
+  }
+
+  let yMinRaw = Math.floor(Math.min(...allValues) - 5);
+  let yMaxRaw = Math.ceil(Math.max(...allValues) + 5);
+  yMinRaw = Math.max(0, yMinRaw);
+  yMaxRaw = Math.min(100, yMaxRaw);
+
+  if (yMaxRaw - yMinRaw < 10) {
+    yMinRaw = Math.max(0, yMinRaw - 5);
+    yMaxRaw = Math.min(100, yMaxRaw + 5);
+  }
+
+  function xScale(i) {
+    if (labels.length === 1) return pad.left + plotW / 2;
+    return pad.left + (plotW * i / (labels.length - 1));
+  }
+
+  function yScale(v) {
+    return pad.top + ((yMaxRaw - v) / (yMaxRaw - yMinRaw)) * plotH;
+  }
+
+  let svg = `<rect width="${W}" height="${H}" fill="#0f1520"/>`;
+
+  const yTickCount = 5;
+  const yStep = (yMaxRaw - yMinRaw) / yTickCount;
+
+  for (let i = 0; i <= yTickCount; i++) {
+    const val = yMinRaw + yStep * i;
+    const y = yScale(val);
+    svg += `<line x1="${pad.left}" y1="${y}" x2="${W - pad.right}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>`;
+    svg += `<text x="${pad.left - 10}" y="${y + 4}" text-anchor="end" fill="#94a3b8" font-size="11" font-weight="700">${Math.round(val)}%</text>`;
+  }
+
+  svg += `<line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${H - pad.bottom}" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
+  svg += `<line x1="${pad.left}" y1="${H - pad.bottom}" x2="${W - pad.right}" y2="${H - pad.bottom}" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
+
+  const maxLabels = 20;
+  const labelStep = labels.length <= maxLabels ? 1 : Math.ceil(labels.length / maxLabels);
+
+  labels.forEach((label, i) => {
+    if (i % labelStep !== 0 && i !== labels.length - 1) return;
+    const x = xScale(i);
+    svg += `<text x="${x}" y="${H - 18}" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700">${label}</text>`;
+  });
+
+  datasets.forEach(ds => {
+    const points = [];
+    ds.values.forEach((v, i) => {
+      if (v !== null) {
+        points.push({ x: xScale(i), y: yScale(v), label: labels[i], value: v, date: dates[i] });
+      }
+    });
+
+    if (points.length > 1) {
+      const pathD = points.map((p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(" ");
+      svg += `<path d="${pathD}" fill="none" stroke="${ds.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+    }
+
+    points.forEach(pt => {
+      const safeName = ds.name.replace(/"/g, '&quot;');
+      svg += `
+        <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="${ds.color}" stroke="#0f1520" stroke-width="2.5"
+          data-name="${safeName}" data-label="${pt.label}" data-value="${pt.value}" data-date="${pt.date}"
+          style="cursor:pointer"/>
+      `;
+    });
+  });
+
+  // 시작점 심볼 뱃지 (겹침 방지)
+  const badgeData = [];
+  datasets.forEach(ds => {
+    const firstVal = ds.values.find(v => v !== null);
+    if (firstVal !== null && firstVal !== undefined) {
+      const firstIdx = ds.values.indexOf(firstVal);
+      badgeData.push({
+        shortName: ds.shortName,
+        color: ds.color,
+        y: yScale(firstVal),
+        x: xScale(firstIdx),
+        winRate: firstVal
+      });
+    }
+  });
+
+  badgeData.sort((a, b) => b.winRate - a.winRate);
+
+  const MIN_GAP = 16;
+  const placedY = [];
+
+  badgeData.forEach(bd => {
+    let targetY = bd.y;
+
+    for (let attempt = 0; attempt < 20; attempt++) {
+      let overlap = false;
+      for (const py of placedY) {
+        if (Math.abs(targetY - py) < MIN_GAP) {
+          overlap = true;
+          break;
+        }
+      }
+      if (!overlap) break;
+      targetY += MIN_GAP;
+    }
+
+    placedY.push(targetY);
+
+    const textLen = bd.shortName.length;
+    const boxW = Math.max(textLen * 8 + 12, 30);
+    const boxH = 16;
+    const boxX = bd.x - boxW - 8;
+    const boxY = targetY - boxH / 2;
+
+    svg += `<rect x="${boxX}" y="${boxY}" width="${boxW}" height="${boxH}" rx="4" fill="${bd.color}22" stroke="${bd.color}55" stroke-width="1"/>`;
+    svg += `<text x="${boxX + boxW / 2}" y="${targetY + 4}" text-anchor="middle" fill="${bd.color}" font-size="9" font-weight="900">${bd.shortName}</text>`;
+  });
+
+  historyChartSvg.innerHTML = svg;
+
+  historyChartSvg.querySelectorAll("circle").forEach(circle => {
+    circle.addEventListener("mousemove", (e) => {
+      const name = circle.getAttribute("data-name");
+      const label = circle.getAttribute("data-label");
+      const value = circle.getAttribute("data-value");
+      const date = circle.getAttribute("data-date");
+      historyShowTooltip(e, `<strong>${name}</strong><br>${label} (${date})<br>승률 ${value}%`);
+    });
+    circle.addEventListener("mouseleave", historyHideTooltip);
+
+    circle.addEventListener("mouseenter", () => {
+      circle.setAttribute("r", "7");
+    });
+    circle.addEventListener("mouseleave", () => {
+      circle.setAttribute("r", "5");
+    });
+  });
+}
+
+function historyShowTooltip(event, html) {
+  const rect = historyChartWrap.getBoundingClientRect();
+  historyTooltip.style.display = "block";
+  historyTooltip.innerHTML = html;
+
+  let left = event.clientX - rect.left + 16;
+  let top = event.clientY - rect.top - 12;
+
+  if (left + 180 > rect.width) left = event.clientX - rect.left - 180;
+  if (top < 0) top = 10;
+
+  historyTooltip.style.left = left + "px";
+  historyTooltip.style.top = top + "px";
+}
+
+function historyHideTooltip() {
+  historyTooltip.style.display = "none";
+}
+
+function historyRenderLegend(datasets) {
+  historyLegendBox.innerHTML = datasets.map(ds => `
+    <div class="history-legend-item">
+      <span class="history-legend-dot" style="background:${ds.color}"></span>
+      ${ds.shortName}
+    </div>
+  `).join("");
+}
+
+function historyRenderSummaryTable(datasets) {
+  if (!datasets.length) {
+    historySummaryBody.innerHTML = `<tr><td colspan="7" style="color:#7a8a9f;">선택된 각인이 없습니다.</td></tr>`;
+    return;
+  }
+
+  historySummaryBody.innerHTML = datasets.map(ds => {
+    const valid = ds.values.filter(v => v !== null);
+
+    if (!valid.length) {
+      return `
+        <tr>
+          <td><span class="color-chip" style="background:${ds.color}"></span>${ds.shortName}</td>
+          <td>${ds.class_name}</td>
+          <td colspan="5" style="color:#7a8a9f;">데이터 없음</td>
+        </tr>
+      `;
+    }
+
+    const first = valid[0];
+    const last = valid[valid.length - 1];
+    const max = Math.max(...valid);
+    const avg = valid.reduce((a, b) => a + b, 0) / valid.length;
+
+    return `
+      <tr>
+        <td><span class="color-chip" style="background:${ds.color}"></span>${ds.shortName}</td>
+        <td>${ds.class_name}</td>
+        <td>${first.toFixed(1)}%</td>
+        <td>${last.toFixed(1)}%</td>
+        <td>${max.toFixed(1)}%</td>
+        <td>${avg.toFixed(1)}%</td>
+        <td>${ds.totalMatches.toLocaleString()}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+document.addEventListener("click", (e) => {
+  if (e.target && e.target.id === "historyApplyBtn") {
+    historyFetchAndRender();
+  }
+});
+
+    
 function openHistoryRateModalPanel() {
   if (!historyRateModal) return;
 
