@@ -5312,15 +5312,17 @@ function renderOpRateContent(rows, prevRows) {
     }
 
     document.addEventListener("click", e => {
-  const opBtn     = document.getElementById("openOpTierBtn");
-  const favorBtn  = document.getElementById("openFavorTierBtn");
-  const opRateBtn = document.getElementById("openOpRateBtn");
+  const opBtn        = document.getElementById("openOpTierBtn");
+  const favorBtn     = document.getElementById("openFavorTierBtn");
+  const opRateBtn    = document.getElementById("openOpRateBtn");
+  const historyBtn   = document.getElementById("openHistoryRateBtn");
 
   if (
     !miniPopup.contains(e.target) &&
-    e.target !== opBtn && !opBtn.contains(e.target) &&
-    e.target !== favorBtn && !favorBtn.contains(e.target) &&
-    e.target !== opRateBtn && !opRateBtn.contains(e.target)
+    (!opBtn || (e.target !== opBtn && !opBtn.contains(e.target))) &&
+    (!favorBtn || (e.target !== favorBtn && !favorBtn.contains(e.target))) &&
+    (!opRateBtn || (e.target !== opRateBtn && !opRateBtn.contains(e.target))) &&
+    (!historyBtn || (e.target !== historyBtn && !historyBtn.contains(e.target)))
   ) {
     miniPopup.classList.remove("show");
   }
@@ -6161,12 +6163,15 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
   await refreshOpRateModal("postpatch");
 });
 
-document.getElementById("openHistoryRateBtn").addEventListener("click", (e) => {
+document.addEventListener("click", (e) => {
+  const historyBtn = e.target.closest("#openHistoryRateBtn");
+  if (!historyBtn) return;
+
   const historyRateUnlocked = completedState.op && completedState.favor;
 
   if (!historyRateUnlocked) {
     showMiniPopup(
-      e.currentTarget,
+      historyBtn,
       "승률 기록표",
       `열람 조건 : <span class="cond">도장 2개 이상 획득 필요</span>`
     );
@@ -6174,7 +6179,7 @@ document.getElementById("openHistoryRateBtn").addEventListener("click", (e) => {
   }
 
   showMiniPopup(
-    e.currentTarget,
+    historyBtn,
     "승률 기록표",
     `승률 기록표 모달 연결 예정`
   );
