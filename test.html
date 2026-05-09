@@ -4387,26 +4387,24 @@
 
 .tier-btn-history-rate .oprate-spark-sweep {
   position: absolute;
-  top: -38%;
-  left: -42%;
-  width: 36%;
-  height: 180%;
+  top: -35%;
+  left: -130%;
+  width: 72%;
+  height: 190%;
   z-index: 1;
   pointer-events: none;
   background: linear-gradient(
     115deg,
     rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.00) 34%,
-    rgba(255,255,255,0.05) 46%,
-    rgba(255,255,255,0.16) 50%,
-    rgba(255,255,255,0.05) 54%,
-    rgba(255,255,255,0.00) 68%,
+    rgba(255,255,255,0.08) 25%,
+    rgba(255,255,255,0.42) 48%,
+    rgba(255,255,255,0.10) 68%,
     rgba(255,255,255,0) 100%
   );
-  transform: rotate(14deg) translateX(-220%);
-  animation: historyRateSweep 5.8s ease-in-out infinite;
+  transform: rotate(18deg);
+  opacity: 0;
+  animation: historyRateSweep 5.8s linear infinite;
   mix-blend-mode: screen;
-  opacity: 0.85;
 }
 
 .badge-history-solid {
@@ -4420,12 +4418,21 @@
 }
     
 @keyframes historyRateSweep {
-  0%   { transform: rotate(14deg) translateX(-220%); opacity: 0; }
-  10%  { opacity: 0; }
-  22%  { opacity: 1; }
-  42%  { opacity: 1; }
-  58%  { transform: rotate(14deg) translateX(420%); opacity: 0; }
-  100% { transform: rotate(14deg) translateX(420%); opacity: 0; }
+  0%, 80% {
+    left: -130%;
+    opacity: 0;
+  }
+  84% {
+    opacity: 1;
+  }
+  96% {
+    left: 145%;
+    opacity: 0.65;
+  }
+  100% {
+    left: 145%;
+    opacity: 0;
+  }
 }
 
 @keyframes historyRateTextShift {
