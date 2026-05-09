@@ -6206,7 +6206,190 @@ if (historyRateModal) {
     }
   });
 }
+
+if (historySearchInput) {
+  historySearchInput.addEventListener("input", () => {
+    historyRenderEngravingList(historySearchInput.value || "");
+  });
+}
+
     
+    const historyModeSelect = document.getElementById("historyModeSelect");
+const historyStartDate = document.getElementById("historyStartDate");
+const historyEndDate = document.getElementById("historyEndDate");
+const historySearchInput = document.getElementById("historySearchInput");
+const historyEngravingList = document.getElementById("historyEngravingList");
+const historySelectedTags = document.getElementById("historySelectedTags");
+const historyApplyBtn = document.getElementById("historyApplyBtn");
+const historyNoticeText = document.getElementById("historyNoticeText");
+const historyChartSvg = document.getElementById("historyChartSvg");
+const historyChartWrap = document.getElementById("historyChartWrap");
+const historyTooltip = document.getElementById("historyTooltip");
+const historyLegendBox = document.getElementById("historyLegendBox");
+const historySummaryBody = document.getElementById("historySummaryBody");
+
+const HISTORY_MAX_SELECT = 5;
+let historyCandidates = [];
+const historySelectedSet = new Set();
+let historySelectedOrder = [];
+
+function initHistoryDates() {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  const tenDaysAgo = new Date(yesterday);
+  tenDaysAgo.setDate(yesterday.getDate() - 9);
+
+  const minDate = new Date("2026-04-07");
+  const start = tenDaysAgo < minDate ? minDate : tenDaysAgo;
+
+  historyStartDate.value = formatDateISO(start);
+  historyEndDate.value = formatDateISO(yesterday);
+
+  historyStartDate.max = formatDateISO(yesterday);
+  historyEndDate.max = formatDateISO(yesterday);
+}
+
+function historyGetColor(name) {
+  const idx = historySelectedOrder.indexOf(name);
+  if (idx === -1) return "#8d6cff";
+  return COLORS[idx % COLORS.length];
+}
+
+function historyGetSelectedEngravings() {
+  return Array.from(historySelectedOrder);
+}
+
+function historyUpdateSelectedTags() {
+  const selected = historyGetSelectedEngravings();
+
+  if (!selected.length) {
+    historySelectedTags.innerHTML = '<span class="history-selected-tag" style="color:#7a8a9f;">선택 없음</span>';
+    return;
+  }
+
+  historySelectedTags.innerHTML = selected.map(name => {
+    const color = historyGetColor(name);
+    const short = getShortName(name);
+    return `<span class="history-selected-tag" style="color:${color}; background:${color}18; border-color:${color}40;">${short}</span>`;
+  }).join("");
+}
+
+function historyRenderEngravingList(filter = "") {
+  const keyword = filter.trim();
+
+  const filtered = keyword
+    ? historyCandidates.filter(c => {
+        const short = getShortName(c.engraving_name);
+        return (
+          c.engraving_name.includes(keyword) ||
+          c.class_name.includes(keyword) ||
+          short.includes(keyword)
+        );
+      })
+    : historyCandidates;
+
+  if (!filtered.length) {
+    historyEngravingList.innerHTML = `<div style="padding:20px; text-align:center; color:#7a8a9f;">검색 결과 없음</div>`;
+    return;
+  }
+
+  historyEngravingList.innerHTML = filtered.map(c => {
+    const checked = historySelectedSet.has(c.engraving_name) ? "checked" : "";
+    const short = getShortName(c.engraving_name);
+
+    return `
+      <label class="history-engraving-item ${checked ? 'checked' : ''}">
+        <input type="checkbox" value="${c.engraving_name}" data-class="${c.class_name}" ${checked}>
+        <span class="history-engraving-short">${short}</span>
+        <span class="history-engraving-class">${c.class_name}</span>
+      </label>
+    `;
+  }).join("");
+
+  historyEngravingList.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener("change", historyOnCheckboxChange);
+  });
+}
+
+function historyOnCheckboxChange(e) {
+  const name = e.target.value;
+
+  if (e.target.checked) {
+    if (historySelectedSet.size >= HISTORY_MAX_SELECT) {
+      e.target.checked = false;
+      showMiniPopup(
+        document.getElementById("openHistoryRateBtn"),
+        "승률 기록표",
+        `최대 <span class="cond">${HISTORY_MAX_SELECT}개</span>까지 선택할 수 있어요.`
+      );
+      return;
+    }
+
+    historySelectedSet.add(name);
+    historySelectedOrder.push(name);
+  } else {
+    historySelectedSet.delete(name);
+    historySelectedOrder = historySelectedOrder.filter(v => v !== name);
+  }
+
+  const item = e.target.closest(".history-engraving-item");
+  if (item) item.classList.toggle("checked", e.target.checked);
+
+  historyUpdateSelectedTags();
+}
+
+async function loadHistoryCandidates() {
+  if (historyCandidates.length) {
+    historyRenderEngravingList(historySearchInput.value || "");
+    return;
+  }
+
+  historyEngravingList.innerHTML = `<div style="padding:20px; text-align:center; color:#7a8a9f;">로딩 중...</div>`;
+
+  try {
+    const { data, error } = await supabase
+      .from("candidates")
+      .select("class_name, engraving_name")
+      .eq("enabled", true)
+      .order("class_name", { ascending: true })
+      .order("engraving_name", { ascending: true });
+
+    if (error) throw error;
+
+    historyCandidates = data || [];
+    historyRenderEngravingList(historySearchInput.value || "");
+  } catch (err) {
+    console.error(err);
+    historyEngravingList.innerHTML = `<div style="padding:20px; text-align:center; color:#ff9b9b;">각인 목록 로드 실패</div>`;
+  }
+}
+
+function resetHistorySummaryTable() {
+  historySummaryBody.innerHTML = `<tr><td colspan="7" style="color:#7a8a9f;">조회 결과가 여기에 표시됩니다.</td></tr>`;
+}
+
+function resetHistoryChart() {
+  historyChartSvg.innerHTML = `
+    <rect width="1000" height="380" fill="#0f1520"></rect>
+    <text x="500" y="190" text-anchor="middle" fill="#7a8a9f" font-size="15" font-weight="700">
+      각인을 선택하고 확인을 눌러주세요.
+    </text>
+  `;
+  historyLegendBox.innerHTML = "";
+  resetHistorySummaryTable();
+}
+
+function openHistoryRateModalPanel() {
+  if (!historyRateModal) return;
+
+  historyRateModal.style.display = "flex";
+  initHistoryDates();
+  historyUpdateSelectedTags();
+  resetHistoryChart();
+  loadHistoryCandidates();
+}
     
   function updateLockIcons() {
   const opUnlocked          = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
@@ -6865,10 +7048,7 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-    const historyModal = document.getElementById("historyRateModal");
-  if (historyModal) {
-    historyModal.style.display = "flex";
-  }
+  openHistoryRateModalPanel();
 });
     
 
