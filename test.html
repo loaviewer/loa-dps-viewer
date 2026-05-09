@@ -213,10 +213,6 @@
       z-index: 5;
     }
 
-    .no-data {
-      text-align: center; padding: 60px 20px; color: #7a8a9f; font-size: 15px;
-    }
-
     @media (max-width: 1100px) {
       .history-modal { grid-template-columns: 1fr; }
       .left-panel { border-right: 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -322,7 +318,7 @@
     // Supabase 설정
     // ==============================
     const SUPABASE_URL = "https://khszfukekudyripouifm.supabase.co";
-const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
+    const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
 
     async function callRpc(fnName, params) {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fnName}`, {
@@ -371,25 +367,31 @@ const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
     const noticeText = document.getElementById("noticeText");
 
     // ==============================
-    // 초기화: 날짜 기본값
+    // 선택 상태 관리 (검색해도 유지)
     // ==============================
-   function initDates() {
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
+    let allCandidates = [];
+    const selectedEngravingSet = new Set();
 
-  const tenDaysAgo = new Date(yesterday);
-  tenDaysAgo.setDate(yesterday.getDate() - 9);
+    // ==============================
+    // 날짜 초기화 (어제까지만)
+    // ==============================
+    function initDates() {
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
 
-  const minDate = new Date("2026-04-07");
-  const start = tenDaysAgo < minDate ? minDate : tenDaysAgo;
+      const tenDaysAgo = new Date(yesterday);
+      tenDaysAgo.setDate(yesterday.getDate() - 9);
 
-  startDateEl.value = formatDateISO(start);
-  endDateEl.value = formatDateISO(yesterday);
+      const minDate = new Date("2026-04-07");
+      const start = tenDaysAgo < minDate ? minDate : tenDaysAgo;
 
-  startDateEl.max = formatDateISO(yesterday);
-  endDateEl.max = formatDateISO(yesterday);
-}
+      startDateEl.value = formatDateISO(start);
+      endDateEl.value = formatDateISO(yesterday);
+
+      startDateEl.max = formatDateISO(yesterday);
+      endDateEl.max = formatDateISO(yesterday);
+    }
 
     function formatDateISO(d) {
       const y = d.getFullYear();
@@ -401,8 +403,6 @@ const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
     // ==============================
     // 각인 목록 로드
     // ==============================
-    let allCandidates = [];
-
     async function loadCandidates() {
       try {
         const res = await fetch(
@@ -437,7 +437,7 @@ const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
       }
 
       engravingListEl.innerHTML = filtered.map(c => {
-        const checked = getSelectedEngravings().includes(c.engraving_name) ? "checked" : "";
+        const checked = selectedEngravingSet.has(c.engraving_name) ? "checked" : "";
         return `
           <label class="engraving-item ${checked ? 'checked' : ''}">
             <input type="checkbox" value="${c.engraving_name}" ${checked}
@@ -453,24 +453,35 @@ const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
       });
     }
 
+    // ==============================
+    // 선택 관련 함수
+    // ==============================
     function getSelectedEngravings() {
-      return [...engravingListEl.querySelectorAll('input[type="checkbox"]:checked')].map(el => el.value);
+      return Array.from(selectedEngravingSet);
     }
 
     function getSelectedWithClass() {
-      return [...engravingListEl.querySelectorAll('input[type="checkbox"]:checked')].map(el => ({
-        engraving_name: el.value,
-        class_name: el.getAttribute("data-class")
-      }));
+      return Array.from(selectedEngravingSet).map(name => {
+        const found = allCandidates.find(c => c.engraving_name === name);
+        return {
+          engraving_name: name,
+          class_name: found ? found.class_name : ""
+        };
+      });
     }
 
     function onCheckboxChange(e) {
-      const selected = getSelectedEngravings();
+      const name = e.target.value;
 
-      if (selected.length > MAX_SELECT) {
-        e.target.checked = false;
-        alert(`최대 ${MAX_SELECT}개까지 선택 가능합니다.`);
-        return;
+      if (e.target.checked) {
+        if (selectedEngravingSet.size >= MAX_SELECT) {
+          e.target.checked = false;
+          alert(`최대 ${MAX_SELECT}개까지 선택 가능합니다.`);
+          return;
+        }
+        selectedEngravingSet.add(name);
+      } else {
+        selectedEngravingSet.delete(name);
       }
 
       e.target.closest(".engraving-item").classList.toggle("checked", e.target.checked);
@@ -493,8 +504,6 @@ const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
     // ==============================
     // 데이터 조회 + 차트 그리기
     // ==============================
-    let cachedData = null;
-
     applyBtn.addEventListener("click", fetchAndRender);
 
     async function fetchAndRender() {
@@ -521,8 +530,6 @@ const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
           p_start: startStr,
           p_end: endStr
         });
-
-        cachedData = data;
 
         const filteredData = data.filter(row => selected.includes(row.engraving_name));
 
