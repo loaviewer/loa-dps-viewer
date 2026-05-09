@@ -4450,7 +4450,7 @@
 .history-modal-card {
   position: relative;
   width: min(96vw, 1640px);
-  height: min(92vh, 1020px);
+  height: min(94vh, 1100px);
   background: rgba(17, 22, 34, 0.96);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 26px;
@@ -5332,7 +5332,7 @@
       <aside class="history-left-panel">
         <div class="history-left-head">
           <h2>직업 각인 선택</h2>
-          <p>보고 싶은 각인을 선택하세요. (최대 5개)</p>
+          <p>보고 싶은 각인을 선택하세요. (최대 4개)</p>
           <div class="history-selected-tags" id="historySelectedTags"></div>
         </div>
 
@@ -6297,7 +6297,7 @@ const historyTooltip = document.getElementById("historyTooltip");
 const historyLegendBox = document.getElementById("historyLegendBox");
 const historySummaryBody = document.getElementById("historySummaryBody");
 
-const HISTORY_MAX_SELECT = 5;
+const HISTORY_MAX_SELECT = 4;
 const HISTORY_COLORS = [
   "#7effae",
   "#59c7ff",
@@ -6572,8 +6572,7 @@ async function historyFetchAndRender() {
   }
 }
 
-   
-function historyRenderSvgChart(datasets, labels, dates) {
+   function historyRenderSvgChart(datasets, labels, dates) {
   const W = 1000;
   const H = 380;
   const pad = { top: 28, right: 30, bottom: 46, left: 60 };
@@ -6610,11 +6609,11 @@ function historyRenderSvgChart(datasets, labels, dates) {
 
   let svg = `<rect width="${W}" height="${H}" fill="#0f1520"/>`;
 
-  // Y축 그리드 + 라벨 (그리드선 안쪽 중앙 배치)
+  // Y축 그리드 + 라벨 (왼쪽 배치)
   yTicks.forEach(val => {
     const y = yScale(val);
     svg += `<line x1="${pad.left}" y1="${y}" x2="${W - pad.right}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>`;
-    svg += `<text x="${pad.left + 6}" y="${y - 5}" text-anchor="start" fill="#94a3b8" font-size="10" font-weight="700" opacity="0.7">${val}%</text>`;
+    svg += `<text x="${pad.left - 10}" y="${y + 4}" text-anchor="end" fill="#94a3b8" font-size="11" font-weight="700">${val}%</text>`;
   });
 
   // 축선
@@ -6631,7 +6630,7 @@ function historyRenderSvgChart(datasets, labels, dates) {
     svg += `<text x="${x}" y="${H - 18}" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700">${label}</text>`;
   });
 
-  // 라인 그리기
+  // 라인 + 점
   datasets.forEach(ds => {
     const points = [];
     ds.values.forEach((v, i) => {
@@ -6645,9 +6644,7 @@ function historyRenderSvgChart(datasets, labels, dates) {
       svg += `<path d="${pathD}" fill="none" stroke="${ds.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
     }
 
-    // 일반 점 (시작점 제외)
-    points.forEach((pt, ptIdx) => {
-      if (ptIdx === 0) return;
+    points.forEach(pt => {
       const safeName = ds.name.replace(/"/g, '&quot;');
       svg += `
         <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="${ds.color}" stroke="#0f1520" stroke-width="2.5"
@@ -6657,65 +6654,28 @@ function historyRenderSvgChart(datasets, labels, dates) {
     });
   });
 
-  // 시작점 원형 심볼 (불투명 배경, 그래프 위에 덮기)
-  datasets.forEach(ds => {
-    const firstVal = ds.values.find(v => v !== null);
-    if (firstVal === null || firstVal === undefined) return;
-
-    const firstIdx = ds.values.indexOf(firstVal);
-    const cx = xScale(firstIdx);
-    const cy = yScale(firstVal);
-    const short = ds.shortName;
-    const startDate = dates[firstIdx] || "";
-    const safeName = ds.name.replace(/"/g, '&quot;');
-
-    // 불투명 배경 원 (그래프를 덮음)
-    svg += `<circle cx="${cx}" cy="${cy}" r="16" fill="#0f1520" stroke="none"/>`;
-
-    // 색상 테두리 원
-    svg += `<circle cx="${cx}" cy="${cy}" r="15" fill="${ds.color}30" stroke="${ds.color}" stroke-width="1.5"/>`;
-
-    // 줄임명 텍스트
-    svg += `<text x="${cx}" y="${cy + 3.5}" text-anchor="middle" fill="${ds.color}" font-size="8.5" font-weight="900">${short}</text>`;
-
-    // hover 영역
-    svg += `
-      <circle cx="${cx}" cy="${cy}" r="16" fill="transparent"
-        data-name="${safeName}" data-label="${short}" data-value="${firstVal}" data-date="${startDate}"
-        style="cursor:pointer" class="history-symbol-hover"/>
-    `;
-  });
-
   historyChartSvg.innerHTML = svg;
 
   historyChartSvg.querySelectorAll("circle[data-name]").forEach(circle => {
-    const isSymbol = circle.classList.contains("history-symbol-hover");
-
     circle.addEventListener("mousemove", (e) => {
       const name = circle.getAttribute("data-name");
       const label = circle.getAttribute("data-label");
       const value = circle.getAttribute("data-value");
       const date = circle.getAttribute("data-date");
-
-      if (isSymbol) {
-        historyShowTooltip(e, `<strong>${name}</strong><br>시작일: ${date}<br>승률 ${value}%`);
-      } else {
-        historyShowTooltip(e, `<strong>${name}</strong><br>${label} (${date})<br>승률 ${value}%`);
-      }
+      historyShowTooltip(e, `<strong>${name}</strong><br>${label} (${date})<br>승률 ${value}%`);
     });
 
     circle.addEventListener("mouseleave", () => {
       historyHideTooltip();
-      if (!isSymbol) circle.setAttribute("r", "5");
+      circle.setAttribute("r", "5");
     });
 
-    if (!isSymbol) {
-      circle.addEventListener("mouseenter", () => {
-        circle.setAttribute("r", "7");
-      });
-    }
+    circle.addEventListener("mouseenter", () => {
+      circle.setAttribute("r", "7");
+    });
   });
 }
+
       
 function historyShowTooltip(event, html) {
   const rect = historyChartWrap.getBoundingClientRect();
