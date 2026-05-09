@@ -4871,6 +4871,100 @@
     </div>
   </div>
 
+
+<!-- 승률 기록표 모달 -->
+<div class="modal-backdrop" id="historyRateModal" style="display:none;">
+  <div class="history-modal-card">
+    <button class="modal-close" id="closeHistoryRateBtn">×</button>
+
+    <div class="history-modal-inner">
+      <aside class="history-left-panel">
+        <div class="history-left-head">
+          <h2>직업 각인 선택</h2>
+          <p>보고 싶은 각인을 선택하세요. (최대 5개)</p>
+          <div class="history-selected-tags" id="historySelectedTags"></div>
+        </div>
+
+        <div class="history-search-box">
+          <input type="text" id="historySearchInput" placeholder="각인 검색...">
+        </div>
+
+        <div class="history-engraving-list" id="historyEngravingList">
+          <div style="padding:20px; text-align:center; color:#7a8a9f;">로딩 중...</div>
+        </div>
+      </aside>
+
+      <section class="history-main-panel">
+        <div class="history-controls">
+          <div class="history-field">
+            <label>모드</label>
+            <select id="historyModeSelect">
+              <option value="op">OP</option>
+              <option value="favor">호감</option>
+            </select>
+          </div>
+
+          <div class="history-field">
+            <label>시작일</label>
+            <input type="date" id="historyStartDate" min="2026-04-07">
+          </div>
+
+          <div class="history-field">
+            <label>종료일</label>
+            <input type="date" id="historyEndDate" min="2026-04-07">
+          </div>
+
+          <button class="history-confirm-btn" id="historyApplyBtn">확인</button>
+        </div>
+
+        <div class="history-notice" id="historyNoticeText">
+          각인을 선택하고 날짜를 지정한 뒤 확인을 눌러주세요.
+        </div>
+
+        <div class="history-content-area">
+          <div class="history-chart-card">
+            <h3>일별 승률 추이</h3>
+            <p>선택한 각인의 날짜별 승률 변화를 보여줍니다.</p>
+
+            <div class="history-chart-wrap" id="historyChartWrap">
+              <svg id="historyChartSvg" viewBox="0 0 1000 380" preserveAspectRatio="none"></svg>
+              <div class="history-tooltip" id="historyTooltip"></div>
+            </div>
+
+            <div class="history-legend" id="historyLegendBox"></div>
+          </div>
+
+          <div class="history-table-card">
+            <h3>선택 각인 요약</h3>
+            <p>기간 내 시작/종료/최고/평균 승률</p>
+
+            <div class="history-mini-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>각인</th>
+                    <th>클래스</th>
+                    <th>시작 승률</th>
+                    <th>종료 승률</th>
+                    <th>최고 승률</th>
+                    <th>평균 승률</th>
+                    <th>총 경기</th>
+                  </tr>
+                </thead>
+                <tbody id="historySummaryBody">
+                  <tr><td colspan="7" style="color:#7a8a9f;">조회 결과가 여기에 표시됩니다.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+
+  
   <!-- 호감 티어표 모달 -->
   <div class="modal-backdrop" id="favorTierModal">
     <div class="modal-card">
@@ -6365,7 +6459,7 @@ document.addEventListener("click", (e) => {
   if (!historyRateUnlocked) {
     showMiniPopup(
       historyBtn,
-      "승률 기록표",
+      "승률 변동 그래프",
       `열람 조건 : <span class="cond">도장 2개 이상 획득 필요</span>`
     );
     return;
@@ -6373,8 +6467,8 @@ document.addEventListener("click", (e) => {
 
   showMiniPopup(
     historyBtn,
-    "승률 기록표",
-    `승률 기록표 모달 연결 예정`
+    "승률 변동 그래프",
+    `승률 변동 그래프 모달 연결 예정`
   );
 });
     
