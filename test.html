@@ -5417,8 +5417,8 @@
   <label>단위</label>
   <div class="history-unit-tabs" id="historyUnitTabs">
     <button class="history-unit-btn active" data-unit="1">1일</button>
+    <button class="history-unit-btn" data-unit="2">2일</button>
     <button class="history-unit-btn" data-unit="3">3일</button>
-    <button class="history-unit-btn" data-unit="7">7일</button>
   </div>
 </div>
           <button class="history-confirm-btn" id="historyApplyBtn">확인</button>
@@ -6845,9 +6845,9 @@ document.addEventListener("click", (e) => {
 let historyCurrentUnit = 1;
 
 const HISTORY_UNIT_LIMITS = {
-  1: 15,
-  3: 31,
-  7: 93
+  1: 21,
+  2: 42,
+  3: 63
 };
 
 document.addEventListener("click", (e) => {
