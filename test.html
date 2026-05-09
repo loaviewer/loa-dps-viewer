@@ -21,10 +21,19 @@
 
     .page-header {
       margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-icon {
+      width: 28px;
+      height: 28px;
+      flex: 0 0 auto;
     }
 
     .page-header h1 {
-      margin: 0 0 6px;
+      margin: 0;
       font-size: 26px;
       font-weight: 900;
       letter-spacing: -0.02em;
@@ -33,17 +42,11 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .page-header p {
-      margin: 0;
-      color: #8a97ae;
-      font-size: 13px;
-    }
-
     .history-modal {
       width: 100%;
       min-height: 860px;
       display: grid;
-      grid-template-columns: 300px 1fr;
+      grid-template-columns: 260px 1fr;
       background: rgba(17, 24, 36, 0.95);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 26px;
@@ -59,29 +62,29 @@
     }
 
     .left-head {
-      padding: 20px 18px 14px;
+      padding: 20px 14px 14px;
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
-    .left-head h2 { margin: 0 0 8px; font-size: 19px; font-weight: 900; }
-    .left-head p { margin: 0; color: #92a0b6; font-size: 13px; line-height: 1.5; }
+    .left-head h2 { margin: 0 0 8px; font-size: 17px; font-weight: 900; }
+    .left-head p { margin: 0; color: #92a0b6; font-size: 12px; line-height: 1.5; }
 
     .selected-tags {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; min-height: 34px;
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; min-height: 30px;
     }
 
     .tag {
-      padding: 7px 10px; border-radius: 999px; font-size: 12px; font-weight: 800;
+      padding: 5px 9px; border-radius: 999px; font-size: 11px; font-weight: 800;
       border: 1px solid rgba(255,255,255,0.15);
     }
 
     .search-box {
-      padding: 10px 10px 0;
+      padding: 8px 8px 0;
     }
 
     .search-box input {
       width: 100%;
-      padding: 10px 12px;
+      padding: 9px 10px;
       border-radius: 10px;
       border: 1px solid rgba(255,255,255,0.08);
       background: #101723;
@@ -91,15 +94,15 @@
     }
 
     .engraving-list {
-      padding: 10px;
+      padding: 8px;
       overflow-y: auto;
       flex: 1;
-      max-height: 660px;
+      max-height: 680px;
     }
 
     .engraving-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 11px 12px; border-radius: 12px; margin-bottom: 6px;
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 10px; border-radius: 10px; margin-bottom: 4px;
       background: rgba(255,255,255,0.02); border: 1px solid transparent;
       cursor: pointer; transition: .18s ease;
     }
@@ -113,11 +116,11 @@
     }
 
     .engraving-item input {
-      width: 18px; height: 18px; accent-color: #7effae; flex: 0 0 auto; cursor: pointer;
+      width: 16px; height: 16px; accent-color: #7effae; flex: 0 0 auto; cursor: pointer;
     }
 
-    .engraving-name { font-size: 14px; font-weight: 800; color: #edf4ff; }
-    .engraving-class { font-size: 11px; color: #8a97ad; margin-left: auto; }
+    .engraving-short { font-size: 14px; font-weight: 900; color: #edf4ff; min-width: 36px; }
+    .engraving-class { font-size: 11px; color: #6b7a90; margin-left: auto; }
 
     .main-panel { display: flex; flex-direction: column; min-width: 0; }
 
@@ -231,15 +234,19 @@
 <body>
   <div class="wrap">
     <div class="page-header">
-      <h1>📈 직각 승률 변동 그래프</h1>
-      <p>선택한 직업 각인의 일별 승률 변화를 확인할 수 있습니다.</p>
+      <svg class="header-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="28" height="28" rx="8" fill="rgba(126,255,174,0.12)"/>
+        <polyline points="5,20 10,14 15,16 20,8 25,11" stroke="#7effae" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="25" cy="11" r="2" fill="#7effae"/>
+      </svg>
+      <h1>직각 승률 변동 그래프</h1>
     </div>
 
     <div class="history-modal">
       <aside class="left-panel">
         <div class="left-head">
           <h2>직업 각인 선택</h2>
-          <p>체크박스로 보고 싶은 각인을 선택하세요. (최대 5개)</p>
+          <p>보고 싶은 각인을 선택하세요. (최대 5개)</p>
           <div class="selected-tags" id="selectedTags"></div>
         </div>
 
@@ -356,7 +363,6 @@
 
     const MAX_SELECT = 5;
 
-    // 직각명 → 줄임명 매핑 (완전판)
     const SHORT_NAMES = {
       "고독한 기사":"고기","전투 태세":"전태","광기":"광기","광전사의 비기":"비기",
       "분노의 망치":"분망","중력 수련":"중수","심판자":"심판자","축복의 오라":"축오",
@@ -410,7 +416,7 @@
     }
 
     // ==============================
-    // 날짜 초기화 (어제까지만)
+    // 날짜 초기화
     // ==============================
     function initDates() {
       const today = new Date();
@@ -463,9 +469,10 @@
 
     function renderEngravingList(filter = "") {
       const filtered = filter
-        ? allCandidates.filter(c =>
-            c.engraving_name.includes(filter) || c.class_name.includes(filter)
-          )
+        ? allCandidates.filter(c => {
+            const short = getShortName(c.engraving_name);
+            return c.engraving_name.includes(filter) || c.class_name.includes(filter) || short.includes(filter);
+          })
         : allCandidates;
 
       if (!filtered.length) {
@@ -475,11 +482,12 @@
 
       engravingListEl.innerHTML = filtered.map(c => {
         const checked = selectedEngravingSet.has(c.engraving_name) ? "checked" : "";
+        const short = getShortName(c.engraving_name);
         return `
           <label class="engraving-item ${checked ? 'checked' : ''}">
             <input type="checkbox" value="${c.engraving_name}" ${checked}
                    data-class="${c.class_name}">
-            <span class="engraving-name">${c.engraving_name}</span>
+            <span class="engraving-short">${short}</span>
             <span class="engraving-class">${c.class_name}</span>
           </label>
         `;
@@ -535,7 +543,8 @@
       }
       selectedTagsEl.innerHTML = selected.map(name => {
         const color = getColorForEngraving(name);
-        return `<span class="tag" style="color:${color}; background:${color}18; border-color:${color}40;">${name}</span>`;
+        const short = getShortName(name);
+        return `<span class="tag" style="color:${color}; background:${color}18; border-color:${color}40;">${short}</span>`;
       }).join("");
     }
 
@@ -544,7 +553,7 @@
     });
 
     // ==============================
-    // 데이터 조회 + 차트 그리기
+    // 데이터 조회
     // ==============================
     applyBtn.addEventListener("click", fetchAndRender);
 
@@ -574,7 +583,6 @@
         });
 
         const filteredData = data.filter(row => selected.includes(row.engraving_name));
-
         const dates = [...new Set(data.map(r => r.date_key))].sort();
 
         const datasets = selected.map((name, idx) => {
@@ -692,7 +700,7 @@
         svg += `<text x="${x}" y="${H - 18}" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700">${label}</text>`;
       });
 
-      // 데이터 라인 + 점 + 시작점 줄임명
+      // 라인 그리기
       datasets.forEach(ds => {
         const points = [];
         ds.values.forEach((v, i) => {
@@ -701,20 +709,11 @@
           }
         });
 
-        // 라인
         if (points.length > 1) {
           const pathD = points.map((p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(" ");
           svg += `<path d="${pathD}" fill="none" stroke="${ds.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
         }
 
-        // 시작점 줄임명 (첫 번째 점의 Y위치에 맞춰서, % 라벨 왼쪽 바깥에 배치)
-        if (points.length > 0) {
-          const firstPt = points[0];
-          // pad.left 왼쪽 영역에 배치 (% 라벨과 겹치지 않게 x=8 고정)
-          svg += `<text x="8" y="${firstPt.y + 4}" text-anchor="start" fill="${ds.color}" font-size="9" font-weight="900" opacity="0.9">${ds.shortName}</text>`;
-        }
-
-        // 점
         points.forEach(pt => {
           const safeName = ds.name.replace(/"/g, '&quot;');
           svg += `
@@ -723,6 +722,56 @@
               style="cursor:pointer"/>
           `;
         });
+      });
+
+      // 시작점 심볼 뱃지 (겹침 방지)
+      const badgeData = [];
+      datasets.forEach(ds => {
+        const firstVal = ds.values.find(v => v !== null);
+        if (firstVal !== null && firstVal !== undefined) {
+          const firstIdx = ds.values.indexOf(firstVal);
+          badgeData.push({
+            shortName: ds.shortName,
+            color: ds.color,
+            y: yScale(firstVal),
+            x: xScale(firstIdx),
+            winRate: firstVal
+          });
+        }
+      });
+
+      // 승률 높은 순 정렬 (위에서부터)
+      badgeData.sort((a, b) => b.winRate - a.winRate);
+
+      // 겹침 방지: 최소 간격 16px
+      const MIN_GAP = 16;
+      const placedY = [];
+
+      badgeData.forEach(bd => {
+        let targetY = bd.y;
+
+        for (let attempt = 0; attempt < 20; attempt++) {
+          let overlap = false;
+          for (const py of placedY) {
+            if (Math.abs(targetY - py) < MIN_GAP) {
+              overlap = true;
+              break;
+            }
+          }
+          if (!overlap) break;
+          targetY += MIN_GAP;
+        }
+
+        placedY.push(targetY);
+
+        const textLen = bd.shortName.length;
+        const boxW = Math.max(textLen * 8 + 12, 30);
+        const boxH = 16;
+        const boxX = bd.x - boxW - 8;
+        const boxY = targetY - boxH / 2;
+
+        svg += `<rect x="${boxX}" y="${boxY}" width="${boxW}" height="${boxH}" rx="4" fill="${bd.color}22" stroke="${bd.color}55" stroke-width="1"/>`;
+        svg += `<text x="${boxX + boxW / 2}" y="${targetY + 4}" text-anchor="middle" fill="${bd.color}" font-size="9" font-weight="900">${bd.shortName}</text>`;
       });
 
       chartSvg.innerHTML = svg;
@@ -776,7 +825,7 @@
       legendBox.innerHTML = datasets.map(ds => `
         <div class="legend-item">
           <span class="legend-dot" style="background:${ds.color}"></span>
-          ${ds.name}
+          ${ds.shortName} <span style="color:#8a97ad; margin-left:4px;">${ds.name}</span>
         </div>
       `).join("");
     }
@@ -796,7 +845,7 @@
         if (!valid.length) {
           return `
             <tr>
-              <td><span class="color-chip" style="background:${ds.color}"></span>${ds.name}</td>
+              <td><span class="color-chip" style="background:${ds.color}"></span>${ds.shortName}</td>
               <td>${ds.class_name}</td>
               <td colspan="5" class="muted">데이터 없음</td>
             </tr>
@@ -810,7 +859,7 @@
 
         return `
           <tr>
-            <td><span class="color-chip" style="background:${ds.color}"></span>${ds.name}</td>
+            <td><span class="color-chip" style="background:${ds.color}"></span>${ds.shortName}</td>
             <td>${ds.class_name}</td>
             <td>${first.toFixed(1)}%</td>
             <td>${last.toFixed(1)}%</td>
