@@ -4235,27 +4235,86 @@
 
 .tier-btn-history {
   position: relative;
-  border: 1px solid rgba(181, 122, 255, 0.34);
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(191, 138, 255, 0.42);
   background:
-    linear-gradient(135deg, rgba(82, 36, 135, 0.98), rgba(127, 72, 204, 0.98));
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,0.16), transparent 26%),
+    radial-gradient(circle at 84% 22%, rgba(209,170,255,0.22), transparent 30%),
+    linear-gradient(135deg, rgba(72, 32, 122, 0.98), rgba(116, 66, 196, 0.98) 52%, rgba(86, 54, 178, 0.98));
   box-shadow:
-    0 10px 24px rgba(115, 64, 201, 0.22),
-    inset 0 1px 0 rgba(255,255,255,0.10);
+    0 12px 28px rgba(118, 68, 214, 0.26),
+    0 0 0 1px rgba(255,255,255,0.03) inset,
+    inset 0 1px 0 rgba(255,255,255,0.12);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, filter .18s ease;
+}
+
+.tier-btn-history::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg,
+      transparent 0%,
+      transparent 34%,
+      rgba(255,255,255,0.12) 46%,
+      rgba(255,255,255,0.20) 50%,
+      rgba(255,255,255,0.10) 54%,
+      transparent 66%,
+      transparent 100%);
+  transform: translateX(-120%);
+  transition: transform .65s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.tier-btn-history::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), transparent 26%, transparent 72%, rgba(255,255,255,0.03));
+  z-index: 0;
+  pointer-events: none;
 }
 
 .tier-btn-history:hover {
-  border-color: rgba(218, 185, 255, 0.58);
-  background:
-    linear-gradient(135deg, rgba(95, 46, 154, 1), rgba(144, 87, 228, 1));
+  border-color: rgba(225, 194, 255, 0.68);
   box-shadow:
-    0 14px 28px rgba(133, 75, 225, 0.28),
-    inset 0 1px 0 rgba(255,255,255,0.12);
+    0 16px 34px rgba(133, 76, 233, 0.34),
+    0 0 22px rgba(153, 92, 255, 0.16),
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    inset 0 1px 0 rgba(255,255,255,0.14);
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+
+.tier-btn-history:hover::before {
+  transform: translateX(120%);
+}
+
+.tier-btn-history .tier-btn-content {
+  position: relative;
+  z-index: 1;
+}
+
+.tier-btn-history .tier-btn-small {
+  color: rgba(240, 228, 255, 0.82);
+}
+
+.tier-btn-history .tier-btn-main {
+  color: #fbf4ff;
+  text-shadow: 0 1px 10px rgba(208, 170, 255, 0.18);
 }
 
 .badge-history-solid {
-  background: linear-gradient(135deg, #a96cff, #7d4cff);
-  color: #f7efff;
-  border: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(135deg, #c084ff, #8b5cf6);
+  color: #fcf7ff;
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow:
+    0 4px 10px rgba(139, 92, 246, 0.22),
+    inset 0 1px 0 rgba(255,255,255,0.12);
 }
 
 
