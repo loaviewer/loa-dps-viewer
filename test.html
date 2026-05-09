@@ -373,17 +373,23 @@ const SUPABASE_KEY = "sb_publishable_XjCVKOZRq1aERqzOGj_tHw_eC4uCXEb";
     // ==============================
     // 초기화: 날짜 기본값
     // ==============================
-    function initDates() {
-      const today = new Date();
-      const tenDaysAgo = new Date(today);
-      tenDaysAgo.setDate(today.getDate() - 10);
+   function initDates() {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
 
-      const minDate = new Date("2026-04-07");
-      const start = tenDaysAgo < minDate ? minDate : tenDaysAgo;
+  const tenDaysAgo = new Date(yesterday);
+  tenDaysAgo.setDate(yesterday.getDate() - 9);
 
-      startDateEl.value = formatDateISO(start);
-      endDateEl.value = formatDateISO(today);
-    }
+  const minDate = new Date("2026-04-07");
+  const start = tenDaysAgo < minDate ? minDate : tenDaysAgo;
+
+  startDateEl.value = formatDateISO(start);
+  endDateEl.value = formatDateISO(yesterday);
+
+  startDateEl.max = formatDateISO(yesterday);
+  endDateEl.max = formatDateISO(yesterday);
+}
 
     function formatDateISO(d) {
       const y = d.getFullYear();
