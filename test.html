@@ -5514,17 +5514,22 @@ function isOpRateUnlocked() {
   );
 }
 
+const historyRateLockIcon = document.getElementById("historyRateLockIcon");
+const openHistoryRateBtn = document.getElementById("openHistoryRateBtn");
+
+
     
-   function updateLockIcons() {
-  const opUnlocked      = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
-  const favorUnlocked   = completedState.op || completedState.favor;
-  const opRateUnlocked  = isOpRateUnlocked();
+  function updateLockIcons() {
+  const opUnlocked          = completedState.op && todayOpGrade && A_MINUS_AND_ABOVE.includes(todayOpGrade);
+  const favorUnlocked       = completedState.op || completedState.favor;
+  const opRateUnlocked      = isOpRateUnlocked();
+  const historyRateUnlocked = completedState.op && completedState.favor;
 
-  opLockIcon.style.display     = opUnlocked ? "none" : "flex";
-  favorLockIcon.style.display  = favorUnlocked ? "none" : "flex";
-  opRateLockIcon.style.display = opRateUnlocked ? "none" : "flex";
+  opLockIcon.style.display          = opUnlocked ? "none" : "flex";
+  favorLockIcon.style.display       = favorUnlocked ? "none" : "flex";
+  opRateLockIcon.style.display      = opRateUnlocked ? "none" : "flex";
+  historyRateLockIcon.style.display = historyRateUnlocked ? "none" : "flex";
 }
-
     function sortRankingRows(rows) {
       return [...rows].sort((a,b)=>{
         if (b.champion_count!==a.champion_count) return b.champion_count-a.champion_count;
