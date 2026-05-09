@@ -6161,6 +6161,18 @@ opRateModal.addEventListener("click",e=>{ if(e.target===opRateModal) opRateModal
   await refreshOpRateModal("postpatch");
 });
 
+document.getElementById("openHistoryRateBtn").addEventListener("click", (e) => {
+  const historyRateUnlocked = completedState.op && completedState.favor;
+
+  if (!historyRateUnlocked) {
+    alert("승률 기록표는 도장 2개 이상부터 열람할 수 있어요.");
+    return;
+  }
+
+  alert("여기에 승률 기록표 모달 열기 연결 예정");
+});
+    
+
     document.addEventListener("keydown",e=>{
   if (e.key==="Escape") {
     guideModal.classList.remove("show");
