@@ -6165,11 +6165,19 @@ document.getElementById("openHistoryRateBtn").addEventListener("click", (e) => {
   const historyRateUnlocked = completedState.op && completedState.favor;
 
   if (!historyRateUnlocked) {
-    alert("승률 기록표는 도장 2개 이상부터 열람할 수 있어요.");
+    showMiniPopup(
+      e.currentTarget,
+      "승률 기록표",
+      `열람 조건 : <span class="cond">도장 2개 이상 획득 필요</span>`
+    );
     return;
   }
 
-  alert("여기에 승률 기록표 모달 열기 연결 예정");
+  showMiniPopup(
+    e.currentTarget,
+    "승률 기록표",
+    `승률 기록표 모달 연결 예정`
+  );
 });
     
 
