@@ -4449,8 +4449,8 @@
 
 .history-modal-card {
   position: relative;
-  width: min(96vw, 1540px);
-  height: min(88vh, 920px);
+  width: min(96vw, 1640px);
+  height: min(92vh, 1020px);
   background: rgba(17, 22, 34, 0.96);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 26px;
@@ -4459,14 +4459,15 @@
     inset 0 1px 0 rgba(255,255,255,0.04);
   overflow: hidden;
 }
-
+    
 .history-modal-inner {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 260px 1fr;
   width: 100%;
   height: 100%;
+  min-height: 0;
 }
-
+    
 .history-left-panel {
   border-right: 1px solid rgba(255,255,255,0.06);
   background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015));
@@ -4478,8 +4479,9 @@
 }
 
 .history-left-head {
-  padding: 20px 18px 14px;
+  padding: 16px 14px 12px;
   border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
 }
 
 .history-left-head h2 {
@@ -4516,7 +4518,8 @@
 }
 
 .history-search-box {
-  padding: 10px 10px 0;
+  padding: 8px 10px 0;
+  flex-shrink: 0;
 }
 
 .history-search-box input {
@@ -4590,6 +4593,8 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
   background:
     radial-gradient(circle at top, rgba(123, 88, 214, 0.05), transparent 28%),
     linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0));
@@ -4666,7 +4671,9 @@
   padding: 14px 18px 18px;
   display: grid;
   gap: 16px;
-  overflow: auto;
+  overflow-y: auto;
+  min-height: 0;
+  overscroll-behavior: contain;
 }
 
 .history-chart-card,
@@ -6509,7 +6516,7 @@ async function historyFetchAndRender() {
   }
 }
 
-function historyRenderSvgChart(datasets, labels, dates) {
+    function historyRenderSvgChart(datasets, labels, dates) {
   const W = 1000;
   const H = 380;
   const pad = { top: 28, right: 30, bottom: 46, left: 60 };
@@ -6531,15 +6538,9 @@ function historyRenderSvgChart(datasets, labels, dates) {
     return;
   }
 
-  let yMinRaw = Math.floor(Math.min(...allValues) - 5);
-  let yMaxRaw = Math.ceil(Math.max(...allValues) + 5);
-  yMinRaw = Math.max(0, yMinRaw);
-  yMaxRaw = Math.min(100, yMaxRaw);
-
-  if (yMaxRaw - yMinRaw < 10) {
-    yMinRaw = Math.max(0, yMinRaw - 5);
-    yMaxRaw = Math.min(100, yMaxRaw + 5);
-  }
+  const yMin = 0;
+  const yMax = 100;
+  const yTicks = [0, 20, 40, 60, 80, 100];
 
   function xScale(i) {
     if (labels.length === 1) return pad.left + plotW / 2;
@@ -6547,20 +6548,16 @@ function historyRenderSvgChart(datasets, labels, dates) {
   }
 
   function yScale(v) {
-    return pad.top + ((yMaxRaw - v) / (yMaxRaw - yMinRaw)) * plotH;
+    return pad.top + ((yMax - v) / (yMax - yMin)) * plotH;
   }
 
   let svg = `<rect width="${W}" height="${H}" fill="#0f1520"/>`;
 
-  const yTickCount = 5;
-  const yStep = (yMaxRaw - yMinRaw) / yTickCount;
-
-  for (let i = 0; i <= yTickCount; i++) {
-    const val = yMinRaw + yStep * i;
+  yTicks.forEach(val => {
     const y = yScale(val);
     svg += `<line x1="${pad.left}" y1="${y}" x2="${W - pad.right}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>`;
-    svg += `<text x="${pad.left - 10}" y="${y + 4}" text-anchor="end" fill="#94a3b8" font-size="11" font-weight="700">${Math.round(val)}%</text>`;
-  }
+    svg += `<text x="${pad.left - 10}" y="${y + 4}" text-anchor="end" fill="#94a3b8" font-size="11" font-weight="700">${val}%</text>`;
+  });
 
   svg += `<line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${H - pad.bottom}" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
   svg += `<line x1="${pad.left}" y1="${H - pad.bottom}" x2="${W - pad.right}" y2="${H - pad.bottom}" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
@@ -6597,7 +6594,7 @@ function historyRenderSvgChart(datasets, labels, dates) {
     });
   });
 
-  // 시작점 심볼 뱃지 (겹침 방지)
+  // 시작점 심볼 뱃지 (첫 번째 점 오른쪽에 배치, 겹침 방지)
   const badgeData = [];
   datasets.forEach(ds => {
     const firstVal = ds.values.find(v => v !== null);
@@ -6638,7 +6635,7 @@ function historyRenderSvgChart(datasets, labels, dates) {
     const textLen = bd.shortName.length;
     const boxW = Math.max(textLen * 8 + 12, 30);
     const boxH = 16;
-    const boxX = bd.x - boxW - 8;
+    const boxX = bd.x + 10;
     const boxY = targetY - boxH / 2;
 
     svg += `<rect x="${boxX}" y="${boxY}" width="${boxW}" height="${boxH}" rx="4" fill="${bd.color}22" stroke="${bd.color}55" stroke-width="1"/>`;
