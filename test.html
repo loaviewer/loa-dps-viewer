@@ -5015,7 +5015,7 @@
       <span class="tier-btn-small">일별 직각 승률 흐름 (PC전용)</span>
 
       <span class="tier-btn-main">
-        <span class="historyrate-main-text">승률 변동 그래프 (Beta)</span>
+        <span class="historyrate-main-text">승률 변동 그래프</span>
         <span class="historyrate-main-icon-wrap">
           <span class="historyrate-main-icon">📊</span>
         </span>
@@ -6376,12 +6376,22 @@ document.addEventListener("click", (e) => {
   const resetBtn = e.target.closest("#historyResetBtn");
   if (!resetBtn) return;
 
+  const hadSelected = historySelectedOrder.length > 0;
+
   historySelectedSet.clear();
   historySelectedOrder = [];
 
   historyUpdateSelectedTags();
   historyRenderEngravingList(historySearchInput ? (historySearchInput.value || "") : "");
   resetHistoryChart();
+
+  showMiniPopup(
+    resetBtn,
+    "선택 초기화",
+    hadSelected
+      ? `선택한 각인을 모두 초기화했어요.`
+      : `초기화할 선택 각인이 없어요.`
+  );
 });
     
     
@@ -6505,7 +6515,11 @@ function historyOnCheckboxChange(e) {
   if (e.target.checked) {
     if (historySelectedSet.size >= HISTORY_MAX_SELECT) {
       e.target.checked = false;
-      alert(`최대 ${HISTORY_MAX_SELECT}개까지 선택할 수 있어요.`);
+      showMiniPopup(
+  document.getElementById("historyResetBtn"),
+  "선택 제한",
+  `최대 <span class="cond">${HISTORY_MAX_SELECT}개</span>까지 선택할 수 있어요.`
+);
       return;
     }
 
