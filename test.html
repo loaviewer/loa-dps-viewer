@@ -6778,18 +6778,31 @@ function historyRenderSummaryTable(datasets, allData, dates) {
     historySummaryBody.innerHTML = `<tr><td colspan="6" style="color:#7a8a9f;">선택된 각인이 없습니다.</td></tr>`;
     return;
   }
+ 
+ // 해당 기간 전체 통합 승률로 순위 계산
+const allEngravingStats = {};
 
-  // 종료일(마지막 날짜) 기준 전체 각인 승률 순위
-  const lastDate = dates[dates.length - 1];
-  const lastDayAll = allData
-    .filter(r => r.date_key === lastDate && r.win_rate !== null)
-    .map(r => ({ engraving_name: r.engraving_name, win_rate: parseFloat(r.win_rate) }))
-    .sort((a, b) => b.win_rate - a.win_rate);
+allData.forEach(r => {
+  const name = r.engraving_name;
+  if (!allEngravingStats[name]) {
+    allEngravingStats[name] = { wins: 0, total: 0 };
+  }
+  allEngravingStats[name].wins += parseInt(r.win_count) || 0;
+  allEngravingStats[name].total += parseInt(r.total_matches) || 0;
+});
 
-  const globalRankMap = {};
-  lastDayAll.forEach((item, idx) => {
-    globalRankMap[item.engraving_name] = idx + 1;
-  });
+const globalRankList = Object.entries(allEngravingStats)
+  .filter(([_, s]) => s.total > 0)
+  .map(([name, s]) => ({
+    engraving_name: name,
+    win_rate: (s.wins / s.total) * 100
+  }))
+  .sort((a, b) => b.win_rate - a.win_rate);
+
+const globalRankMap = {};
+globalRankList.forEach((item, idx) => {
+  globalRankMap[item.engraving_name] = idx + 1;
+});
 
   historySummaryBody.innerHTML = datasets.map(ds => {
     const valid = ds.values.filter(v => v !== null);
