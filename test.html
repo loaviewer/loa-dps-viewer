@@ -5250,7 +5250,7 @@
            <div class="card-actions">
   <button class="primary-btn" id="opStartBtn">시작하기</button>
   <button class="ghost-btn" id="openGradeDistBtn">등급 분포</button>
-  <button class="ghost-btn" id="opRankBtn" style="display:none;">랭킹보기</button>
+  
 </div>
             <div class="stamp" id="opStamp">
               <div class="date"       id="opStampDate"></div>
@@ -5265,7 +5265,7 @@
             <div class="card-desc">취향, 호감도, 애정 기준으로 마음에 드는 직업각인을 선택하는 토너먼트입니다.</div>
            <div class="card-actions">
   <button class="primary-btn" id="favorStartBtn">시작하기</button>
-  <button class="ghost-btn" id="favorRankBtn" style="display:none;">랭킹보기</button>
+ 
 </div>
             <div class="stamp" id="favorStamp">
               <div class="date" id="favorStampDate"></div>
@@ -6292,8 +6292,6 @@ function renderOpRateContent(rows, prevRows) {
     const opStampGrade   = document.getElementById("opStampGrade");
     const opStartBtn     = document.getElementById("opStartBtn");
     const favorStartBtn  = document.getElementById("favorStartBtn");
-    const opRankBtn      = document.getElementById("opRankBtn");
-    const favorRankBtn   = document.getElementById("favorRankBtn");
     const rankingBoard   = document.getElementById("rankingBoard");
     const rankingBoardTitle = document.getElementById("rankingBoardTitle");
     const rankingBoardSub   = document.getElementById("rankingBoardSub");
@@ -7672,20 +7670,7 @@ gradeStampEl.classList.add(getStampClass(grade));
     opStartBtn.addEventListener("click",()=>handleStart("op"));
     favorStartBtn.addEventListener("click",()=>handleStart("favor"));
 
-    opRankBtn.addEventListener("click",async()=>{
-      if (!completedState.op) { alert("OP 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다."); return; }
-      currentBoardMode="op"; await loadRankingData("op");
-      rankingBoard.classList.remove("locked"); rankingBoard.scrollIntoView({behavior:"smooth",block:"start"});
-    isFinalizingTournament = false;
-    winnerConfirmBtn.disabled = false;
-    });
-    favorRankBtn.addEventListener("click",async()=>{
-      if (!completedState.favor) { alert("호감 직각 토너먼트를 완료한 뒤 랭킹을 볼 수 있습니다."); return; }
-      currentBoardMode="favor"; await loadRankingData("favor");
-      rankingBoard.classList.remove("locked"); rankingBoard.scrollIntoView({behavior:"smooth",block:"start"});
-      isFinalizingTournament = false;
-      winnerConfirmBtn.disabled = false;
-    });
+   
 
    modeOpBtn.addEventListener("click", async () => {
   if (!completedState.op) return;
