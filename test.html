@@ -7121,28 +7121,30 @@ async function loadGradeDist() {
   gradeDistContent.innerHTML = `<div class="loading-text">불러오는 중...</div>`;
 
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/sessions?select=grade&tournament_type=eq.op&date_key=gte.2026-04-07`,
-      {
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`
-        }
-      }
-    );
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_grade_distribution`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
+      },
+      body: JSON.stringify({
+        p_type: "op",
+        p_start_date: "2026-04-07"
+      })
+    });
 
     if (!res.ok) {
       const errText = await res.text();
-      throw new Error(`sessions fetch failed: ${res.status} ${errText}`);
+      throw new Error(`get_grade_distribution RPC failed: ${res.status} ${errText}`);
     }
 
-    const gradeSessions = await res.json();
+    const data = await res.json();
     const counts = {};
 
-    if (gradeSessions && Array.isArray(gradeSessions)) {
-      for (const row of gradeSessions) {
-        if (!row.grade) continue;
-        counts[row.grade] = (counts[row.grade] || 0) + 1;
+    if (data && Array.isArray(data)) {
+      for (const row of data) {
+        counts[row.grade] = parseInt(row.grade_count, 10);
       }
     }
 
