@@ -4255,22 +4255,16 @@
   z-index: 0;
 }
 
+
+
 .tier-btn-history-rate {
   position: relative;
   overflow: hidden;
   isolation: isolate;
   border: 1px solid transparent;
-  background:
-       linear-gradient(180deg, rgba(70, 54, 114, 0.96) 0%, rgba(50, 39, 86, 0.98) 50%, rgba(34, 27, 62, 0.99) 100%);
-  box-shadow:
-    0 12px 24px rgba(33, 22, 62, 0.30),
-    0 0 22px rgba(106, 82, 174, 0.14),
-    0 0 0 1px rgba(255,255,255,0.02) inset,
-    inset 0 1px 0 rgba(255,255,255,0.08);
-  transition:
-    transform .18s ease,
-    box-shadow .22s ease,
-    filter .22s ease;
+  background: linear-gradient(180deg, rgba(70, 54, 114, 0.96) 0%, rgba(50, 39, 86, 0.98) 50%, rgba(34, 27, 62, 0.99) 100%);
+  box-shadow: 0 12px 24px rgba(33, 22, 62, 0.30), 0 0 22px rgba(106, 82, 174, 0.14), 0 0 0 1px rgba(255,255,255,0.02) inset, inset 0 1px 0 rgba(255,255,255,0.08);
+  transition: transform .18s ease, box-shadow .22s ease, filter .22s ease;
 }
 
 .tier-btn-history-rate::before {
@@ -4279,10 +4273,11 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background:
-     radial-gradient(circle at 18% 100%, rgba(122, 94, 196, 0.10), transparent 34%),
-  radial-gradient(circle at 84% 100%, rgba(96, 134, 225, 0.08), transparent 32%);
-    linear-gradient(180deg, rgba(255,255,255,0.03), transparent 40%);
+  /* 중간 세미콜론을 쉼표로 고쳤습니다 */
+  background: 
+    radial-gradient(circle at 18% 100%, rgba(122, 94, 196, 0.10), transparent 34%),
+    radial-gradient(circle at 84% 100%, rgba(96, 134, 225, 0.08), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 40%);
 }
 
 .tier-btn-history-rate::after {
@@ -4292,15 +4287,7 @@
   border-radius: 19px;
   z-index: 1;
   pointer-events: none;
-  background: conic-gradient(
-    from var(--angle, 0deg),
-    rgba(190, 170, 242, 0.85) 0deg,
-    rgba(160, 132, 229, 0.92) 70deg,
-    rgba(118, 162, 236, 0.88) 140deg,
-    rgba(178, 150, 242, 0.90) 220deg,
-    rgba(126, 104, 214, 0.86) 290deg,
-    rgba(190, 170, 242, 0.85) 360deg
-  );
+  background: conic-gradient(from var(--angle, 0deg), rgba(190, 170, 242, 0.85) 0deg, rgba(160, 132, 229, 0.92) 70deg, rgba(118, 162, 236, 0.88) 140deg, rgba(178, 150, 242, 0.90) 220deg, rgba(126, 104, 214, 0.86) 290deg, rgba(190, 170, 242, 0.85) 360deg);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -4309,15 +4296,14 @@
 }
 
 .tier-btn-history-rate:hover {
-  box-shadow:
-    0 16px 30px rgba(40, 26, 74, 0.34),
-    0 0 26px rgba(126, 104, 214, 0.18),
-    0 0 54px rgba(116, 146, 226, 0.10),
-    0 0 0 1px rgba(255,255,255,0.03) inset,
-    inset 0 1px 0 rgba(255,255,255,0.10);
+  /* 압축기가 0을 지워도 인식되도록 수치 유지 */
+  box-shadow: 0 16px 30px rgba(40, 26, 74, 0.34), 0 0 26px rgba(126, 104, 214, 0.18), 0 0 54px rgba(116, 146, 226, 0.10), 0 0 0 1px rgba(255, 255, 255, 0.03) inset, inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
   transform: translateY(-2px);
   filter: brightness(1.03);
 }
+
+
+
 
 .tier-btn-history-rate .tier-btn-content {
   position: relative;
