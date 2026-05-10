@@ -4504,13 +4504,14 @@
 }
 
 .history-search-box {
+  position: relative;
   padding: 8px 10px 0;
   flex-shrink: 0;
 }
 
 .history-search-box input {
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px 42px 10px 12px;
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.08);
   background: #0f1520;
@@ -4523,6 +4524,35 @@
   border-color: rgba(156, 132, 214, 0.52);
   box-shadow: 0 0 0 3px rgba(156, 132, 214, 0.10);
 }
+
+.history-reset-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #a9b4c8;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: .16s ease;
+}
+
+.history-reset-btn:hover {
+  background: rgba(156, 132, 214, 0.12);
+  color: #f2f5ff;
+}
+
+.history-reset-btn:active {
+  transform: scale(0.96);
+}
+    
 
 .history-engraving-list {
   padding: 10px;
@@ -4982,7 +5012,7 @@
     <div class="tier-lock-icon" id="historyRateLockIcon" style="display:none;">🔒</div>
 
     <div class="tier-btn-content">
-      <span class="tier-btn-small">일별 직각 승률 흐름</span>
+      <span class="tier-btn-small">일별 직각 승률 흐름 (PC전용)</span>
 
       <span class="tier-btn-main">
         <span class="historyrate-main-text">승률 변동 그래프 (Beta)</span>
@@ -5388,8 +5418,9 @@
         </div>
 
         <div class="history-search-box">
-          <input type="text" id="historySearchInput" placeholder="각인 검색...">
-        </div>
+  <input type="text" id="historySearchInput" placeholder="각인 검색...">
+  <button type="button" class="history-reset-btn" id="historyResetBtn" aria-label="선택 초기화">↺</button>
+</div>
 
         <div class="history-engraving-list" id="historyEngravingList">
           <div style="padding:20px; text-align:center; color:#7a8a9f;">로딩 중...</div>
@@ -6341,6 +6372,18 @@ document.addEventListener("input", (e) => {
   }
 });
 
+document.addEventListener("click", (e) => {
+  const resetBtn = e.target.closest("#historyResetBtn");
+  if (!resetBtn) return;
+
+  historySelectedSet.clear();
+  historySelectedOrder = [];
+
+  historyUpdateSelectedTags();
+  historyRenderEngravingList(historySearchInput ? (historySearchInput.value || "") : "");
+  resetHistoryChart();
+});
+    
     
     const historyModeSelect = document.getElementById("historyModeSelect");
 const historyStartDate = document.getElementById("historyStartDate");
