@@ -6499,6 +6499,19 @@ document.addEventListener("input", (e) => {
   }
 });
 
+    if (historyModeSelect) {
+  historyModeSelect.addEventListener("change", () => {
+    historySelectedSet.clear();
+    historySelectedOrder = [];
+    historyUpdateSelectedTags();
+    resetHistoryChart();
+
+    historyCandidates = [];
+    historyCandidatesMode = "";
+    loadHistoryCandidates();
+  });
+}
+
 document.addEventListener("click", (e) => {
   const resetBtn = e.target.closest("#historyResetBtn");
   if (!resetBtn) return;
@@ -6546,6 +6559,7 @@ const HISTORY_COLORS = [
 ];
     
 let historyCandidates = [];
+let historyCandidatesMode = "";
 const historySelectedSet = new Set();
 let historySelectedOrder = [];
 
@@ -6667,13 +6681,15 @@ function historyOnCheckboxChange(e) {
 async function loadHistoryCandidates() {
   const listEl = document.getElementById("historyEngravingList");
   const searchEl = document.getElementById("historySearchInput");
+  const mode = historyModeSelect ? historyModeSelect.value : "op";
 
   if (!listEl) {
     console.error("historyEngravingList 요소를 찾지 못했습니다.");
     return;
   }
 
-  if (historyCandidates.length) {
+  // 같은 모드면 캐시 재사용
+  if (historyCandidates.length && historyCandidatesMode === mode) {
     historyRenderEngravingList(searchEl ? (searchEl.value || "") : "");
     return;
   }
@@ -6681,15 +6697,19 @@ async function loadHistoryCandidates() {
   listEl.innerHTML = `<div style="padding:20px; text-align:center; color:#7a8a9f;">로딩 중...</div>`;
 
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/candidates?enabled=eq.true&select=class_name,engraving_name&order=class_name.asc,engraving_name.asc`,
-      {
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`
-        }
+    let url = `${SUPABASE_URL}/rest/v1/candidates?select=class_name,engraving_name,enabled&order=class_name.asc,engraving_name.asc`;
+
+    // OP는 enabled=true만, 호감은 전체 각인
+    if (mode === "op") {
+      url = `${SUPABASE_URL}/rest/v1/candidates?enabled=eq.true&select=class_name,engraving_name,enabled&order=class_name.asc,engraving_name.asc`;
+    }
+
+    const res = await fetch(url, {
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
       }
-    );
+    });
 
     if (!res.ok) {
       const errText = await res.text();
@@ -6697,10 +6717,7 @@ async function loadHistoryCandidates() {
     }
 
     historyCandidates = await res.json();
-
-    if (!Array.isArray(historyCandidates)) {
-      throw new Error("candidates 응답이 배열이 아닙니다.");
-    }
+    historyCandidatesMode = mode;
 
     historyRenderEngravingList(searchEl ? (searchEl.value || "") : "");
   } catch (err) {
