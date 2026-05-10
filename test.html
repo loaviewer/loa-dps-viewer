@@ -7097,7 +7097,7 @@ function renderGradeDist(counts) {
     .map(g => {
       const count = counts[g.grade] || 0;
       if (count === 0) return "";
-      const pct = ((count / total) * 100).toFixed(3);
+      const pct = ((count / total) * 100).toFixed(2);
 
       return `
         <div class="grade-dist-row">
