@@ -5836,6 +5836,17 @@
       {grade:"F+",min:10,max:14},{grade:"F",min:5,max:9},{grade:"F-",min:0,max:4},
     ];
 
+    const GRADE_COLORS = {
+  "SS+": "#ffd700", "SS": "#ffd700", "SS-": "#ffd700",
+  "S+": "#7fc6ff", "S": "#7fc6ff", "S-": "#7fc6ff",
+  "A+": "#ff7755", "A": "#ff7755", "A-": "#ff7755",
+  "B+": "#ffb060", "B": "#ffb060", "B-": "#ffb060",
+  "C+": "#c79cff", "C": "#c79cff", "C-": "#c79cff",
+  "D+": "#a9dfff", "D": "#a9dfff", "D-": "#a9dfff",
+  "E+": "#8ee8b0", "E": "#8ee8b0", "E-": "#8ee8b0",
+  "F+": "#999999", "F": "#999999", "F-": "#999999"
+};
+
     const GRADE_COMMENTS = {
       "SS+":["완벽한 판단입니다! 모든 선택이 정확했어요. 전설급 결과!","100% 달성! 이 선택은 흔치 않은 최상위 판정입니다.","완벽 그 자체! 정석을 넘어선 초월적인 선택이었습니다."],
       "SS": ["아주 훌륭한 결과입니다. 거의 완벽에 가까운 판단이었어요.","정석적인 최고의 선택들로 안정적으로 마무리했습니다.","상위권 판정입니다. 흐름을 잘 읽고 정확하게 골랐어요."],
@@ -7072,43 +7083,7 @@ const gradeDistModal = document.getElementById("gradeDistModal");
 const closeGradeDistBtn = document.getElementById("closeGradeDistBtn");
 const gradeDistContent = document.getElementById("gradeDistContent");
 
-const GRADE_TABLE = [
-  { grade: "SS+", min: 100, max: 100 },
-  { grade: "SS",  min: 98,  max: 99 },
-  { grade: "SS-", min: 96,  max: 97 },
-  { grade: "S+",  min: 94,  max: 95 },
-  { grade: "S",   min: 92,  max: 93 },
-  { grade: "S-",  min: 90,  max: 91 },
-  { grade: "A+",  min: 85,  max: 89 },
-  { grade: "A",   min: 80,  max: 84 },
-  { grade: "A-",  min: 75,  max: 79 },
-  { grade: "B+",  min: 70,  max: 74 },
-  { grade: "B",   min: 65,  max: 69 },
-  { grade: "B-",  min: 60,  max: 64 },
-  { grade: "C+",  min: 55,  max: 59 },
-  { grade: "C",   min: 50,  max: 54 },
-  { grade: "C-",  min: 45,  max: 49 },
-  { grade: "D+",  min: 40,  max: 44 },
-  { grade: "D",   min: 35,  max: 39 },
-  { grade: "D-",  min: 30,  max: 34 },
-  { grade: "E+",  min: 25,  max: 29 },
-  { grade: "E",   min: 20,  max: 24 },
-  { grade: "E-",  min: 15,  max: 19 },
-  { grade: "F+",  min: 10,  max: 14 },
-  { grade: "F",   min: 5,   max: 9 },
-  { grade: "F-",  min: 0,   max: 4 }
-];
 
-const GRADE_COLORS = {
-  "SS+": "#ffd700", "SS": "#ffd700", "SS-": "#ffd700",
-  "S+": "#7fc6ff", "S": "#7fc6ff", "S-": "#7fc6ff",
-  "A+": "#ff7755", "A": "#ff7755", "A-": "#ff7755",
-  "B+": "#ffb060", "B": "#ffb060", "B-": "#ffb060",
-  "C+": "#c79cff", "C": "#c79cff", "C-": "#c79cff",
-  "D+": "#a9dfff", "D": "#a9dfff", "D-": "#a9dfff",
-  "E+": "#8ee8b0", "E": "#8ee8b0", "E-": "#8ee8b0",
-  "F+": "#999999", "F": "#999999", "F-": "#999999"
-};
 
 function renderGradeDist(counts) {
   if (!gradeDistContent) return;
