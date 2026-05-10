@@ -6499,19 +6499,20 @@ document.addEventListener("input", (e) => {
   }
 });
 
-    if (historyModeSelect) {
-  historyModeSelect.addEventListener("change", () => {
-    historySelectedSet.clear();
-    historySelectedOrder = [];
-    historyUpdateSelectedTags();
-    resetHistoryChart();
+document.addEventListener("change", (e) => {
+  if (!e.target || e.target.id !== "historyModeSelect") return;
 
-    historyCandidates = [];
-    historyCandidatesMode = "";
-    loadHistoryCandidates();
-  });
-}
+  historySelectedSet.clear();
+  historySelectedOrder = [];
+  historyUpdateSelectedTags();
+  resetHistoryChart();
 
+  historyCandidates = [];
+  historyCandidatesMode = "";
+  loadHistoryCandidates();
+});
+
+    
 document.addEventListener("click", (e) => {
   const resetBtn = e.target.closest("#historyResetBtn");
   if (!resetBtn) return;
