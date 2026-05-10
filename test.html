@@ -4973,6 +4973,96 @@
     display: none !important;
   }
 }
+
+#gradeDistModal {
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1550;
+}
+
+.grade-dist-modal-card {
+  position: relative;
+  width: min(92vw, 470px);
+  max-height: min(78vh, 760px);
+  background: rgba(18, 23, 36, 0.97);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 22px;
+  box-shadow:
+    0 24px 80px rgba(0,0,0,0.46),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  overflow: hidden;
+}
+
+.grade-dist-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background:
+    radial-gradient(circle at top, rgba(110, 160, 255, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+}
+
+.grade-dist-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #f5f8ff;
+  letter-spacing: -0.02em;
+}
+
+.grade-dist-sub {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #8ea0bb;
+}
+
+.grade-dist-body {
+  padding: 16px 18px 18px;
+  overflow-y: auto;
+  max-height: calc(min(78vh, 760px) - 86px);
+}
+
+.grade-dist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.grade-dist-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: .16s ease;
+}
+
+.grade-dist-row:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.08);
+}
+
+.grade-dist-grade {
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.grade-dist-percent {
+  font-size: 13px;
+  font-weight: 900;
+  color: #f3f7ff;
+}
+
+.grade-dist-empty {
+  text-align: center;
+  color: #6e809b;
+  font-size: 13px;
+  padding: 24px 0;
+}
     
   </style>
 </head>
@@ -5405,7 +5495,24 @@
     </div>
   </div>
 
+<!-- OP 등급 분포 모달 -->
+<div class="modal-backdrop" id="gradeDistModal" style="display:none;">
+  <div class="grade-dist-modal-card">
+    <button class="modal-close" id="closeGradeDistBtn">×</button>
 
+    <div class="grade-dist-header">
+      <div class="grade-dist-title">OP 등급 분포</div>
+      <div class="grade-dist-sub">매일 0:00 집계 · 4월 7일 이후 전체 누적 비율</div>
+    </div>
+
+    <div class="grade-dist-body">
+      <div id="gradeDistContent">
+        <div class="loading-text">불러오는 중...</div>
+      </div>
+    </div>
+  </div>
+</div>
+  
 <!-- 승률 기록표 모달 -->
 <div class="modal-backdrop" id="historyRateModal" style="display:none;">
   <div class="history-modal-card">
