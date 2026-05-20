@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>로스트아크 아브렐슈드 EX 나메 잔혈컷 & 1인분 계산기 (크로니클 0 반영)</title>
+    <title>로스트아크 아브렐슈드 EX 나메 잔혈컷 계산기 (발악 체력 수정형)</title>
     <style>
         body {
             font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
@@ -184,24 +184,19 @@
 <body>
 
 <div class="container">
-    <h2>아브렐슈드 EX 나메 잔혈컷 & 1인분 계산기</h2>
+    <h2>아브렐슈드 EX 나메 잔혈컷 & 지분 정산기</h2>
     
-    <div class="section-title">1. 보스 체력 (고정 수치)</div>
+    <div class="section-title">1. 보스 체력 설정 (크로니클 제외 완료)</div>
     <div class="input-group">
         <div class="row">
-            <label for="hp-base">기본 체력</label>
+            <label for="hp-base">본 페이즈 체력 (420줄~0줄)</label>
             <input type="number" id="hp-base" value="54168.87" readonly>
             <span class="unit" style="width:50px;">억</span>
         </div>
         <div class="row">
-            <label for="hp-zero">0줄 (발악) 체력</label>
-            <input type="number" id="hp-zero" value="19500.79" readonly>
-            <span class="unit" style="width:50px;">억</span>
-        </div>
-        <div class="row">
-            <label for="hp-chronicle">크로니클 체력 (미적용 수정)</label>
-            <input type="number" id="hp-chronicle" value="0.00" readonly>
-            <span class="unit" style="width:50px;">억</span>
+            <label for="hp-zero" style="color: #ffb100; font-weight: bold;">★ 0줄 발악 체력 (임의 수정 가능)</label>
+            <input type="number" id="hp-zero" value="19500.79" step="0.01" oninput="updateTotalHP()">
+            <span class="unit" style="width:50px; color: #ffb100;">억</span>
         </div>
     </div>
     
@@ -219,8 +214,8 @@
         </div>
         <div class="row">
             <label for="cnt-az1">아제나 1칸 사용 횟수</label>
-            <input type="number" id="cnt-az1" value="4" min="0" oninput="calcEstherDmg()">
-            <span class="unit" id="dmg-az1-display">4,540.00 억</span>
+            <input type="number" id="cnt-az1" value="2" min="0" oninput="calcEstherDmg()">
+            <span class="unit" id="dmg-az1-display">2,270.00 억</span>
         </div>
         <div class="row">
             <label for="cnt-azhidden">히든 아제나 사용 횟수</label>
@@ -233,20 +228,20 @@
             <span class="unit" id="dmg-gusto1-display">0.00 억</span>
         </div>
         <div class="row">
-            <label for="dmg-etc">기타 공제 (삑난 딜 등 변수 차단)</label>
-            <input type="number" id="dmg-etc" value="500.00" step="0.01" oninput="calcEstherDmg()">
+            <label for="dmg-support">서폿 2명 클리어까지의 총 딜량</label>
+            <input type="number" id="dmg-support" value="170.0" step="0.1" oninput="calcEstherDmg()">
             <span class="unit" style="color: #ffffff;">억</span>
         </div>
         <div class="row">
-            <label for="dmg-support">서폿 2명 클리어까지의 총 딜량</label>
-            <input type="number" id="dmg-support" value="170.0" step="0.1" oninput="calcEstherDmg()">
+            <label for="dmg-etc">기타 공제 (삑난 딜 등 변수 차단)</label>
+            <input type="number" id="dmg-etc" value="0.00" step="0.01" oninput="calcEstherDmg()">
             <span class="unit" style="color: #ffffff;">억</span>
         </div>
     </div>
     
     <div class="row" style="padding: 0 10px 15px 10px; font-size: 13px; color: #aaa;">
-        <span>공제할 총 딜량 (에스더+기타+폿):</span>
-        <span id="excluded-total-display" style="font-weight: bold; color: #ff5555;">12,776.20 억</span>
+        <span>총 공제량 (에스더 + 서폿 + 기타):</span>
+        <span id="excluded-total-display" style="font-weight: bold; color: #ff5555;">10,006.20 억</span>
     </div>
     
     <button class="btn-calc" onclick="calculateAll()">확인 및 지분 정산</button>
@@ -293,10 +288,7 @@
 </div>
 
 <script>
-    // 크로니클 체력을 완전히 제외한 총 체력 (54,168.86... + 19,500.79...)
-    const TOTAL_HP = 73669.66208743; 
-    
-    // 형님의 표 기준 1회당 고정 고유 데미지 프리셋
+    // 에스더 고정 상수 프리셋
     const VALUE_AZ3 = 1009.01;   
     const VALUE_AZ1 = 1135.00;   
     const VALUE_AZHIDDEN = 4539.17;
@@ -318,6 +310,15 @@
         if (eok > 0) result += eok + "억 ";
         if (man > 0 || (cho === 0 && eok === 0)) result += man + "만";
         return result.trim();
+    }
+
+    // 발악 체력 수정 시 상단 총합 실시간 업데이트
+    function updateTotalHP() {
+        let hpBase = parseFloat(document.getElementById('hp-base').value) || 0;
+        let hpZero = parseFloat(document.getElementById('hp-zero').value) || 0;
+        let totalHP = hpBase + hpZero;
+        document.getElementById('hp-total-display').innerText = formatNumber(totalHP) + " 억";
+        return totalHP;
     }
 
     function calcEstherDmg() {
@@ -346,8 +347,9 @@
     }
 
     function calculateAll() {
+        let totalHP = updateTotalHP();
         let excludedDmg = calcEstherDmg();
-        let pureDealerHP = TOTAL_HP - excludedDmg;
+        let pureDealerHP = totalHP - excludedDmg;
         if(pureDealerHP < 0) pureDealerHP = 0;
         
         let onePercent = pureDealerHP / 100;
@@ -411,6 +413,7 @@
     }
 
     window.onload = function() {
+        updateTotalHP();
         calcEstherDmg();
     };
 </script>
