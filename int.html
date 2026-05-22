@@ -213,7 +213,7 @@ const raidMeta = {
 };
 
 const simpleData = {
-  "egir-ex": {
+ "egir-ex": {
     sectionTitle: "에기르 EX",
     intro: "<i>에기르 EX 레이드 26.04.22 ~ 26.05.20 패치전 까지</i>",
     cards: [
@@ -221,8 +221,8 @@ const simpleData = {
       { theme: "b-gold", title: "에기르 EX 하드", node: "1750", rows: [{ gate: "1관", boss: "에기르", badges: [{ text: "고대", cls: "type-ancient" }], range: "4400 - 5850", dpscut: "3.50억 - 4.65억" }], gold: "45,000", bindGold: "", total: "" },
       { theme: "b-purple", title: "에기르 EX 나이트메어", node: "1770", rows: [{ gate: "1관", boss: "에기르", badges: [{ text: "고대", cls: "type-ancient" }], range: "7900 - 10500", dpscut: "6.27억 - 8.33억" }], gold: "45,000", bindGold: "", total: "" }
     ],
-    extraHtml: "" // 닫히지 않았던 백틱을 지우고 빈 문자열로 처리했습니다.
-  }, // egir-ex 객체를 닫아주는 중괄호와 쉼표를 추가했습니다.
+    extraHtml: ""
+  }, // <-- 꼬여있던 쉼표와 중괄호를 정상적으로 닫았습니다.
 
   "abr-ex": {
     sectionTitle: "아브렐슈드 EX",
@@ -280,7 +280,7 @@ const simpleData = {
         total: ""
       }
     ],
-    extraHtml: "" // 마찬가지로 맨 밑의 백틱도 안전하게 마감했습니다.
+    extraHtml: ""
   }
 };
 
