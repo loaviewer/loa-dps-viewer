@@ -529,64 +529,69 @@ const simpleData = {
       { theme: "b-gold", title: "에기르 EX 하드", node: "1750", rows: [{ gate: "1관", boss: "에기르", badges: [{ text: "고대", cls: "type-ancient" }], range: "4400 - 5850", dpscut: "3.50억 - 4.65억" }], gold: "45,000", bindGold: "", total: "" },
       { theme: "b-purple", title: "에기르 EX 나이트메어", node: "1770", rows: [{ gate: "1관", boss: "에기르", badges: [{ text: "고대", cls: "type-ancient" }], range: "7900 - 10500", dpscut: "6.27억 - 8.33억" }], gold: "45,000", bindGold: "", total: "" }
     ],
+    extraHtml: "" // 닫히지 않았던 백틱을 지우고 빈 문자열로 처리했습니다.
+  }, // egir-ex 객체를 닫아주는 중괄호와 쉼표를 추가했습니다.
 
- "abr-ex": {
-  sectionTitle: "아브렐슈드 EX",
-  intro: "<i>아브렐슈드 EX 레이드</i>",
-  cards: [
-    {
-      theme: "b-green",
-      title: "아브렐슈드 EX 노말",
-      node: "1720",
-      rows: [
-        {
-          gate: "1관",
-          boss: "아브렐슈드",
-          badges: [{ text: "악마", cls: "type-demon" }],
-          range: "준비중",
-          dpscut: ""
-        }
-      ],
-      gold: "20,000",
-      bindGold: "",
-      total: ""
-    },
-    {
-      theme: "b-gold",
-      title: "아브렐슈드 EX 하드",
-      node: "1750",
-      rows: [
-        {
-          gate: "1관",
-          boss: "아브렐슈드",
-          badges: [{ text: "악마", cls: "type-demon" }],
-          range: "준비중",
-          dpscut: ""
-        }
-      ],
-      gold: "45,000",
-      bindGold: "",
-      total: ""
-    },
-    {
-      theme: "b-purple",
-      title: "아브렐슈드 EX 나이트메어",
-      node: "1770",
-      rows: [
-        {
-          gate: "1관",
-          boss: "아브렐슈드",
-          badges: [{ text: "악마", cls: "type-demon" }],
-          range: "준비중",
-          dpscut: ""
-        }
-      ],
-      gold: "45,000",
-      bindGold: "",
-      total: ""
-    }
-  ],
-  extraHtml: `
+  "abr-ex": {
+    sectionTitle: "아브렐슈드 EX",
+    intro: "<i>아브렐슈드 EX 레이드</i>",
+    cards: [
+      {
+        theme: "b-green",
+        title: "아브렐슈드 EX 노말",
+        node: "1720",
+        rows: [
+          {
+            gate: "1관",
+            boss: "아브렐슈드",
+            badges: [{ text: "악마", cls: "type-demon" }],
+            range: "준비중",
+            dpscut: ""
+          }
+        ],
+        gold: "20,000",
+        bindGold: "",
+        total: ""
+      },
+      {
+        theme: "b-gold",
+        title: "아브렐슈드 EX 하드",
+        node: "1750",
+        rows: [
+          {
+            gate: "1관",
+            boss: "아브렐슈드",
+            badges: [{ text: "악마", cls: "type-demon" }],
+            range: "준비중",
+            dpscut: ""
+          }
+        ],
+        gold: "45,000",
+        bindGold: "",
+        total: ""
+      },
+      {
+        theme: "b-purple",
+        title: "아브렐슈드 EX 나이트메어",
+        node: "1770",
+        rows: [
+          {
+            gate: "1관",
+            boss: "아브렐슈드",
+            badges: [{ text: "악마", cls: "type-demon" }],
+            range: "준비중",
+            dpscut: ""
+          }
+        ],
+        gold: "45,000",
+        bindGold: "",
+        total: ""
+      }
+    ],
+    extraHtml: "" // 마찬가지로 맨 밑의 백틱도 안전하게 마감했습니다.
+  }
+};
+
 <style>
   .boss-wrap{margin-top:14px;font-family:'Segoe UI','Malgun Gothic',sans-serif;color:#fff;background:#121212;padding:24px;border-radius:24px;max-width:100%;box-sizing:border-box;overflow:hidden}
   .boss-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
