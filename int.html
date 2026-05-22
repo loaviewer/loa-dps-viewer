@@ -529,6 +529,256 @@ const simpleData = {
       { theme: "b-gold", title: "에기르 EX 하드", node: "1750", rows: [{ gate: "1관", boss: "에기르", badges: [{ text: "고대", cls: "type-ancient" }], range: "4400 - 5850", dpscut: "3.50억 - 4.65억" }], gold: "45,000", bindGold: "", total: "" },
       { theme: "b-purple", title: "에기르 EX 나이트메어", node: "1770", rows: [{ gate: "1관", boss: "에기르", badges: [{ text: "고대", cls: "type-ancient" }], range: "7900 - 10500", dpscut: "6.27억 - 8.33억" }], gold: "45,000", bindGold: "", total: "" }
     ],
+
+      "abr-ex": {
+  sectionTitle: "아브렐슈드 EX",
+  intro: "<i>아브렐슈드 EX 레이드</i>",
+  cards: [
+    {
+      theme: "b-green",
+      title: "아브렐슈드 EX 노말",
+      node: "1720",
+      rows: [
+        {
+          gate: "1관",
+          boss: "아브렐슈드",
+          badges: [{ text: "악마", cls: "type-demon" }],
+          range: "준비중",
+          dpscut: ""
+        }
+      ],
+      gold: "20,000",
+      bindGold: "",
+      total: ""
+    },
+    {
+      theme: "b-gold",
+      title: "아브렐슈드 EX 하드",
+      node: "1750",
+      rows: [
+        {
+          gate: "1관",
+          boss: "아브렐슈드",
+          badges: [{ text: "악마", cls: "type-demon" }],
+          range: "준비중",
+          dpscut: ""
+        }
+      ],
+      gold: "45,000",
+      bindGold: "",
+      total: ""
+    },
+    {
+      theme: "b-purple",
+      title: "아브렐슈드 EX 나이트메어",
+      node: "1770",
+      rows: [
+        {
+          gate: "1관",
+          boss: "아브렐슈드",
+          badges: [{ text: "악마", cls: "type-demon" }],
+          range: "준비중",
+          dpscut: ""
+        }
+      ],
+      gold: "45,000",
+      bindGold: "",
+      total: ""
+    }
+  ],
+  extraHtml: `
+<style>
+  .boss-wrap{margin-top:14px;font-family:'Segoe UI','Malgun Gothic',sans-serif;color:#fff;background:#121212;padding:24px;border-radius:24px;max-width:100%;box-sizing:border-box;overflow:hidden}
+  .boss-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+  .boss-card{background:rgba(30,30,35,0.8);border:1px solid rgba(255,255,255,0.05);border-radius:20px;padding:16px;display:flex;flex-direction:column;min-width:0;box-sizing:border-box}
+  .boss-chart-row{display:flex;align-items:center;gap:10px}
+  .boss-labels{display:flex;flex-direction:column;gap:10px;flex-shrink:0}
+  .boss-donut-wrap{margin-left:auto;flex-shrink:0}
+  .boss-donut{width:100px;height:100px}
+  .boss-donut-inner{inset:18px}
+  .boss-donut-title{font-size:10px}
+  .boss-donut-val{font-size:11px}
+  .boss-label-name{font-size:11px}
+  .boss-label-pct{font-size:14px}
+  .boss-legend{display:flex;flex-direction:column;gap:8px;font-size:12px;margin-bottom:12px;color:#ddd}
+  .boss-legend-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .boss-total-row{margin-top:auto;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;align-items:baseline}
+  .esther-table{background:rgba(30,30,35,0.8);border:1px solid rgba(255,255,255,0.05);border-radius:20px;overflow:hidden}
+  .esther-row{display:flex;padding:14px 24px;border-top:1px solid rgba(255,255,255,0.03);font-size:14px;align-items:center}
+  .esther-row div{flex:1;text-align:right;font-weight:700}
+  .esther-row div:first-child{flex:1.2;text-align:left;font-weight:400;color:#ccc}
+
+  @media(max-width:900px){
+    .boss-grid{grid-template-columns:1fr !important;gap:16px}
+    .boss-card{padding:20px}
+    .boss-chart-row{gap:16px}
+    .boss-donut{width:110px;height:110px}
+    .boss-donut-inner{inset:20px}
+    .boss-donut-title{font-size:11px}
+    .boss-donut-val{font-size:12px}
+    .boss-label-name{font-size:12px}
+    .boss-label-pct{font-size:16px}
+    .boss-legend{font-size:13px}
+    .boss-legend-text{white-space:normal;overflow:visible}
+    .boss-total-row span:last-child{font-size:20px}
+    .esther-row{padding:12px 16px;font-size:12px}
+  }
+  @media(max-width:480px){
+    .boss-wrap{padding:14px}
+    .boss-card{padding:16px}
+    .boss-donut{width:90px;height:90px}
+    .boss-donut-inner{inset:16px}
+    .boss-donut-title{font-size:9px}
+    .boss-donut-val{font-size:10px}
+    .boss-label-pct{font-size:14px}
+    .boss-label-name{font-size:11px}
+    .esther-row{padding:10px 12px;font-size:11px;gap:4px}
+    .esther-row div{min-width:0}
+  }
+</style>
+
+<div class="boss-wrap">
+
+<div style="
+  position:relative;
+  margin-bottom:20px;
+  padding:12px 20px;
+  background:linear-gradient(135deg,rgba(143,127,221,0.15) 0%,rgba(30,30,35,0.9) 50%,rgba(255,107,61,0.15) 100%);
+  border:1px solid rgba(143,127,221,0.3);
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  overflow:hidden;
+">
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(143,127,221,0.6),rgba(255,107,61,0.6),transparent);"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(143,127,221,0.3),rgba(255,107,61,0.3),transparent);"></div>
+  <div style="width:6px;height:6px;background:#8F7FDD;border-radius:50%;box-shadow:0 0 6px rgba(143,127,221,0.8);flex-shrink:0;"></div>
+  <div style="font-size:12px;color:#bbb;font-weight:600;letter-spacing:0.3px;line-height:1.4;">
+    <span style="color:#ccc;">⚠</span>&nbsp; 보스 체력정보 / 에스더 데미지는 직접 수작업으로 체크한 부분이라 정확하지 않을 수 있습니다.
+  </div>
+  <div style="width:6px;height:6px;background:#ff6b3d;border-radius:50%;box-shadow:0 0 6px rgba(255,107,61,0.8);flex-shrink:0;margin-left:auto;"></div>
+</div>
+
+<div class="boss-grid">
+
+${[
+  { name: "나이트메어", color: "#8F7FDD", hp: ["5조 4,168억", "1조 9,500억", "7조 3,669억"], p: [73.53, 26.47] },
+  { name: "하드", color: "#f1c40f", hp: ["2조 3,859억", "8,589억", "3조 2,449억"], p: [73.53, 26.47] },
+  { name: "노말", color: "#7DDB7D", hp: ["8,799억", "3,167억", "1조 1,966억"], p: [73.53, 26.47] }
+].map(e => {
+  const [hpPct, zeroPct] = e.p;
+  const hpEnd = hpPct.toFixed(2);
+
+  return \`
+<div class="boss-card">
+
+  <div style="color:\${e.color};font-weight:900;font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:6px;">
+    <div style="width:4px;height:14px;background:\${e.color};border-radius:2px;flex-shrink:0;"></div>
+    \${e.name}
+  </div>
+
+  <div style="margin-bottom:20px;">
+    <div class="boss-chart-row">
+
+      <div class="boss-labels">
+        <div style="display:flex;align-items:center;gap:5px;">
+          <div style="width:7px;height:7px;border-radius:50%;background:\${e.color};flex-shrink:0;"></div>
+          <div>
+            <div class="boss-label-name" style="color:#999;line-height:1;">체력</div>
+            <div class="boss-label-pct" style="font-weight:900;color:\${e.color};line-height:1.3;">\${hpPct}%</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;">
+          <div style="width:7px;height:7px;border-radius:50%;background:#ff6b3d;flex-shrink:0;"></div>
+          <div>
+            <div class="boss-label-name" style="color:#999;line-height:1;">0줄</div>
+            <div class="boss-label-pct" style="font-weight:900;color:#ff6b3d;line-height:1.3;">\${zeroPct}%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="boss-donut-wrap">
+        <div style="position:relative;" class="boss-donut">
+          <div class="boss-donut" style="
+            border-radius:50%;
+            background:conic-gradient(from -90deg,\${e.color} 0% \${hpEnd}%,#ff6b3d \${hpEnd}% 100%);
+            box-shadow:0 0 0 4px rgba(255,255,255,0.03),0 4px 16px rgba(0,0,0,0.4);
+          ">
+            <div class="boss-donut-inner" style="
+              position:absolute;
+              border-radius:50%;
+              background:#1e1e23;
+              display:flex;
+              flex-direction:column;
+              align-items:center;
+              justify-content:center;
+              text-align:center;
+              box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06);
+            ">
+              <div class="boss-donut-title" style="color:#777;margin-bottom:1px;">총 체력</div>
+              <div class="boss-donut-val" style="font-weight:800;color:#eee;line-height:1.2;">\${e.hp[2]}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="boss-legend">
+    <div style="display:flex;align-items:center;">
+      <div style="width:8px;height:8px;border-radius:2px;background:\${e.color};margin-right:6px;flex-shrink:0;"></div>
+      <span class="boss-legend-text">기본 체력</span>
+      <span style="margin-left:auto;font-weight:700;flex-shrink:0;">\${e.hp[0]}</span>
+    </div>
+    <div style="display:flex;align-items:center;">
+      <div style="width:8px;height:8px;border-radius:2px;background:#ff6b3d;margin-right:6px;flex-shrink:0;"></div>
+      <span class="boss-legend-text">0줄 체력</span>
+      <span style="margin-left:auto;font-weight:700;flex-shrink:0;">\${e.hp[1]}</span>
+    </div>
+  </div>
+
+  <div class="boss-total-row">
+    <span style="font-size:13px;color:#777;">총 체력</span>
+    <span style="font-size:18px;font-weight:900;color:\${e.color};">\${e.hp[2]}</span>
+  </div>
+</div>
+\`;
+}).join("")}
+</div>
+
+<div class="esther-table">
+  <div style="padding:18px 24px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:10px;">
+    <div style="width:4px;height:18px;background:#8F7FDD;border-radius:2px;"></div>
+    <span style="font-weight:900;font-size:16px;">에스더 데미지 기대값</span>
+  </div>
+  <div style="display:flex;padding:12px 24px;background:rgba(255,255,255,0.02);font-size:13px;color:#888;font-weight:700;">
+    <div style="flex:1.2;">에스더 스킬</div>
+    <div style="flex:1;text-align:right;color:#8F7FDD;">나이트메어</div>
+    <div style="flex:1;text-align:right;color:#f1c40f;">하드</div>
+    <div style="flex:1;text-align:right;color:#7DDB7D;">노말</div>
+  </div>
+  ${[
+    ["아제나 3칸", "약 1,009억", "약 451억", "약 162억"],
+    ["아제나 1칸", "약 1,135억", "약 508억", "약 182억"],
+    ["히든 아제나", "약 4,539억", "약 1,946억", "약 729억"],
+    ["니나브 3칸", "약 743억", "약 320억", "약 119억"],
+    ["니나브 1칸", "약 1,185억", "약 530억", "약 190억"],
+    ["구스토 1칸", "약 995억", "약 445억", "약 159억"]
+  ].map(e => \`
+    <div class="esther-row">
+      <div>\${e[0]}</div>
+      <div>\${e[1]}</div>
+      <div>\${e[2]}</div>
+      <div>\${e[3]}</div>
+    </div>
+  \`).join("")}
+</div>
+</div>
+`
+}
+      
     extraHtml: `
 <style>
   .boss-wrap{margin-top:14px;font-family:'Segoe UI','Malgun Gothic',sans-serif;color:#fff;background:#121212;padding:24px;border-radius:24px;max-width:100%;box-sizing:border-box;overflow:hidden}
@@ -995,7 +1245,19 @@ function getComboTabs(menu) {
 
 function getContentName() {
   if (currentMenu === "simple") {
-    return currentSimpleLevel === "egir-ex" ? "에기르 EX 레이드 💠" : "잔혈컷 간편보기 👀";
+    if (currentSimpleLevel === "egir-ex") return "에기르 EX 레이드 💠";
+    if (currentSimpleLevel === "abr-ex") return "아브렐슈드 EX 레이드 💠";
+    return "잔혈컷 간편보기 👀";
+  }
+
+  if (currentMenu === "serka" || currentMenu === "cathedral") {
+    const info = raidMeta[currentMenu][currentCombo];
+    return `${currentMenu === "serka" ? "세르카" : "성당"} : ${info.title.replace(/\s*\(.+\)/, "")} ${info.gateName}`;
+  }
+
+  if (currentMenu === "gato1730") return `1730 가디언 토벌 : ${currentGatoBoss}`;
+  if (currentMenu === "gato1750") return `1750 가디언 토벌 : ${currentGato1750Boss}`;
+  return "콘텐츠";
   }
 
   if (currentMenu === "serka" || currentMenu === "cathedral") {
@@ -1095,10 +1357,9 @@ function renderTabs() {
       <button class="tab tab-ex ${currentSimpleLevel === "egir-ex" ? "active" : ""}" data-simple-level="egir-ex">
         <div class="tab-label">에기르 EX</div>
       </button>
-      <button class="tab tab-ex disabled" data-simple-level="abr-ex">
-        <div class="tab-label">아브 EX</div>
-        <div class="tab-open-date">작업중</div>
-      </button>
+      <button class="tab tab-ex ${currentSimpleLevel === "abr-ex" ? "active" : ""}" data-simple-level="abr-ex">
+    <div class="tab-label">아브 EX</div>
+</button>
       ${levels.map(level => `
         <button class="tab ${currentSimpleLevel === level ? "active" : ""}" data-simple-level="${level}">
           <div class="tab-label">${level}</div>
@@ -1368,7 +1629,7 @@ function goldBarHtml(card) {
     </div>`;
   }
 
-  if (currentSimpleLevel === "egir-ex") {
+  if (currentSimpleLevel === "egir-ex" || currentSimpleLevel === "abr-ex") {
     let orbCount = 0;
     if (card.title.includes("노말")) orbCount = 150;
     else if (card.title.includes("하드") || card.title.includes("나이트메어")) orbCount = 200;
