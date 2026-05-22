@@ -1272,9 +1272,10 @@ function getContentName() {
 
 function getTableTitle() {
   if (currentMenu === "simple") {
-    return currentSimpleLevel === "egir-ex"
-      ? "DPS컷은 딱클 정도의 수치로 표기되었습니다."
-      : (simpleData[currentSimpleLevel]?.sectionTitle || "잔혈컷 간편보기");
+    if (currentSimpleLevel === "egir-ex" || currentSimpleLevel === "abr-ex") {
+      return "DPS컷은 딱클 정도의 수치로 표기되었습니다.";
+    }
+    return simpleData[currentSimpleLevel]?.sectionTitle || "잔혈컷 간편보기";
   }
 
   if (currentMenu === "serka" || currentMenu === "cathedral") {
@@ -1802,11 +1803,13 @@ function updatePartyDpsDisplay() {
 function renderTable() {
   updateTimeDisplay();
 
-  if (currentMenu === "simple" && currentSimpleLevel === "egir-ex") {
-    document.getElementById("contentTitle").innerHTML =
-      '<span style="background:linear-gradient(90deg,#ff6b6b 0%,#ffd700 15%,#fffacd 30%,#6bcb77 45%,#ffd700 60%,#fffacd 75%,#ff9ff3 90%,#ffd700 100%);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:textShimmer 2s linear infinite;filter:drop-shadow(0 0 7px rgba(255,215,0,0.85));">에기르 EX 레이드</span>';
-  } else {
-    document.getElementById("contentTitle").textContent = getContentName();
+ if (currentMenu === "simple" && (currentSimpleLevel === "egir-ex" || currentSimpleLevel === "abr-ex")) {
+  const exTitle = currentSimpleLevel === "egir-ex" ? "에기르 EX 레이드" : "아브렐슈드 EX 레이드";
+  document.getElementById("contentTitle").innerHTML =
+    `<span style="background:linear-gradient(90deg,#ff6b6b 0%,#ffd700 15%,#fffacd 30%,#6bcb77 45%,#ffd700 60%,#fffacd 75%,#ff9ff3 90%,#ffd700 100%);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:textShimmer 2s linear infinite;filter:drop-shadow(0 0 7px rgba(255,215,0,0.85));">${exTitle}</span>`;
+} else {
+  document.getElementById("contentTitle").textContent = getContentName();
+}
   }
 
   document.getElementById("tableTitle").textContent = getTableTitle();
