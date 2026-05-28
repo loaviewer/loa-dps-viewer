@@ -3,34 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아브 EX 대시보드 (타임라인 정밀 수정본)</title>
+    <title>아브 EX 대시보드 (PC/모바일 겸용 반응형)</title>
     <style>
         body {
             background-color: #121318;
             color: #ffffff;
             font-family: 'Noto Sans KR', sans-serif;
-            padding: 20px;
+            padding: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            box-sizing: border-box;
         }
 
         .container {
             width: 100%;
             max-width: 850px;
+            margin: 0 auto;
         }
 
+        /* 🛠️ 클릭 유도를 위한 호버 모션 */
         .raid-card {
             background-color: #1a1c24;
             border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
             border: 1px solid #252836;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             position: relative;
+            box-sizing: border-box;
         }
 
         .raid-card:hover {
@@ -44,25 +48,27 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-right: 40px;
+            flex-wrap: wrap; /* 모바일에서 공간 부족 시 아래로 흐르게 설정 */
+            gap: 16px;
         }
 
         .left-section {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 16px;
         }
 
         .level-badge {
             color: #121318;
             font-weight: bold;
-            font-size: 18px;
-            width: 60px;
-            height: 60px;
-            border-radius: 14px;
+            font-size: 16px;
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-shrink: 0;
         }
 
         /* 🎨 난이도별 테마 스킨 정의 */
@@ -79,19 +85,20 @@
         .card-nightmare .td-phase { color: #bfa5f9; }
 
         .raid-info-title h2 {
-            margin: 0 0 8px 0;
-            font-size: 22px;
+            margin: 0 0 6px 0;
+            font-size: 19px;
             font-weight: 700;
         }
 
         .tags {
             display: flex;
-            gap: 6px;
+            gap: 4px;
+            flex-wrap: wrap;
         }
 
         .tag {
-            font-size: 12px;
-            padding: 2px 8px;
+            font-size: 11px;
+            padding: 2px 6px;
             border-radius: 4px;
             background-color: #2b2e3d;
             color: #a5a9bc;
@@ -104,33 +111,35 @@
 
         .right-section {
             text-align: right;
+            padding-right: 24px; /* 화살표 아이콘과 겹침 방지 */
         }
 
         .mvp-types {
-            font-size: 12px;
-            margin-bottom: 12px;
+            font-size: 11px;
+            margin-bottom: 8px;
             font-weight: bold;
             letter-spacing: 0.5px;
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
             display: inline-block;
         }
 
         .main-damage-info {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             margin-bottom: 4px;
         }
 
         .main-damage-info .highlight { color: #f7ca54; }
-        .main-dps-info { font-size: 14px; color: #a5a9bc; }
+        .main-dps-info { font-size: 13px; color: #a5a9bc; }
         .main-dps-info .highlight-dps { color: #f7ca54; }
 
+        /* 🎯 우측 끝 화살표 아이콘 */
         .arrow-icon {
             position: absolute;
-            right: 24px;
-            top: 44px;
-            font-size: 16px;
+            right: 20px;
+            top: 36px;
+            font-size: 14px;
             color: #a5a9bc;
             transition: transform 0.3s ease;
         }
@@ -140,6 +149,7 @@
             color: #f7ca54;
         }
 
+        /* 🔽 아코디언 애니메이션 영역 */
         .accordion-content {
             max-height: 0;
             overflow: hidden;
@@ -147,29 +157,38 @@
         }
 
         .raid-card.active .accordion-content {
-            max-height: 600px;
+            max-height: 800px;
             border-top: 2px solid #3a3f58;
-            margin-top: 24px;
-            padding-top: 20px;
+            margin-top: 20px;
+            padding-top: 16px;
         }
 
+        /* 📊 가로 스크롤 보장 컨테이너 (모바일 가로잘림 방지) */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 📊 공통 테이블 스타일 */
         .dps-table {
             width: 100%;
             border-collapse: collapse;
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
+            min-width: 500px; /* 테이블이 너무 압착되는 것을 방지 */
         }
 
         .dps-table th {
             color: #a5a9bc;
             font-weight: 500;
-            padding: 12px 8px;
+            padding: 10px 6px;
             border-bottom: 2px solid #3a3f58;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .dps-table td {
-            padding: 16px 8px;
+            padding: 12px 6px;
             border-bottom: 1px solid #3a3f58;
             vertical-align: middle;
         }
@@ -188,24 +207,24 @@
             font-size: 11px;
             color: #a5a9bc;
             font-weight: normal;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .val-text {
             display: block;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             color: #ffffff;
         }
 
         .dps-text {
             display: block;
-            font-size: 12px;
+            font-size: 11px;
             color: #00e676;
         }
 
         .col-highlight {
-            background-color: rgba(247, 202, 84, 0.02);
+            background-color: rgba(247, 202, 84, 0.01);
         }
         
         th.col-highlight {
@@ -223,6 +242,18 @@
         }
         .row-total .td-phase {
             color: #ff8a80;
+        }
+
+        /* 📱 모바일 디바이스 전용 스타일 조정 (768px 이하) */
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            .raid-card { padding: 16px; margin-bottom: 12px; }
+            .card-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .right-section { text-align: left; padding-left: 68px; padding-right: 0; }
+            .arrow-icon { top: 20px; right: 16px; }
+            .raid-info-title h2 { font-size: 18px; }
+            .main-damage-info { font-size: 15px; }
+            .main-dps-info { font-size: 12px; }
         }
     </style>
 </head>
@@ -257,42 +288,44 @@
         </div>
 
         <div class="accordion-content" onclick="event.stopPropagation();">
-            <table class="dps-table">
-                <thead>
-                    <tr>
-                        <th style="text-align: left; width: 28%;">구간 (누적 기준)</th>
-                        <th style="width: 24%;">강투 (15%)</th>
-                        <th style="width: 24%;">1인분 (16.66%)</th>
-                        <th style="width: 24%;" class="col-highlight">잔혈 (20%)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
-                        <td><span class="val-text">211.5억</span><span class="dps-text">1.51억</span></td>
-                        <td><span class="val-text">235.0억</span><span class="dps-text">1.68억</span></td>
-                        <td class="col-highlight"><span class="val-text">282.0억</span><span class="dps-text">2.01억</span></td>
-                    </tr>
-                    <tr>
-                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
-                        <td><span class="val-text">747.0억</span><span class="dps-text">1.13억</span></td>
-                        <td><span class="val-text">830.0억</span><span class="dps-text">1.26억</span></td>
-                        <td class="col-highlight"><span class="val-text">996.0억</span><span class="dps-text">1.51억</span></td>
-                    </tr>
-                    <tr>
-                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
-                        <td><span class="val-text">1,143.0억</span><span class="dps-text">1.06억</span></td>
-                        <td><span class="val-text">1,270.0억</span><span class="dps-text">1.18억</span></td>
-                        <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.42억</span></td>
-                    </tr>
-                    <tr class="row-total">
-                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
-                        <td><span class="val-text">1,143.0억</span><span class="dps-text">0.86억</span></td>
-                        <td><span class="val-text">1,270.0억</span><span class="dps-text">0.96억</span></td>
-                        <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.15억</span></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="dps-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left; width: 31%;">구간 (누적 기준)</th>
+                            <th style="width: 23%;">강투 (15%)</th>
+                            <th style="width: 23%;">1인분 (16.66%)</th>
+                            <th style="width: 23%;" class="col-highlight">잔혈 (20%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
+                            <td><span class="val-text">211.5억</span><span class="dps-text">1.51억</span></td>
+                            <td><span class="val-text">235.0억</span><span class="dps-text">1.68억</span></td>
+                            <td class="col-highlight"><span class="val-text">282.0억</span><span class="dps-text">2.01억</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
+                            <td><span class="val-text">747.0억</span><span class="dps-text">1.13억</span></td>
+                            <td><span class="val-text">830.0억</span><span class="dps-text">1.26억</span></td>
+                            <td class="col-highlight"><span class="val-text">996.0억</span><span class="dps-text">1.51억</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
+                            <td><span class="val-text">1,143.0억</span><span class="dps-text">1.06억</span></td>
+                            <td><span class="val-text">1,270.0억</span><span class="dps-text">1.18억</span></td>
+                            <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.42억</span></td>
+                        </tr>
+                        <tr class="row-total">
+                            <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
+                            <td><span class="val-text">1,143.0억</span><span class="dps-text">0.86억</span></td>
+                            <td><span class="val-text">1,270.0억</span><span class="dps-text">0.96억</span></td>
+                            <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.15억</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -323,42 +356,44 @@
         </div>
 
         <div class="accordion-content" onclick="event.stopPropagation();">
-            <table class="dps-table">
-                <thead>
-                    <tr>
-                        <th style="text-align: left; width: 28%;">구간 (누적 기준)</th>
-                        <th style="width: 24%;">강투 (15%)</th>
-                        <th style="width: 24%;">1인분 (16.66%)</th>
-                        <th style="width: 24%;" class="col-highlight">잔혈 (20%)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
-                        <td><span class="val-text">573.3억</span><span class="dps-text">4.10억</span></td>
-                        <td><span class="val-text">637.0억</span><span class="dps-text">4.55억</span></td>
-                        <td class="col-highlight"><span class="val-text">764.4억</span><span class="dps-text">5.46억</span></td>
-                    </tr>
-                    <tr>
-                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
-                        <td><span class="val-text">2,028.0억</span><span class="dps-text">3.07억</span></td>
-                        <td><span class="val-text">2,253.0억</span><span class="dps-text">3.41억</span></td>
-                        <td class="col-highlight"><span class="val-text">2,703.6억</span><span class="dps-text">4.10억</span></td>
-                    </tr>
-                    <tr>
-                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
-                        <td><span class="val-text">3,101.0억</span><span class="dps-text">2.88억</span></td>
-                        <td><span class="val-text">3,445.0억</span><span class="dps-text">3.20억</span></td>
-                        <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">3.85억</span></td>
-                    </tr>
-                    <tr class="row-total">
-                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
-                        <td><span class="val-text">3,101.0억</span><span class="dps-text">2.34억</span></td>
-                        <td><span class="val-text">3,445.0억</span><span class="dps-text">2.60억</span></td>
-                        <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">3.12억</span></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="dps-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left; width: 31%;">구간 (누적 기준)</th>
+                            <th style="width: 23%;">강투 (15%)</th>
+                            <th style="width: 23%;">1인분 (16.66%)</th>
+                            <th style="width: 23%;" class="col-highlight">잔혈 (20%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
+                            <td><span class="val-text">573.3억</span><span class="dps-text">4.10억</span></td>
+                            <td><span class="val-text">637.0억</span><span class="dps-text">4.55억</span></td>
+                            <td class="col-highlight"><span class="val-text">764.4억</span><span class="dps-text">5.46억</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
+                            <td><span class="val-text">2,028.0억</span><span class="dps-text">3.07억</span></td>
+                            <td><span class="val-text">2,253.0억</span><span class="dps-text">3.41억</span></td>
+                            <td class="col-highlight"><span class="val-text">2,703.6억</span><span class="dps-text">4.10억</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
+                            <td><span class="val-text">3,101.0억</span><span class="dps-text">2.88억</span></td>
+                            <td><span class="val-text">3,445.0억</span><span class="dps-text">3.20억</span></td>
+                            <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">3.85억</span></td>
+                        </tr>
+                        <tr class="row-total">
+                            <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
+                            <td><span class="val-text">3,101.0억</span><span class="dps-text">2.34억</span></td>
+                            <td><span class="val-text">3,445.0억</span><span class="dps-text">2.60억</span></td>
+                            <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">3.12억</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -389,42 +424,44 @@
         </div>
 
         <div class="accordion-content" onclick="event.stopPropagation();">
-            <table class="dps-table">
-                <thead>
-                    <tr>
-                        <th style="text-align: left; width: 28%;">구간 (누적 기준)</th>
-                        <th style="width: 24%;">강투 (15%)</th>
-                        <th style="width: 24%;">1인분 (16.66%)</th>
-                        <th style="width: 24%;" class="col-highlight">잔혈 (20%)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
-                        <td><span class="val-text">1,320.2억</span><span class="dps-text">9.43억</span></td>
-                        <td><span class="val-text">1,466.2억</span><span class="dps-text">10.47억</span></td>
-                        <td class="col-highlight"><span class="val-text">1,760.2억</span><span class="dps-text">12.57억</span></td>
-                    </tr>
-                    <tr>
-                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
-                        <td><span class="val-text">4,669.7억</span><span class="dps-text">7.08억</span></td>
-                        <td><span class="val-text">5,186.5억</span><span class="dps-text">7.86억</span></td>
-                        <td class="col-highlight"><span class="val-text">6,226.3억</span><span class="dps-text">9.43억</span></td>
-                    </tr>
-                    <tr>
-                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
-                        <td><span class="val-text">7,141.2억</span><span class="dps-text">6.64억</span></td>
-                        <td><span class="val-text">7,931.5억</span><span class="dps-text">7.38억</span></td>
-                        <td class="col-highlight"><span class="val-text">9,521.6억</span><span class="dps-text">8.86억</span></td>
-                    </tr>
-                    <tr class="row-total">
-                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
-                        <td><span class="val-text">9,228.0억</span><span class="dps-text">6.96억</span></td>
-                        <td><span class="val-text">1조 249.2억</span><span class="dps-text">7.73억</span></td>
-                        <td class="col-highlight"><span class="val-text">1조 2,304.0억</span><span class="dps-text">9.29억</span></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="dps-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left; width: 31%;">구간 (누적 기준)</th>
+                            <th style="width: 23%;">강투 (15%)</th>
+                            <th style="width: 23%;">1인분 (16.66%)</th>
+                            <th style="width: 23%;" class="col-highlight">잔혈 (20%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
+                            <td><span class="val-text">1,320.2억</span><span class="dps-text">9.43억</span></td>
+                            <td><span class="val-text">1,466.2억</span><span class="dps-text">10.47억</span></td>
+                            <td class="col-highlight"><span class="val-text">1,760.2억</span><span class="dps-text">12.57억</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
+                            <td><span class="val-text">4,669.7억</span><span class="dps-text">7.08억</span></td>
+                            <td><span class="val-text">5,186.5억</span><span class="dps-text">7.86억</span></td>
+                            <td class="col-highlight"><span class="val-text">6,226.3억</span><span class="dps-text">9.43억</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
+                            <td><span class="val-text">7,141.2억</span><span class="dps-text">6.64억</span></td>
+                            <td><span class="val-text">7,931.5억</span><span class="dps-text">7.38억</span></td>
+                            <td class="col-highlight"><span class="val-text">9,521.6억</span><span class="dps-text">8.86억</span></td>
+                        </tr>
+                        <tr class="row-total">
+                            <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
+                            <td><span class="val-text">9,228.0억</span><span class="dps-text">6.96억</span></td>
+                            <td><span class="val-text">1조 249.2억</span><span class="dps-text">7.73억</span></td>
+                            <td class="col-highlight"><span class="val-text">1조 2,304.0억</span><span class="dps-text">9.29억</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
