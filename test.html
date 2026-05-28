@@ -3,412 +3,438 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아브렐슈드 EX G4 DPS Settlement Tool</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <title>아브 EX 대시보드 (노말/하드/나메 통합본)</title>
     <style>
-        /* 기본 테마 및 변수 정의 (리얼 다크모드) */
-        :root {
-            --bg-body: #0b0c10;
-            --bg-container: #12141c;
-            --text-main: #ffffff;
-            --text-sub: #94a3b8;
-            --bg-input-sec: #1f242d;
-            --border-color: #2f3644;
-            --input-bg: #12141c;
-            --input-text: #ffffff;
-            --tab-inactive: #242936;
-            --tab-inactive-text: #64748b;
-            --bg-info-box: rgba(0, 0, 0, 0.4);
-            
-            /* 다크모드 강조행 */
-            --hl-15-bg: rgba(249, 115, 22, 0.15);
-            --hl-15-border: #f97316;
-            --hl-15-text: #ff9d5c;
-            
-            --hl-1666-bg: rgba(234, 179, 8, 0.15);
-            --hl-1666-border: #eab308;
-            --hl-1666-text: #fde047;
-            
-            --hl-20-bg: rgba(233, 69, 96, 0.2);
-            --hl-20-border: #e94560;
-            --hl-20-text: #ff6b8b;
+        body {
+            background-color: #121318;
+            color: #ffffff;
+            font-family: 'Noto Sans KR', sans-serif;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
         }
 
-        /* 라이트모드 변수 */
-        [data-theme="light"] {
-            --bg-body: #f0f2f5;
-            --bg-container: #ffffff;
-            --text-main: #1e293b; 
-            --text-sub: #475569;  
-            --bg-input-sec: #f8fafc;
-            --border-color: #cbd5e1;
-            --input-bg: #ffffff;
-            --input-text: #0f172a;
-            --tab-inactive: #e2e8f0;
-            --tab-inactive-text: #64748b;
-            --bg-info-box: #f1f5f9;
-            
-            /* 화이트모드 강조행 */
-            --hl-15-bg: #ffedd5;
-            --hl-15-border: #ea580c;
-            --hl-15-text: #c2410c;
-            
-            --hl-1666-bg: #fef9c3;
-            --hl-1666-border: #ca8a04;
-            --hl-1666-text: #a16207;
-            
-            --hl-20-bg: #ffe4e6;
-            --hl-20-border: #e11d48;
-            --hl-20-text: #9f1239;
+        .container {
+            width: 100%;
+            max-width: 850px;
         }
 
-        * { box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; transition: background-color 0.2s, color 0.2s, border-color 0.2s; }
-        body { background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        
-        .calc-container { background-color: var(--bg-container); width: 100%; max-width: 1200px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); overflow: hidden; padding: 40px; position: relative; }
-        
-        /* 상단 헤더 */
-        .header-wrapper { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #e94560; padding-bottom: 15px; }
-        h1 { margin: 0; color: var(--text-main); font-size: 26px; }
-        
-        /* 토글 스위치 */
-        .switch-wrapper { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; color: var(--text-main); }
-        .switch { position: relative; display: inline-block; width: 60px; height: 30px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .3s; border-radius: 30px; }
-        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        input:checked + .slider { background-color: #e94560; }
-        input:checked + .slider:before { transform: translateX(30px); }
-
-        /* 상단 탭 메뉴 - 깔끔하게 나메 / 하드 / 노말 통일 */
-        .tab-menu { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; background: var(--tab-inactive); cursor: pointer; font-weight: 700; font-size: 18px; color: var(--tab-inactive-text); transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
-        .tab-btn.active.nm { background: #e94560; color: #ffffff; }
-        .tab-btn.active.hd { background: #3a4f6b; color: #ffffff; }
-        .tab-btn.active.nl { background: #3b593f; color: #ffffff; }
-        
-        /* 메인 레이아웃 */
-        .calc-wrapper { display: grid; grid-template-columns: 1.25fr 1fr; gap: 30px; align-items: start; }
-        
-        /* 입력 섹션 */
-        .input-section { background: var(--bg-input-sec); padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .section-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin: 0; }
-        .btn-reset { background: #e94560; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 14px; }
-        .btn-reset:hover { opacity: 0.9; }
-        
-        .input-group { display: grid; grid-template-columns: 1.5fr 1fr; align-items: center; margin-bottom: 14px; }
-        .input-group label { font-size: 15px; font-weight: 700; color: var(--text-main); }
-        
-        .input-container { position: relative; width: 100%; }
-        
-        /* 인풋 휠/화살표 작동 버그 완전 수정 */
-        .input-group input { 
-            width: 100%; 
-            padding: 12px 15px 12px 35px; /* 화살표가 우측에 생기므로, 숫자가 완전히 중앙에 맞도록 패딩 비대칭 미세조정 */
-            border: 2px solid var(--border-color); 
-            background: var(--input-bg); 
-            color: var(--input-text); 
-            border-radius: 8px; 
-            text-align: center; 
-            font-size: 18px; 
-            font-weight: 700; 
-        }
-        .input-group input:focus { border-color: #e94560; outline: none; }
-        
-        /* 순정 화살표를 살리되, 평소에는 가리고 호버 시에만 투명도를 주어 활성화 및 클릭 가능하게 처리 */
-        .input-group input::-webkit-inner-spin-button {
-            transition: opacity 0.15s;
-            opacity: 0;
+        /* 🛠️ 클릭 유도를 위한 호버 모션 */
+        .raid-card {
+            background-color: #1a1c24;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid #252836;
             cursor: pointer;
-            height: 28px;
+            transition: all 0.2s ease-in-out;
+            position: relative;
         }
-        .input-container:hover input::-webkit-inner-spin-button {
-            opacity: 1; /* 마우스 올렸을 때 클릭 가능한 실제 화살표 노출 */
-        }
-        
-        /* 파이어폭스 대응 스핀버튼 제어 */
-        .input-group input { -moz-appearance: textfield; }
-        .input-container:hover input { -moz-appearance: number-input; }
-        
-        /* 하단 고정 안내 문구 */
-        .notice-text { font-size: 13px; color: var(--text-sub); line-height: 1.6; margin-top: 15px; margin-bottom: 20px; word-break: keep-all; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 6px; border-left: 4px solid #e94560; font-weight: 700; }
-        
-        /* 출력 섹션 */
-        .output-section { background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; display: flex; flex-direction: column; gap: 20px; height: 100%; }
-        [data-theme="light"] .output-section { background: #f8fafc; }
 
-        .total-info { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; text-align: center; border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        [data-theme="light"] .total-info { background: #edf2f7; }
-        
-        /* 상단 식별 배지 영역 삭제 후 정돈 */
-        .hp-header { display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
-        .total-info p { margin: 0; font-size: 16px; font-weight: 700; color: var(--text-sub); }
-        .total-info span { font-size: 28px; font-weight: 700; color: #ffbc00; }
-        [data-theme="light"] .total-info span { color: #b45309; }
-        
-        .result-title { font-size: 15px; font-weight: 700; text-align: center; color: #ffbc00; margin: 0; }
-        [data-theme="light"] .result-title { color: #b45309; }
-
-        .result-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
-        .result-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 11px 16px; 
-            border-bottom: 1px solid var(--border-color);
-            font-size: 15px; 
-            color: var(--text-main); 
-            background: rgba(255, 255, 255, 0.02);
+        .raid-card:hover {
+            border-color: #51587d;
+            background-color: #212431;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
-        .result-item:last-child { border-bottom: none; }
-        [data-theme="light"] .result-item { background: #ffffff; border-bottom: 1px solid #e2e8f0; }
-        
-        .result-item .pct-num { font-weight: 700; font-size: 15px; }
-        .result-item b { font-size: 16px; }
 
-        /* 하이라이트 행 영역 */
-        .result-item.highlight-15 { 
-            background-color: var(--hl-15-bg) !important; 
-            border-bottom: 1px solid var(--hl-15-border);
-            color: var(--hl-15-text) !important; 
-            font-weight: 700; 
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 40px;
         }
-        .result-item.highlight-15 b { color: var(--hl-15-text) !important; }
-        
-        .result-item.highlight-1666 { 
-            background-color: var(--hl-1666-bg) !important; 
-            border-bottom: 1px solid var(--hl-1666-border);
-            color: var(--hl-1666-text) !important; 
-            font-weight: 700; 
-        }
-        .result-item.highlight-1666 b { color: var(--hl-1666-text) !important; }
 
-        .result-item.highlight-20 { 
-            background-color: var(--hl-20-bg) !important; 
-            border-bottom: 1px solid var(--hl-20-border);
-            color: var(--hl-20-text) !important; 
-            font-weight: 700; 
+        .left-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
-        .result-item.highlight-20 b { color: var(--hl-20-text) !important; }
 
-        /* 에스더 정보 박스 */
-        .esther-info-box { background: var(--bg-info-box); border: 1px solid var(--border-color); padding: 15px; border-radius: 10px; margin-top: 10px; }
-        .esther-info-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 12px; border-left: 4px solid #ffbc00; padding-left: 8px; }
-        [data-theme="light"] .esther-info-title { border-left-color: #b45309; }
+        .level-badge {
+            color: #121318;
+            font-weight: bold;
+            font-size: 18px;
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 🎨 난이도별 테마 스킨 정의 */
+        .card-normal .level-badge { background-color: #7DDB7D; }
+        .card-normal .mvp-types { color: #7DDB7D; background-color: #1b2a21; }
+        .card-normal .td-phase { color: #7DDB7D; }
         
-        .esther-vertical-list { display: flex; flex-direction: column; gap: 8px; }
-        .esther-list-item { display: flex; justify-content: space-between; padding: 6px 12px; background: rgba(0,0,0,0.2); border-radius: 5px; color: var(--text-sub); font-size: 14px; border: 1px solid rgba(255,255,255,0.03); }
-        [data-theme="light"] .esther-list-item { background: #e2e8f0; border: 1px solid #cbd5e1; }
-        .esther-list-item span.name { font-weight: 700; color: var(--text-main); }
-        .esther-list-item span.val { color: #ffbc00; font-weight: 700; }
-        [data-theme="light"] .esther-list-item span.val { color: #b45309; }
+        .card-hard .level-badge { background-color: #f1c40f; }
+        .card-hard .mvp-types { color: #f1c40f; background-color: #2d2a15; }
+        .card-hard .td-phase { color: #f1c40f; }
+
+        .card-nightmare .level-badge { background-color: #bfa5f9; }
+        .card-nightmare .mvp-types { color: #bfa5f9; background-color: #25233a; }
+        .card-nightmare .td-phase { color: #bfa5f9; }
+
+        .raid-info-title h2 {
+            margin: 0 0 8px 0;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .tags {
+            display: flex;
+            gap: 6px;
+        }
+
+        .tag {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background-color: #2b2e3d;
+            color: #a5a9bc;
+        }
+
+        .tag.weakness {
+            background-color: #3d3525;
+            color: #f7ca54;
+        }
+
+        .right-section {
+            text-align: right;
+        }
+
+        .mvp-types {
+            font-size: 12px;
+            margin-bottom: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .main-damage-info {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .main-damage-info .highlight { color: #f7ca54; }
+        .main-dps-info { font-size: 14px; color: #a5a9bc; }
+        .main-dps-info .highlight-dps { color: #f7ca54; }
+
+        /* 🎯 우측 끝 화살표 아이콘 */
+        .arrow-icon {
+            position: absolute;
+            right: 24px;
+            top: 44px;
+            font-size: 16px;
+            color: #a5a9bc;
+            transition: transform 0.3s ease;
+        }
+
+        .raid-card.active .arrow-icon {
+            transform: rotate(180deg);
+            color: #f7ca54;
+        }
+
+        /* 🔽 아코디언 애니메이션 영역 */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease-out;
+        }
+
+        .raid-card.active .accordion-content {
+            max-height: 600px;
+            border-top: 2px solid #3a3f58;
+            margin-top: 24px;
+            padding-top: 20px;
+        }
+
+        /* 📊 공통 테이블 스타일 */
+        .dps-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .dps-table th {
+            color: #a5a9bc;
+            font-weight: 500;
+            padding: 12px 8px;
+            border-bottom: 2px solid #3a3f58;
+            font-size: 13px;
+        }
+
+        .dps-table td {
+            padding: 16px 8px;
+            border-bottom: 1px solid #3a3f58;
+            vertical-align: middle;
+        }
+
+        .dps-table tr:hover td {
+            background-color: #222531;
+        }
+
+        .td-phase {
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .td-phase span {
+            display: block;
+            font-size: 11px;
+            color: #a5a9bc;
+            font-weight: normal;
+            margin-top: 4px;
+        }
+
+        .val-text {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #ffffff;
+        }
+
+        .dps-text {
+            display: block;
+            font-size: 12px;
+            color: #00e676;
+        }
+
+        .col-highlight {
+            background-color: rgba(247, 202, 84, 0.02);
+        }
+        
+        th.col-highlight {
+            color: #f7ca54;
+            font-weight: bold;
+        }
+
+        .col-highlight .val-text {
+            color: #f7ca54;
+        }
+
+        .row-total td {
+            background-color: #1f212a !important;
+            border-bottom: 2px solid #3a3f58;
+        }
+        .row-total .td-phase {
+            color: #ff8a80;
+        }
     </style>
 </head>
 <body>
 
-<div class="calc-container">
-    <div class="header-wrapper">
-        <h1>아브렐슈드 EX 통합 지분 & 잔혈컷 계산기</h1>
-        <div class="switch-wrapper">
-            <span>다크</span>
-            <label class="switch">
-                <input type="checkbox" id="theme_toggle" onchange="toggleThemeSwitch()">
-                <span class="slider"></span>
-            </label>
-            <span>화이트</span>
-        </div>
-    </div>
-    
-    <div class="tab-menu">
-        <button class="tab-btn active nm" id="tab_nm" onclick="setDifficulty('nm')">나메</button>
-        <button class="tab-btn" id="tab_hd" onclick="setDifficulty('hd')">하드</button>
-        <button class="tab-btn" id="tab_nl" onclick="setDifficulty('nl')">노말</button>
-    </div>
-    
-    <div class="calc-wrapper">
-        <div class="input-section">
-            <div class="section-header">
-                <span class="section-title">📊 수치 입력</span>
-                <button class="btn-reset" onclick="resetCalculator()">조건 초기화</button>
-            </div>
-            <hr style="border: 0; height: 1px; background: var(--border-color); margin-bottom: 20px;">
-            
-            <div class="input-group"><label>아제나 3칸 사용 횟수</label><div class="input-container"><input type="number" id="in_az3" value="3"></div></div>
-            <div class="input-group"><label>아제나 1칸 사용 횟수</label><div class="input-container"><input type="number" id="in_az1" value="2"></div></div>
-            <div class="input-group"><label>히든 아제나 사용 횟수</label><div class="input-container"><input type="number" id="in_azh" value="1"></div></div>
-            <div class="input-group"><label>니나브 3칸 사용 횟수</label><div class="input-container"><input type="number" id="in_ni3" value="0"></div></div>
-            <div class="input-group"><label>니나브 1칸 사용 횟수</label><div class="input-container"><input type="number" id="in_ni1" value="0"></div></div>
-            <div class="input-group"><label>구스토 1칸 사용 횟수</label><div class="input-container"><input type="number" id="in_gs1" value="0"></div></div>
-            <div class="input-group"><label>서포터 2명 딜량 합산 (억)</label><div class="input-container"><input type="number" id="in_sup" value="170"></div></div>
-            <div class="input-group"><label>기타 변수 / 삑난 딜 (억)</label><div class="input-container"><input type="number" id="in_var" value="0"></div></div>
-            
-            <div class="notice-text">
-                ※ 위의 에스더 택틱은 기본적인 에스더 사용 및 빗나감을 고려하여 가장 평균값에 근접한 택틱이라 기본값으로 책정 하였습니다. 임의로 수정가능합니다.
-            </div>
+<div class="container">
 
-            <div class="esther-info-box">
-                <div class="esther-info-title" id="esther_title">나메 에스더 고유 딜량 요약</div>
-                <div class="esther-vertical-list" id="esther_list_content">
+    <div class="raid-card card-normal" onclick="toggleAccordion(this)">
+        <div class="arrow-icon">▼</div>
+        <div class="card-header">
+            <div class="left-section">
+                <div class="level-badge">1720</div>
+                <div class="raid-info-title">
+                    <h2>아브 EX 노말</h2>
+                    <div class="tags">
+                        <span class="tag">1관 아브렐슈드</span>
+                        <span class="tag">악마</span>
+                        <span class="tag weakness">뇌속성 취약</span>
                     </div>
+                </div>
+            </div>
+            <div class="right-section">
+                <div class="mvp-types">클릭 시 페이즈별 수치 보기</div>
+                <div class="main-damage-info">
+                    1478 - 1970 | <span class="highlight">1인분 1,642억</span>
+                </div>
+                <div class="main-dps-info">
+                    1.28억 - 1.71억 | <span class="highlight-dps">1인분 1.42억</span>
+                </div>
             </div>
         </div>
-        
-        <div class="output-section">
-           <div class="total-info">
-    <div class="hp-header">
-        <p>변경된 보스 체력</p>
-    </div>
 
-    <div class="hp-value">
-        <span id="res_rem">0</span>
-        <span class="unit">억</span>
-    </div>
-</div>
-            
-            <div class="result-title">🎯 ※ 에스더 및 서폿 입력 시 실시간 자동 갱신</div>
-            <div class="result-list" id="res_list">
-                </div>
+        <div class="accordion-content" onclick="event.stopPropagation();">
+            <table class="dps-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; width: 28%;">구간 (누적 기준)</th>
+                        <th style="width: 24%;">강투 (15%)</th>
+                        <th style="width: 24%;">1인분 (16.66%)</th>
+                        <th style="width: 24%;" class="col-highlight">잔혈 (20%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 10초)</span></td>
+                        <td><span class="val-text">211.5억</span><span class="dps-text">1.63억/초</span></td>
+                        <td><span class="val-text">235.0억</span><span class="dps-text">1.81억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">282.0억</span><span class="dps-text">2.17억/초</span></td>
+                    </tr>
+                    <tr>
+                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 8분 40초)</span></td>
+                        <td><span class="val-text">747.0억</span><span class="dps-text">1.43억/초</span></td>
+                        <td><span class="val-text">830.0억</span><span class="dps-text">1.59억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">996.0억</span><span class="dps-text">1.92억/초</span></td>
+                    </tr>
+                    <tr>
+                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 15분 20초)</span></td>
+                        <td><span class="val-text">1,143.0억</span><span class="dps-text">1.24억/초</span></td>
+                        <td><span class="val-text">1,270.0억</span><span class="dps-text">1.38억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.66억/초</span></td>
+                    </tr>
+                    <tr class="row-total">
+                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 19分 10초)</span></td>
+                        <td><span class="val-text">1,478.0억</span><span class="dps-text">1.28억/초</span></td>
+                        <td><span class="val-text">1,642.0억</span><span class="dps-text">1.42억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">1,970.0억</span><span class="dps-text">1.71억/초</span></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+
+    <div class="raid-card card-hard" onclick="toggleAccordion(this)">
+        <div class="arrow-icon">▼</div>
+        <div class="card-header">
+            <div class="left-section">
+                <div class="level-badge">1750</div>
+                <div class="raid-info-title">
+                    <h2>아브 EX 하드</h2>
+                    <div class="tags">
+                        <span class="tag">1관 아브렐슈드</span>
+                        <span class="tag">악마</span>
+                        <span class="tag weakness">뇌속성 취약</span>
+                    </div>
+                </div>
+            </div>
+            <div class="right-section">
+                <div class="mvp-types">클릭 시 페이즈별 수치 보기</div>
+                <div class="main-damage-info">
+                    4011 - 5348 | <span class="highlight">1인분 4,456억</span>
+                </div>
+                <div class="main-dps-info">
+                    4.31억 - 5.75억 | <span class="highlight-dps">1인분 4.78억</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-content" onclick="event.stopPropagation();">
+            <table class="dps-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; width: 28%;">구간 (누적 기준)</th>
+                        <th style="width: 24%;">강투 (15%)</th>
+                        <th style="width: 24%;">1인분 (16.66%)</th>
+                        <th style="width: 24%;" class="col-highlight">잔혈 (20%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 15초)</span></td>
+                        <td><span class="val-text">573.3억</span><span class="dps-text">4.24억/초</span></td>
+                        <td><span class="val-text">637.0억</span><span class="dps-text">4.71억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">764.4억</span><span class="dps-text">5.66억/초</span></td>
+                    </tr>
+                    <tr>
+                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 9분 00초)</span></td>
+                        <td><span class="val-text">2,028.0억</span><span class="dps-text">3.75억/초</span></td>
+                        <td><span class="val-text">2,253.0억</span><span class="dps-text">4.17억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">2,703.6억</span><span class="dps-text">5.00억/초</span></td>
+                    </tr>
+                    <tr>
+                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 15분 50초)</span></td>
+                        <td><span class="val-text">3,101.0억</span><span class="dps-text">3.26억/초</span></td>
+                        <td><span class="val-text">3,445.0억</span><span class="dps-text">3.62억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">4.35억/초</span></td>
+                    </tr>
+                    <tr class="row-total">
+                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 19분 50초)</span></td>
+                        <td><span class="val-text">4,011.0억</span><span class="dps-text">4.31억/초</span></td>
+                        <td><span class="val-text">4,456.0억</span><span class="dps-text">4.78억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">5,348.0억</span><span class="dps-text">5.75억/초</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="raid-card card-nightmare" onclick="toggleAccordion(this)">
+        <div class="arrow-icon">▼</div>
+        <div class="card-header">
+            <div class="left-section">
+                <div class="level-badge">1770</div>
+                <div class="raid-info-title">
+                    <h2>아브 EX 나이트메어</h2>
+                    <div class="tags">
+                        <span class="tag">1관 아브렐슈드</span>
+                        <span class="tag">악마</span>
+                        <span class="tag weakness">뇌속성 취약</span>
+                    </div>
+                </div>
+            </div>
+            <div class="right-section">
+                <div class="mvp-types">클릭 시 페이즈별 수치 보기</div>
+                <div class="main-damage-info">
+                    9228 - 12304 | <span class="highlight">1인분 1조 249억</span>
+                </div>
+                <div class="main-dps-info">
+                    7.53억 - 10.04억 | <span class="highlight-dps">1인분 8.37억</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-content" onclick="event.stopPropagation();">
+            <table class="dps-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; width: 28%;">구간 (누적 기준)</th>
+                        <th style="width: 24%;">강투 (15%)</th>
+                        <th style="width: 24%;">1인분 (16.66%)</th>
+                        <th style="width: 24%;" class="col-highlight">잔혈 (20%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
+                        <td><span class="val-text">1,320.2억</span><span class="dps-text">9.43억/초</span></td>
+                        <td><span class="val-text">1,466.2억</span><span class="dps-text">10.47억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">1,760.2억</span><span class="dps-text">12.57억/초</span></td>
+                    </tr>
+                    <tr>
+                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 9분 20초)</span></td>
+                        <td><span class="val-text">4,669.7억</span><span class="dps-text">8.34억/초</span></td>
+                        <td><span class="val-text">5,186.5억</span><span class="dps-text">9.26억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">6,226.3억</span><span class="dps-text">11.12억/초</span></td>
+                    </tr>
+                    <tr>
+                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 16분 15초)</span></td>
+                        <td><span class="val-text">7,141.2억</span><span class="dps-text">7.36억/초</span></td>
+                        <td><span class="val-text">7,931.5억</span><span class="dps-text">8.18억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">9,521.6억</span><span class="dps-text">9.82억/초</span></td>
+                    </tr>
+                    <tr class="row-total">
+                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 20분 30초)</span></td>
+                        <td><span class="val-text">9,228.0억</span><span class="dps-text">7.53억/초</span></td>
+                        <td><span class="val-text">1조 249.2억</span><span class="dps-text">8.37억/초</span></td>
+                        <td class="col-highlight"><span class="val-text">1조 2,304.0억</span><span class="dps-text">10.04억/초</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    // --- 고정 데이터 세팅 ---
-    const bossData = {
-        nm: { name: "나메", total: 73669.66, az3: 1009, az1: 1135, azh: 4539, ni3: 743, ni1: 1185, gs1: 995, sup: 170.0 },
-        hd: { name: "하드", total: 32449.52, az3: 451, az1: 508, azh: 1946, ni3: 320, ni1: 530, gs1: 445, sup: 120.0 },
-        nl: { name: "노말", total: 11966.79, az3: 162, az1: 182, azh: 729, ni3: 119, ni1: 190, gs1: 159, sup: 80.0 }
-    };
-
-    let currentDiff = 'nm';
-
-    function toggleThemeSwitch() {
-        const isChecked = document.getElementById('theme_toggle').checked;
-        if (isChecked) {
-            document.documentElement.setAttribute('data-theme', 'light');
-        } else {
-            document.documentElement.removeAttribute('data-theme');
-        }
-        calculate();
+    function toggleAccordion(card) {
+        card.classList.toggle('active');
     }
-
-    function setDifficulty(diff) {
-        currentDiff = diff;
-        
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active', 'nm', 'hd', 'nl');
-        });
-        
-        const activeTab = document.getElementById('tab_' + diff);
-        activeTab.classList.add('active', diff);
-        
-        document.getElementById('in_sup').value = bossData[diff].sup;
-        
-        calculate();
-    }
-
-    function resetCalculator() {
-        currentDiff = 'nm';
-        
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active', 'nm', 'hd', 'nl'));
-        document.getElementById('tab_nm').classList.add('active', 'nm');
-
-        document.getElementById('in_az3').value = 3;
-        document.getElementById('in_az1').value = 2;
-        document.getElementById('in_azh').value = 1;
-        document.getElementById('in_ni3').value = 0;
-        document.getElementById('in_ni1').value = 0;
-        document.getElementById('in_gs1').value = 0;
-        document.getElementById('in_sup').value = 170;
-        document.getElementById('in_var').value = 0;
-        
-        calculate();
-    }
-
-    function calculate() {
-        const d = bossData[currentDiff];
-        
-        document.getElementById('esther_title').innerText = `${d.name} 에스더 고유 딜량 요약`;
-        document.getElementById('esther_list_content').innerHTML = `
-            <div class="esther-list-item"><span class="name">아제나 3칸</span><span class="val">${d.az3} 억</span></div>
-            <div class="esther-list-item"><span class="name">아제나 1칸</span><span class="val">${d.az1} 억</span></div>
-            <div class="esther-list-item"><span class="name">히든 아제나</span><span class="val">${d.azh} 억</span></div>
-            <div class="esther-list-item"><span class="name">니나브 3칸</span><span class="val">${d.ni3} 억</span></div>
-            <div class="esther-list-item"><span class="name">니나브 1칸</span><span class="val">${d.ni1} 억</span></div>
-            <div class="esther-list-item"><span class="name">구스토 1칸</span><span class="val">${d.gs1} 억</span></div>
-        `;
-        
-        const counts = {
-            az3: Number(document.getElementById('in_az3').value),
-            az1: Number(document.getElementById('in_az1').value),
-            azh: Number(document.getElementById('in_azh').value),
-            ni3: Number(document.getElementById('in_ni3').value),
-            ni1: Number(document.getElementById('in_ni1').value),
-            gs1: Number(document.getElementById('in_gs1').value),
-            sup: Number(document.getElementById('in_sup').value),
-            var: Number(document.getElementById('in_var').value)
-        };
-
-        const totalEsther = (counts.az3 * d.az3) + (counts.az1 * d.az1) + (counts.azh * d.azh) + 
-                           (counts.ni3 * d.ni3) + (counts.ni1 * d.ni1) + (counts.gs1 * d.gs1);
-        
-        const totalDeduction = totalEsther + counts.sup + counts.var;
-        const remaining = d.total - totalDeduction;
-
-        document.getElementById('res_rem').innerText = Math.floor(remaining).toLocaleString();
-
-        const listContainer = document.getElementById('res_list');
-        listContainer.innerHTML = '';
-
-        const percentages = [];
-        for (let i = 10; i <= 25; i++) {
-            percentages.push(i);
-            if (i === 16) percentages.push(16.66);
-        }
-
-        percentages.forEach(pct => {
-            const cutValue = remaining * (pct / 100);
-            const item = document.createElement('div');
-            item.className = 'result-item';
-            
-            if (pct === 15) {
-                item.classList.add('highlight-15');
-                item.innerHTML = `<span class="pct-num">15% (강투컷)</span> <span><b>${Math.floor(cutValue).toLocaleString()}</b> 억</span>`;
-            } else if (pct === 16.66) {
-                item.classList.add('highlight-1666');
-                item.innerHTML = `<span class="pct-num">16.66% (1인분컷)</span> <span><b>${Math.floor(cutValue).toLocaleString()}</b> 억</span>`;
-            } else if (pct === 20) {
-                item.classList.add('highlight-20');
-                item.innerHTML = `<span class="pct-num">20% (잔혈컷)</span> <span><b>${Math.floor(cutValue).toLocaleString()}</b> 억</span>`;
-            } else {
-                item.innerHTML = `<span class="pct-num">${pct}%</span> <span><b>${Math.floor(cutValue).toLocaleString()}</b> 억</span>`;
-            }
-            
-            listContainer.appendChild(item);
-        });
-    }
-
-    window.onload = () => {
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', calculate);
-            // 마우스 스크롤 휠로도 수치가 자연스럽게 변경되도록 이벤트 바인딩 센스 추가
-            input.addEventListener('wheel', function(e) {
-                e.preventDefault();
-                let step = Number(this.getAttribute('step')) || 1;
-                if (e.deltaY < 0) {
-                    this.value = Number(this.value) + step;
-                } else {
-                    this.value = Math.max(0, Number(this.value) - step);
-                }
-                calculate();
-            });
-        });
-        calculate();
-    };
 </script>
-
 </body>
 </html>
