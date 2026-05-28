@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아브 EX 대시보드 (진입 시간 통일 및 단위 수정본)</title>
+    <title>아브 EX 대시보드 (타임라인 정밀 수정본)</title>
     <style>
         body {
             background-color: #121318;
@@ -22,7 +22,6 @@
             max-width: 850px;
         }
 
-        /* 🛠️ 클릭 유도를 위한 호버 모션 */
         .raid-card {
             background-color: #1a1c24;
             border-radius: 16px;
@@ -127,7 +126,6 @@
         .main-dps-info { font-size: 14px; color: #a5a9bc; }
         .main-dps-info .highlight-dps { color: #f7ca54; }
 
-        /* 🎯 우측 끝 화살표 아이콘 */
         .arrow-icon {
             position: absolute;
             right: 24px;
@@ -142,7 +140,6 @@
             color: #f7ca54;
         }
 
-        /* 🔽 아코디언 애니메이션 영역 */
         .accordion-content {
             max-height: 0;
             overflow: hidden;
@@ -156,7 +153,6 @@
             padding-top: 20px;
         }
 
-        /* 📊 공통 테이블 스타일 */
         .dps-table {
             width: 100%;
             border-collapse: collapse;
@@ -255,7 +251,7 @@
                     1143 - 1524 | <span class="highlight">1인분 1,270억</span>
                 </div>
                 <div class="main-dps-info">
-                    0.93억 - 1.24억 | <span class="highlight-dps">1인분 1.03억</span>
+                    0.86억 - 1.15억 | <span class="highlight-dps">1인분 0.96억</span>
                 </div>
             </div>
         </div>
@@ -278,22 +274,22 @@
                         <td class="col-highlight"><span class="val-text">282.0억</span><span class="dps-text">2.01억</span></td>
                     </tr>
                     <tr>
-                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 9분 20초)</span></td>
-                        <td><span class="val-text">747.0억</span><span class="dps-text">1.33억</span></td>
-                        <td><span class="val-text">830.0억</span><span class="dps-text">1.48억</span></td>
-                        <td class="col-highlight"><span class="val-text">996.0억</span><span class="dps-text">1.78억</span></td>
+                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
+                        <td><span class="val-text">747.0억</span><span class="dps-text">1.13억</span></td>
+                        <td><span class="val-text">830.0억</span><span class="dps-text">1.26억</span></td>
+                        <td class="col-highlight"><span class="val-text">996.0억</span><span class="dps-text">1.51억</span></td>
                     </tr>
                     <tr>
-                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 16분 15초)</span></td>
-                        <td><span class="val-text">1,143.0억</span><span class="dps-text">1.17억</span></td>
-                        <td><span class="val-text">1,270.0억</span><span class="dps-text">1.30억</span></td>
-                        <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.56억</span></td>
+                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
+                        <td><span class="val-text">1,143.0억</span><span class="dps-text">1.06억</span></td>
+                        <td><span class="val-text">1,270.0억</span><span class="dps-text">1.18억</span></td>
+                        <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.42억</span></td>
                     </tr>
                     <tr class="row-total">
-                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 20분 30초)</span></td>
-                        <td><span class="val-text">1,143.0억</span><span class="dps-text">0.93억</span></td>
-                        <td><span class="val-text">1,270.0억</span><span class="dps-text">1.03억</span></td>
-                        <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.24억</span></td>
+                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
+                        <td><span class="val-text">1,143.0억</span><span class="dps-text">0.86억</span></td>
+                        <td><span class="val-text">1,270.0억</span><span class="dps-text">0.96억</span></td>
+                        <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.15억</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -321,7 +317,7 @@
                     3101 - 4134 | <span class="highlight">1인분 3,445억</span>
                 </div>
                 <div class="main-dps-info">
-                    2.52억 - 3.36억 | <span class="highlight-dps">1인분 2.80억</span>
+                    2.34억 - 3.12억 | <span class="highlight-dps">1인분 2.60억</span>
                 </div>
             </div>
         </div>
@@ -344,22 +340,22 @@
                         <td class="col-highlight"><span class="val-text">764.4억</span><span class="dps-text">5.46억</span></td>
                     </tr>
                     <tr>
-                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 9분 20초)</span></td>
-                        <td><span class="val-text">2,028.0억</span><span class="dps-text">3.62억</span></td>
-                        <td><span class="val-text">2,253.0억</span><span class="dps-text">4.02억</span></td>
-                        <td class="col-highlight"><span class="val-text">2,703.6억</span><span class="dps-text">4.83억</span></td>
+                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
+                        <td><span class="val-text">2,028.0억</span><span class="dps-text">3.07억</span></td>
+                        <td><span class="val-text">2,253.0억</span><span class="dps-text">3.41억</span></td>
+                        <td class="col-highlight"><span class="val-text">2,703.6억</span><span class="dps-text">4.10억</span></td>
                     </tr>
                     <tr>
-                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 16분 15초)</span></td>
-                        <td><span class="val-text">3,101.0억</span><span class="dps-text">3.18억</span></td>
-                        <td><span class="val-text">3,445.0억</span><span class="dps-text">3.53억</span></td>
-                        <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">4.24억</span></td>
+                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
+                        <td><span class="val-text">3,101.0억</span><span class="dps-text">2.88억</span></td>
+                        <td><span class="val-text">3,445.0억</span><span class="dps-text">3.20억</span></td>
+                        <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">3.85억</span></td>
                     </tr>
                     <tr class="row-total">
-                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 20분 30초)</span></td>
-                        <td><span class="val-text">3,101.0억</span><span class="dps-text">2.52억</span></td>
-                        <td><span class="val-text">3,445.0억</span><span class="dps-text">2.80억</span></td>
-                        <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">3.36억</span></td>
+                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
+                        <td><span class="val-text">3,101.0억</span><span class="dps-text">2.34억</span></td>
+                        <td><span class="val-text">3,445.0억</span><span class="dps-text">2.60억</span></td>
+                        <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">3.12억</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -387,7 +383,7 @@
                     9228 - 12304 | <span class="highlight">1인분 1조 249억</span>
                 </div>
                 <div class="main-dps-info">
-                    7.53억 - 10.04억 | <span class="highlight-dps">1인분 8.37억</span>
+                    6.96억 - 9.29억 | <span class="highlight-dps">1인분 7.73억</span>
                 </div>
             </div>
         </div>
@@ -410,22 +406,22 @@
                         <td class="col-highlight"><span class="val-text">1,760.2억</span><span class="dps-text">12.57억</span></td>
                     </tr>
                     <tr>
-                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 9분 20초)</span></td>
-                        <td><span class="val-text">4,669.7억</span><span class="dps-text">8.34억</span></td>
-                        <td><span class="val-text">5,186.5억</span><span class="dps-text">9.26억</span></td>
-                        <td class="col-highlight"><span class="val-text">6,226.3억</span><span class="dps-text">11.12억</span></td>
+                        <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
+                        <td><span class="val-text">4,669.7억</span><span class="dps-text">7.08억</span></td>
+                        <td><span class="val-text">5,186.5억</span><span class="dps-text">7.86억</span></td>
+                        <td class="col-highlight"><span class="val-text">6,226.3억</span><span class="dps-text">9.43억</span></td>
                     </tr>
                     <tr>
-                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 16분 15초)</span></td>
-                        <td><span class="val-text">7,141.2억</span><span class="dps-text">7.36억</span></td>
-                        <td><span class="val-text">7,931.5억</span><span class="dps-text">8.18억</span></td>
-                        <td class="col-highlight"><span class="val-text">9,521.6억</span><span class="dps-text">9.82억</span></td>
+                        <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
+                        <td><span class="val-text">7,141.2억</span><span class="dps-text">6.64억</span></td>
+                        <td><span class="val-text">7,931.5억</span><span class="dps-text">7.38억</span></td>
+                        <td class="col-highlight"><span class="val-text">9,521.6억</span><span class="dps-text">8.86억</span></td>
                     </tr>
                     <tr class="row-total">
-                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 20분 30초)</span></td>
-                        <td><span class="val-text">9,228.0억</span><span class="dps-text">7.53억</span></td>
-                        <td><span class="val-text">1조 249.2억</span><span class="dps-text">8.37억</span></td>
-                        <td class="col-highlight"><span class="val-text">1조 2,304.0억</span><span class="dps-text">10.04억</span></td>
+                        <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
+                        <td><span class="val-text">9,228.0억</span><span class="dps-text">6.96억</span></td>
+                        <td><span class="val-text">1조 249.2억</span><span class="dps-text">7.73억</span></td>
+                        <td class="col-highlight"><span class="val-text">1조 2,304.0억</span><span class="dps-text">9.29억</span></td>
                     </tr>
                 </tbody>
             </table>
