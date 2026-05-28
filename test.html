@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아브 EX 대시보드 (PC/모바일 겸용 반응형)</title>
+    <title>아브 EX 대시보드 (원스크롤 모바일 최적화)</title>
     <style>
         body {
             background-color: #121318;
@@ -24,7 +24,6 @@
             margin: 0 auto;
         }
 
-        /* 🛠️ 클릭 유도를 위한 호버 모션 */
         .raid-card {
             background-color: #1a1c24;
             border-radius: 16px;
@@ -48,8 +47,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap; /* 모바일에서 공간 부족 시 아래로 흐르게 설정 */
-            gap: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .left-section {
@@ -74,15 +73,15 @@
         /* 🎨 난이도별 테마 스킨 정의 */
         .card-normal .level-badge { background-color: #7DDB7D; }
         .card-normal .mvp-types { color: #7DDB7D; background-color: #1b2a21; }
-        .card-normal .td-phase { color: #7DDB7D; }
+        .card-normal .phase-title { color: #7DDB7D; }
         
         .card-hard .level-badge { background-color: #f1c40f; }
         .card-hard .mvp-types { color: #f1c40f; background-color: #2d2a15; }
-        .card-hard .td-phase { color: #f1c40f; }
+        .card-hard .phase-title { color: #f1c40f; }
 
         .card-nightmare .level-badge { background-color: #bfa5f9; }
         .card-nightmare .mvp-types { color: #bfa5f9; background-color: #25233a; }
-        .card-nightmare .td-phase { color: #bfa5f9; }
+        .card-nightmare .phase-title { color: #bfa5f9; }
 
         .raid-info-title h2 {
             margin: 0 0 6px 0;
@@ -111,12 +110,12 @@
 
         .right-section {
             text-align: right;
-            padding-right: 24px; /* 화살표 아이콘과 겹침 방지 */
+            padding-right: 24px;
         }
 
         .mvp-types {
             font-size: 11px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: bold;
             letter-spacing: 0.5px;
             padding: 2px 6px;
@@ -134,7 +133,6 @@
         .main-dps-info { font-size: 13px; color: #a5a9bc; }
         .main-dps-info .highlight-dps { color: #f7ca54; }
 
-        /* 🎯 우측 끝 화살표 아이콘 */
         .arrow-icon {
             position: absolute;
             right: 20px;
@@ -157,26 +155,23 @@
         }
 
         .raid-card.active .accordion-content {
-            max-height: 800px;
+            max-height: 1200px;
             border-top: 2px solid #3a3f58;
             margin-top: 20px;
             padding-top: 16px;
         }
 
-        /* 📊 가로 스크롤 보장 컨테이너 (모바일 가로잘림 방지) */
-        .table-responsive {
+        /* 🖥️ PC용 표준 테이블 스타일 */
+        .pc-table-view {
+            display: block;
             width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
-        /* 📊 공통 테이블 스타일 */
         .dps-table {
             width: 100%;
             border-collapse: collapse;
             text-align: center;
             font-size: 13px;
-            min-width: 500px; /* 테이블이 너무 압착되는 것을 방지 */
         }
 
         .dps-table th {
@@ -188,7 +183,7 @@
         }
 
         .dps-table td {
-            padding: 12px 6px;
+            padding: 14px 6px;
             border-bottom: 1px solid #3a3f58;
             vertical-align: middle;
         }
@@ -197,12 +192,12 @@
             background-color: #222531;
         }
 
-        .td-phase {
+        .phase-title {
             text-align: left;
             font-weight: bold;
         }
 
-        .td-phase span {
+        .phase-title span {
             display: block;
             font-size: 11px;
             color: #a5a9bc;
@@ -227,12 +222,7 @@
             background-color: rgba(247, 202, 84, 0.01);
         }
         
-        th.col-highlight {
-            color: #f7ca54;
-            font-weight: bold;
-        }
-
-        .col-highlight .val-text {
+        th.col-highlight, td.col-highlight .val-text {
             color: #f7ca54;
         }
 
@@ -240,20 +230,91 @@
             background-color: #1f212a !important;
             border-bottom: 2px solid #3a3f58;
         }
-        .row-total .td-phase {
+        .row-total .phase-title {
             color: #ff8a80;
         }
 
-        /* 📱 모바일 디바이스 전용 스타일 조정 (768px 이하) */
+        /* 📱 모바일 전용 카드형 리스트 뷰 (기본값 숨김) */
+        .mobile-list-view {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* ===================================================
+           📱 모바일 레이아웃 브레이크포인트 (768px 이하)
+        =================================================== */
         @media (max-width: 768px) {
             body { padding: 8px; }
-            .raid-card { padding: 16px; margin-bottom: 12px; }
-            .card-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .raid-card { padding: 14px; margin-bottom: 10px; }
+            .card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
             .right-section { text-align: left; padding-left: 68px; padding-right: 0; }
             .arrow-icon { top: 20px; right: 16px; }
-            .raid-info-title h2 { font-size: 18px; }
-            .main-damage-info { font-size: 15px; }
-            .main-dps-info { font-size: 12px; }
+            .raid-info-title h2 { font-size: 17px; }
+            
+            /* PC 테이블 숨기고 모바일 카드 리스트 켜기 */
+            .pc-table-view { display: none; }
+            .mobile-list-view { display: flex; }
+
+            /* 모바일 전용 개별 세부 카드 스타일 */
+            .m-phase-card {
+                background-color: #20232f;
+                border-radius: 10px;
+                padding: 12px;
+                border: 1px solid #2d3146;
+            }
+            
+            .m-phase-card.m-total {
+                background-color: #24222b;
+                border: 1px solid #4a3b4e;
+            }
+
+            .m-phase-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                border-bottom: 1px solid #2d3146;
+                padding-bottom: 6px;
+                margin-bottom: 8px;
+            }
+            
+            .m-phase-name {
+                font-size: 13px;
+                font-weight: bold;
+            }
+            
+            .m-phase-info {
+                font-size: 11px;
+                color: #a5a9bc;
+            }
+
+            .m-grid-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 4px 0;
+                font-size: 12px;
+            }
+
+            .m-label {
+                color: #a5a9bc;
+            }
+
+            .m-values {
+                text-align: right;
+                font-weight: bold;
+            }
+
+            .m-values .m-dps {
+                color: #00e676;
+                font-size: 11px;
+                font-weight: normal;
+                margin-left: 6px;
+            }
+
+            /* 잔혈 하이라이트 */
+            .m-highlight .m-label { color: #f7ca54; font-weight: bold; }
+            .m-highlight .m-values { color: #f7ca54; }
         }
     </style>
 </head>
@@ -288,7 +349,8 @@
         </div>
 
         <div class="accordion-content" onclick="event.stopPropagation();">
-            <div class="table-responsive">
+            <!-- 🖥️ PC 뷰 (테이블) -->
+            <div class="pc-table-view">
                 <table class="dps-table">
                     <thead>
                         <tr>
@@ -300,31 +362,63 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
+                            <td class="phase-title">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
                             <td><span class="val-text">211.5억</span><span class="dps-text">1.51억</span></td>
                             <td><span class="val-text">235.0억</span><span class="dps-text">1.68억</span></td>
                             <td class="col-highlight"><span class="val-text">282.0억</span><span class="dps-text">2.01억</span></td>
                         </tr>
                         <tr>
-                            <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
+                            <td class="phase-title">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
                             <td><span class="val-text">747.0억</span><span class="dps-text">1.13억</span></td>
                             <td><span class="val-text">830.0억</span><span class="dps-text">1.26억</span></td>
                             <td class="col-highlight"><span class="val-text">996.0억</span><span class="dps-text">1.51억</span></td>
                         </tr>
                         <tr>
-                            <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
+                            <td class="phase-title">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
                             <td><span class="val-text">1,143.0억</span><span class="dps-text">1.06억</span></td>
                             <td><span class="val-text">1,270.0억</span><span class="dps-text">1.18억</span></td>
                             <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.42억</span></td>
                         </tr>
                         <tr class="row-total">
-                            <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
+                            <td class="phase-title">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
                             <td><span class="val-text">1,143.0억</span><span class="dps-text">0.86억</span></td>
                             <td><span class="val-text">1,270.0억</span><span class="dps-text">0.96억</span></td>
                             <td class="col-highlight"><span class="val-text">1,524.0억</span><span class="dps-text">1.15억</span></td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- 📱 모바일 뷰 (카드 리스트) -->
+            <div class="mobile-list-view">
+                <!-- 1페 -->
+                <div class="m-phase-card">
+                    <div class="m-phase-header"><span class="m-phase-name phase-title">1페이즈 종료</span><span class="m-phase-info">335줄 / 2분 20초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">211.5억<span class="m-dps">1.51억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">235.0억<span class="m-dps">1.68억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">282.0억<span class="m-dps">2.01억</span></span></div>
+                </div>
+                <!-- 2페 -->
+                <div class="m-phase-card">
+                    <div class="m-phase-header"><span class="m-phase-name phase-title">2페이즈 종료</span><span class="m-phase-info">145줄 / 11분 00초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">747.0억<span class="m-dps">1.13억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">830.0억<span class="m-dps">1.26억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">996.0억<span class="m-dps">1.51억</span></span></div>
+                </div>
+                <!-- 3페 -->
+                <div class="m-phase-card">
+                    <div class="m-phase-header"><span class="m-phase-name phase-title">3페이즈 종료</span><span class="m-phase-info">0줄 진입 / 17분 55초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">1,143.0억<span class="m-dps">1.06억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">1,270.0억<span class="m-dps">1.18억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">1,524.0억<span class="m-dps">1.42억</span></span></div>
+                </div>
+                <!-- 토벌 -->
+                <div class="m-phase-card m-total">
+                    <div class="m-phase-header"><span class="m-phase-name" style="color:#ff8a80;">🏆 최종 토벌 완료</span><span class="m-phase-info" style="color:#ff8a80;">총 22분 05초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">1,143.0억<span class="m-dps">0.86억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">1,270.0억<span class="m-dps">0.96억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">1,524.0억<span class="m-dps">1.15억</span></span></div>
+                </div>
             </div>
         </div>
     </div>
@@ -356,7 +450,8 @@
         </div>
 
         <div class="accordion-content" onclick="event.stopPropagation();">
-            <div class="table-responsive">
+            <!-- 🖥️ PC 뷰 (테이블) -->
+            <div class="pc-table-view">
                 <table class="dps-table">
                     <thead>
                         <tr>
@@ -368,31 +463,63 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
+                            <td class="phase-title">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
                             <td><span class="val-text">573.3억</span><span class="dps-text">4.10억</span></td>
                             <td><span class="val-text">637.0억</span><span class="dps-text">4.55억</span></td>
                             <td class="col-highlight"><span class="val-text">764.4억</span><span class="dps-text">5.46억</span></td>
                         </tr>
                         <tr>
-                            <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
+                            <td class="phase-title">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
                             <td><span class="val-text">2,028.0억</span><span class="dps-text">3.07억</span></td>
                             <td><span class="val-text">2,253.0억</span><span class="dps-text">3.41억</span></td>
                             <td class="col-highlight"><span class="val-text">2,703.6억</span><span class="dps-text">4.10억</span></td>
                         </tr>
                         <tr>
-                            <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
+                            <td class="phase-title">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
                             <td><span class="val-text">3,101.0억</span><span class="dps-text">2.88억</span></td>
                             <td><span class="val-text">3,445.0억</span><span class="dps-text">3.20억</span></td>
                             <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">3.85억</span></td>
                         </tr>
                         <tr class="row-total">
-                            <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
+                            <td class="phase-title">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
                             <td><span class="val-text">3,101.0억</span><span class="dps-text">2.34억</span></td>
                             <td><span class="val-text">3,445.0억</span><span class="dps-text">2.60억</span></td>
                             <td class="col-highlight"><span class="val-text">4,134.0억</span><span class="dps-text">3.12억</span></td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- 📱 모바일 뷰 (카드 리스트) -->
+            <div class="mobile-list-view">
+                <!-- 1페 -->
+                <div class="m-phase-card">
+                    <div class="m-phase-header"><span class="m-phase-name phase-title">1페이즈 종료</span><span class="m-phase-info">335줄 / 2분 20초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">573.3억<span class="m-dps">4.10억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">637.0억<span class="m-dps">4.55억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">764.4억<span class="m-dps">5.46억</span></span></div>
+                </div>
+                <!-- 2페 -->
+                <div class="m-phase-card">
+                    <div class="m-phase-header"><span class="m-phase-name phase-title">2페이즈 종료</span><span class="m-phase-info">145줄 / 11분 00초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">2,028.0억<span class="m-dps">3.07억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">2,253.0억<span class="m-dps">3.41억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">2,703.6억<span class="m-dps">4.10억</span></span></div>
+                </div>
+                <!-- 3페 -->
+                <div class="m-phase-card">
+                    <div class="m-phase-header"><span class="m-phase-name phase-title">3페이즈 종료</span><span class="m-phase-info">0줄 진입 / 17분 55초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">3,101.0억<span class="m-dps">2.88억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">3,445.0억<span class="m-dps">3.20억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">4,134.0억<span class="m-dps">3.85억</span></span></div>
+                </div>
+                <!-- 토벌 -->
+                <div class="m-phase-card m-total">
+                    <div class="m-phase-header"><span class="m-phase-name" style="color:#f1c40f;">🏆 최종 토벌 완료</span><span class="m-phase-info" style="color:#f1c40f;">총 22분 05초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">3,101.0억<span class="m-dps">2.34억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">3,445.0억<span class="m-dps">2.60억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">4,134.0억<span class="m-dps">3.12억</span></span></div>
+                </div>
             </div>
         </div>
     </div>
@@ -424,7 +551,8 @@
         </div>
 
         <div class="accordion-content" onclick="event.stopPropagation();">
-            <div class="table-responsive">
+            <!-- 🖥️ PC 뷰 (테이블) -->
+            <div class="pc-table-view">
                 <table class="dps-table">
                     <thead>
                         <tr>
@@ -436,31 +564,63 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="td-phase">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
+                            <td class="phase-title">1페이즈 종료 <span>(335줄 / 누적 2분 20초)</span></td>
                             <td><span class="val-text">1,320.2억</span><span class="dps-text">9.43억</span></td>
                             <td><span class="val-text">1,466.2억</span><span class="dps-text">10.47억</span></td>
                             <td class="col-highlight"><span class="val-text">1,760.2억</span><span class="dps-text">12.57억</span></td>
                         </tr>
                         <tr>
-                            <td class="td-phase">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
+                            <td class="phase-title">2페이즈 종료 <span>(145줄 / 누적 11분 00초)</span></td>
                             <td><span class="val-text">4,669.7억</span><span class="dps-text">7.08억</span></td>
                             <td><span class="val-text">5,186.5억</span><span class="dps-text">7.86억</span></td>
                             <td class="col-highlight"><span class="val-text">6,226.3억</span><span class="dps-text">9.43억</span></td>
                         </tr>
                         <tr>
-                            <td class="td-phase">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
+                            <td class="phase-title">3페이즈 종료 <span>(0줄 진입 / 누적 17분 55초)</span></td>
                             <td><span class="val-text">7,141.2억</span><span class="dps-text">6.64억</span></td>
                             <td><span class="val-text">7,931.5억</span><span class="dps-text">7.38억</span></td>
                             <td class="col-highlight"><span class="val-text">9,521.6억</span><span class="dps-text">8.86억</span></td>
                         </tr>
                         <tr class="row-total">
-                            <td class="td-phase">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
+                            <td class="phase-title">🏆 최종 토벌 완료 <span>(레이드 종료 / 총 22분 05초)</span></td>
                             <td><span class="val-text">9,228.0억</span><span class="dps-text">6.96억</span></td>
                             <td><span class="val-text">1조 249.2억</span><span class="dps-text">7.73억</span></td>
                             <td class="col-highlight"><span class="val-text">1조 2,304.0억</span><span class="dps-text">9.29억</span></td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- 📱 모바일 뷰 (카드 리스트) -->
+            <div class="mobile-list-view">
+                <!-- 1페 -->
+                <div class="m-phase-card">
+                    <div class="m-phase-header"><span class="m-phase-name phase-title">1페이즈 종료</span><span class="m-phase-info">335줄 / 2분 20초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">1,320.2억<span class="m-dps">9.43억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">1,466.2억<span class="m-dps">10.47억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">1,760.2억<span class="m-dps">12.57억</span></span></div>
+                </div>
+                <!-- 2페 -->
+                <div class="m-phase-card">
+                    <div class="m-phase-header"><span class="m-phase-name phase-title">2페이즈 종료</span><span class="m-phase-info">145줄 / 11분 00초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">4,669.7억<span class="m-dps">7.08억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">5,186.5억<span class="m-dps">7.86억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">6,226.3억<span class="m-dps">9.43억</span></span></div>
+                </div>
+                <!-- 3페 -->
+                <div class="m-phase-card">
+                    <div class="m-phase-header"><span class="m-phase-name phase-title">3페이즈 종료</span><span class="m-phase-info">0줄 진입 / 17분 55초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">7,141.2억<span class="m-dps">6.64억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">7,931.5억<span class="m-dps">7.38억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">9,521.6억<span class="m-dps">8.86억</span></span></div>
+                </div>
+                <!-- 토벌 -->
+                <div class="m-phase-card m-total">
+                    <div class="m-phase-header"><span class="m-phase-name" style="color:#bfa5f9;">🏆 최종 토벌 완료</span><span class="m-phase-info" style="color:#bfa5f9;">총 22분 05초</span></div>
+                    <div class="m-grid-row"><span class="m-label">강투 (15%)</span><span class="m-values">9,228.0억<span class="m-dps">6.96억</span></span></div>
+                    <div class="m-grid-row"><span class="m-label">1인분 (16.6%)</span><span class="m-values">1조 249.2억<span class="m-dps">7.73억</span></span></div>
+                    <div class="m-grid-row m-highlight"><span class="m-label">잔혈 (20%)</span><span class="m-values">1조 2,304.0억<span class="m-dps">9.29억</span></span></div>
+                </div>
             </div>
         </div>
     </div>
