@@ -1082,19 +1082,19 @@
             color: #f7ca54;
         }
 
-        .ex-detail-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px 0;
-            margin-top: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #5a6178;
-            border-top: 1px solid #1e2030;
-            transition: color .2s;
-        }
+       .ex-detail-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 0;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #6b7280;
+    border-top: 1px solid rgba(167,139,250,.15);
+    transition: color .2s;
+}
 
         .ex-detail-arrow {
             transition: transform .3s;
@@ -1111,22 +1111,23 @@
         }
 
         .ex-raid-card.ex-active .ex-accordion-content {
-            max-height: 2000px;
-            border-top: 1px solid #252836;
-            margin-top: 14px;
-            padding-top: 14px;
-        }
+    max-height: 2000px;
+    border-top: 2px solid rgba(167,139,250,.25);
+    margin-top: 14px;
+    padding-top: 14px;
+}
 
         .ex-pc-table-view { display: block; width: 100%; }
         .ex-dps-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; }
-        .ex-dps-table th { color: #5a6178; font-weight: 600; padding: 10px 6px; border-bottom: 1px solid #252836; font-size: 12px; }
-        .ex-dps-table td { padding: 12px 6px; border-bottom: 1px solid #1e2030; color: #e0e0e0; }
+        .ex-dps-table th { color: #9ca3af; font-weight: 700; padding: 12px 8px; border-bottom: 2px solid rgba(167,139,250,.3); font-size: 12px; background: linear-gradient(180deg, rgba(167,139,250,.1), rgba(139,92,246,.03)); }
+        .ex-dps-table td { padding: 12px 8px; border-bottom: 1px solid #2d3146; border-right: 1px solid #252836; color: #e0e0e0; }
+.ex-dps-table td:last-child { border-right: none; }
         .ex-dps-table tr:hover td { background: #15171f; }
         .ex-phase-title { text-align: left; font-weight: 700; }
         .ex-phase-title span { display: block; font-size: 11px; color: #5a6178; font-weight: normal; margin-top: 2px; }
         .ex-val-text { display: block; font-weight: 700; margin-bottom: 2px; color: #fff; }
         .ex-dps-text { display: block; font-size: 11px; color: #34d399; }
-        .ex-col-highlight { background: rgba(247,202,84,.02); }
+        .ex-col-highlight { background: rgba(247,202,84,.06); }
         .ex-dps-table th.ex-col-highlight,
         .ex-dps-table td.ex-col-highlight .ex-val-text { color: #f7ca54; }
         .ex-row-total td { background: #15171f !important; border-bottom: 2px solid #252836; }
@@ -1630,7 +1631,7 @@
                     <a href="./tournament.html">직각 토너먼트</a>
                 </div>
 
-                <div class="mini-label">LOITER BASE · v24</div>
+                <div class="mini-label">LOITER BASE · v25</div>
                 <div class="hero">
                     로아<br>
                     DPS 계산기
@@ -2366,16 +2367,16 @@
                         name: "아브 EX 나이트메어",
                         tags: [{ text: "1관 아브렐슈드" }, { text: "악마" }, { text: "뇌속성 취약", weak: true }],
                         tank_dmg: "9,228",
-                        tank_dps: "6.96억",
-                        one_dmg: "1조 249",
-                        one_dps: "7.73억",
-                        blood_dmg: "1조 2,304",
-                        blood_dps: "9.29억",
+tank_dps: "6.96억",
+one_dmg: "10,249",
+one_dps: "7.73억",
+blood_dmg: "12,304",
+blood_dps: "9.29억",
                         phases: [
                             { label: "1페이즈 종료", sub: "335줄 / 누적 2분 20초", t_d: "1,320.2억", t_s: "9.43억", o_d: "1,466.2억", o_s: "10.47억", b_d: "1,760.2억", b_s: "12.57억" },
                             { label: "2페이즈 종료", sub: "145줄 / 누적 11분 00초", t_d: "4,669.7억", t_s: "7.08억", o_d: "5,186.5억", o_s: "7.86억", b_d: "6,226.3억", b_s: "9.43억" },
                             { label: "3페이즈 종료", sub: "0줄 진입 / 누적 17분 55초", t_d: "7,141.2억", t_s: "6.64억", o_d: "7,931.5억", o_s: "7.38억", b_d: "9,521.6억", b_s: "8.86억" },
-                            { label: "🏆 최종 토벌 완료", sub: "레이드 종료 / 총 22분 05초", t_d: "9,228.0억", t_s: "6.96억", o_d: "1조 249.2억", o_s: "7.73억", b_d: "1조 2,304.0억", b_s: "9.29억", total: true }
+                            { label: "🏆 최종 토벌 완료", sub: "레이드 종료 / 총 22분 05초", t_d: "9,228.0억", t_s: "6.96억", o_d: "10,249.2억", o_s: "7.73억", b_d: "12,304.0억", b_s: "9.29억", total: true }
                         ]
                     }
                 ],
