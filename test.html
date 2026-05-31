@@ -2583,13 +2583,30 @@
         box-shadow: none !important;
       }
 
-      .battle-choice.stage-green,
-      .battle-choice.stage-blue,
-      .battle-choice.stage-purple,
-      .battle-choice.stage-yellow,
-      .battle-choice.stage-red {
-        box-shadow: none !important;
-      }
+     .battle-choice.stage-green {
+    box-shadow: 0 12px 24px rgba(0,0,0,.24), 0 0 18px rgba(52,211,153,.18) !important;
+    border-color: rgba(52,211,153,.24) !important;
+}
+
+.battle-choice.stage-blue {
+    box-shadow: 0 12px 24px rgba(0,0,0,.24), 0 0 18px rgba(59,130,246,.18) !important;
+    border-color: rgba(59,130,246,.24) !important;
+}
+
+.battle-choice.stage-purple {
+    box-shadow: 0 12px 24px rgba(0,0,0,.24), 0 0 18px rgba(167,139,250,.18) !important;
+    border-color: rgba(167,139,250,.24) !important;
+}
+
+.battle-choice.stage-yellow {
+    box-shadow: 0 12px 24px rgba(0,0,0,.24), 0 0 18px rgba(247,202,84,.18) !important;
+    border-color: rgba(247,202,84,.24) !important;
+}
+
+.battle-choice.stage-red {
+    box-shadow: 0 12px 24px rgba(0,0,0,.24), 0 0 18px rgba(239,68,68,.18) !important;
+    border-color: rgba(239,68,68,.24) !important;
+}
       
     }
     @media (max-width: 480px) {
@@ -4407,7 +4424,7 @@
 
 .badge-history-solid {
   background: linear-gradient(180deg, rgba(166, 132, 234, 0.98), rgba(126, 96, 204, 0.98));
-  color: #1b1328;
+  color: #111111 !important;
   border: 1px solid rgba(255,255,255,0.12);
   box-shadow:
     0 4px 10px rgba(91, 63, 158, 0.24),
@@ -5192,13 +5209,46 @@ body {
 }
 
 /* 7) 왼쪽 사이드 카드들 톤 통일 */
-.tier-btn,
-.historyrate-btn-wrap,
-.oprate-btn-wrap {
-    background: #15171f !important;
+.tier-btn {
     border: 1px solid #252836 !important;
     border-radius: 14px !important;
     box-shadow: none !important;
+}
+
+.historyrate-btn-wrap,
+.oprate-btn-wrap {
+    border-radius: 14px !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* 버튼별 내부 배경 다시 살리기 */
+.tier-btn-op {
+    background: linear-gradient(135deg, rgba(34,197,94,0.10), rgba(34,197,94,0.03)) !important;
+    border: 1px solid rgba(34,197,94,0.22) !important;
+    border-top: 2px solid #22c55e !important;
+    color: #86efac !important;
+}
+
+.tier-btn-favor {
+    background: linear-gradient(135deg, rgba(247,202,84,0.10), rgba(247,202,84,0.03)) !important;
+    border: 1px solid rgba(247,202,84,0.22) !important;
+    border-top: 2px solid #f7ca54 !important;
+    color: #fcd34d !important;
+}
+
+.tier-btn-op-rate {
+    background: linear-gradient(135deg, rgba(59,130,246,0.10), rgba(99,102,241,0.05)) !important;
+    border: 1px solid rgba(99,102,241,0.22) !important;
+    border-top: 2px solid #3b82f6 !important;
+}
+
+
+.tier-btn-history-rate {
+    background: linear-gradient(135deg, rgba(167,139,250,0.10), rgba(139,92,246,0.04)) !important;
+    border: 1px solid rgba(167,139,250,0.22) !important;
+    border-top: 2px solid #a78bfa !important;
 }
 
 /* 내부 버튼/링크가 있을 경우 */
@@ -5219,17 +5269,45 @@ body {
 
 /* history / op rate 래퍼 안쪽도 카드처럼 */
 .historyrate-btn-wrap {
-    border-top: 2px solid #a78bfa !important;
+.historyrate-btn-wrap {
+    border-top: none !important;
 }
 
 .oprate-btn-wrap {
+    border-top: none !important;
+}
+
+.tier-btn-history-rate {
+    border-top: 2px solid #a78bfa !important;
+}
+
+.tier-btn-op-rate {
     border-top: 2px solid #3b82f6 !important;
+}
+
+.tier-btn-history-rate,
+.tier-btn-op-rate {
+    border-radius: 14px !important;
+    overflow: hidden !important;
+}
+
+.tier-btn-history-rate::after,
+.tier-btn-op-rate::after {
+    inset: 0 !important;
+    border-radius: inherit !important;
+    opacity: 0.42 !important;
+    padding: 1px !important;
+}
+
+.tier-btn-history-rate::after,
+.tier-btn-op-rate::after {
+    clip-path: inset(0 round 14px);
 }
 
 /* hover */
 .tier-btn:hover,
-.historyrate-btn-wrap:hover,
-.oprate-btn-wrap:hover {
+.tier-btn-history-rate:hover,
+.tier-btn-op-rate:hover {
     background: #1a1c24 !important;
     border-color: #3b4563 !important;
     transform: translateY(-1px) !important;
@@ -5290,6 +5368,469 @@ body {
         border-bottom: 1px solid #1e2030 !important;
     }
 }
+
+
+
+/* 13) 메인 토너먼트 카드 다크 대시보드 톤 */
+.tournament-card {
+    background: #13151c !important;
+    border: 1px solid #252836 !important;
+    border-radius: 18px !important;
+    box-shadow: none !important;
+}
+
+.tournament-card::before {
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent 42%) !important;
+}
+
+/* OP 카드 */
+.op-card {
+    background:
+        linear-gradient(180deg, rgba(59,130,246,0.10), rgba(19,21,28,0.96) 42%),
+        #13151c !important;
+    border: 1px solid rgba(99,102,241,0.28) !important;
+    box-shadow: 0 0 0 1px rgba(99,102,241,0.04) inset !important;
+}
+
+/* 호감 카드 */
+.favor-card {
+    background:
+        linear-gradient(180deg, rgba(247,202,84,0.08), rgba(19,21,28,0.96) 42%),
+        #13151c !important;
+    border: 1px solid rgba(247,202,84,0.24) !important;
+    box-shadow: 0 0 0 1px rgba(247,202,84,0.03) inset !important;
+}
+
+/* 카드 텍스트 */
+.card-label {
+    font-size: 10px !important;
+    letter-spacing: 2px !important;
+    font-weight: 900 !important;
+}
+
+.op-card .card-label {
+    color: #93c5fd !important;
+}
+
+.favor-card .card-label {
+    color: #f7ca54 !important;
+}
+
+.card-title {
+    color: #ffffff !important;
+}
+
+.card-desc {
+    color: #6b7280 !important;
+}
+
+/* 메인 카드 버튼도 다크톤에 맞게 정리 */
+.primary-btn {
+    background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(99,102,241,.18) !important;
+}
+
+.ghost-btn {
+    background: #1a1c24 !important;
+    border: 1px solid #252836 !important;
+    color: #6b7280 !important;
+    box-shadow: none !important;
+}
+
+.ghost-btn:hover {
+    background: #1e2030 !important;
+    border-color: #3b4563 !important;
+    color: #d1d5db !important;
+}
+
+
+/* 14) 직업 선택 / 배틀 모달 다크 대시보드 톤 */
+#classModal,
+#battleModal {
+    background: rgba(4, 8, 16, 0.72) !important;
+    backdrop-filter: blur(6px) !important;
+}
+
+#classModal .flow-card,
+#battleModal .flow-card {
+    background: #13151c !important;
+    border: 1px solid #252836 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 30px 80px rgba(0,0,0,.45) !important;
+}
+
+/* 상단 라벨/제목/설명 */
+#classModal .flow-label,
+#battleModal .flow-label {
+    color: #a78bfa !important;
+    font-size: 11px !important;
+    letter-spacing: 2px !important;
+    font-weight: 900 !important;
+}
+
+#classModal .flow-title,
+#battleModal .flow-title,
+#battleModal .battle-top-title,
+#battleModal .battleRoundTitle {
+    color: #ffffff !important;
+}
+
+#classModal .flow-desc,
+#battleModal .flow-desc,
+#battleModal #battleSubText {
+    color: #6b7280 !important;
+}
+
+/* 직업 선택 줄 */
+.class-row {
+    background: #15171f !important;
+    border: 1px solid #252836 !important;
+    border-radius: 14px !important;
+}
+
+.class-group {
+    color: #ffffff !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+}
+
+/* 직업 선택 버튼 */
+.class-select-btn {
+    background: #1a1c24 !important;
+    border: 1px solid #252836 !important;
+    color: #e5e7eb !important;
+    box-shadow: none !important;
+}
+
+.class-select-btn:hover {
+    background: #1e2030 !important;
+    border-color: #3b4563 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+/* 배틀 진행바 */
+.battle-progress-top {
+    color: #9ca3af !important;
+}
+
+.battle-progress-bar {
+    background: #15171f !important;
+    border: 1px solid #252836 !important;
+    border-radius: 999px !important;
+    padding: 3px !important;
+    height: 14px !important;
+}
+
+.battle-progress-fill {
+    background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+    border-radius: 999px !important;
+    box-shadow: 0 0 12px rgba(99,102,241,.18) !important;
+}
+
+/* VS 텍스트 */
+.battle-vs {
+    color: #f7ca54 !important;
+    text-shadow: 0 0 10px rgba(247,202,84,.16) !important;
+}
+
+/* 배틀 카드 기본 */
+.battle-choice {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+        #15171f !important;
+    border: 1px solid #252836 !important;
+    box-shadow:
+        0 16px 32px rgba(0,0,0,.28),
+        0 0 0 1px rgba(255,255,255,.02) inset !important;
+}
+
+/* 카드 hover */
+.battle-choice:hover {
+    filter: brightness(1.03) !important;
+}
+
+/* 단계별 글로우를 다크톤에 맞게 다운 */
+.battle-choice.stage-green {
+    box-shadow:
+        0 16px 34px rgba(0,0,0,.28),
+        0 0 28px rgba(52,211,153,.12) !important;
+    border-color: rgba(52,211,153,.22) !important;
+}
+
+.battle-choice.stage-blue {
+    box-shadow:
+        0 16px 34px rgba(0,0,0,.28),
+        0 0 30px rgba(59,130,246,.14) !important;
+    border-color: rgba(59,130,246,.24) !important;
+}
+
+.battle-choice.stage-purple {
+    box-shadow:
+        0 16px 34px rgba(0,0,0,.28),
+        0 0 30px rgba(167,139,250,.14) !important;
+    border-color: rgba(167,139,250,.24) !important;
+}
+
+.battle-choice.stage-yellow {
+    box-shadow:
+        0 18px 36px rgba(0,0,0,.30),
+        0 0 32px rgba(247,202,84,.14) !important;
+    border-color: rgba(247,202,84,.24) !important;
+}
+
+.battle-choice.stage-red {
+    box-shadow:
+        0 18px 36px rgba(0,0,0,.32),
+        0 0 34px rgba(239,68,68,.16) !important;
+    border-color: rgba(239,68,68,.24) !important;
+}
+
+/* 카드 내부 텍스트 */
+.battle-choice-class {
+    color: #6b7280 !important;
+}
+
+.battle-choice-name {
+    text-shadow: 0 0 10px rgba(255,255,255,.08) !important;
+}
+
+/* 카드 프레임 금선은 조금 톤다운 */
+.gold {
+    stroke: rgba(247,202,84,0.78) !important;
+}
+
+.gold-thin {
+    stroke: rgba(247,202,84,0.48) !important;
+}
+
+.gold-fill {
+    fill: rgba(247,202,84,0.82) !important;
+}
+
+/* 글로스도 너무 튀지 않게 */
+.choice-gloss {
+    background: linear-gradient(
+      115deg,
+      rgba(255,255,255,0) 22%,
+      rgba(255,255,255,0.04) 34%,
+      rgba(147,197,253,0.16) 48%,
+      rgba(255,255,255,0.04) 62%,
+      rgba(255,255,255,0) 78%
+    ) !important;
+}
+
+/* 그만두기 버튼 */
+#quitBattleBtn,
+#closeClassModalBtn {
+    background: #1a1c24 !important;
+    border: 1px solid #252836 !important;
+    color: #9ca3af !important;
+}
+
+#quitBattleBtn:hover,
+#closeClassModalBtn:hover {
+    background: #1e2030 !important;
+    border-color: #3b4563 !important;
+    color: #ffffff !important;
+}
+
+
+/* 15) 우승 모달 / 가이드 모달 / 티어 모달 / 승률표 모달 다크 대시보드 톤 통일 */
+
+/* ===== 모달 배경 ===== */
+#winnerModal,
+#guideModal,
+#opTierModal,
+#favorTierModal,
+#opRateModal {
+    background: rgba(4, 8, 16, 0.76) !important;
+    backdrop-filter: blur(6px) !important;
+}
+
+/* ===== 우승 모달 카드 ===== */
+#winnerModal .winner-card {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
+        #13151c !important;
+    border: 1px solid #252836 !important;
+    border-radius: 24px !important;
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.45),
+        0 0 0 1px rgba(255,255,255,.02) inset !important;
+}
+
+#winnerModal .winner-card::before {
+    background:
+        radial-gradient(circle at top center, rgba(99,102,241,.06), transparent 34%),
+        radial-gradient(circle at bottom center, rgba(247,202,84,.05), transparent 34%) !important;
+}
+
+#winnerModal .winner-label {
+    color: #a78bfa !important;
+}
+
+#winnerModal .winner-title {
+    color: #ffffff !important;
+    text-shadow: none !important;
+}
+
+#winnerModal .winner-sub {
+    color: #d1d5db !important;
+}
+
+#winnerModal .winner-desc {
+    color: #6b7280 !important;
+}
+
+#winnerModal .winner-actions .primary-btn {
+    background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(99,102,241,.18) !important;
+}
+
+/* ===== 우승 모달 안 등급 도장 랩 ===== */
+#winnerModal .grade-stamp-wrap {
+    margin: 18px 0 12px !important;
+}
+
+#winnerModal .grade-comment {
+    color: #c4b5fd !important;
+    font-style: normal !important;
+}
+
+/* ===== 공통 modal-card 톤 (가이드 / 티어 / 승률표) ===== */
+#guideModal .modal-card,
+#opTierModal .modal-card,
+#favorTierModal .modal-card,
+#opRateModal .modal-card {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
+        #13151c !important;
+    border: 1px solid #252836 !important;
+    border-radius: 22px !important;
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.45),
+        0 0 0 1px rgba(255,255,255,.02) inset !important;
+}
+
+/* ===== 모달 닫기 버튼 ===== */
+#guideModal .modal-close,
+#opTierModal .modal-close,
+#favorTierModal .modal-close,
+#opRateModal .modal-close {
+    background: #1a1c24 !important;
+    border: 1px solid #252836 !important;
+    color: #9ca3af !important;
+}
+
+#guideModal .modal-close:hover,
+#opTierModal .modal-close:hover,
+#favorTierModal .modal-close:hover,
+#opRateModal .modal-close:hover {
+    background: #1e2030 !important;
+    border-color: #3b4563 !important;
+    color: #ffffff !important;
+}
+
+/* ===== 가이드 모달 ===== */
+#guideModal .modal-top-label {
+    color: #a78bfa !important;
+}
+
+#guideModal .modal-title {
+    color: #ffffff !important;
+}
+
+#guideModal .modal-sub {
+    color: #6b7280 !important;
+}
+
+#guideModal .modal-divider {
+    background: linear-gradient(90deg, transparent, #252836, transparent) !important;
+}
+
+#guideModal .grade-note {
+    background: #1a1c24 !important;
+    border: 1px solid #252836 !important;
+    color: #9ca3af !important;
+}
+
+/* 등급표 셀은 기존 색상 유지하면서 배경만 대시보드화 */
+#guideModal .grade-item {
+    background: rgba(255,255,255,0.03) !important;
+    box-shadow: none !important;
+}
+
+/* ===== OP / 호감 티어 모달 ===== */
+#opTierModal .modal-top-label,
+#favorTierModal .modal-top-label {
+    color: #a78bfa !important;
+}
+
+#opTierModal .modal-sub,
+#favorTierModal .modal-sub {
+    color: #6b7280 !important;
+}
+
+#opTierModal .modal-divider,
+#favorTierModal .modal-divider {
+    background: linear-gradient(90deg, transparent, #252836, transparent) !important;
+}
+
+/* 티어 박스들도 대시보드 톤 위에 자연스럽게 */
+#opTierModal .tier-block,
+#favorTierModal .tier-block {
+    box-shadow: none !important;
+}
+
+/* ===== 승률표 모달 상단 ===== */
+#opRateModal .modal-top-label {
+    color: #a78bfa !important;
+}
+
+#opRateModal .modal-title {
+    color: #ffffff !important;
+}
+
+#opRateModal .modal-sub {
+    color: #6b7280 !important;
+}
+
+#opRateModal .modal-divider {
+    background: linear-gradient(90deg, transparent, #252836, transparent) !important;
+}
+
+/* 비교 기준 영역도 다크 톤에 맞게 */
+.oprate-compare-wrap {
+    background: rgba(255,255,255,0.02) !important;
+    border-radius: 14px !important;
+    padding: 10px 12px !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+.oprate-compare-base {
+    color: #9ca3af !important;
+}
+
+.oprate-compare-vs {
+    color: #f7ca54 !important;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+    #winnerModal .winner-card,
+    #guideModal .modal-card,
+    #opTierModal .modal-card,
+    #favorTierModal .modal-card,
+    #opRateModal .modal-card {
+        border-radius: 18px !important;
+    }
+}
+
+
+
     
   </style>
 </head>
@@ -5302,15 +5843,14 @@ body {
   <a href="./tournament" class="active">직각 토너먼트</a>
 </div>
 
-        <div class="mini-label">LOITER BASE · v25</div>
+        <div class="mini-label">LOITER BASE · v26</div>
         <div class="hero">로아<br>직각 토너먼트</div>
         <div class="muted">OP 직각과 호감 직각을 직접 선택하고, 완료 후 전체 랭킹을 확인할 수 있습니다.</div>
 
                 <button class="guide-trigger" id="openGuideBtn">
           <span class="guide-small">안내</span>
           <span>랭크 도장 <span class="guide-accent">점수 기준</span> 보기</span>
-          <span class="new-badge">NEW</span>
-        </button>
+                 </button>
 
         <div class="sidebar-divider"></div>
 
@@ -5354,8 +5894,7 @@ body {
 </div>
 
        <div class="oprate-btn-wrap">
-  <span class="new-badge new-badge-rate">NEW</span>
-
+ 
   <button class="tier-btn tier-btn-op-rate" id="openOpRateBtn">
     <div class="oprate-spark-glow"></div>
     <div class="oprate-spark-sweep"></div>
