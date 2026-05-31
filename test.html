@@ -21,58 +21,68 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            background-color: #0d0e13;
-            color: #e0e0e0;
-            font-family: "Segoe UI", "Malgun Gothic", sans-serif;
-            min-height: 100vh;
-        }
+       body {
+    background-color: #0d0e13;
+    color: #e0e0e0;
+    font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+    min-height: 100vh;
+    
+}
 
-        .app {
-            width: min(1440px, 100%);
-            margin: 0 auto;
-            overflow: hidden;
-        }
-
-        .workspace {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            min-height: 100vh;
-        }
+       .app {
+    width: min(1440px, calc(100% - 20px));
+    margin: 20px auto 10px;
+    overflow: hidden;
+    border-radius: 30px;
+}
+       .workspace {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 780px;
+}
 
         /* ===================== 사이드바 ===================== */
-        .sidebar {
-            padding: 24px 18px;
-            background: #111318;
-            border-right: 1px solid #1e2030;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+  .sidebar {
+    padding: 24px;
+    background: #111318;
+    border-right: 1px solid #1e2030;
+}
 
-        .switch-wrap {
-            display: flex; gap: 4px; padding: 4px;
-            border-radius: 10px; background: #1a1c24;
-            border: 1px solid #252836; margin-bottom: 22px;
-        }
+       .switch-wrap {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 10px;
+    background: #1a1c24;
+    border: 1px solid #252836;
+    margin-bottom: 16px;
+}
 
-        .switch-wrap a {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            min-height: 36px; text-decoration: none; border-radius: 8px;
-            font-size: 12px; font-weight: 900; color: #5a6178;
-            transition: .2s; white-space: nowrap;
-        }
+       .switch-wrap a {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 900;
+    color: #5a6178;
+    transition: .2s;
+    white-space: nowrap;
+}
 
         .switch-wrap a.active {
             background: linear-gradient(135deg, #3b82f6, #6366f1);
             color: #fff; box-shadow: 0 2px 12px rgba(99,102,241,.3);
         }
 
-        .mini-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #4a7cff; margin-bottom: 6px; }
+        .mini-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #4a7cff; margin-bottom: 8px; }
 
-        .hero { font-size: 28px; font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 10px; word-break: keep-all; }
+        .hero { font-size: 34px; font-weight: 900; color: #fff; line-height: 1.12; margin-bottom: 12px; word-break: keep-all; }
 
-        .muted { font-size: 13px; color: #6b7280; line-height: 1.6; }
+       .muted { font-size: 14px; color: #6b7280; line-height: 1.65; }
 
         .guide-trigger-wrap { margin-top: 18px; margin-bottom: 18px; }
 
@@ -87,19 +97,27 @@
 
         .sidebar-divider { width: 100%; height: 1px; background: #1e2030; margin: 12px 0; }
 
-        .menu { display: grid; gap: 6px; }
+        .menu { display: grid; gap: 10px; }
 
         .menu-item {
-            width: 100%; border: 1px solid #252836; background: #1a1c24;
-            border-radius: 12px; padding: 13px 14px; font-size: 14px; font-weight: 700;
-            color: #c0c7d6; text-align: left; cursor: pointer; transition: .2s;
-        }
+    width: 100%;
+    border: 1px solid #252836;
+    background: #1a1c24;
+    border-radius: 18px;
+    padding: 15px 16px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #c0c7d6;
+    text-align: left;
+    cursor: pointer;
+    transition: .2s;
+}
         .menu-item:hover { border-color: #3b4563; background: #1e2030; transform: translateY(-1px); }
         .menu-item.active {
             background: linear-gradient(135deg, #3b82f6, #6366f1);
             color: #fff; border-color: transparent; box-shadow: 0 4px 16px rgba(99,102,241,.25);
         }
-        .menu-item.simple-entry { font-size: 14px; padding: 13px 14px; }
+        .menu-item.simple-entry { font-size: 16px; padding: 15px 16px; }
 
         .icon { width: 14px; height: 14px; margin-right: 4px; vertical-align: middle; }
         .gold-material { margin-top: 4px; display: flex; align-items: center; gap: 4px; font-size: 13px; color: #9ca3af; }
@@ -169,14 +187,14 @@
         .cal-day.today.sat, .cal-day.today.sun { color:#fff; }
 
         /* ===================== 메인 ===================== */
-        .main {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            min-width: 0;
-            background: #0d0e13;
-        }
+   .main {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    background: #0d0e13;
+}
 
         .topline {
             display: flex;
@@ -1543,7 +1561,7 @@
         
 @media (max-width: 768px) {
     body { padding: 0; }
-    .sidebar { padding: 16px; }
+    .sidebar { padding: 12px; }
     .main { padding: 14px; }
     .hero { font-size: 24px; }
     .title { font-size: 22px; }
@@ -1700,7 +1718,7 @@
                     <a href="./tournament.html">직각 토너먼트</a>
                 </div>
 
-                <div class="mini-label">LOITER BASE · v25</div>
+                <div class="mini-label">LOITER BASE · v26</div>
                 <div class="hero">
                     로아<br>
                     DPS 계산기
