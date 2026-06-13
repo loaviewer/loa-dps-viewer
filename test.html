@@ -6334,6 +6334,11 @@ body {
   </style>
 
 <style>
+
+body.class-win-modal-open{
+  overflow:hidden !important;
+}
+  
 #classWinModal .modal-card{
   width:min(1100px,100%);
   max-height:92vh;
@@ -6345,7 +6350,8 @@ body {
   border-radius:24px!important;
   box-shadow:0 30px 80px rgba(0,0,0,.45)!important;
   position:relative;
-  scrollbar-gutter: stable;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
 }
 
 #classWinModal .modal-top-label,
@@ -6661,7 +6667,7 @@ body {
   top:calc(100% + 8px);
   right:0;
   left:auto;
-  width:min(540px, calc(100vw - 48px));
+  width:min(420px, calc(100vw - 48px));
   border-radius:16px;
   border:1px solid #2b3145;
   background:linear-gradient(180deg,#171b25 0%,#11151d 100%);
@@ -6673,6 +6679,7 @@ body {
   overflow-x:hidden;
   padding:14px;
   scrollbar-gutter:stable;
+  overscroll-behavior:contain;
 }
 
 .cw-select-dropdown.show{
@@ -6681,7 +6688,7 @@ body {
 
 .cw-job-grid{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:1fr;
   gap:12px;
 }
 
@@ -7239,136 +7246,138 @@ body {
   </div>
 
 
-  <!-- 클래스별 우승 분석 모달 -->
-  <div class="modal-backdrop" id="classWinModal">
-    <div class="modal-card">
-      <button class="modal-close" id="closeClassWinBtn">×</button>
-      <div class="modal-top-label">CLASS WIN ANALYSIS</div>
-      <div class="modal-title" style="color:#ff9f9f;">클래스별 우승 분석 📊</div>
-      <div class="modal-sub" id="classWinSub">도장 1개 이상 획득 시 열람 가능</div>
-      <div class="modal-divider"></div>
-   
-<div id="classWinContent">
-  <div class="cw-chart-header">
-    <div class="cw-chart-class-badge" id="cwClassBadge">전사</div>
-    <div class="cw-chart-title" id="cwChartTitle">
-      워로드가 선택한 <span class="cw-hl-op">OP</span> 각인은?
-    </div>
-    <div class="cw-chart-sub">해당 클래스 유저들이 최종 우승으로 선택한 각인 비율입니다.</div>
-  </div>
+<!-- 클래스별 우승 분석 모달 -->
+<div class="modal-backdrop" id="classWinModal">
+  <div class="modal-card">
+    <button class="modal-close" id="closeClassWinBtn">×</button>
+    <div class="modal-top-label">CLASS WIN ANALYSIS</div>
+    <div class="modal-title" style="color:#ff9f9f;">클래스별 우승 분석 📊</div>
+    <div class="modal-sub" id="classWinSub">도장 1개 이상 획득 시 열람 가능</div>
+    <div class="modal-divider"></div>
 
-  <div class="cw-body">
-    <div class="cw-pie-area">
-      <div class="cw-pie-container" id="cwPieWrap">
-        <canvas id="cwPieCanvas" width="1000" height="1000"></canvas>
+    <div id="classWinContent">
+      <div class="cw-chart-header">
+        <div class="cw-chart-class-badge" id="cwClassBadge">전사</div>
+        <div class="cw-chart-title" id="cwChartTitle">
+          워로드가 선택한 <span class="cw-hl-op">OP</span> 각인은?
+        </div>
+        <div class="cw-chart-sub">해당 클래스 유저들이 최종 우승으로 선택한 각인 비율입니다.</div>
       </div>
 
-      <div class="cw-legend-wrap" id="cwLegendWrap"></div>
-      <div class="cw-pie-note"><strong>기타</strong>는 6위 이상 전체 각인의 합산입니다.</div>
-    </div>
-
-    <div class="cw-control-panel">
-      <div class="cw-control-panel-head">클래스 선택</div>
-
-      <div class="cw-control-body">
-        <div class="cw-type-toggle">
-          <button class="cw-type-btn cw-active-op" id="cwTypeOpBtn">OP</button>
-          <button class="cw-type-btn" id="cwTypeFavorBtn">호감</button>
-        </div>
-
-        <div class="cw-select-wrap" id="cwSelectWrap">
-          <div class="cw-select-btn" id="cwSelectBtn">
-            <span id="cwSelectLabel">워로드</span>
-            <span class="cw-arrow" id="cwSelectArrow">▼</span>
+      <div class="cw-body">
+        <div class="cw-pie-area">
+          <div class="cw-pie-container" id="cwPieWrap">
+            <canvas id="cwPieCanvas" width="1000" height="1000"></canvas>
           </div>
 
-          <div class="cw-select-dropdown" id="cwSelectDropdown">
-  <div class="cw-job-grid">
+          <div class="cw-legend-wrap" id="cwLegendWrap"></div>
+          <div class="cw-pie-note"><strong>기타</strong>는 6위 이상 전체 각인의 합산입니다.</div>
+        </div>
 
-    <div class="cw-job-group">
-      <div class="cw-job-group-title">전사</div>
-      <div class="cw-job-list">
-        <div class="cw-select-option cw-active" data-class="워로드" data-group="전사">워로드</div>
-        <div class="cw-select-option" data-class="버서커" data-group="전사">버서커</div>
-        <div class="cw-select-option" data-class="디스트로이어" data-group="전사">디스트로이어</div>
-        <div class="cw-select-option" data-class="홀리나이트" data-group="전사">홀리나이트</div>
-        <div class="cw-select-option" data-class="슬레이어" data-group="전사">슬레이어</div>
-        <div class="cw-select-option" data-class="발키리" data-group="전사">발키리</div>
-      </div>
-    </div>
+        <div class="cw-control-panel">
+          <div class="cw-control-panel-head">클래스 선택</div>
 
-    <div class="cw-job-group">
-      <div class="cw-job-group-title">무도가</div>
-      <div class="cw-job-list">
-        <div class="cw-select-option" data-class="배틀마스터" data-group="무도가">배틀마스터</div>
-        <div class="cw-select-option" data-class="인파이터" data-group="무도가">인파이터</div>
-        <div class="cw-select-option" data-class="기공사" data-group="무도가">기공사</div>
-        <div class="cw-select-option" data-class="창술사" data-group="무도가">창술사</div>
-        <div class="cw-select-option" data-class="스트라이커" data-group="무도가">스트라이커</div>
-        <div class="cw-select-option" data-class="브레이커" data-group="무도가">브레이커</div>
-      </div>
-    </div>
+          <div class="cw-control-body">
+            <div class="cw-type-toggle">
+              <button class="cw-type-btn cw-active-op" id="cwTypeOpBtn">OP</button>
+              <button class="cw-type-btn" id="cwTypeFavorBtn">호감</button>
+            </div>
 
-    <div class="cw-job-group">
-      <div class="cw-job-group-title">헌터</div>
-      <div class="cw-job-list">
-        <div class="cw-select-option" data-class="데빌헌터" data-group="헌터">데빌헌터</div>
-        <div class="cw-select-option" data-class="블래스터" data-group="헌터">블래스터</div>
-        <div class="cw-select-option" data-class="호크아이" data-group="헌터">호크아이</div>
-        <div class="cw-select-option" data-class="스카우터" data-group="헌터">스카우터</div>
-        <div class="cw-select-option" data-class="건슬링어" data-group="헌터">건슬링어</div>
-      </div>
-    </div>
+            <div class="cw-select-wrap" id="cwSelectWrap">
+              <div class="cw-select-btn" id="cwSelectBtn">
+                <span id="cwSelectLabel">워로드</span>
+                <span class="cw-arrow" id="cwSelectArrow">▼</span>
+              </div>
 
-    <div class="cw-job-group">
-      <div class="cw-job-group-title">마법사</div>
-      <div class="cw-job-list">
-        <div class="cw-select-option" data-class="서머너" data-group="마법사">서머너</div>
-        <div class="cw-select-option" data-class="아르카나" data-group="마법사">아르카나</div>
-        <div class="cw-select-option" data-class="바드" data-group="마법사">바드</div>
-        <div class="cw-select-option" data-class="소서리스" data-group="마법사">소서리스</div>
-      </div>
-    </div>
+              <div class="cw-select-dropdown" id="cwSelectDropdown">
+                <div class="cw-job-grid">
 
-    <div class="cw-job-group">
-      <div class="cw-job-group-title">암살자</div>
-      <div class="cw-job-list">
-        <div class="cw-select-option" data-class="블레이드" data-group="암살자">블레이드</div>
-        <div class="cw-select-option" data-class="데모닉" data-group="암살자">데모닉</div>
-        <div class="cw-select-option" data-class="리퍼" data-group="암살자">리퍼</div>
-        <div class="cw-select-option" data-class="소울이터" data-group="암살자">소울이터</div>
-      </div>
-    </div>
+                  <div class="cw-job-group">
+                    <div class="cw-job-group-title">전사</div>
+                    <div class="cw-job-list">
+                      <div class="cw-select-option cw-active" data-class="워로드" data-group="전사">워로드</div>
+                      <div class="cw-select-option" data-class="버서커" data-group="전사">버서커</div>
+                      <div class="cw-select-option" data-class="디스트로이어" data-group="전사">디스트로이어</div>
+                      <div class="cw-select-option" data-class="홀리나이트" data-group="전사">홀리나이트</div>
+                      <div class="cw-select-option" data-class="슬레이어" data-group="전사">슬레이어</div>
+                      <div class="cw-select-option" data-class="발키리" data-group="전사">발키리</div>
+                    </div>
+                  </div>
 
-    <div class="cw-job-group">
-      <div class="cw-job-group-title">스페셜리스트</div>
-      <div class="cw-job-list">
-        <div class="cw-select-option" data-class="도화가" data-group="스페셜리스트">도화가</div>
-        <div class="cw-select-option" data-class="기상술사" data-group="스페셜리스트">기상술사</div>
-        <div class="cw-select-option" data-class="환수사" data-group="스페셜리스트">환수사</div>
-      </div>
-    </div>
+                  <div class="cw-job-group">
+                    <div class="cw-job-group-title">무도가</div>
+                    <div class="cw-job-list">
+                      <div class="cw-select-option" data-class="배틀마스터" data-group="무도가">배틀마스터</div>
+                      <div class="cw-select-option" data-class="인파이터" data-group="무도가">인파이터</div>
+                      <div class="cw-select-option" data-class="기공사" data-group="무도가">기공사</div>
+                      <div class="cw-select-option" data-class="창술사" data-group="무도가">창술사</div>
+                      <div class="cw-select-option" data-class="스트라이커" data-group="무도가">스트라이커</div>
+                      <div class="cw-select-option" data-class="브레이커" data-group="무도가">브레이커</div>
+                    </div>
+                  </div>
 
-    <div class="cw-job-group">
-      <div class="cw-job-group-title">가디언나이트</div>
-      <div class="cw-job-list">
-        <div class="cw-select-option" data-class="가디언나이트" data-group="가디언나이트">가디언나이트</div>
-      </div>
-    </div>
+                  <div class="cw-job-group">
+                    <div class="cw-job-group-title">헌터</div>
+                    <div class="cw-job-list">
+                      <div class="cw-select-option" data-class="데빌헌터" data-group="헌터">데빌헌터</div>
+                      <div class="cw-select-option" data-class="블래스터" data-group="헌터">블래스터</div>
+                      <div class="cw-select-option" data-class="호크아이" data-group="헌터">호크아이</div>
+                      <div class="cw-select-option" data-class="스카우터" data-group="헌터">스카우터</div>
+                      <div class="cw-select-option" data-class="건슬링어" data-group="헌터">건슬링어</div>
+                    </div>
+                  </div>
 
-  </div>
-</div>
-        <div class="cw-control-help">
-          OP / 호감 토글과 클래스 선택에 따라<br>
-          그래프가 자동 갱신됩니다.
+                  <div class="cw-job-group">
+                    <div class="cw-job-group-title">마법사</div>
+                    <div class="cw-job-list">
+                      <div class="cw-select-option" data-class="서머너" data-group="마법사">서머너</div>
+                      <div class="cw-select-option" data-class="아르카나" data-group="마법사">아르카나</div>
+                      <div class="cw-select-option" data-class="바드" data-group="마법사">바드</div>
+                      <div class="cw-select-option" data-class="소서리스" data-group="마법사">소서리스</div>
+                    </div>
+                  </div>
+
+                  <div class="cw-job-group">
+                    <div class="cw-job-group-title">암살자</div>
+                    <div class="cw-job-list">
+                      <div class="cw-select-option" data-class="블레이드" data-group="암살자">블레이드</div>
+                      <div class="cw-select-option" data-class="데모닉" data-group="암살자">데모닉</div>
+                      <div class="cw-select-option" data-class="리퍼" data-group="암살자">리퍼</div>
+                      <div class="cw-select-option" data-class="소울이터" data-group="암살자">소울이터</div>
+                    </div>
+                  </div>
+
+                  <div class="cw-job-group">
+                    <div class="cw-job-group-title">스페셜리스트</div>
+                    <div class="cw-job-list">
+                      <div class="cw-select-option" data-class="도화가" data-group="스페셜리스트">도화가</div>
+                      <div class="cw-select-option" data-class="기상술사" data-group="스페셜리스트">기상술사</div>
+                      <div class="cw-select-option" data-class="환수사" data-group="스페셜리스트">환수사</div>
+                    </div>
+                  </div>
+
+                  <div class="cw-job-group">
+                    <div class="cw-job-group-title">가디언나이트</div>
+                    <div class="cw-job-list">
+                      <div class="cw-select-option" data-class="가디언나이트" data-group="가디언나이트">가디언나이트</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="cw-control-help">
+              OP / 호감 토글과 클래스 선택에 따라<br>
+              그래프가 자동 갱신됩니다.
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
-
-    </div>
-  </div>
 
   <!-- OP 티어표 모달 -->
   <div class="modal-backdrop" id="opTierModal">
@@ -9809,10 +9818,14 @@ document.addEventListener("click", (e) => {
 
 document.getElementById("closeClassWinBtn").addEventListener("click", () => {
   classWinModal.classList.remove("show");
+  document.body.classList.remove("class-win-modal-open");
 });
 
 classWinModal.addEventListener("click", e => {
-  if (e.target === classWinModal) classWinModal.classList.remove("show");
+  if (e.target === classWinModal){
+    classWinModal.classList.remove("show");
+    document.body.classList.remove("class-win-modal-open");
+  }
 });
 
 
@@ -9827,6 +9840,7 @@ classWinModal.addEventListener("click", e => {
     document.getElementById("inquiryModal").classList.remove("show");
     document.getElementById("inqPwPopup")?.classList.remove("show");
     classWinModal.classList.remove("show");
+    document.body.classList.remove("class-win-modal-open");
   }
 });
 
@@ -10694,6 +10708,7 @@ document.getElementById("openClassWinBtn").addEventListener("click", (e) => {
     return;
   }
   classWinModal.classList.add("show");
+  document.body.classList.add("class-win-modal-open");
   cwCurrentClass = "워로드";
   cwCurrentGroup = "전사";
   cwCurrentType = "op";
