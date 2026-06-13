@@ -6341,19 +6341,34 @@ body.class-win-modal-open{
   
 #classWinModal .modal-card{
   width:min(1100px,100%);
-  max-height:92vh;
-  overflow-y:auto;
-  overflow-x:hidden;
+  max-height:none;
+  overflow:visible !important;
   padding:24px 24px 20px;
   background:#13151c!important;
   border:1px solid #252836!important;
   border-radius:24px!important;
   box-shadow:0 30px 80px rgba(0,0,0,.45)!important;
   position:relative;
-  overscroll-behavior:contain;
-  scrollbar-gutter:stable;
 }
 
+  #classWinModal{
+  overflow-y:auto;
+  overflow-x:visible;
+  align-items:center;
+  justify-content:center;
+}
+
+
+#classWinModal #classWinContent,
+#classWinModal .cw-body,
+#classWinModal .cw-pie-area,
+#classWinModal .cw-control-panel,
+#classWinModal .cw-control-body,
+#classWinModal .cw-select-wrap{
+  overflow:visible !important;
+}
+  
+  
 #classWinModal .modal-top-label,
 #classWinModal .modal-title,
 #classWinModal .modal-sub,
@@ -6665,20 +6680,21 @@ body.class-win-modal-open{
 .cw-select-dropdown{
   position:absolute;
   top:calc(100% + 8px);
-  right:0;
-  left:auto;
-  width:min(420px, calc(100vw - 48px));
+  left:0;
+  right:auto;
+  width:100% !important;
+  min-width:100%;
+  max-width:none !important;
   border-radius:16px;
   border:1px solid #2b3145;
   background:linear-gradient(180deg,#171b25 0%,#11151d 100%);
   box-shadow:0 18px 48px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.03) inset;
-  z-index:40;
+  z-index:999;
   display:none;
-  max-height:440px;
+  max-height:360px;
   overflow-y:auto;
   overflow-x:hidden;
   padding:14px;
-  scrollbar-gutter:stable;
   overscroll-behavior:contain;
 }
 
