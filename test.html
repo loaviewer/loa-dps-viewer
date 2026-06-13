@@ -6345,6 +6345,7 @@ body {
   border-radius:24px!important;
   box-shadow:0 30px 80px rgba(0,0,0,.45)!important;
   position:relative;
+  scrollbar-gutter: stable;
 }
 
 #classWinModal .modal-top-label,
@@ -6435,6 +6436,7 @@ body {
   gap:10px 14px;
   justify-content:center;
   max-width:700px;
+  min-height:28px;
 }
 
 .cw-legend-item{
@@ -10414,18 +10416,15 @@ function cwAnimateEntry(data){
 async function cwAnimateRender(){
   const wrap = document.getElementById("cwPieWrap");
   if(!wrap) return;
-  wrap.classList.add("fading");
-  const legendWrap = document.getElementById("cwLegendWrap");
-  if(legendWrap) legendWrap.innerHTML = '<div class="loading-text">불러오는 중...</div>';
 
+  wrap.classList.add("fading");
   cwUpdateHeader();
+
   const data = await cwLoadData(cwCurrentClass, cwCurrentType);
 
-  setTimeout(() => {
-    cwAnimateEntry(data);
-    cwUpdateLegend(data);
-    if(wrap) wrap.classList.remove("fading");
-  }, 220);
+  cwAnimateEntry(data);
+  cwUpdateLegend(data);
+  wrap.classList.remove("fading");
 }
 
 function cwInitEvents(){
