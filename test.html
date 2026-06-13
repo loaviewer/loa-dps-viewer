@@ -6025,14 +6025,6 @@ body {
   position:relative;
 }
 
-/* 기존 껍데기 헤더는 숨김: 내부 차트 헤더를 사용할 거라 중복 제거 */
-#classWinModal .modal-top-label,
-#classWinModal .modal-title,
-#classWinModal .modal-sub,
-#classWinModal .modal-divider{
-  display:none!important;
-}
-
 #classWinModal #classWinContent{
   padding-top:4px;
 }
@@ -6265,14 +6257,6 @@ body {
   border-radius:999px;
 }
 
-.cw-select-group-label{
-  padding:8px 14px 4px;
-  font-size:10px;
-  font-weight:900;
-  color:#4b5563;
-  letter-spacing:1px;
-  text-transform:uppercase;
-}
 
 .cw-select-option{
   padding:9px 14px;
@@ -7264,11 +7248,7 @@ body.class-win-modal-open{
 <div class="modal-backdrop" id="classWinModal">
   <div class="modal-card">
     <button class="modal-close" id="closeClassWinBtn">×</button>
-    <div class="modal-top-label">CLASS WIN ANALYSIS</div>
-    <div class="modal-title" style="color:#ff9f9f;">클래스별 우승 분석 📊</div>
-    <div class="modal-sub" id="classWinSub">도장 1개 이상 획득 시 열람 가능</div>
-    <div class="modal-divider"></div>
-
+  
     <div id="classWinContent">
       <div class="cw-chart-header">
         <div class="cw-chart-class-badge" id="cwClassBadge">전사</div>
