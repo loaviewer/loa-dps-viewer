@@ -2011,11 +2011,11 @@
         </div>
     </div>
 
-   <div style="width: 100%; text-align: center; padding: 30px 0; font-size: 11px; color: #555; line-height: 1.8; clear: both;">
+  <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px; padding-top: 15px; font-size: 10px; opacity: 0.3; line-height: 1.6; text-align: left;">
     <div>© 2026 로이터 베이스. All rights reserved.</div>
-    <div style="margin-top: 4px;">
-        <a href="#" id="openPrivacy" style="color: #555; text-decoration: none; margin-right: 12px; border-bottom: 1px solid #333;">개인정보처리방침</a>
-        <a href="#" class="openContact" style="color: #555; text-decoration: none; border-bottom: 1px solid #333;">문의하기</a>
+    <div style="margin-top: 5px;">
+        <a href="#" id="openPrivacy" style="color: #fff; text-decoration: none; margin-right: 8px;">개인정보처리방침</a> | 
+        <a href="#" class="openContact" style="color: #fff; text-decoration: none; margin-left: 8px;">문의하기</a>
     </div>
 </div>
 
@@ -2023,7 +2023,7 @@
     <div style="background: #1e1e1e; color: #ddd; padding: 25px; width: 90%; max-width: 550px; max-height: 80vh; overflow-y: auto; border-radius: 8px; border: 1px solid #333; line-height: 1.6; text-align: left; font-size: 13px;">
         <h3 style="margin-top: 0; color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px; font-size: 16px;">개인정보처리방침</h3>
         <div style="color: #aaa; font-size: 12px;">
-            <p><strong>1. 목적 및 수집 항목</strong><br>본 웹사이트는 이용자의 별도 회원가입 절차 없이 모든 서비스를 이용할 수 있으며, 이용자의 어떠한 개인정보도 수집하거나 저장하지 않습니다.</p>
+            <p><strong>1. 목적 및 수집 항목</strong><br>본 웹사이트는 별도의 회원가입 절차 없이 모든 서비스를 이용할 수 있으며, 이용자의 어떠한 개인정보도 수집하거나 저장하지 않습니다.</p>
             <p><strong>2. 구글 애드센스 쿠키 사용 고지</strong><br>
             - 본 사이트는 광고 게재를 위해 구글(Google)이 제공하는 애드센스를 사용합니다.<br>
             - 구글을 포함한 제3자 제공업체는 쿠키(Cookie)를 사용하여 이용자의 이전 방문 내역을 기반으로 맞춤형 광고를 게재합니다.<br>
@@ -2036,31 +2036,7 @@
 </div>
 
 <script>
-// 개인정보처리방침 팝업 제어
-const privacyModal = document.getElementById('privacyModal');
-const openPrivacyBtn = document.getElementById('openPrivacy');
-const closePrivacyBtn = document.getElementById('closePrivacy');
-
-if(openPrivacyBtn && privacyModal) {
-    openPrivacyBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        privacyModal.style.display = 'flex';
-    });
-}
-if(closePrivacyBtn && privacyModal) {
-    closePrivacyBtn.addEventListener('click', () => {
-        privacyModal.style.display = 'none';
-    });
-}
-window.addEventListener('click', (e) => {
-    if (e.target === privacyModal) {
-        privacyModal.style.display = 'none';
-    }
-});
-</script>
-
-<script>
-// 개인정보처리방침 팝업 열고 닫기 스크립트
+// 개인정보처리방침 팝업 제어 스크립트
 const privacyModal = document.getElementById('privacyModal');
 const openPrivacyBtn = document.getElementById('openPrivacy');
 const closePrivacyBtn = document.getElementById('closePrivacy');
