@@ -2011,13 +2011,53 @@
         </div>
     </div>
 
-    <div class="footer-loiter">
-        <p>
-            © 2026 LOITER BASE · All Rights Reserved.<br>
-            Not associated with Smilegate RPG &amp; Smilegate Stove.<br>
-            Data based on Google Sheets · Powered by Supabase · GitHub Pages · GoatCounter
-        </p>
+    <div style="font-size: 11px; color: #777; margin-top: 25px; line-height: 1.6; text-align: center;">
+    <div>© 2026 로이터 베이스. All rights reserved.</div>
+    <div style="margin-top: 4px;">
+        <a href="#" id="openPrivacy" style="color: #777; text-decoration: none; margin-right: 10px; border-bottom: 1px solid #444;">개인정보처리방침</a>
+        <a href="#" class="openContact" style="color: #777; text-decoration: none; border-bottom: 1px solid #444;">문의하기</a>
     </div>
+</div>
+
+<div id="privacyModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center;">
+    <div style="background: #1e1e1e; color: #ddd; padding: 25px; width: 90%; max-width: 550px; max-height: 80vh; overflow-y: auto; border-radius: 8px; border: 1px solid #333; line-height: 1.6; text-align: left; font-size: 13px;">
+        <h3 style="margin-top: 0; color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px; font-size: 16px;">개인정보처리방침</h3>
+        <div style="color: #aaa; font-size: 12px;">
+            <p><strong>1. 목적 및 수집 항목</strong><br>본 웹사이트는 별도의 회원가입 절차 없이 모든 서비스를 이용할 수 있으며, 이용자의 어떠한 개인정보도 수집하거나 저장하지 않습니다.</p>
+            <p><strong>2. 구글 애드센스 쿠키 사용 고지</strong><br>
+            - 본 사이트는 광고 게재를 위해 구글(Google)이 제공하는 애드센스를 사용합니다.<br>
+            - 구글을 포함한 제3자 제공업체는 쿠키(Cookie)를 사용하여 이용자의 이전 방문 내역을 기반으로 맞춤형 광고를 게재합니다.<br>
+            - 이용자는 구글의 광고 설정을 방문하여 맞춤형 광고를 해제하거나 거부할 수 있습니다.</p>
+            <p><strong>3. 데이터 보안 및 문의</strong><br>본 사이트는 이용자의 데이터를 안전하게 보호합니다. 문의 사항은 하단의 '문의하기' 양식을 이용해 주시기 바랍니다.</p>
+            <p style="color: #666; margin-top: 15px;">공고 및 시행일자: 2026년 6월 18일</p>
+        </div>
+        <button id="closePrivacy" style="margin-top: 20px; width: 100%; padding: 8px; background: #2a2a2a; color: #ccc; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 12px;">닫기</button>
+    </div>
+</div>
+
+<script>
+// 개인정보처리방침 팝업 열고 닫기 스크립트
+const privacyModal = document.getElementById('privacyModal');
+const openPrivacyBtn = document.getElementById('openPrivacy');
+const closePrivacyBtn = document.getElementById('closePrivacy');
+
+if(openPrivacyBtn && privacyModal) {
+    openPrivacyBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        privacyModal.style.display = 'flex';
+    });
+}
+if(closePrivacyBtn && privacyModal) {
+    closePrivacyBtn.addEventListener('click', () => {
+        privacyModal.style.display = 'none';
+    });
+}
+window.addEventListener('click', (e) => {
+    if (e.target === privacyModal) {
+        privacyModal.style.display = 'none';
+    }
+});
+</script>
 
     <script data-goatcounter="https://loaviewer.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -3762,56 +3802,5 @@ blood_dps: "9.29억",
         loadCSV();
         acUpdate();
     </script>
-<!-- 구글 애드센스 승인용 푸터 및 개인정보처리방침 모달 (추가하는 코드) -->
-<footer style="text-align: center; padding: 20px; color: #888; font-size: 14px; border-top: 1px solid #333; margin-top: 40px; font-family: Arial, sans-serif;">
-    <p>© 2026 로스트아크 툴즈. All rights reserved.</p>
-    <p>
-        <a href="#" id="openPrivacy" style="color: #aaa; text-decoration: none; margin-right: 15px;">개인정보처리방침</a>
-        <a href="#" class="openContact" style="color: #aaa; text-decoration: none;">문의하기</a>
-    </p>
-</footer>
-
-<div id="privacyModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center;">
-    <div style="background: #1e1e1e; color: #fff; padding: 25px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; border-radius: 8px; border: 1px solid #444; font-family: Arial, sans-serif; line-height: 1.6; text-align: left;">
-        <h2 style="margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 10px;">개인정보처리방침</h2>
-        <div style="font-size: 14px; color: #ccc;">
-            <p><strong>1. 목적 및 수집 항목</strong><br>본 웹사이트는 이용자의 별도 회원가입 절차 없이 모든 서비스를 자유롭게 이용할 수 있습니다. 본 사이트는 이용자의 어떠한 개인정보도 직접 수집하거나 서버에 저장하지 않습니다.</p>
-            <p><strong>2. 구글 애드센스(Google AdSense) 쿠키 사용 고지</strong><br>
-            - 본 사이트는 광고 게재 및 수익 창출을 위해 구글(Google)에서 제공하는 웹로그 분석 및 광고 서비스인 구글 애드센스를 사용합니다.<br>
-            - 구글을 포함한 제3자 제공업체는 사용자가 본 웹사이트 또는 기타 웹사이트를 이전에 방문한 내역을 기반으로 쿠키(Cookie)를 사용하여 광고를 게재합니다.<br>
-            - 구글의 광고 쿠키 사용을 통해 구글과 그 파트너는 사용자의 본 사이트 및/또는 다른 사이트 방문에 기반한 맞춤형 광고를 제공할 수 있습니다.<br>
-            - 이용자는 구글의 광고 설정을 방문하여 맞춤형 광고 게재를 설정 해제하거나 거부할 수 있습니다.</p>
-            <p><strong>3. 데이터 보안</strong><br>본 사이트는 이용자의 데이터를 안전하게 보호하며, 외부로 유출하지 않습니다. 쿠키 차단을 원하실 경우 브라우저 설정을 통해 쿠키 수집을 거부하실 수 있습니다.</p>
-            <p><strong>4. 문의처</strong><br>개인정보처리방침이나 서비스 이용에 관한 문의는 사이트 하단의 '문의하기' 양식을 통해 접수해 주시기 바랍니다.</p>
-            <p style="font-size: 12px; color: #888; margin-top: 20px;">공고일자: 2026년 6월 18일<br>시행일자: 2026년 6월 18일</p>
-        </div>
-        <button id="closePrivacy" style="margin-top: 20px; width: 100%; padding: 10px; background: #333; color: #fff; border: none; border-radius: 4px; cursor: pointer;">닫기</button>
-    </div>
-</div>
-
-<script>
-// 개인정보처리방침 팝업 켜고 끄는 기능
-const privacyModal = document.getElementById('privacyModal');
-const openPrivacyBtn = document.getElementById('openPrivacy');
-const closePrivacyBtn = document.getElementById('closePrivacy');
-
-if(openPrivacyBtn && privacyModal) {
-    openPrivacyBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        privacyModal.style.display = 'flex';
-    });
-}
-if(closePrivacyBtn && privacyModal) {
-    closePrivacyBtn.addEventListener('click', () => {
-        privacyModal.style.display = 'none';
-    });
-}
-window.addEventListener('click', (e) => {
-    if (e.target === privacyModal) {
-        privacyModal.style.display = 'none';
-    }
-});
-</script>
-  
 </body>
 </html>
