@@ -3,361 +3,770 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>직각 토너먼트 밸패 분석</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<title>웹툰 북마크</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
   body {
     background: #1a1a2e;
-    color: #e0e0e0;
-    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
-    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-height: 100vh;
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    user-select: none;
   }
-  .header {
-    margin-bottom: 24px;
-  }
-  .header h1 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 4px;
-  }
-  .header p {
-    font-size: 13px;
-    color: #888;
-  }
-  .toggle-wrap {
+
+  .app {
+    width: 340px;
+    height: 680px;
+    background: #0f0f23;
+    border-radius: 20px;
+    border: 3px solid #2d2d5e;
+    box-shadow: 0 0 60px rgba(100,100,255,0.15), 0 20px 60px rgba(0,0,0,0.8);
     display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  .toggle-btn {
-    padding: 8px 20px;
-    border-radius: 8px;
-    border: 1px solid #444;
-    background: transparent;
-    color: #aaa;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .toggle-btn.active-op {
-    background: #378ADD;
-    color: #fff;
-    border-color: #378ADD;
-  }
-  .toggle-btn.active-favor {
-    background: #D4537E;
-    color: #fff;
-    border-color: #D4537E;
-  }
-  .stat-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  .stat-card {
-    background: #252540;
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
-  }
-  .stat-card .label {
-    font-size: 12px;
-    color: #888;
-    margin-bottom: 6px;
-  }
-  .stat-card .value {
-    font-size: 22px;
-    font-weight: 700;
-  }
-  .chart-card {
-    background: #252540;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-  .chart-card h2 {
-    font-size: 15px;
-    font-weight: 600;
-    color: #ccc;
-    margin-bottom: 16px;
-  }
-  .legend {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 12px;
-    font-size: 12px;
-    color: #888;
-  }
-  .legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    display: inline-block;
-    margin-right: 4px;
-  }
-  .chart-wrap {
+    flex-direction: column;
+    overflow: hidden;
     position: relative;
-    width: 100%;
   }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
+
+  /* 헤더 */
+  .app-header {
+    padding: 14px 14px 10px;
+    background: #13132a;
+    border-bottom: 1px solid #2d2d5e;
+    flex-shrink: 0;
   }
-  th {
-    text-align: left;
-    padding: 8px 6px;
-    color: #888;
-    font-weight: 500;
-    border-bottom: 1px solid #333;
+
+  .app-title {
+    font-size: 14px; font-weight: 700;
+    color: #a0a0ff; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
   }
-  td {
-    padding: 10px 6px;
-    border-bottom: 1px solid #2a2a3e;
-    color: #ccc;
+
+  .save-btn {
+    width: 100%; height: 34px;
+    background: #4040cc;
+    border: none; border-radius: 8px;
+    color: #fff; font-size: 12px;
+    font-family: 'Malgun Gothic', sans-serif;
+    cursor: pointer; font-weight: 600;
+    transition: background 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
   }
-  td.right { text-align: right; }
-  .up { color: #1D9E75; font-weight: 600; }
-  .down { color: #E24B4A; font-weight: 600; }
-  .loading {
-    text-align: center;
-    padding: 40px;
-    color: #888;
+  .save-btn:hover { background: #5050dd; }
+
+  /* 검색 */
+  .search-box {
+    padding: 8px 12px;
+    border-bottom: 1px solid #2d2d5e;
+    background: #13132a;
+    flex-shrink: 0;
+  }
+  .search-box input {
+    width: 100%; height: 28px;
+    background: #0a0a1a;
+    border: 1px solid #3a3a6e; border-radius: 6px;
+    padding: 0 10px; color: #ccc; font-size: 11px;
+    font-family: 'Malgun Gothic', sans-serif; outline: none;
+  }
+  .search-box input:focus { border-color: #6060ee; }
+
+  /* 북마크 목록 */
+  .bookmark-list {
+    flex: 1; overflow-y: auto; padding: 4px 0;
+    background: #0f0f23;
+  }
+  .bookmark-list::-webkit-scrollbar { width: 4px; }
+  .bookmark-list::-webkit-scrollbar-thumb { background: #3a3a6e; border-radius: 2px; }
+
+  .bookmark-item {
+    display: flex; align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    gap: 8px;
+    transition: background 0.1s;
+    position: relative;
+  }
+  .bookmark-item:hover { background: #1e1e3e; border-left-color: #4040cc; }
+
+  .bookmark-favicon {
+    width: 20px; height: 20px;
+    border-radius: 3px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
     font-size: 14px;
   }
-  .error {
+  .bookmark-favicon img { width: 16px; height: 16px; border-radius: 2px; }
+
+  .bookmark-info { flex: 1; overflow: hidden; }
+  .bookmark-name {
+    font-size: 12px; color: #ccc;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .bookmark-ep { font-size: 10px; color: #6666aa; margin-top: 2px; }
+
+  .open-icon {
+    font-size: 11px; color: #44447a;
+    flex-shrink: 0; opacity: 0;
+    transition: opacity 0.1s;
+  }
+  .bookmark-item:hover .open-icon { opacity: 1; }
+
+  .empty-state {
+    padding: 40px 14px; text-align: center;
+    color: #44447a; font-size: 12px; line-height: 2;
+  }
+
+  /* 하단 버튼 */
+  .bottom-btns {
+    padding: 8px 12px;
+    border-top: 1px solid #2d2d5e;
+    background: #13132a;
+    display: flex; flex-direction: column; gap: 5px;
+    flex-shrink: 0;
+  }
+
+  .bottom-btn {
+    width: 100%; height: 30px;
+    background: #1e1e3e;
+    border: 1px dashed #3a3a6e; border-radius: 7px;
+    color: #6666aa; font-size: 11px;
+    font-family: 'Malgun Gothic', sans-serif;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    transition: all 0.15s;
+  }
+  .bottom-btn:hover { background: #252550; border-color: #6060ee; color: #a0a0ff; }
+
+  /* 키패드 힌트 */
+  .key-hint {
     text-align: center;
-    padding: 40px;
-    color: #E24B4A;
-    font-size: 14px;
+    font-size: 10px; color: #3a3a6e;
+    padding: 5px;
+    background: #13132a;
+    border-top: 1px solid #1e1e3e;
+    flex-shrink: 0;
   }
-  .rank-num {
-    color: #666;
-    font-size: 12px;
-    margin-right: 4px;
+
+  /* 컨텍스트 메뉴 */
+  .ctx-menu {
+    display: none;
+    position: fixed;
+    background: #1e1e3e;
+    border: 1px solid #3a3a6e;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    min-width: 130px;
   }
-  .period-label {
-    font-size: 12px;
-    color: #666;
-    margin-bottom: 20px;
+  .ctx-menu.open { display: block; }
+  .ctx-item {
+    padding: 9px 16px;
+    font-size: 12px; color: #ccc;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    transition: background 0.1s;
   }
-  @media (max-width: 600px) {
-    .stat-grid { grid-template-columns: repeat(2, 1fr); }
-    body { padding: 16px; }
+  .ctx-item:hover { background: #2d2d5e; }
+  .ctx-item.danger { color: #ff6666; }
+  .ctx-item.danger:hover { background: #3d1e1e; }
+  .ctx-divider { height: 1px; background: #2d2d5e; }
+
+  /* 모달 공통 */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 100;
+    align-items: center; justify-content: center;
   }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #1a1a3e;
+    border: 1px solid #3a3a6e;
+    border-radius: 12px;
+    padding: 20px;
+    width: 320px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  }
+  .modal h3 { color: #a0a0ff; font-size: 14px; margin-bottom: 14px; }
+  .modal label { display: block; font-size: 11px; color: #8888bb; margin: 10px 0 4px; }
+  .modal input {
+    width: 100%; height: 32px;
+    background: #0a0a1a;
+    border: 1px solid #3a3a6e; border-radius: 6px;
+    padding: 0 10px; color: #ddd; font-size: 12px;
+    font-family: 'Malgun Gothic', sans-serif; outline: none;
+  }
+  .modal input:focus { border-color: #6060ee; }
+  .modal-note { font-size: 11px; color: #666; margin-top: 6px; line-height: 1.6; }
+
+  .modal-btns { display: flex; gap: 8px; margin-top: 16px; }
+  .modal-btns button {
+    flex: 1; height: 32px; border-radius: 6px;
+    border: none; cursor: pointer;
+    font-size: 12px; font-family: 'Malgun Gothic', sans-serif; font-weight: 600;
+  }
+  .btn-confirm { background: #4040cc; color: #fff; }
+  .btn-confirm:hover { background: #5050dd; }
+  .btn-cancel { background: #2a2a4e; color: #999; }
+  .btn-cancel:hover { background: #333360; }
+
+  /* 저장 모달 - 화 번호 입력용 */
+  .ep-modal-note {
+    font-size: 11px; color: #8888bb; margin-bottom: 12px; line-height: 1.6;
+  }
+
+  /* 도메인 일괄변경 */
+  .domain-list { max-height: 160px; overflow-y: auto; margin: 8px 0; }
+  .domain-list::-webkit-scrollbar { width: 3px; }
+  .domain-list::-webkit-scrollbar-thumb { background: #3a3a6e; }
+  .domain-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #2a2a5e; border-radius: 4px;
+    padding: 4px 10px; margin: 3px; font-size: 11px; color: #aaa;
+    cursor: pointer; border: 1px solid #3a3a6e;
+  }
+  .domain-chip:hover { border-color: #6060ee; color: #fff; }
+  .domain-chip.selected { background: #3a3a9e; border-color: #6060ee; color: #fff; }
+
+  /* 불러오기 모달 */
+  .import-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .import-tab {
+    flex: 1; height: 28px; border-radius: 6px;
+    border: 1px solid #3a3a6e;
+    background: #0a0a1a; color: #888;
+    font-size: 11px; font-family: 'Malgun Gothic', sans-serif;
+    cursor: pointer; transition: all 0.1s;
+  }
+  .import-tab.active { background: #4040cc; color: #fff; border-color: #4040cc; }
+
+  .import-panel { display: none; }
+  .import-panel.active { display: block; }
+
+  .file-drop {
+    border: 2px dashed #3a3a6e; border-radius: 8px;
+    padding: 18px; text-align: center;
+    color: #666; font-size: 12px; cursor: pointer;
+    transition: all 0.15s; line-height: 1.8; display: block;
+  }
+  .file-drop:hover { border-color: #6060ee; color: #a0a0ff; background: #1e1e3e; }
+  .file-drop input { display: none; }
+
+  /* 내보내기 버튼 */
+  .export-row {
+    display: flex; gap: 6px; padding: 7px 12px;
+    border-bottom: 1px solid #2d2d5e;
+    background: #13132a;
+    flex-shrink: 0;
+  }
+  .export-btn {
+    flex: 1; height: 26px;
+    background: #1e1e3e;
+    border: 1px solid #3a3a6e; border-radius: 5px;
+    color: #8888bb; font-size: 10px;
+    font-family: 'Malgun Gothic', sans-serif;
+    cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+  }
+  .export-btn:hover { background: #252550; border-color: #6060ee; color: #a0a0ff; }
+
+  /* 토스트 */
+  .toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: #2a2a6e; border: 1px solid #4040cc;
+    border-radius: 8px; padding: 8px 18px;
+    font-size: 12px; color: #a0a0ff;
+    opacity: 0; transition: opacity 0.3s;
+    pointer-events: none; white-space: nowrap; z-index: 300;
+  }
+  .toast.show { opacity: 1; }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>밸패 이후 떠오르는 직각 분석</h1>
-  <p>로아 직각 토너먼트 데이터 기반 · LOITER BASE</p>
+<div class="app">
+
+  <!-- 헤더 -->
+  <div class="app-header">
+    <div class="app-title">📚 웹툰 북마크</div>
+    <button class="save-btn" id="saveCurrentBtn">💾 현재 화 저장 (키패드 +)</button>
+  </div>
+
+  <!-- 내보내기/불러오기 -->
+  <div class="export-row">
+    <button class="export-btn" id="exportBtn">📤 내보내기</button>
+    <button class="export-btn" id="importBtn">📥 불러오기</button>
+  </div>
+
+  <!-- 검색 -->
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍  제목으로 검색...">
+  </div>
+
+  <!-- 북마크 목록 -->
+  <div class="bookmark-list" id="bookmarkList">
+    <div class="empty-state">아직 저장된 웹툰이 없어요<br>아래 버튼으로 추가해보세요</div>
+  </div>
+
+  <!-- 하단 버튼 -->
+  <div class="bottom-btns">
+    <button class="bottom-btn" id="addBtn">＋ 직접 추가하기</button>
+    <button class="bottom-btn" id="domainBtn">🔗 도메인 일괄 변경</button>
+  </div>
+
+  <div class="key-hint">북마크 클릭 → 새 창 열기 &nbsp;|&nbsp; 우클릭 → 수정/삭제 &nbsp;|&nbsp; 키패드 + → 화 저장</div>
 </div>
 
-<div class="toggle-wrap">
-  <button class="toggle-btn active-op" id="btn-op" onclick="switchType('op')">🔥 OP 토너먼트</button>
-  <button class="toggle-btn" id="btn-favor" onclick="switchType('favor')">❤️ 호감 토너먼트</button>
+<!-- 컨텍스트 메뉴 -->
+<div class="ctx-menu" id="ctxMenu">
+  <div class="ctx-item" id="ctxOpen">↗ 새 창으로 열기</div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item" id="ctxEdit">✏️ 수정</div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item danger" id="ctxDelete">🗑 삭제</div>
 </div>
 
-<div class="period-label">
-  📅 비교 기간 &nbsp;|&nbsp; 밸패 전: 2026-04-07 ~ 2026-04-21 &nbsp;/&nbsp; 밸패 후: 2026-04-22 ~ 현재
-</div>
-
-<div class="stat-grid">
-  <div class="stat-card">
-    <div class="label">분석 직각 수</div>
-    <div class="value" id="stat-total" style="color:#aaa;">-</div>
-  </div>
-  <div class="stat-card">
-    <div class="label">최대 상승</div>
-    <div class="value up" id="stat-up">-</div>
-  </div>
-  <div class="stat-card">
-    <div class="label">최대 하락</div>
-    <div class="value down" id="stat-down">-</div>
-  </div>
-</div>
-
-<div class="chart-card">
-  <h2>승률 변화 TOP 10 (밸패 후 기준)</h2>
-  <div class="legend">
-    <span><span class="legend-dot" style="background:#1D9E75;"></span>밸패 후 승률</span>
-    <span><span class="legend-dot" style="background:#555;"></span>밸패 전 승률</span>
-  </div>
-  <div id="loading-msg" class="loading">데이터 불러오는 중...</div>
-  <div id="error-msg" class="error" style="display:none;"></div>
-  <div class="chart-wrap" id="chart-wrap" style="display:none;">
-    <canvas id="mainChart" role="img" aria-label="밸패 전후 직각 승률 변화 TOP 10"></canvas>
+<!-- 추가/수정 모달 -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3 id="editModalTitle">웹툰 추가</h3>
+    <label>웹툰 이름</label>
+    <input type="text" id="inputName" placeholder="예: 원펀맨 리메이크">
+    <label>URL 주소</label>
+    <input type="text" id="inputUrl" placeholder="https://...">
+    <label>현재 회차 (선택)</label>
+    <input type="text" id="inputEp" placeholder="예: 271화">
+    <div class="modal-btns">
+      <button class="btn-cancel" id="editCancelBtn">취소</button>
+      <button class="btn-confirm" id="editConfirmBtn">저장</button>
+    </div>
   </div>
 </div>
 
-<div class="chart-card" id="table-card" style="display:none;">
-  <h2>상세 데이터</h2>
-  <table>
-    <thead>
-      <tr>
-        <th style="width:40%;">직각명</th>
-        <th class="right" style="width:20%;">밸패 전</th>
-        <th class="right" style="width:20%;">밸패 후</th>
-        <th class="right" style="width:20%;">변화량</th>
-      </tr>
-    </thead>
-    <tbody id="table-body"></tbody>
-  </table>
+<!-- 키패드 + 저장 모달 (URL + 화 번호 입력) -->
+<div class="modal-overlay" id="saveModal">
+  <div class="modal">
+    <h3>💾 현재 화 저장</h3>
+    <p class="ep-modal-note">현재 보고 있는 웹툰의 URL과 화 번호를 입력하세요.<br>목록에 있는 항목이면 자동으로 업데이트돼요.</p>
+    <label>웹툰 이름</label>
+    <input type="text" id="saveInputName" placeholder="예: 김부장">
+    <label>현재 URL</label>
+    <input type="text" id="saveInputUrl" placeholder="https://...21화 URL">
+    <label>현재 화 번호</label>
+    <input type="text" id="saveInputEp" placeholder="예: 21화">
+    <div class="modal-btns">
+      <button class="btn-cancel" id="saveCancelBtn">취소</button>
+      <button class="btn-confirm" id="saveConfirmBtn">저장</button>
+    </div>
+  </div>
 </div>
+
+<!-- 도메인 일괄변경 모달 -->
+<div class="modal-overlay" id="domainModal">
+  <div class="modal">
+    <h3>🔗 도메인 일괄 변경</h3>
+    <p class="modal-note">사이트 주소가 바뀌었을 때 해당 도메인을 사용하는<br>북마크를 한번에 변경해요</p>
+    <label>변경할 기존 도메인 선택</label>
+    <div class="domain-list" id="domainList"></div>
+    <label>새 도메인으로 변경</label>
+    <input type="text" id="inputNewDomain" placeholder="예: https://웹툰22.com">
+    <p class="modal-note" style="margin-top:6px">⚠️ 선택한 도메인을 사용하는 북마크 주소가 모두 변경돼요</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" id="domainCancelBtn">취소</button>
+      <button class="btn-confirm" id="domainConfirmBtn">일괄 변경</button>
+    </div>
+  </div>
+</div>
+
+<!-- 북마크 불러오기 모달 -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal">
+    <h3>📥 북마크 불러오기</h3>
+    <div class="import-tabs">
+      <button class="import-tab active" data-tab="chrome">Chrome</button>
+      <button class="import-tab" data-tab="naver">네이버</button>
+      <button class="import-tab" data-tab="json">JSON</button>
+    </div>
+
+    <div class="import-panel active" id="tab-chrome">
+      <p class="modal-note" style="margin-bottom:10px">
+        Chrome 메뉴 → 북마크 → 북마크 관리자<br>
+        → 우측 점 메뉴 → 북마크 내보내기<br>
+        → .html 파일 저장 후 불러오기
+      </p>
+      <label class="file-drop" id="chromeFileDrop">
+        <input type="file" id="chromeFileInput" accept=".html">
+        📂 파일 선택 또는 끌어다 놓기<br>
+        <span style="font-size:10px;color:#555">(bookmarks_*.html)</span>
+      </label>
+    </div>
+
+    <div class="import-panel" id="tab-naver">
+      <p class="modal-note" style="margin-bottom:10px">
+        네이버 → 즐겨찾기 → 설정<br>
+        → 즐겨찾기 내보내기 → .html 저장
+      </p>
+      <label class="file-drop" id="naverFileDrop">
+        <input type="file" id="naverFileInput" accept=".html">
+        📂 파일 선택 또는 끌어다 놓기
+      </label>
+    </div>
+
+    <div class="import-panel" id="tab-json">
+      <p class="modal-note" style="margin-bottom:10px">
+        이 앱에서 내보낸 JSON 파일을 불러와요
+      </p>
+      <label class="file-drop" id="jsonFileDrop">
+        <input type="file" id="jsonFileInput" accept=".json">
+        📂 파일 선택 또는 끌어다 놓기<br>
+        <span style="font-size:10px;color:#555">(webtoon_bookmarks_*.json)</span>
+      </label>
+    </div>
+
+    <div class="modal-btns" style="margin-top:14px">
+      <button class="btn-cancel" id="importCancelBtn">닫기</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-const SUPABASE_URL = 'https://khszfukekudyripouifm.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtoc3pmdWtla3VkeXJpcG91aWZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4NzMyNjksImV4cCI6MjA1OTQ0OTI2OX0.oCBXBNaHS00yS-JFxnFtlDQBBwIWqBHKMJLO_kuIYSY';
+const STORAGE_KEY = 'webtoon_bookmarks_v2';
+let bookmarks = [];
+let ctxTargetIdx = -1;
+let editMode = 'add';
 
-let currentType = 'op';
-let chartInstance = null;
+function load() {
+  try { const r = localStorage.getItem(STORAGE_KEY); if(r) bookmarks = JSON.parse(r); } catch(e) { bookmarks = []; }
+}
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks)); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-async function fetchRange(type, start, end) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_tier_data_range`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`
-    },
-    body: JSON.stringify({ p_type: type, p_start: start, p_end: end })
-  });
-  if (!res.ok) throw new Error('API 오류 ' + res.status);
-  return res.json();
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-async function loadData(type) {
-  document.getElementById('loading-msg').style.display = 'block';
-  document.getElementById('error-msg').style.display = 'none';
-  document.getElementById('chart-wrap').style.display = 'none';
-  document.getElementById('table-card').style.display = 'none';
-  document.getElementById('stat-total').textContent = '-';
-  document.getElementById('stat-up').textContent = '-';
-  document.getElementById('stat-down').textContent = '-';
+function getFavicon(url) {
+  try { return `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=32`; } catch { return null; }
+}
 
-  try {
-    const today = new Date().toISOString().split('T')[0];
-    const [before, after] = await Promise.all([
-      fetchRange(type, '2026-04-07', '2026-04-21'),
-      fetchRange(type, '2026-04-22', today)
-    ]);
+function getDomain(url) {
+  try { const u = new URL(url); return u.origin; } catch { return ''; }
+}
 
-    const beforeMap = {};
-    before.forEach(d => { beforeMap[d.engraving_name] = parseFloat(d.win_rate); });
+function render(filter='') {
+  const list = document.getElementById('bookmarkList');
+  const q = filter.toLowerCase();
+  const filtered = bookmarks.map((b,i) => ({...b, _i:i})).filter(b => !q || b.name.toLowerCase().includes(q));
 
-    const combined = after
-      .filter(d => beforeMap[d.engraving_name] !== undefined && d.total_matches >= 5)
-      .map(d => ({
-        name: d.engraving_name,
-        before: beforeMap[d.engraving_name],
-        after: parseFloat(d.win_rate),
-        diff: parseFloat(d.win_rate) - beforeMap[d.engraving_name]
-      }))
-      .sort((a, b) => b.diff - a.diff);
-
-    const top10 = combined.slice(0, 10);
-
-    document.getElementById('stat-total').textContent = combined.length + '개';
-    document.getElementById('stat-up').textContent = top10[0] ? '+' + top10[0].diff.toFixed(1) + '%p' : '-';
-    const worst = combined[combined.length - 1];
-    document.getElementById('stat-down').textContent = worst ? worst.diff.toFixed(1) + '%p' : '-';
-
-    renderChart(top10);
-    renderTable(top10);
-
-    document.getElementById('loading-msg').style.display = 'none';
-    document.getElementById('chart-wrap').style.display = 'block';
-    document.getElementById('table-card').style.display = 'block';
-
-  } catch(e) {
-    document.getElementById('loading-msg').style.display = 'none';
-    document.getElementById('error-msg').style.display = 'block';
-    document.getElementById('error-msg').textContent = '데이터 로딩 실패: ' + e.message;
+  if (bookmarks.length === 0) {
+    list.innerHTML = '<div class="empty-state">아직 저장된 웹툰이 없어요<br>아래 버튼으로 추가해보세요</div>';
+    return;
   }
+  list.innerHTML = filtered.length === 0
+    ? '<div class="empty-state">검색 결과가 없어요</div>'
+    : filtered.map(b => {
+        const fav = getFavicon(b.url);
+        return `<div class="bookmark-item" data-idx="${b._i}">
+          <div class="bookmark-favicon">${fav ? `<img src="${fav}" onerror="this.style.display='none'">` : '📖'}</div>
+          <div class="bookmark-info">
+            <div class="bookmark-name">${esc(b.name)}</div>
+            ${b.episode ? `<div class="bookmark-ep">▶ ${esc(b.episode)}</div>` : ''}
+          </div>
+          <span class="open-icon">↗</span>
+        </div>`;
+      }).join('');
+
+  list.querySelectorAll('.bookmark-item').forEach(el => {
+    const idx = parseInt(el.dataset.idx);
+    el.addEventListener('click', () => openBookmark(idx));
+    el.addEventListener('contextmenu', e => { e.preventDefault(); showCtx(e, idx); });
+  });
 }
 
-function renderChart(data) {
-  const wrap = document.getElementById('chart-wrap');
-  wrap.style.height = Math.max(data.length * 48 + 80, 300) + 'px';
-  const canvas = document.getElementById('mainChart');
-  if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+function openBookmark(idx) {
+  const b = bookmarks[idx];
+  if (!b) return;
+  window.open(b.url, '_blank');
+}
 
-  chartInstance = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels: data.map(d => d.name),
-      datasets: [
-        {
-          label: '밸패 후',
-          data: data.map(d => parseFloat(d.after.toFixed(1))),
-          backgroundColor: '#1D9E75',
-          borderRadius: 4
-        },
-        {
-          label: '밸패 전',
-          data: data.map(d => parseFloat(d.before.toFixed(1))),
-          backgroundColor: '#555566',
-          borderRadius: 4
-        }
-      ]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            afterBody: (items) => {
-              const i = items[0].dataIndex;
-              const d = data[i].diff;
-              return '변화량: ' + (d > 0 ? '+' : '') + d.toFixed(1) + '%p';
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { callback: v => v + '%', color: '#888' },
-          grid: { color: 'rgba(255,255,255,0.05)' }
-        },
-        y: {
-          ticks: { color: '#ccc', font: { size: 12 }, autoSkip: false },
-          grid: { display: false }
-        }
-      }
+// 키패드 + → 저장 모달 열기
+document.addEventListener('keydown', e => {
+  if (e.code === 'NumpadAdd' || (e.key === '+' && e.location === 3)) {
+    e.preventDefault();
+    openSaveModal();
+  }
+});
+
+document.getElementById('saveCurrentBtn').addEventListener('click', openSaveModal);
+
+function openSaveModal() {
+  document.getElementById('saveInputName').value = '';
+  document.getElementById('saveInputUrl').value = '';
+  document.getElementById('saveInputEp').value = '';
+  document.getElementById('saveModal').classList.add('open');
+  setTimeout(() => document.getElementById('saveInputName').focus(), 50);
+}
+
+document.getElementById('saveCancelBtn').addEventListener('click', () => document.getElementById('saveModal').classList.remove('open'));
+document.getElementById('saveModal').addEventListener('click', e => { if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); });
+
+document.getElementById('saveConfirmBtn').addEventListener('click', () => {
+  const name = document.getElementById('saveInputName').value.trim();
+  let url = document.getElementById('saveInputUrl').value.trim();
+  const ep = document.getElementById('saveInputEp').value.trim();
+  if (!url) { alert('URL을 입력해주세요'); return; }
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+  // 이름이 같은 기존 항목 찾아 업데이트
+  if (name) {
+    const existIdx = bookmarks.findIndex(b => b.name === name);
+    if (existIdx >= 0) {
+      bookmarks[existIdx].url = url;
+      if (ep) bookmarks[existIdx].episode = ep;
+      save(); render(document.getElementById('searchInput').value);
+      document.getElementById('saveModal').classList.remove('open');
+      showToast(`✅ "${name}" ${ep} 업데이트됐어요`);
+      return;
+    }
+  }
+  // 없으면 새로 추가
+  bookmarks.push({ name: name || new URL(url).hostname, url, episode: ep, addedAt: Date.now() });
+  save(); render(document.getElementById('searchInput').value);
+  document.getElementById('saveModal').classList.remove('open');
+  showToast(`✅ "${name || url}" 추가됐어요`);
+});
+
+// 직접 추가
+document.getElementById('addBtn').addEventListener('click', () => openEditModal('add'));
+
+function openEditModal(mode, idx=-1) {
+  editMode = mode;
+  ctxTargetIdx = idx;
+  if (mode === 'edit' && idx >= 0) {
+    const b = bookmarks[idx];
+    document.getElementById('editModalTitle').textContent = '웹툰 수정';
+    document.getElementById('inputName').value = b.name;
+    document.getElementById('inputUrl').value = b.url;
+    document.getElementById('inputEp').value = b.episode || '';
+  } else {
+    document.getElementById('editModalTitle').textContent = '웹툰 추가';
+    document.getElementById('inputName').value = '';
+    document.getElementById('inputUrl').value = '';
+    document.getElementById('inputEp').value = '';
+  }
+  document.getElementById('editModal').classList.add('open');
+  setTimeout(() => document.getElementById('inputName').focus(), 50);
+}
+
+document.getElementById('editCancelBtn').addEventListener('click', () => document.getElementById('editModal').classList.remove('open'));
+document.getElementById('editModal').addEventListener('click', e => { if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); });
+
+document.getElementById('editConfirmBtn').addEventListener('click', () => {
+  const name = document.getElementById('inputName').value.trim();
+  let url = document.getElementById('inputUrl').value.trim();
+  const ep = document.getElementById('inputEp').value.trim();
+  if (!name) { alert('이름을 입력해주세요'); return; }
+  if (!url) { alert('URL을 입력해주세요'); return; }
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+  if (editMode === 'edit' && ctxTargetIdx >= 0) {
+    bookmarks[ctxTargetIdx] = { ...bookmarks[ctxTargetIdx], name, url, episode: ep };
+    showToast('✅ 수정됐어요');
+  } else {
+    bookmarks.push({ name, url, episode: ep, addedAt: Date.now() });
+    showToast('✅ 추가됐어요');
+  }
+  save();
+  document.getElementById('editModal').classList.remove('open');
+  render(document.getElementById('searchInput').value);
+});
+
+// 컨텍스트 메뉴
+const ctxMenu = document.getElementById('ctxMenu');
+function showCtx(e, idx) {
+  ctxTargetIdx = idx;
+  ctxMenu.style.left = Math.min(e.clientX, window.innerWidth - 160) + 'px';
+  ctxMenu.style.top = Math.min(e.clientY, window.innerHeight - 120) + 'px';
+  ctxMenu.classList.add('open');
+}
+document.addEventListener('click', e => { if (!e.target.closest('#ctxMenu')) ctxMenu.classList.remove('open'); });
+
+document.getElementById('ctxOpen').addEventListener('click', e => {
+  e.stopPropagation();
+  ctxMenu.classList.remove('open');
+  openBookmark(ctxTargetIdx);
+});
+
+document.getElementById('ctxEdit').addEventListener('click', e => {
+  e.stopPropagation();
+  ctxMenu.classList.remove('open');
+  openEditModal('edit', ctxTargetIdx);
+});
+
+document.getElementById('ctxDelete').addEventListener('click', e => {
+  e.stopPropagation();
+  ctxMenu.classList.remove('open');
+  const b = bookmarks[ctxTargetIdx];
+  if (!b || !confirm(`"${b.name}" 을 삭제할까요?`)) return;
+  bookmarks.splice(ctxTargetIdx, 1);
+  ctxTargetIdx = -1;
+  save(); render(document.getElementById('searchInput').value);
+  showToast('🗑 삭제됐어요');
+});
+
+// 도메인 일괄변경
+document.getElementById('domainBtn').addEventListener('click', () => {
+  const domains = [...new Set(bookmarks.map(b => getDomain(b.url)).filter(Boolean))];
+  const dl = document.getElementById('domainList');
+  if (domains.length === 0) { alert('저장된 북마크가 없어요'); return; }
+  dl.innerHTML = domains.map(d => `<span class="domain-chip" data-domain="${esc(d)}">${esc(d)}</span>`).join('');
+  dl.querySelectorAll('.domain-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      dl.querySelectorAll('.domain-chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      document.getElementById('inputNewDomain').value = chip.dataset.domain;
+      document.getElementById('inputNewDomain').focus();
+    });
+  });
+  document.getElementById('inputNewDomain').value = '';
+  document.getElementById('domainModal').classList.add('open');
+});
+
+document.getElementById('domainCancelBtn').addEventListener('click', () => document.getElementById('domainModal').classList.remove('open'));
+document.getElementById('domainModal').addEventListener('click', e => { if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); });
+
+document.getElementById('domainConfirmBtn').addEventListener('click', () => {
+  const selected = document.querySelector('.domain-chip.selected');
+  if (!selected) { alert('변경할 도메인을 선택해주세요'); return; }
+  let newDomain = document.getElementById('inputNewDomain').value.trim();
+  if (!newDomain) { alert('새 도메인을 입력해주세요'); return; }
+  if (!/^https?:\/\//i.test(newDomain)) newDomain = 'https://' + newDomain;
+  newDomain = newDomain.replace(/\/$/, '');
+  const oldDomain = selected.dataset.domain;
+  let count = 0;
+  bookmarks = bookmarks.map(b => {
+    if (getDomain(b.url) === oldDomain) { count++; return { ...b, url: b.url.replace(oldDomain, newDomain) }; }
+    return b;
+  });
+  save(); document.getElementById('domainModal').classList.remove('open');
+  render(document.getElementById('searchInput').value);
+  showToast(`✅ ${count}개 북마크 도메인 변경 완료`);
+});
+
+// 내보내기
+document.getElementById('exportBtn').addEventListener('click', () => {
+  if (bookmarks.length === 0) { alert('저장된 북마크가 없어요'); return; }
+  const json = JSON.stringify(bookmarks, null, 2);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10);
+  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+  a.download = `webtoon_bookmarks_${date}.json`;
+  a.click();
+  showToast(`✅ ${bookmarks.length}개 북마크 내보내기 완료`);
+});
+
+// 불러오기 모달
+document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importModal').classList.add('open'));
+document.getElementById('importCancelBtn').addEventListener('click', () => document.getElementById('importModal').classList.remove('open'));
+document.getElementById('importModal').addEventListener('click', e => { if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); });
+
+document.querySelectorAll('.import-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.import-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.import-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+function parseBookmarkHTML(html) {
+  html = html.replace(/^\uFEFF/, '');
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const results = [];
+  doc.querySelectorAll('a').forEach(a => {
+    const raw = a.getAttribute('href') || '';
+    const name = (a.textContent || '').trim();
+    if (/^https?:\/\//i.test(raw)) {
+      results.push({ name: name || raw, url: raw, episode: '', addedAt: Date.now() });
     }
   });
+  if (results.length === 0) {
+    const re = /<[Aa][^>]+[Hh][Rr][Ee][Ff]="([^"]+)"[^>]*>([^<]*)</g;
+    let m;
+    while ((m = re.exec(html)) !== null) {
+      const url = m[1], name = m[2].trim();
+      if (/^https?:\/\//i.test(url)) results.push({ name: name || url, url, episode: '', addedAt: Date.now() });
+    }
+  }
+  return results;
 }
 
-function renderTable(data) {
-  document.getElementById('table-body').innerHTML = data.map((d, i) => {
-    const cls = d.diff > 0 ? 'up' : 'down';
-    const sign = d.diff > 0 ? '+' : '';
-    return `<tr>
-      <td><span class="rank-num">${i+1}.</span>${d.name}</td>
-      <td class="right">${d.before.toFixed(1)}%</td>
-      <td class="right">${d.after.toFixed(1)}%</td>
-      <td class="right ${cls}">${sign}${d.diff.toFixed(1)}%p</td>
-    </tr>`;
-  }).join('');
+function handleImportFile(file, type) {
+  if (!file) return;
+  if (type === 'json') {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!Array.isArray(data)) { alert('올바른 JSON 파일이 아니에요'); return; }
+        const existing = new Set(bookmarks.map(b => b.url));
+        const newItems = data.filter(b => !existing.has(b.url));
+        bookmarks.push(...newItems);
+        save(); document.getElementById('importModal').classList.remove('open');
+        render(document.getElementById('searchInput').value);
+        showToast(`✅ ${newItems.length}개 불러왔어요 (중복 ${data.length - newItems.length}개 제외)`);
+      } catch { alert('파일을 읽는 중 오류가 발생했어요'); }
+    };
+    reader.readAsText(file);
+    return;
+  }
+  // HTML 파일
+  function tryRead(encoding) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.onerror = reject;
+      reader.readAsText(file, encoding);
+    });
+  }
+  tryRead('UTF-8').then(text => {
+    const hasGarbled = /[\uFFFD]/.test(text) || (/[\x80-\xFF]/.test(text) && !/[\uAC00-\uD7A3]/.test(text));
+    return hasGarbled ? tryRead('EUC-KR') : text;
+  }).then(html => {
+    const items = parseBookmarkHTML(html);
+    if (items.length === 0) { alert('북마크를 찾지 못했어요'); return; }
+    const existing = new Set(bookmarks.map(b => b.url));
+    const newItems = items.filter(b => !existing.has(b.url));
+    bookmarks.push(...newItems);
+    save(); document.getElementById('importModal').classList.remove('open');
+    render(document.getElementById('searchInput').value);
+    showToast(`✅ ${newItems.length}개 불러왔어요 (중복 ${items.length - newItems.length}개 제외)`);
+  }).catch(() => alert('파일을 읽는 중 오류가 발생했어요'));
 }
 
-function switchType(type) {
-  currentType = type;
-  document.getElementById('btn-op').className = 'toggle-btn' + (type === 'op' ? ' active-op' : '');
-  document.getElementById('btn-favor').className = 'toggle-btn' + (type === 'favor' ? ' active-favor' : '');
-  loadData(type);
-}
+[['chrome','html'],['naver','html'],['json','json']].forEach(([id, type]) => {
+  const input = document.getElementById(id + 'FileInput');
+  const drop = document.getElementById(id + 'FileDrop');
+  input.addEventListener('change', e => handleImportFile(e.target.files[0], type));
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.style.borderColor = '#6060ee'; });
+  drop.addEventListener('dragleave', () => { drop.style.borderColor = '#3a3a6e'; });
+  drop.addEventListener('drop', e => { e.preventDefault(); drop.style.borderColor = '#3a3a6e'; handleImportFile(e.dataTransfer.files[0], type); });
+});
 
-loadData('op');
+// 검색
+document.getElementById('searchInput').addEventListener('input', e => render(e.target.value));
+
+load();
+render();
 </script>
 </body>
 </html>
