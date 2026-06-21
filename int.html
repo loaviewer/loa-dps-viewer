@@ -113,6 +113,60 @@
   }
   .bookmark-item:hover .open-icon { opacity: 1; }
 
+  /* 다중 선택 */
+  .bookmark-item.selected {
+    background: #1e1e4e;
+    border-left-color: #6060ee;
+  }
+  .bookmark-item.selected .bookmark-name { color: #c0c0ff; }
+  .bookmark-item.selected .open-icon { display: none; }
+
+  .select-badge {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #4040cc;
+    border: none;
+    flex-shrink: 0;
+    display: none;
+    align-items: center; justify-content: center;
+    font-size: 10px; color: #fff; font-weight: 700;
+  }
+  .bookmark-item.selected .select-badge { display: flex; }
+  .bookmark-item.selected .bookmark-favicon { display: none; }
+
+  /* 선택 모드 상태바 */
+  .select-bar {
+    display: none;
+    padding: 6px 12px;
+    background: #1e1e4e;
+    border-bottom: 1px solid #3a3a6e;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 8px;
+  }
+  .select-bar.active { display: flex; }
+  .select-bar-text { flex: 1; font-size: 11px; color: #a0a0ff; }
+  .select-bar-btn {
+    height: 24px; padding: 0 10px;
+    border-radius: 5px; border: none;
+    font-size: 11px; font-family: 'Malgun Gothic', sans-serif;
+    cursor: pointer;
+  }
+  .select-bar-btn.cancel { background: #2a2a4e; color: #999; }
+  .select-bar-btn.cancel:hover { background: #333360; }
+  .select-bar-btn.del { background: #6b1e1e; color: #ff9999; }
+  .select-bar-btn.del:hover { background: #8b2e2e; }
+
+  /* 드래그 선택 오버레이 */
+  .drag-overlay {
+    position: absolute;
+    border: 1px solid #6060ee;
+    background: rgba(60,60,200,0.12);
+    pointer-events: none;
+    display: none;
+    z-index: 50;
+  }
+
   .empty-state {
     padding: 40px 14px; text-align: center;
     color: #44447a; font-size: 12px; line-height: 2;
@@ -307,8 +361,16 @@
     <input type="text" id="searchInput" placeholder="🔍  제목으로 검색...">
   </div>
 
+  <!-- 다중선택 상태바 -->
+  <div class="select-bar" id="selectBar">
+    <span class="select-bar-text" id="selectBarText">0개 선택됨</span>
+    <button class="select-bar-btn cancel" id="selectCancelBtn">취소</button>
+    <button class="select-bar-btn del" id="selectDeleteBtn">🗑 삭제</button>
+  </div>
+
   <!-- 북마크 목록 -->
-  <div class="bookmark-list" id="bookmarkList">
+  <div class="bookmark-list" id="bookmarkList" style="position:relative">
+    <div class="drag-overlay" id="dragOverlay"></div>
     <div class="empty-state">아직 저장된 웹툰이 없어요<br>아래 버튼으로 추가해보세요</div>
   </div>
 
@@ -318,16 +380,21 @@
     <button class="bottom-btn" id="domainBtn">🔗 도메인 일괄 변경</button>
   </div>
 
-  <div class="key-hint">북마크 클릭 → 새 창 열기 &nbsp;|&nbsp; 우클릭 → 수정/삭제 &nbsp;|&nbsp; 키패드 + → 화 저장</div>
+  <div class="key-hint">클릭 → 새 창 열기 &nbsp;|&nbsp; 드래그/클릭으로 다중선택 → 우클릭 삭제 &nbsp;|&nbsp; 키패드 + → 화 저장</div>
 </div>
 
-<!-- 컨텍스트 메뉴 -->
+<!-- 컨텍스트 메뉴 (단일) -->
 <div class="ctx-menu" id="ctxMenu">
   <div class="ctx-item" id="ctxOpen">↗ 새 창으로 열기</div>
   <div class="ctx-divider"></div>
   <div class="ctx-item" id="ctxEdit">✏️ 수정</div>
   <div class="ctx-divider"></div>
   <div class="ctx-item danger" id="ctxDelete">🗑 삭제</div>
+</div>
+
+<!-- 컨텍스트 메뉴 (다중선택) -->
+<div class="ctx-menu" id="ctxMenuMulti">
+  <div class="ctx-item danger" id="ctxDeleteMulti">🗑 선택 항목 삭제</div>
 </div>
 
 <!-- 추가/수정 모달 -->
@@ -440,6 +507,10 @@ const STORAGE_KEY = 'webtoon_bookmarks_v2';
 let bookmarks = [];
 let ctxTargetIdx = -1;
 let editMode = 'add';
+let selectedSet = new Set(); // 선택된 bookmark 원본 인덱스
+let isDragging = false;
+let dragStartY = 0;
+let dragStartScrollTop = 0;
 
 function load() {
   try { const r = localStorage.getItem(STORAGE_KEY); if(r) bookmarks = JSON.parse(r); } catch(e) { bookmarks = []; }
@@ -467,14 +538,16 @@ function render(filter='') {
   const filtered = bookmarks.map((b,i) => ({...b, _i:i})).filter(b => !q || b.name.toLowerCase().includes(q));
 
   if (bookmarks.length === 0) {
-    list.innerHTML = '<div class="empty-state">아직 저장된 웹툰이 없어요<br>아래 버튼으로 추가해보세요</div>';
+    list.innerHTML = '<div class="drag-overlay" id="dragOverlay"></div><div class="empty-state">아직 저장된 웹툰이 없어요<br>아래 버튼으로 추가해보세요</div>';
     return;
   }
-  list.innerHTML = filtered.length === 0
+  list.innerHTML = '<div class="drag-overlay" id="dragOverlay"></div>' + (filtered.length === 0
     ? '<div class="empty-state">검색 결과가 없어요</div>'
     : filtered.map(b => {
         const fav = getFavicon(b.url);
-        return `<div class="bookmark-item" data-idx="${b._i}">
+        const sel = selectedSet.has(b._i);
+        return `<div class="bookmark-item${sel?' selected':''}" data-idx="${b._i}">
+          <div class="select-badge">✓</div>
           <div class="bookmark-favicon">${fav ? `<img src="${fav}" onerror="this.style.display='none'">` : '📖'}</div>
           <div class="bookmark-info">
             <div class="bookmark-name">${esc(b.name)}</div>
@@ -482,13 +555,119 @@ function render(filter='') {
           </div>
           <span class="open-icon">↗</span>
         </div>`;
-      }).join('');
+      }).join(''));
 
-  list.querySelectorAll('.bookmark-item').forEach(el => {
+  updateSelectBar();
+  attachListEvents();
+}
+
+function updateSelectBar() {
+  const bar = document.getElementById('selectBar');
+  const txt = document.getElementById('selectBarText');
+  if (selectedSet.size > 0) {
+    bar.classList.add('active');
+    txt.textContent = `${selectedSet.size}개 선택됨`;
+  } else {
+    bar.classList.remove('active');
+  }
+}
+
+function attachListEvents() {
+  const listEl = document.getElementById('bookmarkList');
+  listEl.querySelectorAll('.bookmark-item').forEach(el => {
     const idx = parseInt(el.dataset.idx);
-    el.addEventListener('click', () => openBookmark(idx));
-    el.addEventListener('contextmenu', e => { e.preventDefault(); showCtx(e, idx); });
+    el.addEventListener('click', e => {
+      // 드래그 후엔 클릭 무시
+      if (isDragging) return;
+      if (selectedSet.size > 0) {
+        // 선택 모드: 토글
+        toggleSelect(idx);
+      } else {
+        openBookmark(idx);
+      }
+    });
+    el.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      if (selectedSet.size > 1 && selectedSet.has(idx)) {
+        showCtxMulti(e);
+      } else {
+        selectedSet.clear();
+        render(document.getElementById('searchInput').value);
+        showCtx(e, idx);
+      }
+    });
   });
+
+  // 드래그 선택 (마우스다운 → 드래그 → 마우스업)
+  listEl.addEventListener('mousedown', onDragStart);
+}
+
+function toggleSelect(idx) {
+  if (selectedSet.has(idx)) selectedSet.delete(idx);
+  else selectedSet.add(idx);
+  render(document.getElementById('searchInput').value);
+}
+
+// 드래그 선택 로직
+function onDragStart(e) {
+  if (e.button !== 0) return;
+  if (e.target.closest('.bookmark-item')) {
+    // 아이템 위에서 시작 = 클릭 or 드래그 구분 필요
+    const startEl = e.target.closest('.bookmark-item');
+    const startIdx = parseInt(startEl.dataset.idx);
+    const startY = e.clientY;
+    let moved = false;
+
+    const onMove = mv => {
+      if (!moved && Math.abs(mv.clientY - startY) > 5) {
+        moved = true;
+        isDragging = true;
+      }
+      if (!moved) return;
+      mv.preventDefault();
+      const listEl = document.getElementById('bookmarkList');
+      const rect = listEl.getBoundingClientRect();
+      const items = [...listEl.querySelectorAll('.bookmark-item')];
+      const minY = Math.min(startY, mv.clientY);
+      const maxY = Math.max(startY, mv.clientY);
+
+      // 드래그 오버레이 시각화
+      const overlay = document.getElementById('dragOverlay');
+      if (overlay) {
+        overlay.style.display = 'block';
+        overlay.style.left = '0';
+        overlay.style.right = '0';
+        overlay.style.top = (minY - rect.top + listEl.scrollTop) + 'px';
+        overlay.style.height = (maxY - minY) + 'px';
+      }
+
+      // 범위 내 아이템 선택
+      selectedSet.clear();
+      items.forEach(item => {
+        const r = item.getBoundingClientRect();
+        const itemMidY = r.top + r.height / 2;
+        if (itemMidY >= minY && itemMidY <= maxY) {
+          selectedSet.add(parseInt(item.dataset.idx));
+        }
+      });
+      updateSelectBar();
+      items.forEach(item => {
+        const idx = parseInt(item.dataset.idx);
+        item.classList.toggle('selected', selectedSet.has(idx));
+      });
+    };
+
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      const overlay = document.getElementById('dragOverlay');
+      if (overlay) overlay.style.display = 'none';
+      setTimeout(() => { isDragging = false; }, 50);
+    };
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  }
 }
 
 function openBookmark(idx) {
@@ -589,37 +768,75 @@ document.getElementById('editConfirmBtn').addEventListener('click', () => {
   render(document.getElementById('searchInput').value);
 });
 
-// 컨텍스트 메뉴
+// 컨텍스트 메뉴 (단일)
 const ctxMenu = document.getElementById('ctxMenu');
 function showCtx(e, idx) {
   ctxTargetIdx = idx;
+  document.getElementById('ctxMenuMulti').classList.remove('open');
   ctxMenu.style.left = Math.min(e.clientX, window.innerWidth - 160) + 'px';
   ctxMenu.style.top = Math.min(e.clientY, window.innerHeight - 120) + 'px';
   ctxMenu.classList.add('open');
 }
-document.addEventListener('click', e => { if (!e.target.closest('#ctxMenu')) ctxMenu.classList.remove('open'); });
+
+// 컨텍스트 메뉴 (다중)
+const ctxMenuMulti = document.getElementById('ctxMenuMulti');
+function showCtxMulti(e) {
+  ctxMenu.classList.remove('open');
+  ctxMenuMulti.style.left = Math.min(e.clientX, window.innerWidth - 180) + 'px';
+  ctxMenuMulti.style.top = Math.min(e.clientY, window.innerHeight - 60) + 'px';
+  ctxMenuMulti.classList.add('open');
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#ctxMenu')) ctxMenu.classList.remove('open');
+  if (!e.target.closest('#ctxMenuMulti')) ctxMenuMulti.classList.remove('open');
+});
 
 document.getElementById('ctxOpen').addEventListener('click', e => {
-  e.stopPropagation();
-  ctxMenu.classList.remove('open');
+  e.stopPropagation(); ctxMenu.classList.remove('open');
   openBookmark(ctxTargetIdx);
 });
 
 document.getElementById('ctxEdit').addEventListener('click', e => {
-  e.stopPropagation();
-  ctxMenu.classList.remove('open');
+  e.stopPropagation(); ctxMenu.classList.remove('open');
   openEditModal('edit', ctxTargetIdx);
 });
 
 document.getElementById('ctxDelete').addEventListener('click', e => {
-  e.stopPropagation();
-  ctxMenu.classList.remove('open');
+  e.stopPropagation(); ctxMenu.classList.remove('open');
   const b = bookmarks[ctxTargetIdx];
   if (!b || !confirm(`"${b.name}" 을 삭제할까요?`)) return;
   bookmarks.splice(ctxTargetIdx, 1);
   ctxTargetIdx = -1;
+  selectedSet.clear();
   save(); render(document.getElementById('searchInput').value);
   showToast('🗑 삭제됐어요');
+});
+
+// 다중 삭제
+document.getElementById('ctxDeleteMulti').addEventListener('click', e => {
+  e.stopPropagation(); ctxMenuMulti.classList.remove('open');
+  if (!selectedSet.size) return;
+  if (!confirm(`선택한 ${selectedSet.size}개 항목을 삭제할까요?`)) return;
+  bookmarks = bookmarks.filter((_, i) => !selectedSet.has(i));
+  selectedSet.clear();
+  save(); render(document.getElementById('searchInput').value);
+  showToast(`🗑 ${selectedSet.size || '선택'} 항목 삭제됐어요`);
+});
+
+// 선택 상태바 버튼
+document.getElementById('selectCancelBtn').addEventListener('click', () => {
+  selectedSet.clear();
+  render(document.getElementById('searchInput').value);
+});
+document.getElementById('selectDeleteBtn').addEventListener('click', () => {
+  if (!selectedSet.size) return;
+  const cnt = selectedSet.size;
+  if (!confirm(`선택한 ${cnt}개 항목을 삭제할까요?`)) return;
+  bookmarks = bookmarks.filter((_, i) => !selectedSet.has(i));
+  selectedSet.clear();
+  save(); render(document.getElementById('searchInput').value);
+  showToast(`🗑 ${cnt}개 삭제됐어요`);
 });
 
 // 도메인 일괄변경
