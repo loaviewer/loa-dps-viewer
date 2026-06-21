@@ -36,6 +36,10 @@
     background: #13132a;
     border-bottom: 1px solid #2d2d5e;
     flex-shrink: 0;
+    min-height: 88px; /* title(20) + gap(10) + save-btn(34) + padding(24) 고정 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .app-title {
@@ -139,7 +143,7 @@
     display: none;
     align-items: center;
     gap: 8px;
-    height: 34px; /* save-btn 높이와 동일 */
+    height: 54px; /* title(20) + gap(10) + save-btn(34) 와 동일 */
   }
   .select-bar.active { display: flex; }
   #normalHeader { display: block; }
