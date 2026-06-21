@@ -635,16 +635,17 @@ function onDragStart(e) {
 
   function updateSelection(currentClientY) {
     const curRelY = getRelY(currentClientY);
-    const minRel = Math.min(anchorRelY, curRelY);
-    const maxRel = Math.max(anchorRelY, curRelY);
+    // 앵커를 아이템 top 기준으로 확장해서 첫 아이템도 포함
+    const minRel = Math.min(anchorRelY, curRelY) - 1;
+    const maxRel = Math.max(anchorRelY, curRelY) + 1;
 
     // 오버레이 업데이트
     const overlay = document.getElementById('dragOverlay');
     if (overlay) {
       overlay.style.display = 'block';
       overlay.style.left = '0'; overlay.style.right = '0';
-      overlay.style.top = minRel + 'px';
-      overlay.style.height = (maxRel - minRel) + 'px';
+      overlay.style.top = (minRel + 1) + 'px';
+      overlay.style.height = (maxRel - minRel - 2) + 'px';
     }
 
     // 현재 DOM 아이템 기준 선택 (스크롤 위치 반영)
@@ -652,16 +653,14 @@ function onDragStart(e) {
     selectedSet.clear();
     items.forEach(item => {
       const r = item.getBoundingClientRect();
-      // item의 리스트-상대 top/bottom
       const itemTop = r.top - listRect.top + listEl.scrollTop;
-      const itemBot = itemTop + r.height;
       const itemMid = itemTop + r.height / 2;
       if (itemMid >= minRel && itemMid <= maxRel) {
         selectedSet.add(parseInt(item.dataset.idx));
       }
     });
 
-    // 즉시 DOM 반영 (render 없이 빠르게)
+    // 즉시 DOM 반영
     items.forEach(item => {
       item.classList.toggle('selected', selectedSet.has(parseInt(item.dataset.idx)));
     });
