@@ -509,8 +509,6 @@ let ctxTargetIdx = -1;
 let editMode = 'add';
 let selectedSet = new Set(); // 선택된 bookmark 원본 인덱스
 let isDragging = false;
-let dragStartY = 0;
-let dragStartScrollTop = 0;
 
 function load() {
   try { const r = localStorage.getItem(STORAGE_KEY); if(r) bookmarks = JSON.parse(r); } catch(e) { bookmarks = []; }
