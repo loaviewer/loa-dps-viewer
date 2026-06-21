@@ -134,23 +134,22 @@
   .bookmark-item.selected .select-badge { display: flex; }
   .bookmark-item.selected .bookmark-favicon { display: none; }
 
-  /* 선택 모드 상태바 */
+  /* 선택 모드 상태바 - 헤더 안에 위치 */
   .select-bar {
     display: none;
-    padding: 6px 12px;
-    background: #1e1e4e;
-    border-bottom: 1px solid #3a3a6e;
-    flex-shrink: 0;
     align-items: center;
     gap: 8px;
+    height: 34px; /* save-btn 높이와 동일 */
   }
   .select-bar.active { display: flex; }
-  .select-bar-text { flex: 1; font-size: 11px; color: #a0a0ff; }
+  #normalHeader { display: block; }
+  #normalHeader.hidden { display: none; }
+  .select-bar-text { flex: 1; font-size: 12px; color: #a0a0ff; font-weight: 600; }
   .select-bar-btn {
-    height: 24px; padding: 0 10px;
-    border-radius: 5px; border: none;
-    font-size: 11px; font-family: 'Malgun Gothic', sans-serif;
-    cursor: pointer;
+    height: 28px; padding: 0 12px;
+    border-radius: 6px; border: none;
+    font-size: 12px; font-family: 'Malgun Gothic', sans-serif;
+    cursor: pointer; font-weight: 600;
   }
   .select-bar-btn.cancel { background: #2a2a4e; color: #999; }
   .select-bar-btn.cancel:hover { background: #333360; }
@@ -344,10 +343,18 @@
 
 <div class="app">
 
-  <!-- 헤더 -->
-  <div class="app-header">
-    <div class="app-title">📚 웹툰 북마크</div>
-    <button class="save-btn" id="saveCurrentBtn">💾 현재 화 저장 (키패드 +)</button>
+  <!-- 헤더 (선택바 포함) -->
+  <div class="app-header" id="appHeader">
+    <div id="normalHeader">
+      <div class="app-title">📚 웹툰 북마크</div>
+      <button class="save-btn" id="saveCurrentBtn">💾 현재 화 저장 (키패드 +)</button>
+    </div>
+    <!-- 선택 모드시 헤더 전체를 선택바로 교체 -->
+    <div class="select-bar" id="selectBar">
+      <span class="select-bar-text" id="selectBarText">0개 선택됨</span>
+      <button class="select-bar-btn cancel" id="selectCancelBtn">취소</button>
+      <button class="select-bar-btn del" id="selectDeleteBtn">🗑 삭제</button>
+    </div>
   </div>
 
   <!-- 내보내기/불러오기 -->
@@ -359,13 +366,6 @@
   <!-- 검색 -->
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="🔍  제목으로 검색...">
-  </div>
-
-  <!-- 다중선택 상태바 -->
-  <div class="select-bar" id="selectBar">
-    <span class="select-bar-text" id="selectBarText">0개 선택됨</span>
-    <button class="select-bar-btn cancel" id="selectCancelBtn">취소</button>
-    <button class="select-bar-btn del" id="selectDeleteBtn">🗑 삭제</button>
   </div>
 
   <!-- 북마크 목록 -->
@@ -564,11 +564,14 @@ function render(filter='') {
 function updateSelectBar() {
   const bar = document.getElementById('selectBar');
   const txt = document.getElementById('selectBarText');
+  const normalHeader = document.getElementById('normalHeader');
   if (selectedSet.size > 0) {
     bar.classList.add('active');
+    normalHeader.classList.add('hidden');
     txt.textContent = `${selectedSet.size}개 선택됨`;
   } else {
     bar.classList.remove('active');
+    normalHeader.classList.remove('hidden');
   }
 }
 
@@ -608,66 +611,113 @@ function toggleSelect(idx) {
   render(document.getElementById('searchInput').value);
 }
 
-// 드래그 선택 로직
+// ── 드래그 선택 ──────────────────────────────────────────
+let dragActive = false;
+let dragStartClientY = 0;
+let dragStartScrollTop = 0;
+let autoScrollRAF = null;
+
 function onDragStart(e) {
   if (e.button !== 0) return;
-  if (e.target.closest('.bookmark-item')) {
-    // 아이템 위에서 시작 = 클릭 or 드래그 구분 필요
-    const startEl = e.target.closest('.bookmark-item');
-    const startIdx = parseInt(startEl.dataset.idx);
-    const startY = e.clientY;
-    let moved = false;
+  const startItem = e.target.closest('.bookmark-item');
+  if (!startItem) return;
 
-    const onMove = mv => {
-      if (!moved && Math.abs(mv.clientY - startY) > 5) {
-        moved = true;
-        isDragging = true;
-      }
-      if (!moved) return;
-      mv.preventDefault();
-      const listEl = document.getElementById('bookmarkList');
-      const rect = listEl.getBoundingClientRect();
-      const items = [...listEl.querySelectorAll('.bookmark-item')];
-      const minY = Math.min(startY, mv.clientY);
-      const maxY = Math.max(startY, mv.clientY);
+  const listEl = document.getElementById('bookmarkList');
+  dragStartClientY = e.clientY;
+  dragStartScrollTop = listEl.scrollTop;
+  dragActive = false;
 
-      // 드래그 오버레이 시각화
-      const overlay = document.getElementById('dragOverlay');
-      if (overlay) {
-        overlay.style.display = 'block';
-        overlay.style.left = '0';
-        overlay.style.right = '0';
-        overlay.style.top = (minY - rect.top + listEl.scrollTop) + 'px';
-        overlay.style.height = (maxY - minY) + 'px';
-      }
+  // 앵커 Y (리스트 상대 좌표)
+  const listRect = listEl.getBoundingClientRect();
+  const anchorRelY = e.clientY - listRect.top + listEl.scrollTop;
 
-      // 범위 내 아이템 선택
-      selectedSet.clear();
-      items.forEach(item => {
-        const r = item.getBoundingClientRect();
-        const itemMidY = r.top + r.height / 2;
-        if (itemMidY >= minY && itemMidY <= maxY) {
-          selectedSet.add(parseInt(item.dataset.idx));
-        }
-      });
-      updateSelectBar();
-      items.forEach(item => {
-        const idx = parseInt(item.dataset.idx);
-        item.classList.toggle('selected', selectedSet.has(idx));
-      });
-    };
-
-    const onUp = () => {
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-      const overlay = document.getElementById('dragOverlay');
-      if (overlay) overlay.style.display = 'none';
-      setTimeout(() => { isDragging = false; }, 50);
-    };
-
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onUp);
+  function getRelY(clientY) {
+    return clientY - listRect.top + listEl.scrollTop;
   }
+
+  function updateSelection(currentClientY) {
+    const curRelY = getRelY(currentClientY);
+    const minRel = Math.min(anchorRelY, curRelY);
+    const maxRel = Math.max(anchorRelY, curRelY);
+
+    // 오버레이 업데이트
+    const overlay = document.getElementById('dragOverlay');
+    if (overlay) {
+      overlay.style.display = 'block';
+      overlay.style.left = '0'; overlay.style.right = '0';
+      overlay.style.top = minRel + 'px';
+      overlay.style.height = (maxRel - minRel) + 'px';
+    }
+
+    // 현재 DOM 아이템 기준 선택 (스크롤 위치 반영)
+    const items = [...listEl.querySelectorAll('.bookmark-item')];
+    selectedSet.clear();
+    items.forEach(item => {
+      const r = item.getBoundingClientRect();
+      // item의 리스트-상대 top/bottom
+      const itemTop = r.top - listRect.top + listEl.scrollTop;
+      const itemBot = itemTop + r.height;
+      const itemMid = itemTop + r.height / 2;
+      if (itemMid >= minRel && itemMid <= maxRel) {
+        selectedSet.add(parseInt(item.dataset.idx));
+      }
+    });
+
+    // 즉시 DOM 반영 (render 없이 빠르게)
+    items.forEach(item => {
+      item.classList.toggle('selected', selectedSet.has(parseInt(item.dataset.idx)));
+    });
+    updateSelectBar();
+  }
+
+  function autoScroll(currentClientY) {
+    const rect = listEl.getBoundingClientRect();
+    const ZONE = 40; // px
+    const SPEED = 8; // px/frame
+    let delta = 0;
+    if (currentClientY > rect.bottom - ZONE) {
+      delta = SPEED * Math.min(1, (currentClientY - (rect.bottom - ZONE)) / ZONE);
+    } else if (currentClientY < rect.top + ZONE) {
+      delta = -SPEED * Math.min(1, ((rect.top + ZONE) - currentClientY) / ZONE);
+    }
+    if (delta !== 0) {
+      listEl.scrollTop += delta;
+    }
+    return delta;
+  }
+
+  let lastClientY = e.clientY;
+
+  function rafLoop() {
+    if (!dragActive) return;
+    const delta = autoScroll(lastClientY);
+    if (delta !== 0) updateSelection(lastClientY);
+    autoScrollRAF = requestAnimationFrame(rafLoop);
+  }
+
+  const onMove = mv => {
+    lastClientY = mv.clientY;
+    if (!dragActive && Math.abs(mv.clientY - dragStartClientY) > 4) {
+      dragActive = true;
+      isDragging = true;
+      autoScrollRAF = requestAnimationFrame(rafLoop);
+    }
+    if (!dragActive) return;
+    mv.preventDefault();
+    updateSelection(mv.clientY);
+  };
+
+  const onUp = () => {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    cancelAnimationFrame(autoScrollRAF);
+    const overlay = document.getElementById('dragOverlay');
+    if (overlay) overlay.style.display = 'none';
+    setTimeout(() => { isDragging = false; dragActive = false; }, 50);
+  };
+
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
 }
 
 function openBookmark(idx) {
