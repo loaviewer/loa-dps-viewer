@@ -295,19 +295,30 @@ async function recognizeBoard(){
   const btn=document.getElementById('btnRecognize');
   btn.disabled=true;btn.textContent='🔍 인식 중...';
   try{
-    const prompt=`이 티카투카 게임 보드 스크린샷을 분석해주세요.
-왼쪽=내 보드, 오른쪽=상대 보드. 3개 라인(위/중간/아래) 각각 최대 3칸.
-초록 테두리=내 실드, 빨간/분홍 테두리=상대 실드, 테두리없음=일반, 빈칸=null.
-JSON만 반환(다른 텍스트 없이):
-{"me":[[{"val":숫자or null,"shield":bool},{"val":숫자or null,"shield":bool},{"val":숫자or null,"shield":bool}],[...],[...]],"opp":[[...],[...],[...]]}
-me[0]=윗줄, me[1]=중간, me[2]=아래. 각 배열은 왼쪽→오른쪽.`;
+    const prompt=`티카투카 보드게임 스크린샷입니다. 정확히 분석해주세요.
+
+=== 보드 구조 ===
+중앙에 3줄(위/중간/아래) 보드. 각 줄: 왼쪽=내 보드(최대3칸) | 중앙점수 | 오른쪽=상대보드(최대3칸)
+내 주사위=초록점, 상대 주사위=빨간점
+
+=== 인식 규칙 ===
+주사위 있는 칸: 흰색/베이지 배경 + 점 → 점 개수로 숫자 판단(1~6)
+빈 칸: 어두운 갈색 배경, 아무것도 없음 → null로 처리
+초록 테두리=내 실드(shield:true), 빨간/분홍 테두리=상대 실드(shield:true), 테두리없음=일반(shield:false)
+
+=== 대기 주사위 ===
+화면 왼쪽 별도 영역의 주사위(현재 배치할 주사위). 숫자와 실드여부 인식. 없으면 null.
+
+반드시 JSON만 반환(다른 텍스트 절대 없이):
+{"me":[[{"val":숫자ornull,"shield":bool},{"val":숫자ornull,"shield":bool},{"val":숫자ornull,"shield":bool}],[같은형식],[같은형식]],"opp":[[같은형식],[같은형식],[같은형식]],"current":{"val":숫자ornull,"shield":bool}}
+me[0]=윗줄,me[1]=중간,me[2]=아래. 각줄 왼쪽→오른쪽.`;
 
     const resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
       method:'POST',
       headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json','HTTP-Referer':'tikatuka-ai','X-Title':'TikaTuka AI'},
       body:JSON.stringify({
         model:'anthropic/claude-sonnet-4-5',
-        max_tokens:600,
+        max_tokens:800,
         messages:[{role:'user',content:[
           {type:'image_url',image_url:{url:capturedImage}},
           {type:'text',text:prompt}
@@ -318,9 +329,21 @@ me[0]=윗줄, me[1]=중간, me[2]=아래. 각 배열은 왼쪽→오른쪽.`;
     if(!resp.ok)throw new Error(data.error?.message||'API 오류');
     const text=data.choices[0].message.content;
     const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
+
+    // 보드 적용
     board.me=parsed.me.map(row=>row.map(d=>({val:d.val,shield:!!d.shield})));
     board.opp=parsed.opp.map(row=>row.map(d=>({val:d.val,shield:!!d.shield})));
     rebuildSlots(); refreshScores();
+
+    // 대기 주사위 자동 적용
+    if(parsed.current&&parsed.current.val){
+      curDice.val=parsed.current.val;
+      curDice.shield=!!parsed.current.shield;
+      document.querySelectorAll('.nb').forEach((b,i)=>b.classList.toggle('sel',i+1===curDice.val));
+      document.getElementById('isShield').checked=curDice.shield;
+      updateCurDisplay();
+    }
+
     btn.textContent='✅ 인식 완료!';
     setTimeout(()=>{btn.textContent='🔍 AI로 보드 자동 인식';updateBtnState();},2000);
   }catch(e){
