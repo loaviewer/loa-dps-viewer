@@ -9,12 +9,29 @@ const cors = require("cors");
 
 const app = express();
 
-// 환경변수에서 키를 읽어옴 (클라우드타입 배포 시 여기에 값을 넣어줌)
-const LOSTARK_API_KEY = process.env.LOSTARK_API_KEY;
+// 환경변수에서 키들을 읽어옴 (클라우드타입에서 LOSTARK_API_KEYS 하나에 콤마로 구분해서 등록)
+// 예: LOSTARK_API_KEYS = "키1,키2,키3,...,키10"
+// 키 개수는 몇 개든 상관없음 (1개여도 되고, 10개, 20개여도 됨)
+const API_KEYS = (process.env.LOSTARK_API_KEYS || "")
+  .split(",")
+  .map((key) => key.trim())
+  .filter(Boolean); // 빈 값 제외
+
 const LOSTARK_BASE_URL = "https://developer-lostark.game.onstove.com";
 
+// 다음에 쓸 키의 순번을 기억하는 변수 (요청마다 하나씩 증가)
+let keyIndex = 0;
+
+// 호출할 때마다 순서대로 다음 키를 반환 (마지막 키까지 쓰면 다시 첫 번째로 돌아감)
+function getNextApiKey() {
+  if (API_KEYS.length === 0) return null;
+  const key = API_KEYS[keyIndex % API_KEYS.length];
+  keyIndex++;
+  return key;
+}
+
 // 어떤 도메인에서 이 서버를 호출해도 되는지 제한 (내 깃허브 사이트만 허용)
-// 실제 슈쿠 사이트 주소로 바꿔줘. 여러 개면 배열로 추가 가능.
+// 실제사이트 주소로 바꿔줘. 여러 개면 배열로 추가 가능.
 const ALLOWED_ORIGINS = [
   "https://loaviewer.github.io",
 ];
@@ -32,7 +49,9 @@ app.get("/", (req, res) => {
 
 // 공통 프록시 함수: 로스트아크 API의 특정 경로를 그대로 대신 호출해줌
 async function callLostArk(path, res) {
-  if (!LOSTARK_API_KEY) {
+  const currentKey = getNextApiKey();
+
+  if (!currentKey) {
     return res.status(500).json({ error: "서버에 API 키가 설정되지 않았습니다." });
   }
 
@@ -40,7 +59,7 @@ async function callLostArk(path, res) {
     const response = await fetch(`${LOSTARK_BASE_URL}${path}`, {
       headers: {
         accept: "application/json",
-        authorization: `bearer ${LOSTARK_API_KEY}`,
+        authorization: `bearer ${currentKey}`,
       },
     });
 
