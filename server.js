@@ -31,7 +31,7 @@ function getNextApiKey() {
 }
 
 // 어떤 도메인에서 이 서버를 호출해도 되는지 제한 (내 깃허브 사이트만 허용)
-// 실제사이트 주소로 바꿔줘. 여러 개면 배열로 추가 가능.
+// 실제 슈쿠 사이트 주소로 바꿔줘. 여러 개면 배열로 추가 가능.
 const ALLOWED_ORIGINS = [
   "https://loaviewer.github.io",
 ];
@@ -78,8 +78,21 @@ app.get("/character/:name", (req, res) => {
   callLostArk(`/armories/characters/${name}/profiles`, res);
 });
 
-// 예시 2) 경매장 검색 (필요하면 나중에 추가로 확장 가능)
-// app.post("/auctions/items", ...) 처럼 필요한 엔드포인트는 계속 추가하면 됨
+// 메인 홈에서 쓰는 3개 엔드포인트
+// 프론트에서: fetch(`${PROXY_BASE_URL}/gamecontents/calendar`)
+app.get("/gamecontents/calendar", (req, res) => {
+  callLostArk(`/gamecontents/calendar`, res);
+});
+
+// 프론트에서: fetch(`${PROXY_BASE_URL}/news/events`)
+app.get("/news/events", (req, res) => {
+  callLostArk(`/news/events`, res);
+});
+
+// 프론트에서: fetch(`${PROXY_BASE_URL}/news/notices`)
+app.get("/news/notices", (req, res) => {
+  callLostArk(`/news/notices`, res);
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
