@@ -1,0 +1,13 @@
+{
+  "name": "loa-proxy",
+  "version": "1.0.0",
+  "description": "로스트아크 API 키를 안전하게 감춰주는 프록시 서버",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  }
+}
