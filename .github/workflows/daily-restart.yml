@@ -1,0 +1,43 @@
+name: Daily Cloudtype Restart
+
+# 매일 한국시간(KST) 오전 6시에 실행됨
+# cron은 UTC 기준이라 KST 06:00 = UTC 전날 21:00 으로 계산됨
+on:
+  schedule:
+    - cron: '0 21 * * *'
+  workflow_dispatch:   # 수동으로도 실행 버튼을 눌러볼 수 있게 함 (테스트용)
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 클라우드타입 CLI 설치
+        run: npm install -g @cloudtype/cli
+
+      - name: 클라우드타입 로그인 (Secrets에 저장된 API 키 사용)
+        run: ctype login -t ${{ secrets.CLOUDTYPE_API_KEY }}
+
+      - name: 프로젝트 선택
+        run: ctype use loa-dps-viewer
+
+      - name: 배포 설정 파일 생성 (Secrets에 저장된 로스트아크 키를 그 순간에만 끼워 넣음)
+        run: |
+          cat <<EOF > app.yaml
+          name: loa-dps-viewer
+
+          app: node@24
+
+          options:
+            git:
+              url: https://github.com/loaviewer/loa-dps-viewer.git
+              branch: main
+            env:
+              - name: LOSTARK_API_KEYS
+                value: "${{ secrets.LOSTARK_API_KEYS }}"
+            ports: 8080
+            install: npm install
+            start: npm start
+          EOF
+
+      - name: 재배포 실행 (= 재시작)
+        run: ctype apply -f app.yaml
