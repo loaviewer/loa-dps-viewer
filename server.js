@@ -94,6 +94,41 @@ app.get("/news/notices", (req, res) => {
   callLostArk(`/news/notices`, res);
 });
 
+// ===== 경매장 각인서 시세 =====
+app.get("/auctions/items", async (req, res) => {
+  const currentKey = getNextApiKey();
+  if (!currentKey) {
+    return res.status(500).json({ error: "서버에 API 키가 설정되지 않았습니다." });
+  }
+
+  try {
+    const body = {
+      Sort: "BUY_PRICE",
+      CategoryCode: 40000,
+      ItemTier: 4,
+      ItemGrade: "유물",
+      PageNo: 1,
+      SortCondition: "ASC"
+    };
+
+    const response = await fetch(`${LOSTARK_BASE_URL}/auctions/items`, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        authorization: `bearer ${currentKey}`,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+    res.status(response.status).json(data);
+  } catch (err) {
+    console.error("경매장 API 호출 실패:", err.message);
+    res.status(502).json({ error: "경매장 API 호출 중 오류가 발생했습니다." });
+  }
+});
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`프록시 서버 실행 중 (포트: ${PORT})`);
