@@ -71,6 +71,8 @@ app.get("/news/notices", (req, res) => {
   callLostArk(`/news/notices`, res);
 });
 
+
+
 // ===== 각인서 시세 (거래소) =====
 app.get("/auctions/items", async (req, res) => {
   const currentKey = getNextApiKey();
@@ -79,34 +81,75 @@ app.get("/auctions/items", async (req, res) => {
   }
 
   try {
-    const body = {
+    const baseBody = {
       Sort: "CURRENT_MIN_PRICE",
       CategoryCode: 40000,
       CharacterClass: null,
       ItemTier: null,
       ItemGrade: "유물",
       ItemName: "",
-      PageNo: 1,
       SortCondition: "ASC"
     };
 
-    const response = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
+    // 1페이지 먼저 조회
+    const firstResponse = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
       method: "POST",
       headers: {
         accept: "application/json",
         "content-type": "application/json",
         authorization: `bearer ${currentKey}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        ...baseBody,
+        PageNo: 1
+      }),
     });
 
-    const data = await response.json();
-    res.status(response.status).json(data);
+    const firstData = await firstResponse.json();
+
+    if (!firstResponse.ok) {
+      return res.status(firstResponse.status).json(firstData);
+    }
+
+    const allItems = Array.isArray(firstData.Items) ? [...firstData.Items] : [];
+    const totalCount = firstData.TotalCount || 0;
+    const pageSize = firstData.PageSize || 10;
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    // 2페이지부터 끝까지 전부 조회
+    for (let page = 2; page <= totalPages; page++) {
+      const pageResponse = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+          authorization: `bearer ${currentKey}`,
+        },
+        body: JSON.stringify({
+          ...baseBody,
+          PageNo: page
+        }),
+      });
+
+      const pageData = await pageResponse.json();
+
+      if (pageResponse.ok && Array.isArray(pageData.Items)) {
+        allItems.push(...pageData.Items);
+      }
+    }
+
+    res.json({
+      PageNo: 1,
+      PageSize: allItems.length,
+      TotalCount: allItems.length,
+      Items: allItems
+    });
   } catch (err) {
     console.error("각인서 시세 API 호출 실패:", err.message);
     res.status(502).json({ error: "각인서 시세 API 호출 중 오류가 발생했습니다." });
   }
 });
+
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
