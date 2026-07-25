@@ -102,14 +102,18 @@ app.get("/auctions/items", async (req, res) => {
   }
 
   try {
+
     const body = {
       Sort: "BUY_PRICE",
       CategoryCode: 40000,
       ItemTier: 4,
       ItemGrade: "유물",
+      ItemName: "",
       PageNo: 1,
+      PageSize: 100,
       SortCondition: "ASC"
     };
+    
 
     const response = await fetch(`${LOSTARK_BASE_URL}/auctions/items`, {
       method: "POST",
