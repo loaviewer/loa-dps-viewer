@@ -54,56 +54,59 @@ async function callLostArk(path, res) {
   }
 }
 
+async function fetchMarketPages(categoryCode, apiKey) {
+  const baseBody = {
+    Sort: "CURRENT_MIN_PRICE",
+    CategoryCode: categoryCode,
+    ItemTier: null,
+    ItemGrade: "",
+    ItemName: "",
+    SortCondition: "ASC"
+  };
+
+  const firstRes = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      authorization: `bearer ${apiKey}`,
+    },
+    body: JSON.stringify({ ...baseBody, PageNo: 1 }),
+  });
+
+  const firstData = await firstRes.json();
+  if (!firstRes.ok) return [];
+
+  const allItems = Array.isArray(firstData.Items) ? [...firstData.Items] : [];
+  const totalPages = Math.ceil((firstData.TotalCount || 0) / (firstData.PageSize || 10));
+
+  for (let page = 2; page <= totalPages; page++) {
+    const pageRes = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        authorization: `bearer ${apiKey}`,
+      },
+      body: JSON.stringify({ ...baseBody, PageNo: page }),
+    });
+    const pageData = await pageRes.json();
+    if (pageRes.ok && Array.isArray(pageData.Items)) {
+      allItems.push(...pageData.Items);
+    }
+  }
+
+  return allItems;
+}
+
 async function fetchMarketCategory(categoryCode, res) {
   const currentKey = getNextApiKey();
   if (!currentKey) {
     return res.status(500).json({ error: "API 키 없음" });
   }
-
   try {
-    const baseBody = {
-      Sort: "CURRENT_MIN_PRICE",
-      CategoryCode: categoryCode,
-      ItemTier: null,
-      ItemGrade: "",
-      ItemName: "",
-      SortCondition: "ASC"
-    };
-
-    const firstRes = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "content-type": "application/json",
-        authorization: `bearer ${currentKey}`,
-      },
-      body: JSON.stringify({ ...baseBody, PageNo: 1 }),
-    });
-
-    const firstData = await firstRes.json();
-    if (!firstRes.ok) return res.status(firstRes.status).json(firstData);
-
-    const allItems = Array.isArray(firstData.Items) ? [...firstData.Items] : [];
-    const totalPages = Math.ceil((firstData.TotalCount || 0) / (firstData.PageSize || 10));
-
-    for (let page = 2; page <= totalPages; page++) {
-      const pageRes = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json",
-          authorization: `bearer ${currentKey}`,
-        },
-        body: JSON.stringify({ ...baseBody, PageNo: page }),
-      });
-      const pageData = await pageRes.json();
-      if (pageRes.ok && Array.isArray(pageData.Items)) {
-        allItems.push(...pageData.Items);
-      }
-    }
-
+    const allItems = await fetchMarketPages(categoryCode, currentKey);
     res.json({ TotalCount: allItems.length, Items: allItems });
-
   } catch (err) {
     console.error("거래소 API 오류:", err.message);
     res.status(502).json({ error: "거래소 API 호출 오류" });
@@ -199,9 +202,23 @@ app.get("/auctions/items", async (req, res) => {
 
 // ===== 시세 페이지용 거래소 라우트 =====
 
-// 강화 재료
-app.get("/markets/enhance", (req, res) => {
-  fetchMarketCategory(50010, res);
+// 강화 재료 (재련 재료 50010 + 재련 추가 재료 50020 합침)
+app.get("/markets/enhance", async (req, res) => {
+  const currentKey = getNextApiKey();
+  if (!currentKey) {
+    return res.status(500).json({ error: "API 키 없음" });
+  }
+  try {
+    const [refineItems, supportItems] = await Promise.all([
+      fetchMarketPages(50010, currentKey),
+      fetchMarketPages(50020, currentKey)
+    ]);
+    const allItems = [...refineItems, ...supportItems];
+    res.json({ TotalCount: allItems.length, Items: allItems });
+  } catch (err) {
+    console.error("강화 재료 API 오류:", err.message);
+    res.status(502).json({ error: "강화 재료 API 호출 오류" });
+  }
 });
 
 // 각인서
@@ -209,22 +226,12 @@ app.get("/markets/engravings", (req, res) => {
   fetchMarketCategory(40000, res);
 });
 
-// 배틀 아이템
-app.get("/markets/battle", (req, res) => {
-  fetchMarketCategory(60100, res);
-});
-
-// 요리
-app.get("/markets/cook", (req, res) => {
-  fetchMarketCategory(90200, res);
-});
-
 // 생활 재료
 app.get("/markets/life", (req, res) => {
   fetchMarketCategory(90000, res);
 });
 
-// ===== 보석 시세 (경매장 API 사용) =====
+// ===== 보석 시세 (경매장 API) =====
 app.get("/markets/gems", async (req, res) => {
   const currentKey = getNextApiKey();
   if (!currentKey) {
@@ -268,6 +275,8 @@ app.get("/markets/gems", async (req, res) => {
 
         if (gemRes.ok && gemData.Items && gemData.Items.length > 0) {
           const first = gemData.Items[0];
+          const endDate = first.AuctionInfo?.EndDate || null;
+
           allItems.push({
             Name: first.Name || gemName,
             Icon: first.Icon || "",
@@ -275,7 +284,8 @@ app.get("/markets/gems", async (req, res) => {
             BundleCount: 1,
             CurrentMinPrice: first.AuctionInfo?.BuyPrice || first.AuctionInfo?.StartPrice || 0,
             RecentPrice: first.AuctionInfo?.BuyPrice || 0,
-            YDayAvgPrice: first.AuctionInfo?.BuyPrice || 0
+            YDayAvgPrice: first.AuctionInfo?.BuyPrice || 0,
+            EndDate: endDate
           });
         }
       } catch (gemErr) {
