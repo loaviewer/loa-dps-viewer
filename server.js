@@ -70,7 +70,6 @@ async function fetchMarketCategory(categoryCode, res) {
       SortCondition: "ASC"
     };
 
-    // 1페이지 먼저 조회
     const firstRes = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
       method: "POST",
       headers: {
@@ -87,7 +86,6 @@ async function fetchMarketCategory(categoryCode, res) {
     const allItems = Array.isArray(firstData.Items) ? [...firstData.Items] : [];
     const totalPages = Math.ceil((firstData.TotalCount || 0) / (firstData.PageSize || 10));
 
-    // 2페이지부터 끝까지 전부 조회
     for (let page = 2; page <= totalPages; page++) {
       const pageRes = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
         method: "POST",
@@ -148,7 +146,6 @@ app.get("/auctions/items", async (req, res) => {
       SortCondition: "ASC"
     };
 
-    // 1페이지 먼저 조회
     const firstResponse = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
       method: "POST",
       headers: {
@@ -170,7 +167,6 @@ app.get("/auctions/items", async (req, res) => {
     const pageSize = firstData.PageSize || 10;
     const totalPages = Math.ceil(totalCount / pageSize);
 
-    // 2페이지부터 끝까지 전부 조회
     for (let page = 2; page <= totalPages; page++) {
       const pageResponse = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
         method: "POST",
@@ -203,7 +199,7 @@ app.get("/auctions/items", async (req, res) => {
 
 // ===== 시세 페이지용 거래소 라우트 =====
 
-// 강화 재료 (파괴석/수호석/돌파석/파편/융화/숨결)
+// 강화 재료
 app.get("/markets/enhance", (req, res) => {
   fetchMarketCategory(50010, res);
 });
@@ -211,11 +207,6 @@ app.get("/markets/enhance", (req, res) => {
 // 각인서
 app.get("/markets/engravings", (req, res) => {
   fetchMarketCategory(40000, res);
-});
-
-// 보석
-app.get("/markets/gems", (req, res) => {
-  fetchMarketCategory(60200, res);
 });
 
 // 배틀 아이템
@@ -231,6 +222,73 @@ app.get("/markets/cook", (req, res) => {
 // 생활 재료
 app.get("/markets/life", (req, res) => {
   fetchMarketCategory(90000, res);
+});
+
+// ===== 보석 시세 (경매장 API 사용) =====
+app.get("/markets/gems", async (req, res) => {
+  const currentKey = getNextApiKey();
+  if (!currentKey) {
+    return res.status(500).json({ error: "API 키 없음" });
+  }
+
+  try {
+    const gemNames = [
+      "10레벨 겁화의 보석",
+      "9레벨 겁화의 보석",
+      "8레벨 겁화의 보석",
+      "7레벨 겁화의 보석",
+      "10레벨 작열의 보석",
+      "9레벨 작열의 보석",
+      "8레벨 작열의 보석",
+      "7레벨 작열의 보석"
+    ];
+
+    const allItems = [];
+
+    for (const gemName of gemNames) {
+      try {
+        const gemRes = await fetch(`${LOSTARK_BASE_URL}/auctions/items`, {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+            authorization: `bearer ${currentKey}`,
+          },
+          body: JSON.stringify({
+            Sort: "BUY_PRICE",
+            CategoryCode: 210000,
+            ItemTier: 4,
+            ItemName: gemName,
+            PageNo: 1,
+            SortCondition: "ASC"
+          }),
+        });
+
+        const gemData = await gemRes.json();
+
+        if (gemRes.ok && gemData.Items && gemData.Items.length > 0) {
+          const first = gemData.Items[0];
+          allItems.push({
+            Name: first.Name || gemName,
+            Icon: first.Icon || "",
+            Grade: first.Grade || "영웅",
+            BundleCount: 1,
+            CurrentMinPrice: first.AuctionInfo?.BuyPrice || first.AuctionInfo?.StartPrice || 0,
+            RecentPrice: first.AuctionInfo?.BuyPrice || 0,
+            YDayAvgPrice: first.AuctionInfo?.BuyPrice || 0
+          });
+        }
+      } catch (gemErr) {
+        console.error("보석 개별 조회 실패:", gemName, gemErr.message);
+      }
+    }
+
+    res.json({ TotalCount: allItems.length, Items: allItems });
+
+  } catch (err) {
+    console.error("보석 시세 API 오류:", err.message);
+    res.status(502).json({ error: "보석 시세 API 호출 오류" });
+  }
 });
 
 // ===== 서버 시작 =====
