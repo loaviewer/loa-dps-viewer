@@ -33,6 +33,7 @@ app.get("/", (req, res) => {
   res.send("LOA proxy server is running");
 });
 
+// ===== 공통 함수 =====
 async function callLostArk(path, res) {
   const currentKey = getNextApiKey();
   if (!currentKey) {
@@ -50,6 +51,64 @@ async function callLostArk(path, res) {
   } catch (err) {
     console.error("로스트아크 API 호출 실패:", err.message);
     res.status(502).json({ error: "로스트아크 API 호출 중 오류가 발생했습니다." });
+  }
+}
+
+async function fetchMarketCategory(categoryCode, res) {
+  const currentKey = getNextApiKey();
+  if (!currentKey) {
+    return res.status(500).json({ error: "API 키 없음" });
+  }
+
+  try {
+    const baseBody = {
+      Sort: "CURRENT_MIN_PRICE",
+      CategoryCode: categoryCode,
+      ItemTier: null,
+      ItemGrade: "",
+      ItemName: "",
+      SortCondition: "ASC"
+    };
+
+    // 1페이지 먼저 조회
+    const firstRes = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        authorization: `bearer ${currentKey}`,
+      },
+      body: JSON.stringify({ ...baseBody, PageNo: 1 }),
+    });
+
+    const firstData = await firstRes.json();
+    if (!firstRes.ok) return res.status(firstRes.status).json(firstData);
+
+    const allItems = Array.isArray(firstData.Items) ? [...firstData.Items] : [];
+    const totalPages = Math.ceil((firstData.TotalCount || 0) / (firstData.PageSize || 10));
+
+    // 2페이지부터 끝까지 전부 조회
+    for (let page = 2; page <= totalPages; page++) {
+      const pageRes = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+          authorization: `bearer ${currentKey}`,
+        },
+        body: JSON.stringify({ ...baseBody, PageNo: page }),
+      });
+      const pageData = await pageRes.json();
+      if (pageRes.ok && Array.isArray(pageData.Items)) {
+        allItems.push(...pageData.Items);
+      }
+    }
+
+    res.json({ TotalCount: allItems.length, Items: allItems });
+
+  } catch (err) {
+    console.error("거래소 API 오류:", err.message);
+    res.status(502).json({ error: "거래소 API 호출 오류" });
   }
 }
 
@@ -71,9 +130,7 @@ app.get("/news/notices", (req, res) => {
   callLostArk(`/news/notices`, res);
 });
 
-
-
-// ===== 각인서 시세 (거래소) =====
+// ===== 각인서 시세 (경매 계산기용 - 기존 유지) =====
 app.get("/auctions/items", async (req, res) => {
   const currentKey = getNextApiKey();
   if (!currentKey) {
@@ -99,10 +156,7 @@ app.get("/auctions/items", async (req, res) => {
         "content-type": "application/json",
         authorization: `bearer ${currentKey}`,
       },
-      body: JSON.stringify({
-        ...baseBody,
-        PageNo: 1
-      }),
+      body: JSON.stringify({ ...baseBody, PageNo: 1 }),
     });
 
     const firstData = await firstResponse.json();
@@ -125,10 +179,7 @@ app.get("/auctions/items", async (req, res) => {
           "content-type": "application/json",
           authorization: `bearer ${currentKey}`,
         },
-        body: JSON.stringify({
-          ...baseBody,
-          PageNo: page
-        }),
+        body: JSON.stringify({ ...baseBody, PageNo: page }),
       });
 
       const pageData = await pageResponse.json();
@@ -150,7 +201,39 @@ app.get("/auctions/items", async (req, res) => {
   }
 });
 
+// ===== 시세 페이지용 거래소 라우트 =====
 
+// 강화 재료 (파괴석/수호석/돌파석/파편/융화/숨결)
+app.get("/markets/enhance", (req, res) => {
+  fetchMarketCategory(50010, res);
+});
+
+// 각인서
+app.get("/markets/engravings", (req, res) => {
+  fetchMarketCategory(40000, res);
+});
+
+// 보석
+app.get("/markets/gems", (req, res) => {
+  fetchMarketCategory(60200, res);
+});
+
+// 배틀 아이템
+app.get("/markets/battle", (req, res) => {
+  fetchMarketCategory(60100, res);
+});
+
+// 요리
+app.get("/markets/cook", (req, res) => {
+  fetchMarketCategory(90200, res);
+});
+
+// 생활 재료
+app.get("/markets/life", (req, res) => {
+  fetchMarketCategory(90000, res);
+});
+
+// ===== 서버 시작 =====
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`프록시 서버 실행 중 (포트: ${PORT})`);
