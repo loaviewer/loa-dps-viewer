@@ -4,7 +4,6 @@
 // - 이 서버가 대신 로스트아크 공식 API에 키를 붙여서 호출한 뒤 결과를 돌려줌
 // - API 키는 절대 이 파일에 직접 쓰지 않고, 클라우드타입 "환경변수"에만 저장함
 
-
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -416,26 +415,19 @@ Object.keys(CACHE).forEach((name) => {
   }, 1000);
 });
 
-// 캐시 반환 라우트
+// 캐시 반환 라우트 (점검 중이어도 캐시 데이터 보존 반환)
 function sendCache(name, res) {
   const entry = CACHE[name];
   entry.lastRequestedAt = Date.now();
 
-  if (!entry.data) {
-    return res.status(202).json({ 
-      ready: false, 
-      apiStatus: entry.apiStatus, 
-      lastSuccessAt: entry.lastSuccessAt, 
-      message: "데이터 준비 중입니다." 
-    });
-  }
+  const responseData = entry.data || { TotalCount: 0, Items: [] };
 
   res.json({ 
     ready: true, 
     apiStatus: entry.apiStatus,         // ONLINE / OFFLINE
-    lastSuccessAt: entry.lastSuccessAt, // 타임스탬프 (ms)
+    lastSuccessAt: entry.lastSuccessAt, // 마지막 성공 타임스탬프 (ms)
     UpdatedAt: entry.updatedAt, 
-    ...entry.data 
+    ...responseData 
   });
 }
 
