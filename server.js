@@ -183,7 +183,8 @@ app.get("/news/notices", (req, res) => {
 
 // =================================================================
 // ===== 시세/경매 캐시 매니저 =====
-// - 갱신은 "누군가 그 탭을 보고 있을 때만" 발생 (10초간 요청 없으면 정지)
+// - 서버 시작 시 무조건 1회 먼저 채워두고(워밍업), 그 이후로는
+//   "누군가 그 탭을 보고 있을 때만" 주기적으로 갱신 (10초간 요청 없으면 정지)
 // - 각인서는 실시간 경매 특성상 다른 카테고리보다 짧은 주기로 갱신
 // =================================================================
 const IDLE_LIMIT_MS = 10000; // 10초 동안 요청 없으면 "아무도 없음"으로 판단
@@ -284,7 +285,7 @@ async function refreshGemsCache() {
   }
 }
 
-// 경매 계산기용 - 유물 각인서만, 경매장(/auctions/items) 기준
+// 경매 계산기용 - 유물 각인서만, 거래소(/markets/items) 기준
 async function refreshAuctionEngravingsCache() {
   const key = getNextApiKey();
   if (!key) return;
@@ -349,6 +350,23 @@ const REFRESHERS = {
   gems: refreshGemsCache,
   life: refreshLifeCache,
 };
+
+// ===== 서버 시작 시 캐시 워밍업 =====
+// 아무도 접속 안 해도 서버가 켜지자마자 전부 1회 먼저 채워둡니다.
+// 이러면 서버 켜진 뒤 첫 방문자도 곧바로(워밍업 끝난 이후엔) 데이터를 받습니다.
+async function warmUpCaches() {
+  console.log("[cache] 서버 시작 - 캐시 워밍업 시작");
+  for (const name of Object.keys(REFRESHERS)) {
+    try {
+      await REFRESHERS[name]();
+      console.log(`[cache] ${name} 워밍업 완료`);
+    } catch (err) {
+      console.error(`[cache] ${name} 워밍업 실패:`, err.message);
+    }
+  }
+  console.log("[cache] 캐시 워밍업 전체 완료");
+}
+warmUpCaches();
 
 // ===== 워처: 1초마다 "체크"만 하고, 조건 맞을 때만 실제 호출 =====
 Object.keys(CACHE).forEach((name) => {
