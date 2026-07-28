@@ -78,8 +78,9 @@ async function fetchMarketPages(categoryCode, apiKey) {
   if (!firstRes.ok) return [];
 
   const allItems = Array.isArray(firstData.Items) ? [...firstData.Items] : [];
-  const totalPages = Math.ceil((firstData.TotalCount || 0) / (firstData.PageSize || 10));
-
+ const totalPages = Math.ceil((firstData.TotalCount || 0) / (firstData.PageSize || 10));
+console.log(`카테고리 ${categoryCode} : 총 ${firstData.TotalCount}개, ${totalPages}페이지`);
+  
   for (let page = 2; page <= totalPages; page++) {
     const pageRes = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
       method: "POST",
