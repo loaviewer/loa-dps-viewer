@@ -167,11 +167,11 @@ app.get("/news/notices", (req, res) => callLostArk(`/news/notices`, res));
 const IDLE_LIMIT_MS = 10000;
 
 const CACHE = {
-  enhance:           { data: null, updatedAt: null, lastSuccessAt: null, apiStatus: "OFFLINE", intervalMs: 15000, lastRequestedAt: 0, isFetching: false },
-  engravings:        { data: null, updatedAt: null, lastSuccessAt: null, apiStatus: "OFFLINE", intervalMs: 10000, lastRequestedAt: 0, isFetching: false },
-  auctionEngravings: { data: null, updatedAt: null, lastSuccessAt: null, apiStatus: "OFFLINE", intervalMs: 10000, lastRequestedAt: 0, isFetching: false },
-  gems:              { data: null, updatedAt: null, lastSuccessAt: null, apiStatus: "OFFLINE", intervalMs: 8000,  lastRequestedAt: 0, isFetching: false },
-  life:              { data: null, updatedAt: null, lastSuccessAt: null, apiStatus: "OFFLINE", intervalMs: 25000, lastRequestedAt: 0, isFetching: false },
+  enhance:           { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 15000, lastRequestedAt: 0, isFetching: false },
+  engravings:        { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 10000, lastRequestedAt: 0, isFetching: false },
+  auctionEngravings: { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 10000, lastRequestedAt: 0, isFetching: false },
+  gems:              { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 8000,  lastRequestedAt: 0, isFetching: false },
+  life:              { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 25000, lastRequestedAt: 0, isFetching: false },
 };
 
 async function refreshEnhanceCache() {
@@ -403,11 +403,14 @@ Object.keys(CACHE).forEach((name) => {
     const someoneIsHere = now - entry.lastRequestedAt < IDLE_LIMIT_MS;
     if (!someoneIsHere) return;
 
-    const dueForRefresh = !entry.updatedAt || now - entry.updatedAt >= entry.intervalMs;
+    // 성공 여부와 무관하게 "마지막으로 시도한 시각" 기준으로 간격을 지킴
+    // (계속 실패하는 상황에서도 intervalMs를 무시하고 매초 재시도하는 걸 방지)
+    const dueForRefresh = !entry.lastAttemptAt || now - entry.lastAttemptAt >= entry.intervalMs;
     if (!dueForRefresh) return;
 
     try {
       entry.isFetching = true;
+      entry.lastAttemptAt = now;
       await REFRESHERS[name]();
     } finally {
       entry.isFetching = false;
