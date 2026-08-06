@@ -440,11 +440,8 @@ app.get("/markets/gems", (req, res) => sendCache("gems", res));
 app.get("/markets/life", (req, res) => sendCache("life", res));
 app.get("/auctions/items", (req, res) => sendCache("auctionEngravings", res));
 
-
-
-
 // =================================================================
-// ===== 아이템 상세 히스토리 (최근 10일 시세/거래량) =====
+// ===== 아이템 상세 히스토리 (최근 10일 시세/거래량) - 2026년 8월 6일 추가 =====
 // =================================================================
 const ITEM_STATS_CACHE = new Map();
 const ITEM_STATS_TTL = 5 * 60 * 1000; // 5분 캐시 (같은 아이템 반복 클릭 시 API 절약)
@@ -476,10 +473,11 @@ app.get("/markets/item/:itemId/stats", async (req, res) => {
     }
 
     const data = await response.json();
+    // 공식 API가 배열로 줄 수도, 객체로 줄 수도 있어서 둘 다 대응
     const itemData = Array.isArray(data) ? data[0] : data;
     const rawStats = itemData?.Stats || [];
 
-    // 공식 API는 최신 날짜가 먼저 오므로, 최근 10일만 잘라서 날짜 오름차순으로 뒤집음
+    // 공식 API는 최신 날짜가 먼저 오므로, 최근 10일만 잘라서 날짜 오름차순(과거→최신)으로 뒤집음
     const stats = rawStats.slice(0, 10).reverse().map((s) => ({
       date: s.Date,
       avgPrice: s.AvgPrice,
@@ -500,7 +498,7 @@ app.get("/markets/item/:itemId/stats", async (req, res) => {
   }
 });
 
-// 오래된 캐시 정리
+// 오래된 아이템 히스토리 캐시 정리
 setInterval(() => {
   const now = Date.now();
   for (const [key, entry] of ITEM_STATS_CACHE.entries()) {
@@ -509,8 +507,6 @@ setInterval(() => {
     }
   }
 }, 15 * 60 * 1000);
-
-
 
 // 서버 시작
 const PORT = process.env.PORT || 8080;
