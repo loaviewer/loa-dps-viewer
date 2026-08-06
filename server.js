@@ -532,8 +532,24 @@ app.get("/markets/item/:itemId/stats", async (req, res) => {
     }
 
     const data = await response.json();
-    // 공식 API가 배열로 줄 수도, 객체로 줄 수도 있어서 둘 다 대응
-    const itemData = Array.isArray(data) ? data[0] : data;
+
+    // 2026년 8월 6일 수정 (핵심 버그 수정):
+    // 공식 API가 같은 이름의 아이템을 "변형" 여러 개를 배열로 줄 때가 있음.
+    // (예: TradeRemainCount가 다른 두 항목 — 하나는 거래 이력이 전혀 없어 Stats가 전부 0,
+    //  다른 하나는 실제 거래 데이터가 들어있는 진짜 항목)
+    // 기존 코드는 무조건 배열의 0번째만 썼는데, 하필 그게 "빈" 변형이면 항상 0으로만 표시되는 문제가 있었음.
+    // → 배열 안에서 TradeCount 합계가 가장 큰(=실제 거래가 있는) 항목을 골라 쓰도록 수정.
+    const itemDataArray = Array.isArray(data) ? data : [data];
+
+    function sumTradeCount(entry) {
+      return (entry?.Stats || []).reduce((sum, s) => sum + (Number(s.TradeCount) || 0), 0);
+    }
+
+    const itemData = itemDataArray.reduce((best, cur) => {
+      if (!best) return cur;
+      return sumTradeCount(cur) > sumTradeCount(best) ? cur : best;
+    }, null) || itemDataArray[0];
+
     const rawStats = itemData?.Stats || [];
 
     // 2026년 8월 6일 추가: 각인서 그래프가 계속 0으로 뜨는 문제 디버깅용 로그.
