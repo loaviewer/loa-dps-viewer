@@ -207,6 +207,18 @@ async function refreshEngravingsCache() {
       CACHE.engravings.updatedAt = Date.now();
       CACHE.engravings.lastSuccessAt = Date.now();
       CACHE.engravings.apiStatus = "ONLINE";
+
+      // 2026년 8월 6일 추가: 각인서 히스토리 그래프가 항상 0으로 뜨는 문제 디버깅용.
+      // 유물 등급 각인서 1개를 골라서 원본 필드를 한 번 콘솔에 찍어봄.
+      // (배포 로그에서 확인 후 필요 없으면 지워도 됩니다)
+      const sampleRelic = items.find((it) => it.Grade === "유물");
+      if (sampleRelic) {
+        console.log("[debug] 유물 각인서 샘플 아이템:", {
+          Id: sampleRelic.Id,
+          Name: sampleRelic.Name,
+          Grade: sampleRelic.Grade,
+        });
+      }
     } else {
       CACHE.engravings.apiStatus = "OFFLINE";
     }
@@ -235,13 +247,53 @@ async function refreshLifeCache() {
   }
 }
 
+// =================================================================
+// ===== 보석 자체 히스토리 스냅샷 (2026년 8월 6일 추가) =====
+// 공식 API는 경매장(보석) 아이템에 대해 "최근 N일 시세" 히스토리를 제공하지 않음.
+// (거래소 아이템만 /markets/items/{id} 에서 Stats 히스토리를 줌)
+// 그래서 이 서버가 보석 캐시를 갱신할 때마다(하루 1회분만 채택) 직접 스냅샷을
+// 메모리에 쌓아서 "우리가 관찰한 최근 10일" 그래프를 만들어줌.
+// 주의: 서버 프로세스가 재시작되면 지금까지 쌓인 히스토리는 초기화됨.
+//       (영구 보관하려면 파일/DB에 저장하도록 확장 필요)
+// =================================================================
+const GEM_NAMES = [
+  "10레벨 겁화의 보석", "9레벨 겁화의 보석", "8레벨 겁화의 보석", "7레벨 겁화의 보석",
+  "10레벨 작열의 보석", "9레벨 작열의 보석", "8레벨 작열의 보석", "7레벨 작열의 보석",
+];
+
+const GEM_HISTORY = new Map(); // gemName -> [{date, avgPrice, tradeCount}, ...] (최대 10개, 오래된순)
+const GEM_HISTORY_MAX_DAYS = 10;
+
+function getKstDateString(date = new Date()) {
+  // 서버가 어느 시간대에서 돌든 한국 날짜 기준(YYYY-MM-DD)으로 하루를 구분하기 위함
+  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 10);
+}
+
+function recordGemSnapshot(gemName, price, listingCount) {
+  const today = getKstDateString();
+  let history = GEM_HISTORY.get(gemName);
+  if (!history) {
+    history = [];
+    GEM_HISTORY.set(gemName, history);
+  }
+
+  const last = history[history.length - 1];
+  if (last && last.date === today) {
+    // 같은 날 여러 번 갱신되면, 그날의 "가장 최근 관측값"으로 덮어씀
+    last.avgPrice = price;
+    last.tradeCount = listingCount;
+  } else {
+    history.push({ date: today, avgPrice: price, tradeCount: listingCount });
+    if (history.length > GEM_HISTORY_MAX_DAYS) {
+      history.shift();
+    }
+  }
+}
+
 async function refreshGemsCache() {
-  const gemNames = [
-    "10레벨 겁화의 보석", "9레벨 겁화의 보석", "8레벨 겁화의 보석", "7레벨 겁화의 보석",
-    "10레벨 작열의 보석", "9레벨 작열의 보석", "8레벨 작열의 보석", "7레벨 작열의 보석",
-  ];
   try {
-    const promises = gemNames.map((gemName) => {
+    const promises = GEM_NAMES.map((gemName) => {
       const key = getNextApiKey();
       return fetch(`${LOSTARK_BASE_URL}/auctions/items`, {
         method: "POST",
@@ -263,12 +315,19 @@ async function refreshGemsCache() {
         const gemData = await res.json();
         if (gemData.Items?.length > 0) {
           const first = gemData.Items[0];
+          const buyPrice = first.AuctionInfo?.BuyPrice || first.AuctionInfo?.StartPrice || 0;
+
+          // 2026년 8월 6일 추가: 보석 히스토리용 일일 스냅샷 기록
+          // tradeCount 자리에는 실제 "거래 건수"가 아니라 그 시점에 경매장에 등록되어
+          // 있던 매물 총 개수(TotalCount)를 대신 사용함 (공식 API 한계상 실거래 건수는 못 구함)
+          recordGemSnapshot(gemName, buyPrice, gemData.TotalCount || 0);
+
           return {
             Name: first.Name || gemName,
             Icon: first.Icon || "",
             Grade: first.Grade || "영웅",
             BundleCount: 1,
-            CurrentMinPrice: first.AuctionInfo?.BuyPrice || first.AuctionInfo?.StartPrice || 0,
+            CurrentMinPrice: buyPrice,
             RecentPrice: first.AuctionInfo?.BuyPrice || 0,
             YDayAvgPrice: first.AuctionInfo?.BuyPrice || 0,
             EndDate: first.AuctionInfo?.EndDate || null,
@@ -477,17 +536,39 @@ app.get("/markets/item/:itemId/stats", async (req, res) => {
     const itemData = Array.isArray(data) ? data[0] : data;
     const rawStats = itemData?.Stats || [];
 
+    // 2026년 8월 6일 추가: 각인서 그래프가 계속 0으로 뜨는 문제 디버깅용 로그.
+    // 배포 로그(cloudtype 콘솔)에서 실제 원본 필드명/값을 확인할 수 있음.
+    // 정상적으로 나온다고 확인되면 이 로그는 지워도 됨.
+    if (rawStats.length > 0) {
+      console.log(`[debug] itemId=${itemId} 원본 Stats 샘플:`, rawStats[0]);
+    } else {
+      console.log(`[debug] itemId=${itemId} 응답에 Stats 필드가 비어있음. 원본 응답:`, itemData);
+    }
+
+    // 필드명이 흔들려도(대소문자 등) 방어적으로 읽음
+    const pick = (obj, keys) => {
+      for (const k of keys) {
+        if (obj[k] !== undefined && obj[k] !== null && obj[k] !== "") return obj[k];
+      }
+      return null;
+    };
+
     // 공식 API는 최신 날짜가 먼저 오므로, 최근 10일만 잘라서 날짜 오름차순(과거→최신)으로 뒤집음
     const stats = rawStats.slice(0, 10).reverse().map((s) => ({
-      date: s.Date,
-      avgPrice: s.AvgPrice,
-      tradeCount: s.TradeCount,
+      date: pick(s, ["Date", "date"]),
+      avgPrice: Number(pick(s, ["AvgPrice", "avgPrice"])) || 0,
+      tradeCount: Number(pick(s, ["TradeCount", "tradeCount"])) || 0,
     }));
+
+    // 값이 전부 0이면(=진짜로 거래가 없었던 기간일 수 있음) 프론트에서 구분해서
+    // 안내 문구를 보여줄 수 있도록 플래그를 같이 내려줌
+    const allZero = stats.length > 0 && stats.every((s) => s.avgPrice === 0 && s.tradeCount === 0);
 
     const payload = {
       name: itemData?.Name || null,
       bundleCount: itemData?.BundleCount || 1,
       stats,
+      allZero,
     };
 
     ITEM_STATS_CACHE.set(itemId, { data: payload, timestamp: now });
@@ -496,6 +577,34 @@ app.get("/markets/item/:itemId/stats", async (req, res) => {
     console.error("아이템 히스토리 조회 실패:", err.message);
     res.status(502).json({ error: "아이템 히스토리 조회 중 오류가 발생했습니다." });
   }
+});
+
+// =================================================================
+// ===== 보석 자체 히스토리 조회 (2026년 8월 6일 추가) =====
+// 예: GET /markets/gems/stats?level=10&type=겁화
+// =================================================================
+app.get("/markets/gems/stats", (req, res) => {
+  const { level, type } = req.query;
+
+  if (!level || !type) {
+    return res.status(400).json({ error: "level, type 쿼리 파라미터가 필요합니다. 예: ?level=10&type=겁화" });
+  }
+  if (!["겁화", "작열"].includes(type)) {
+    return res.status(400).json({ error: "type은 '겁화' 또는 '작열'만 가능합니다." });
+  }
+
+  const gemName = `${level}레벨 ${type}의 보석`;
+  if (!GEM_NAMES.includes(gemName)) {
+    return res.status(404).json({ error: "지원하지 않는 보석입니다." });
+  }
+
+  const stats = GEM_HISTORY.get(gemName) || [];
+
+  res.json({
+    name: gemName,
+    stats,
+    note: "공식 API는 경매장 아이템의 과거 시세를 제공하지 않아, 이 서버가 매일 관측한 스냅샷을 누적한 데이터입니다. 서버가 켜져 있던 기간만큼만 쌓입니다.",
+  });
 });
 
 // 오래된 아이템 히스토리 캐시 정리
