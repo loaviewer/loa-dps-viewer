@@ -1,4 +1,5 @@
 // server.js
+// 로아 API 프록시 서버
 // - 클라이언트(사이트)는 이 서버에만 요청을 보내고,
 // - 이 서버가 대신 로스트아크 공식 API에 키를 붙여서 호출한 뒤 결과를 돌려줌
 // - API 키는 절대 이 파일에 직접 쓰지 않고, 클라우드타입 "환경변수"에만 저장함
@@ -431,7 +432,6 @@ const REFRESHERS = {
   gems: refreshGemsCache,
   life: refreshLifeCache,
 };
-
 
 // 워밍업
 async function warmUpCaches() {
