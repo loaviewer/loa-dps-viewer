@@ -6,6 +6,8 @@
 
 const express = require("express");
 const cors = require("cors");
+const fs = require("fs");
+const path = require("path");
 const app = express();
 
 const API_KEYS = (process.env.LOSTARK_API_KEYS || "")
@@ -33,6 +35,28 @@ app.use(cors({ origin: ALLOWED_ORIGINS }));
 
 app.get("/", (req, res) => {
   res.send("LOA proxy server is running");
+});
+
+// 2026년 8월 6일 추가: 배틀 아이템 등 새 탭을 만들기 전에 정확한 CategoryCode를 확인하기 위한 임시 디버그용 라우트.
+// 배포 후 브라우저에서 이 주소로 들어가면 전체 카테고리 이름+코드 목록이 그대로 보입니다.
+// (배틀 아이템 코드 확인 끝나면 이 라우트는 지워도 됩니다)
+app.get("/debug/categories", async (req, res) => {
+  const key = getNextApiKey();
+  if (!key) {
+    return res.status(500).json({ error: "서버에 API 키가 설정되지 않았습니다." });
+  }
+  try {
+    const response = await fetch(`${LOSTARK_BASE_URL}/markets/options`, {
+      headers: {
+        accept: "application/json",
+        authorization: `bearer ${key}`,
+      },
+    });
+    const data = await response.json();
+    res.status(response.status).json(data);
+  } catch (err) {
+    res.status(502).json({ error: "카테고리 조회 실패: " + err.message });
+  }
 });
 
 // ===== 공통 함수 =====
@@ -264,6 +288,40 @@ const GEM_NAMES = [
 const GEM_HISTORY = new Map(); // gemName -> [{date, avgPrice, tradeCount}, ...] (최대 10개, 오래된순)
 const GEM_HISTORY_MAX_DAYS = 10;
 
+// 2026년 8월 6일 추가: 재배포/재시작해도 최근까지 쌓은 기록이 날아가지 않도록 디스크에도 저장.
+// 주의: 클라우드타입이 "완전 새 컨테이너로 재배포"하는 방식이면 이 파일도 초기화될 수 있음.
+// (재시작/크래시 복구 수준에서는 안전하게 유지됨)
+const GEM_HISTORY_FILE = path.join(__dirname, "gem_history.json");
+
+function loadGemHistoryFromDisk() {
+  try {
+    if (fs.existsSync(GEM_HISTORY_FILE)) {
+      const raw = fs.readFileSync(GEM_HISTORY_FILE, "utf-8");
+      const obj = JSON.parse(raw);
+      Object.keys(obj).forEach((gemName) => {
+        GEM_HISTORY.set(gemName, obj[gemName]);
+      });
+      console.log("[gem-history] 디스크에서 기존 히스토리 불러옴:", Object.keys(obj).length, "개 보석");
+    }
+  } catch (err) {
+    console.error("[gem-history] 디스크 로드 실패 (무시하고 새로 시작함):", err.message);
+  }
+}
+
+function saveGemHistoryToDisk() {
+  try {
+    const obj = {};
+    GEM_HISTORY.forEach((history, gemName) => {
+      obj[gemName] = history;
+    });
+    fs.writeFileSync(GEM_HISTORY_FILE, JSON.stringify(obj), "utf-8");
+  } catch (err) {
+    console.error("[gem-history] 디스크 저장 실패:", err.message);
+  }
+}
+
+loadGemHistoryFromDisk();
+
 function getKstDateString(date = new Date()) {
   // 서버가 어느 시간대에서 돌든 한국 날짜 기준(YYYY-MM-DD)으로 하루를 구분하기 위함
   const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
@@ -289,6 +347,8 @@ function recordGemSnapshot(gemName, price, listingCount) {
       history.shift();
     }
   }
+
+  saveGemHistoryToDisk();
 }
 
 async function refreshGemsCache() {
