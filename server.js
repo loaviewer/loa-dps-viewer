@@ -317,34 +317,46 @@ async function refreshBattleItemsCache() {
 // 등급이 "에스더"인 특수 아이템. 카테고리 트리에 별도 리프 코드가 없어서
 // 이름 검색(ItemName) + 등급 필터(ItemGrade: "에스더")로 찾음.
 // =================================================================
+// 2026년 8월 7일 수정: 다른 사이트 네트워크 응답으로 확인됨 — 에스더의 기운은
+// "무기 진화 재료"(CategoryCode 51100) 카테고리의 정상적인 거래소 아이템이었음.
+// (경매장이 아니라 거래소라서 일별 Stats 히스토리도 정상적으로 나옴)
+const ESTHER_CANDIDATE_CATEGORIES = [51100, 51000, 50000, 230000, 90800, 170000];
+
+async function trySearchEsther(key, categoryCode) {
+  const response = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      authorization: `bearer ${key}`,
+    },
+    body: JSON.stringify({
+      Sort: "CURRENT_MIN_PRICE",
+      CategoryCode: categoryCode,
+      ItemName: "에스더의 기운",
+      PageNo: 1,
+      SortCondition: "ASC",
+    }),
+  });
+
+  if (!response.ok) return [];
+  const data = await response.json();
+  return data.Items || [];
+}
+
 async function refreshEstherCache() {
   const key = getNextApiKey();
   if (!key) { CACHE.esther.apiStatus = "OFFLINE"; return; }
   try {
-    const response = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "content-type": "application/json",
-        authorization: `bearer ${key}`,
-      },
-      body: JSON.stringify({
-        Sort: "CURRENT_MIN_PRICE",
-        CategoryCode: 0,
-        ItemGrade: "에스더",
-        ItemName: "에스더의 기운",
-        PageNo: 1,
-        SortCondition: "ASC",
-      }),
-    });
+    let items = [];
 
-    if (!response.ok) {
-      CACHE.esther.apiStatus = "OFFLINE";
-      return;
+    for (const categoryCode of ESTHER_CANDIDATE_CATEGORIES) {
+      items = await trySearchEsther(getNextApiKey() || key, categoryCode);
+      if (items.length > 0) {
+        console.log(`[esther] CategoryCode=${categoryCode} 에서 발견됨:`, items[0].Name);
+        break;
+      }
     }
-
-    const data = await response.json();
-    const items = (data.Items || []).filter((it) => it.Grade === "에스더");
 
     if (items.length > 0) {
       CACHE.esther.data = { TotalCount: items.length, Items: items };
@@ -352,6 +364,7 @@ async function refreshEstherCache() {
       CACHE.esther.lastSuccessAt = Date.now();
       CACHE.esther.apiStatus = "ONLINE";
     } else {
+      console.log("[esther] 모든 후보 카테고리에서 못 찾음");
       CACHE.esther.apiStatus = "OFFLINE";
     }
   } catch (err) {
