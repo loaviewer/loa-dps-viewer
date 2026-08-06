@@ -196,6 +196,9 @@ const CACHE = {
   auctionEngravings: { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 10000, lastRequestedAt: 0, isFetching: false },
   gems:              { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 8000,  lastRequestedAt: 0, isFetching: false },
   life:              { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 25000, lastRequestedAt: 0, isFetching: false },
+  // 2026년 8월 6일 추가: 배틀 아이템(전투 용품) / 에스더의 기운
+  battleItems:       { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 15000, lastRequestedAt: 0, isFetching: false },
+  esther:            { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 20000, lastRequestedAt: 0, isFetching: false },
 };
 
 async function refreshEnhanceCache() {
@@ -268,6 +271,92 @@ async function refreshLifeCache() {
   } catch (err) {
     console.error("[cache] life 갱신 실패:", err.message);
     CACHE.life.apiStatus = "OFFLINE";
+  }
+}
+
+// =================================================================
+// ===== 배틀 아이템(전투 용품) - 2026년 8월 6일 추가 =====
+// 카테고리: 전투 용품(60000) 하위 4개 - 회복형/공격형/기능성/버프형
+// =================================================================
+const BATTLE_ITEM_SUBCATS = {
+  60200: "heal",
+  60300: "attack",
+  60400: "utility",
+  60500: "buff",
+};
+
+async function refreshBattleItemsCache() {
+  const key = getNextApiKey();
+  if (!key) { CACHE.battleItems.apiStatus = "OFFLINE"; return; }
+  try {
+    const codes = Object.keys(BATTLE_ITEM_SUBCATS).map(Number);
+    const results = await Promise.all(
+      codes.map((code) =>
+        fetchMarketPages(code, getNextApiKey() || key).then((items) =>
+          items.map((it) => ({ ...it, SubCat: BATTLE_ITEM_SUBCATS[code] }))
+        )
+      )
+    );
+    const items = results.flat();
+    if (items.length > 0) {
+      CACHE.battleItems.data = { TotalCount: items.length, Items: items };
+      CACHE.battleItems.updatedAt = Date.now();
+      CACHE.battleItems.lastSuccessAt = Date.now();
+      CACHE.battleItems.apiStatus = "ONLINE";
+    } else {
+      CACHE.battleItems.apiStatus = "OFFLINE";
+    }
+  } catch (err) {
+    console.error("[cache] battleItems 갱신 실패:", err.message);
+    CACHE.battleItems.apiStatus = "OFFLINE";
+  }
+}
+
+// =================================================================
+// ===== 에스더의 기운 - 2026년 8월 6일 추가 =====
+// 등급이 "에스더"인 특수 아이템. 카테고리 트리에 별도 리프 코드가 없어서
+// 이름 검색(ItemName) + 등급 필터(ItemGrade: "에스더")로 찾음.
+// =================================================================
+async function refreshEstherCache() {
+  const key = getNextApiKey();
+  if (!key) { CACHE.esther.apiStatus = "OFFLINE"; return; }
+  try {
+    const response = await fetch(`${LOSTARK_BASE_URL}/markets/items`, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        authorization: `bearer ${key}`,
+      },
+      body: JSON.stringify({
+        Sort: "CURRENT_MIN_PRICE",
+        CategoryCode: 0,
+        ItemGrade: "에스더",
+        ItemName: "에스더의 기운",
+        PageNo: 1,
+        SortCondition: "ASC",
+      }),
+    });
+
+    if (!response.ok) {
+      CACHE.esther.apiStatus = "OFFLINE";
+      return;
+    }
+
+    const data = await response.json();
+    const items = (data.Items || []).filter((it) => it.Grade === "에스더");
+
+    if (items.length > 0) {
+      CACHE.esther.data = { TotalCount: items.length, Items: items };
+      CACHE.esther.updatedAt = Date.now();
+      CACHE.esther.lastSuccessAt = Date.now();
+      CACHE.esther.apiStatus = "ONLINE";
+    } else {
+      CACHE.esther.apiStatus = "OFFLINE";
+    }
+  } catch (err) {
+    console.error("[cache] esther 갱신 실패:", err.message);
+    CACHE.esther.apiStatus = "OFFLINE";
   }
 }
 
@@ -491,6 +580,8 @@ const REFRESHERS = {
   auctionEngravings: refreshAuctionEngravingsCache,
   gems: refreshGemsCache,
   life: refreshLifeCache,
+  battleItems: refreshBattleItemsCache,
+  esther: refreshEstherCache,
 };
 
 // 워밍업
@@ -557,6 +648,8 @@ app.get("/markets/enhance", (req, res) => sendCache("enhance", res));
 app.get("/markets/engravings", (req, res) => sendCache("engravings", res));
 app.get("/markets/gems", (req, res) => sendCache("gems", res));
 app.get("/markets/life", (req, res) => sendCache("life", res));
+app.get("/markets/battleitems", (req, res) => sendCache("battleItems", res));
+app.get("/markets/esther", (req, res) => sendCache("esther", res));
 app.get("/auctions/items", (req, res) => sendCache("auctionEngravings", res));
 
 // =================================================================
