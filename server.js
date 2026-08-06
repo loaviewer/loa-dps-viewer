@@ -540,7 +540,7 @@ app.get("/markets/item/:itemId/stats", async (req, res) => {
     // 배포 로그(cloudtype 콘솔)에서 실제 원본 필드명/값을 확인할 수 있음.
     // 정상적으로 나온다고 확인되면 이 로그는 지워도 됨.
     if (rawStats.length > 0) {
-      console.log(`[debug] itemId=${itemId} 원본 Stats 샘플:`, rawStats[0]);
+      console.log(`[debug] itemId=${itemId} (${itemData?.Name}) 원본 Stats 전체(최대10일):`, rawStats.slice(0, 10));
     } else {
       console.log(`[debug] itemId=${itemId} 응답에 Stats 필드가 비어있음. 원본 응답:`, itemData);
     }
