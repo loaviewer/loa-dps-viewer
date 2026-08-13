@@ -1,10 +1,10 @@
 name: Daily Cloudtype Restart
 
-# 매일 한국시간(KST) 오전 6시에 실행됨
-# cron은 UTC 기준이라 KST 06:00 = UTC 전날 21:00 으로 계산됨
+# 매일 한국시간(KST) 오전 5시 4분에 실행됨
+# cron은 UTC 기준이라 KST 05:04 = UTC 전날 20:04 으로 계산됨
 on:
   schedule:
-    - cron: '0 21 * * *'
+    - cron: '4 20 * * *'
   workflow_dispatch:   # 수동으로도 실행 버튼을 눌러볼 수 있게 함 (테스트용)
 
 jobs:
@@ -24,9 +24,7 @@ jobs:
         run: |
           cat <<EOF > app.yaml
           name: loa-dps-viewer
-
           app: node@24
-
           options:
             git:
               url: https://github.com/loaviewer/loa-dps-viewer.git
