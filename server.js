@@ -133,6 +133,7 @@ async function fetchMarketPages(categoryCode, apiKey) {
 // ===== 캐릭터 통합 조회 =====
 const CHARACTER_CACHE_TTL = 60 * 1000;
 const characterCache = new Map();
+const CHARACTER_CACHE_MAX = 100;
 
 app.get("/character/:name/all", async (req, res) => {
   const rawName = req.params.name;
@@ -160,7 +161,15 @@ app.get("/character/:name/all", async (req, res) => {
     const data = await response.json();
 
     if (response.ok) {
+
+
+      characterCache.delete(cacheKey);
+      while (characterCache.size >= CHARACTER_CACHE_MAX) {
+        characterCache.delete(characterCache.keys().next().value);
+      }
       characterCache.set(cacheKey, { data, timestamp: now });
+
+      
     }
     res.status(response.status).json({ ...data, Cached: false });
   } catch (err) {
