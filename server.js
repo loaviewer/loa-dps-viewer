@@ -187,6 +187,63 @@ setInterval(() => {
   }
 }, 10 * 60 * 1000);
 
+
+// ===== 원정대(같은 계정 캐릭터 목록) 조회 =====
+const SIBLINGS_CACHE_TTL = 60 * 1000;
+const siblingsCache = new Map();
+const SIBLINGS_CACHE_MAX = 100;
+
+app.get("/character/:name/siblings", async (req, res) => {
+  const rawName = req.params.name;
+  const cacheKey = rawName.trim().toLowerCase();
+  const now = Date.now();
+
+  const cached = siblingsCache.get(cacheKey);
+  if (cached && now - cached.timestamp < SIBLINGS_CACHE_TTL) {
+    return res.json({ ...cached.data, Cached: true });
+  }
+
+  const currentKey = getNextApiKey();
+  if (!currentKey) {
+    return res.status(500).json({ error: "서버에 API 키가 설정되지 않았습니다." });
+  }
+
+  try {
+    const encoded = encodeURIComponent(rawName);
+    const response = await fetch(`${LOSTARK_BASE_URL}/characters/${encoded}/siblings`, {
+      headers: {
+        accept: "application/json",
+        authorization: `bearer ${currentKey}`,
+      },
+    });
+    const data = await response.json();
+
+    if (response.ok) {
+      const payload = { Siblings: data };
+      siblingsCache.delete(cacheKey);
+      while (siblingsCache.size >= SIBLINGS_CACHE_MAX) {
+        siblingsCache.delete(siblingsCache.keys().next().value);
+      }
+      siblingsCache.set(cacheKey, { data: payload, timestamp: now });
+      return res.status(response.status).json({ ...payload, Cached: false });
+    }
+    res.status(response.status).json({ error: "원정대 정보를 불러오지 못했습니다.", detail: data });
+  } catch (err) {
+    console.error("원정대 조회 실패:", err.message);
+    res.status(502).json({ error: "원정대 정보를 불러오는 중 오류가 발생했습니다." });
+  }
+});
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of siblingsCache.entries()) {
+    if (now - entry.timestamp > SIBLINGS_CACHE_TTL * 5) {
+      siblingsCache.delete(key);
+    }
+  }
+}, 10 * 60 * 1000);
+
+
 // 하위 호환
 app.get("/character/:name", (req, res) => callLostArk(`/armories/characters/${encodeURIComponent(req.params.name)}/profiles`, res));
 app.get("/character/:name/arkpassive", (req, res) => callLostArk(`/armories/characters/${encodeURIComponent(req.params.name)}/arkpassive`, res));
