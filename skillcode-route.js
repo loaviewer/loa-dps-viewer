@@ -50,7 +50,6 @@ async function fetchSkillCode(name) {
 
 module.exports = function (app) {
   app.get("/character/:name/skillcode", async (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
     const name = String(req.params.name || "").trim();
     if (!name || name.length > 20) return res.status(400).json({ ok: false, error: "bad name" });
     const hit = cache.get(name);
