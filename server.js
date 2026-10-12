@@ -867,6 +867,7 @@ setInterval(() => {
 
 // 서버 시작
 const PORT = process.env.PORT || 8080;
+require("./skillcode-route")(app);
 app.listen(PORT, () => {
   console.log(`프록시 서버 실행 중 (포트: ${PORT})`);
 });
