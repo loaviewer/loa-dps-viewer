@@ -459,7 +459,7 @@ const GEM_NAMES = [
 //   sum/n : 그날 30분 기록들의 합계/개수 → avgPrice = sum / n
 //   tradeCount : 가장 최근 기록 시점의 경매장 매물 총 개수
 const GEM_HISTORY = new Map();
-const GEM_HISTORY_MAX_DAYS = 10;
+const GEM_HISTORY_MAX_DAYS = 30;
 const GEM_SAMPLE_INTERVAL_MS = 30 * 60 * 1000; // 30분
 
 const GEM_HISTORY_DIR = process.env.DATA_DIR || __dirname;
