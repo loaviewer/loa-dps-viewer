@@ -455,8 +455,9 @@ const GEM_NAMES = [
   "10레벨 작열의 보석", "9레벨 작열의 보석", "8레벨 작열의 보석", "7레벨 작열의 보석",
 ];
 
-// gemName -> [{ date, avgPrice, tradeCount, sum, n }, ...] (오래된 순, 최대 10일)
+// gemName -> [{ date, avgPrice, min, max, tradeCount, sum, n }, ...] (오래된 순, 최대 GEM_HISTORY_MAX_DAYS일)
 //   sum/n : 그날 30분 기록들의 합계/개수 → avgPrice = sum / n
+//   min/max : 그날 30분 기록들 중 가장 낮은/높은 최저가 (실제 하루 중 최저·최고와는 30분 간격만큼 차이날 수 있음)
 //   tradeCount : 가장 최근 기록 시점의 경매장 매물 총 개수
 const GEM_HISTORY = new Map();
 const GEM_HISTORY_MAX_DAYS = 30;
@@ -558,7 +559,19 @@ function recordGemSample(gemName, price, listingCount) {
   last.sum += price;
   last.n += 1;
   last.avgPrice = Math.round(last.sum / last.n);
+  last.min = last.min > 0 ? Math.min(last.min, price) : price; // 예전 형식 기록(min 없음)도 안전하게 처리
+  last.max = last.max > 0 ? Math.max(last.max, price) : price;
   last.tradeCount = listingCount;
+}
+
+// 오늘(한국 날짜 기준)까지 기록된 최저/최고. 현재가도 포함해서 계산. 기록이 없으면 현재가로 대체
+function getGemTodayRange(gemName, currentPrice) {
+  const history = GEM_HISTORY.get(gemName);
+  const today = getKstDateString();
+  const entry = history && history.find((e) => e.date === today);
+  const lo = entry && entry.min > 0 ? Math.min(entry.min, currentPrice || entry.min) : currentPrice;
+  const hi = entry && entry.max > 0 ? Math.max(entry.max, currentPrice || entry.max) : currentPrice;
+  return { min: lo || 0, max: hi || 0 };
 }
 
 // 어제(한국 날짜 기준) 평균 가격. 기록이 없으면 0
@@ -615,6 +628,8 @@ async function refreshGemsCache() {
             RecentPrice: first.AuctionInfo?.BuyPrice || 0,
             // 어제 평균이 있으면 그 값, 아직 기록이 없으면 현재가(→ 변동 "-")
             YDayAvgPrice: getGemYesterdayAvg(gemName) || buyPrice,
+            DayMinPrice: getGemTodayRange(gemName, buyPrice).min,
+            DayMaxPrice: getGemTodayRange(gemName, buyPrice).max,
             EndDate: first.AuctionInfo?.EndDate || null,
           };
         }
