@@ -440,87 +440,144 @@ async function refreshEstherCache() {
 }
 
 // =================================================================
-// ===== 보석 자체 히스토리 스냅샷 (2026년 8월 6일 추가) =====
-// 공식 API는 경매장(보석) 아이템에 대해 "최근 N일 시세" 히스토리를 제공하지 않음.
-// (거래소 아이템만 /markets/items/{id} 에서 Stats 히스토리를 줌)
-// 그래서 이 서버가 보석 캐시를 갱신할 때마다(하루 1회분만 채택) 직접 스냅샷을
-// 메모리에 쌓아서 "우리가 관찰한 최근 10일" 그래프를 만들어줌.
-// 주의: 서버 프로세스가 재시작되면 지금까지 쌓인 히스토리는 초기화됨.
-//       (영구 보관하려면 파일/DB에 저장하도록 확장 필요)
+// ===== 보석 자체 히스토리 (30분마다 기록 → 전일 평균으로 변동 계산) =====
+// 공식 API는 경매장(보석) 아이템의 과거 시세를 주지 않음.
+// 그래서 이 서버가 30분마다 보석 최저가를 기록하고,
+//  - 하루 평균(avgPrice)을 만들어 "최근 10일 그래프"에 쓰고
+//  - 어제 평균을 YDayAvgPrice로 내려줘서 시세 페이지의 "전일 대비"가 나오게 함.
+//
+// 기록 저장 위치 (재배포/재시작해도 남도록):
+//  1순위) Upstash Redis (환경변수 UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN 이 있을 때)
+//  2순위) 파일 (환경변수 DATA_DIR 폴더, 없으면 서버 폴더) - 재배포하면 사라질 수 있음
 // =================================================================
 const GEM_NAMES = [
   "10레벨 겁화의 보석", "9레벨 겁화의 보석", "8레벨 겁화의 보석", "7레벨 겁화의 보석",
   "10레벨 작열의 보석", "9레벨 작열의 보석", "8레벨 작열의 보석", "7레벨 작열의 보석",
 ];
 
-const GEM_HISTORY = new Map(); // gemName -> [{date, avgPrice, tradeCount}, ...] (최대 10개, 오래된순)
+// gemName -> [{ date, avgPrice, tradeCount, sum, n }, ...] (오래된 순, 최대 10일)
+//   sum/n : 그날 30분 기록들의 합계/개수 → avgPrice = sum / n
+//   tradeCount : 가장 최근 기록 시점의 경매장 매물 총 개수
+const GEM_HISTORY = new Map();
 const GEM_HISTORY_MAX_DAYS = 10;
+const GEM_SAMPLE_INTERVAL_MS = 30 * 60 * 1000; // 30분
 
-// 2026년 8월 6일 추가: 재배포/재시작해도 최근까지 쌓은 기록이 날아가지 않도록 디스크에도 저장.
-// 주의: 클라우드타입이 "완전 새 컨테이너로 재배포"하는 방식이면 이 파일도 초기화될 수 있음.
-// (재시작/크래시 복구 수준에서는 안전하게 유지됨)
-const GEM_HISTORY_FILE = path.join(__dirname, "gem_history.json");
+const GEM_HISTORY_DIR = process.env.DATA_DIR || __dirname;
+const GEM_HISTORY_FILE = path.join(GEM_HISTORY_DIR, "gem_history.json");
 
-function loadGemHistoryFromDisk() {
+const UPSTASH_URL = (process.env.UPSTASH_REDIS_REST_URL || "").replace(/\/+$/, "");
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || "";
+const USE_REDIS = Boolean(UPSTASH_URL && UPSTASH_TOKEN);
+const GEM_HISTORY_REDIS_KEY = "loaviewer:gem_history";
+
+// Upstash REST API: POST 주소 + 명령어를 JSON 배열로 보냄. 예) ["SET","키","값"]
+async function redisCommand(args) {
+  const res = await fetch(UPSTASH_URL, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${UPSTASH_TOKEN}`, "content-type": "application/json" },
+    body: JSON.stringify(args),
+  });
+  const data = await res.json();
+  if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
+  return data.result;
+}
+
+function applyLoadedHistory(obj) {
+  Object.keys(obj).forEach((gemName) => GEM_HISTORY.set(gemName, obj[gemName]));
+  console.log("[gem-history] 기존 히스토리 불러옴:", Object.keys(obj).length, "개 보석 /", USE_REDIS ? "Upstash Redis" : GEM_HISTORY_FILE);
+}
+
+async function loadGemHistory() {
   try {
-    if (fs.existsSync(GEM_HISTORY_FILE)) {
-      const raw = fs.readFileSync(GEM_HISTORY_FILE, "utf-8");
-      const obj = JSON.parse(raw);
-      Object.keys(obj).forEach((gemName) => {
-        GEM_HISTORY.set(gemName, obj[gemName]);
-      });
-      console.log("[gem-history] 디스크에서 기존 히스토리 불러옴:", Object.keys(obj).length, "개 보석");
+    if (USE_REDIS) {
+      const raw = await redisCommand(["GET", GEM_HISTORY_REDIS_KEY]);
+      if (raw) applyLoadedHistory(JSON.parse(raw));
+      else console.log("[gem-history] Redis에 기존 히스토리 없음 (새로 시작)");
+    } else if (fs.existsSync(GEM_HISTORY_FILE)) {
+      applyLoadedHistory(JSON.parse(fs.readFileSync(GEM_HISTORY_FILE, "utf-8")));
+    } else {
+      console.log("[gem-history] 기존 히스토리 파일 없음 (새로 시작):", GEM_HISTORY_FILE);
     }
   } catch (err) {
-    console.error("[gem-history] 디스크 로드 실패 (무시하고 새로 시작함):", err.message);
+    console.error("[gem-history] 불러오기 실패 (무시하고 새로 시작함):", err.message);
   }
 }
 
-function saveGemHistoryToDisk() {
+async function saveGemHistory() {
+  const obj = {};
+  GEM_HISTORY.forEach((history, gemName) => { obj[gemName] = history; });
+  const json = JSON.stringify(obj);
   try {
-    const obj = {};
-    GEM_HISTORY.forEach((history, gemName) => {
-      obj[gemName] = history;
-    });
-    fs.writeFileSync(GEM_HISTORY_FILE, JSON.stringify(obj), "utf-8");
+    if (USE_REDIS) {
+      await redisCommand(["SET", GEM_HISTORY_REDIS_KEY, json]);
+    } else {
+      fs.mkdirSync(GEM_HISTORY_DIR, { recursive: true });
+      // 쓰는 도중 꺼져도 파일이 깨지지 않도록 임시 파일에 쓴 뒤 교체
+      const tmp = GEM_HISTORY_FILE + ".tmp";
+      fs.writeFileSync(tmp, json, "utf-8");
+      fs.renameSync(tmp, GEM_HISTORY_FILE);
+    }
   } catch (err) {
-    console.error("[gem-history] 디스크 저장 실패:", err.message);
+    console.error("[gem-history] 저장 실패:", err.message);
   }
 }
 
-loadGemHistoryFromDisk();
+// 서버 시작 시 한 번 불러옴. 보석 갱신은 이게 끝난 뒤에 시작함(덮어쓰기 방지)
+const gemHistoryReady = loadGemHistory();
 
 function getKstDateString(date = new Date()) {
-  // 서버가 어느 시간대에서 돌든 한국 날짜 기준(YYYY-MM-DD)으로 하루를 구분하기 위함
+  // 서버 시간대와 상관없이 한국 날짜(YYYY-MM-DD) 기준으로 하루를 구분
   const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
   return kst.toISOString().slice(0, 10);
 }
 
-function recordGemSnapshot(gemName, price, listingCount) {
+// 30분마다 호출: 그날의 합계/개수에 누적하고 평균을 갱신
+function recordGemSample(gemName, price, listingCount) {
+  if (!(price > 0)) return; // 매물이 없거나 가격을 못 구한 경우는 기록하지 않음
   const today = getKstDateString();
+
   let history = GEM_HISTORY.get(gemName);
   if (!history) {
     history = [];
     GEM_HISTORY.set(gemName, history);
   }
 
-  const last = history[history.length - 1];
-  if (last && last.date === today) {
-    // 같은 날 여러 번 갱신되면, 그날의 "가장 최근 관측값"으로 덮어씀
-    last.avgPrice = price;
-    last.tradeCount = listingCount;
-  } else {
-    history.push({ date: today, avgPrice: price, tradeCount: listingCount });
-    if (history.length > GEM_HISTORY_MAX_DAYS) {
-      history.shift();
-    }
+  let last = history[history.length - 1];
+  if (!last || last.date !== today) {
+    last = { date: today, avgPrice: 0, tradeCount: 0, sum: 0, n: 0 };
+    history.push(last);
+    while (history.length > GEM_HISTORY_MAX_DAYS) history.shift();
   }
 
-  saveGemHistoryToDisk();
+  // 예전 형식(sum/n 없이 avgPrice만 있던 기록)이 오늘 날짜로 남아 있는 경우 대비
+  if (last.n === undefined) {
+    last.sum = last.avgPrice || 0;
+    last.n = last.avgPrice ? 1 : 0;
+  }
+
+  last.sum += price;
+  last.n += 1;
+  last.avgPrice = Math.round(last.sum / last.n);
+  last.tradeCount = listingCount;
 }
+
+// 어제(한국 날짜 기준) 평균 가격. 기록이 없으면 0
+function getGemYesterdayAvg(gemName) {
+  const history = GEM_HISTORY.get(gemName);
+  if (!history) return 0;
+  const yesterday = getKstDateString(new Date(Date.now() - 24 * 60 * 60 * 1000));
+  const entry = history.find((e) => e.date === yesterday);
+  if (!entry) return 0;
+  return entry.n ? Math.round(entry.sum / entry.n) : (entry.avgPrice || 0);
+}
+
+let lastGemSampleAt = 0;
 
 async function refreshGemsCache() {
   try {
+    await gemHistoryReady; // 저장된 기록을 다 불러온 뒤에 시작
+    const samples = [];
+
     const promises = GEM_NAMES.map((gemName) => {
       const key = getNextApiKey();
       return fetch(`${LOSTARK_BASE_URL}/auctions/items`, {
@@ -545,10 +602,9 @@ async function refreshGemsCache() {
           const first = gemData.Items[0];
           const buyPrice = first.AuctionInfo?.BuyPrice || first.AuctionInfo?.StartPrice || 0;
 
-          // 2026년 8월 6일 추가: 보석 히스토리용 일일 스냅샷 기록
-          // tradeCount 자리에는 실제 "거래 건수"가 아니라 그 시점에 경매장에 등록되어
-          // 있던 매물 총 개수(TotalCount)를 대신 사용함 (공식 API 한계상 실거래 건수는 못 구함)
-          recordGemSnapshot(gemName, buyPrice, gemData.TotalCount || 0);
+          // 기록은 아래(30분 간격)에서 한 번에 처리. 여기서는 모아두기만 함.
+          // tradeCount 자리에는 실제 거래 건수가 아니라 경매장 매물 총 개수(TotalCount)를 사용
+          samples.push({ gemName, price: buyPrice, listingCount: gemData.TotalCount || 0 });
 
           return {
             Name: first.Name || gemName,
@@ -557,7 +613,8 @@ async function refreshGemsCache() {
             BundleCount: 1,
             CurrentMinPrice: buyPrice,
             RecentPrice: first.AuctionInfo?.BuyPrice || 0,
-            YDayAvgPrice: first.AuctionInfo?.BuyPrice || 0,
+            // 어제 평균이 있으면 그 값, 아직 기록이 없으면 현재가(→ 변동 "-")
+            YDayAvgPrice: getGemYesterdayAvg(gemName) || buyPrice,
             EndDate: first.AuctionInfo?.EndDate || null,
           };
         }
@@ -573,6 +630,14 @@ async function refreshGemsCache() {
       CACHE.gems.updatedAt = Date.now();
       CACHE.gems.lastSuccessAt = Date.now();
       CACHE.gems.apiStatus = "ONLINE";
+
+      // 방문자가 몇 명이든 30분에 한 번만 기록 (방문자 많은 시간대로 평균이 쏠리지 않게)
+      const now = Date.now();
+      if (now - lastGemSampleAt >= GEM_SAMPLE_INTERVAL_MS) {
+        samples.forEach((s) => recordGemSample(s.gemName, s.price, s.listingCount));
+        await saveGemHistory();
+        lastGemSampleAt = now;
+      }
     } else {
       CACHE.gems.apiStatus = "OFFLINE";
     }
@@ -581,6 +646,20 @@ async function refreshGemsCache() {
     CACHE.gems.apiStatus = "OFFLINE";
   }
 }
+
+// 사이트에 방문자가 없어도 30분마다 보석 가격을 조회해서 기록
+setInterval(async () => {
+  const entry = CACHE.gems;
+  if (entry.isFetching) return;
+  if (Date.now() - lastGemSampleAt < GEM_SAMPLE_INTERVAL_MS) return;
+  try {
+    entry.isFetching = true;
+    entry.lastAttemptAt = Date.now();
+    await refreshGemsCache();
+  } finally {
+    entry.isFetching = false;
+  }
+}, 60 * 1000);
 
 async function refreshAuctionEngravingsCache() {
   const key = getNextApiKey();
