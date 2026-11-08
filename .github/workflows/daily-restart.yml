@@ -1,10 +1,11 @@
-name: Daily Cloudtype Restart
+name: Weekly Cloudtype Restart
 
-# 매일 한국시간(KST) 오전 5시 4분에 실행됨
-# cron은 UTC 기준이라 KST 05:04 = UTC 전날 20:04 으로 계산됨
+# 매주 월요일 한국시간(KST) 오전 5시 4분에 실행됨
+# cron은 UTC 기준이라 KST 월요일 05:04 = UTC 일요일 20:04 로 계산됨
+# (요일 번호: 0=일요일 ... 6=토요일)
 on:
   schedule:
-    - cron: '4 20 * * *'
+    - cron: '4 20 * * 0'
   workflow_dispatch:   # 수동으로도 실행 버튼을 눌러볼 수 있게 함 (테스트용)
 
 jobs:
@@ -22,7 +23,7 @@ jobs:
 
       - name: 배포 설정 파일 생성 (Secrets에 저장된 로스트아크 키를 그 순간에만 끼워 넣음)
         run: |
-          cat <<EOF > app.yaml
+          cat <<EOF2 > app.yaml
           name: loa-dps-viewer
           app: node@24
           options:
@@ -32,10 +33,14 @@ jobs:
             env:
               - name: LOSTARK_API_KEYS
                 value: "${{ secrets.LOSTARK_API_KEYS }}"
+              - name: UPSTASH_REDIS_REST_URL
+                value: "${{ secrets.UPSTASH_REDIS_REST_URL }}"
+              - name: UPSTASH_REDIS_REST_TOKEN
+                value: "${{ secrets.UPSTASH_REDIS_REST_TOKEN }}"
             ports: 8080
             install: npm install
             start: npm start
-          EOF
+          EOF2
 
       - name: 재배포 실행 (= 재시작)
         run: ctype apply -f app.yaml
