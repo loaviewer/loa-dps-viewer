@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>로이터 베이스 | 관리자</title>
+<title>로아뷰 | 관리자 페이지</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif;background:linear-gradient(135deg,#0b1018 0%,#0d1320 45%,#121927 100%);color:#f3ead6;display:flex;align-items:center;justify-content:center}
@@ -66,6 +66,18 @@ body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif
 .record-text{font-size:10px;color:#5a6a82;margin-top:2px}
 .champ-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.22);border-radius:7px;padding:2px 7px;font-size:11px;font-weight:900;color:#ffd700}
 .loading-text{text-align:center;color:#5a6a82;font-size:13px;padding:20px 0}
+
+
+.char-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:10px}
+.char-period-bar{display:flex;flex-wrap:wrap;gap:4px;flex:1}
+.char-period-btn{padding:5px 9px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#5a6a82;font-size:11px;font-weight:900;cursor:pointer}
+.char-period-btn.active{background:linear-gradient(135deg,#ffb347,#ffd48a);color:#1a1208;border-color:transparent}
+.char-refresh-btn{padding:5px 10px;border-radius:8px;border:1px solid rgba(255,180,60,.25);background:rgba(255,180,60,.1);color:#ffd48a;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap}
+.char-refresh-btn:hover{background:rgba(255,180,60,.18)}
+.char-custom-range{display:none;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.char-custom-range.show{display:flex}
+.char-custom-range input[type=date]{padding:5px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#fff;font-size:11px}
+.char-custom-range button{padding:5px 10px;border-radius:8px;border:none;cursor:pointer;background:linear-gradient(135deg,#ffb347,#ffd48a);color:#1a1208;font-size:11px;font-weight:900}
 
 .char-summary{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
 .char-sum-box{border-radius:10px;padding:8px 10px;background:rgba(255,180,60,.06);border:1px solid rgba(255,180,60,.14)}
@@ -170,8 +182,8 @@ body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif
 <div class="admin-page" id="adminPage">
   <div class="admin-wrap">
     <div class="admin-header">
-      <div class="admin-header-label">LOITER BASE · ADMIN</div>
-      <div class="admin-header-title">관리자 대시보드 🛠️</div>
+      <div class="admin-header-label">LOAVIEW · ADMIN</div>
+      <div class="admin-header-title">로아뷰 관리자 페이지 🛠️</div>
       <div class="admin-header-sub">각인 승률 · 캐릭터 조회 · 문의 관리</div>
     </div>
     <div class="triple-layout">
@@ -206,10 +218,28 @@ body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif
       </div>
       <!-- 주황: 조회 자리 -->
       <div class="admin-card col-char">
-        <span class="col-label">캐릭터 조회</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px">
+          <span class="col-label" style="margin:0">캐릭터 조회</span>
+          <button type="button" class="char-refresh-btn" id="charRefreshBtn">↻ 새로고침</button>
+        </div>
+        <div class="char-toolbar">
+          <div class="char-period-bar" id="charPeriodBar">
+            <button type="button" class="char-period-btn active" data-range="today">오늘</button>
+            <button type="button" class="char-period-btn" data-range="yesterday">어제</button>
+            <button type="button" class="char-period-btn" data-range="3">최근 3일</button>
+            <button type="button" class="char-period-btn" data-range="7">최근 7일</button>
+            <button type="button" class="char-period-btn" data-range="custom">기간 선택</button>
+          </div>
+        </div>
+        <div class="char-custom-range" id="charCustomRange">
+          <input type="date" id="charFrom"/>
+          <span style="color:#5a6a82;font-size:11px">~</span>
+          <input type="date" id="charTo"/>
+          <button type="button" id="charCustomApply">적용</button>
+        </div>
         <div class="char-summary">
           <div class="char-sum-box">
-            <div class="char-sum-label">오늘 조회</div>
+            <div class="char-sum-label" id="charPeriodLabel">기간 조회</div>
             <div class="char-sum-value" id="charTodayCount">-</div>
           </div>
           <div class="char-sum-box">
@@ -218,10 +248,10 @@ body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif
           </div>
         </div>
         <div class="char-hour-wrap">
-          <div class="char-hour-title">당일 시간대 (KST)</div>
+          <div class="char-hour-title" id="charChartTitle">시간대 (KST)</div>
           <div class="char-hour-bars" id="charHourBars"><div class="loading-text" style="width:100%;padding:12px 0">불러오는 중...</div></div>
         </div>
-        <div class="char-list-title">닉네임별 조회 (최근순)</div>
+        <div class="char-list-title">닉네임별 조회</div>
         <div class="char-list" id="charLookupList"><div class="loading-text">불러오는 중...</div></div>
       </div>
       <!-- 파랑: 문의 -->
@@ -236,36 +266,10 @@ body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif
         <div class="inq-admin-detail" id="inqAdminDetail"><div class="loading-text">문의글을 선택하면 여기서 확인하고 답변할 수 있습니다.</div></div>
       </div>
     </div>
-    <div class="bottom-grid">
-      <div class="admin-card">
-        <div class="grade-section-title">📊 등급 분포 (OP)</div>
-        <div id="opGradeList"><div class="loading-text">불러오는 중...</div></div>
-      </div>
-      <div class="admin-card">
-        <div class="grade-section-title">🏆 클래스별 우승 직각 분석</div>
-        <div class="pick-controls">
-          <div class="pick-toggle">
-            <button class="pick-toggle-btn active" data-type="op">OP</button>
-            <button class="pick-toggle-btn" data-type="favor">호감</button>
-          </div>
-          <div class="pick-select-wrap">
-            <select class="pick-select" id="classPickSelect">
-              <option value="">클래스 선택 ▼</option>
-              <optgroup label="전사"><option>워로드</option><option>버서커</option><option>디스트로이어</option><option>홀리나이트</option><option>슬레이어</option><option>발키리</option></optgroup>
-              <optgroup label="무도가"><option>배틀마스터</option><option>인파이터</option><option>기공사</option><option>창술사</option><option>스트라이커</option><option>브레이커</option></optgroup>
-              <optgroup label="헌터"><option>데빌헌터</option><option>블래스터</option><option>호크아이</option><option>스카우터</option><option>건슬링어</option></optgroup>
-              <optgroup label="마법사"><option>서머너</option><option>아르카나</option><option>바드</option><option>소서리스</option></optgroup>
-              <optgroup label="암살자"><option>블레이드</option><option>데모닉</option><option>리퍼</option><option>소울이터</option></optgroup>
-              <optgroup label="스페셜리스트"><option>도화가</option><option>기상술사</option><option>환수사</option></optgroup>
-              <optgroup label="가디언나이트"><option>가디언나이트</option></optgroup>
-            </select>
-          </div>
-        </div>
-        <div id="classPickResult"><div class="loading-text">클래스를 선택하세요 🎯</div></div>
-      </div>
+    
     </div>
   </div>
-</div>
+
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 const SUPABASE_URL = "https://khszfukekudyripouifm.supabase.co";
@@ -378,6 +382,7 @@ function renderGrade(counts){
   }).join("")}</div>`;
 }
 async function loadGrade(){
+  if(!document.getElementById("opGradeList")) return;
   const {data}=await supabase.from("sessions").select("grade").eq("tournament_type","op");
   const counts={};
   if(data) for(const r of data){ if(r.grade) counts[r.grade]=(counts[r.grade]||0)+1; }
@@ -402,76 +407,185 @@ function tabsPath(tabs) {
   return tabs.map(t => TAB_LABEL_MAP[t] || t).join(" → ");
 }
 
+
+let charRange = "today"; // today | yesterday | 3 | 7 | custom
+let charFrom = null;
+let charTo = null;
+
+function kstYmd(d) {
+  return d.toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
+}
+function kstHour(d) {
+  let h = Number(d.toLocaleString("en-US", { timeZone: "Asia/Seoul", hour: "numeric", hour12: false }));
+  if (h === 24) h = 0;
+  return h;
+}
+/** 기간 시작/끝 (KST 날짜 문자열 YYYY-MM-DD inclusive) */
+function charRangeBounds() {
+  const now = new Date();
+  const today = kstYmd(now);
+  if (charRange === "today") return { from: today, to: today, mode: "hour" };
+  if (charRange === "yesterday") {
+    const y = new Date(now.getTime() - 24 * 3600 * 1000);
+    const ys = kstYmd(y);
+    return { from: ys, to: ys, mode: "hour" };
+  }
+  if (charRange === "3" || charRange === "7") {
+    const days = Number(charRange);
+    const start = new Date(now.getTime() - (days - 1) * 24 * 3600 * 1000);
+    return { from: kstYmd(start), to: today, mode: "day" };
+  }
+  // custom
+  const f = charFrom || today;
+  const t = charTo || today;
+  const mode = (f === t) ? "hour" : "day";
+  return { from: f, to: t, mode: mode };
+}
+
 async function loadCharLookup() {
   const listEl = document.getElementById("charLookupList");
   const hourEl = document.getElementById("charHourBars");
   if (!listEl) return;
+  listEl.innerHTML = '<div class="loading-text">불러오는 중...</div>';
+  if (hourEl) hourEl.innerHTML = '<div class="loading-text" style="width:100%;padding:12px 0">불러오는 중...</div>';
 
-  // 닉네임 집계
-  const { data: stats, error: e1 } = await supabase
-    .from("char_lookup_stats")
-    .select("name,count,first_seen,last_seen,tabs")
-    .order("last_seen", { ascending: false })
-    .limit(80);
+  try {
+    const bounds = charRangeBounds();
+    // 넉넉히 가져와서 클라이언트에서 KST 필터 (timestamptz)
+    const { data: logs, error: e2 } = await supabase
+      .from("char_lookup_logs")
+      .select("name,created_at")
+      .order("created_at", { ascending: false })
+      .limit(5000);
 
-  if (e1) {
-    listEl.innerHTML = '<div class="loading-text">조회 실패 😢<br><span style="font-size:11px">' + (e1.message || "") + "</span></div>";
-  } else if (!stats || !stats.length) {
-    document.getElementById("charNameCount").textContent = "0";
-    listEl.innerHTML = '<div class="loading-text">아직 조회 기록이 없습니다</div>';
-  } else {
-    document.getElementById("charNameCount").textContent = stats.length;
-    listEl.innerHTML = stats.map(row => {
-      return '<div class="char-row">'
-        + '<div class="char-row-top"><div class="char-row-name">' + row.name + '</div>'
-        + '<div class="char-row-count">' + row.count + '회</div></div>'
-        + '<div class="char-row-meta">마지막 ' + fmtKst(row.last_seen) + '</div>'
-        + '<div class="char-row-tabs"><b>탭</b> ' + tabsPath(row.tabs) + '</div>'
-        + '</div>';
-    }).join("");
-  }
+    if (e2) throw e2;
 
-  // 오늘(KST) 로그 → 시간대 그래프 + 오늘 건수
-  const { data: logs, error: e2 } = await supabase
-    .from("char_lookup_logs")
-    .select("created_at")
-    .order("created_at", { ascending: false })
-    .limit(2000);
-
-  const hourCount = {};
-  for (let h = 0; h < 24; h++) hourCount[h] = 0;
-  let todayN = 0;
-
-  if (!e2 && logs) {
-    const todayKst = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" }); // YYYY-MM-DD
-    logs.forEach(row => {
+    const filtered = [];
+    (logs || []).forEach(row => {
       const d = new Date(row.created_at);
-      const kstDate = d.toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
-      if (kstDate !== todayKst) return;
-      todayN++;
-      const hour = Number(d.toLocaleString("en-US", { timeZone: "Asia/Seoul", hour: "numeric", hour12: false }));
-      // hour12 false can give 24 in some engines — normalize
-      const h = hour === 24 ? 0 : hour;
-      hourCount[h] = (hourCount[h] || 0) + 1;
+      const day = kstYmd(d);
+      if (day >= bounds.from && day <= bounds.to) filtered.push({ name: row.name, at: d, day: day });
     });
-  }
-  document.getElementById("charTodayCount").textContent = todayN;
 
-  const maxH = Math.max(1, ...Object.values(hourCount));
-  // 표시: 최근 활동 구간에 맞춰 0~23 전체 (좁으면 너무 작음)
-  hourEl.innerHTML = "";
-  for (let h = 0; h < 24; h++) {
-    const n = hourCount[h] || 0;
-    const pct = Math.max(n ? 8 : 2, Math.round(n / maxH * 100));
-    const col = document.createElement("div");
-    col.className = "char-hour-col";
-    col.title = h + "시 " + n + "회";
-    col.innerHTML = '<div class="char-hour-bar" style="height:' + pct + '%;opacity:' + (n ? 1 : .25) + '"></div>'
-      + (h % 3 === 0 ? '<div class="char-hour-lbl">' + h + '</div>' : '<div class="char-hour-lbl">&nbsp;</div>');
-    hourEl.appendChild(col);
+    document.getElementById("charTodayCount").textContent = filtered.length;
+    document.getElementById("charPeriodLabel").textContent =
+      bounds.from === bounds.to ? (bounds.from + " 조회") : (bounds.from + " ~ " + bounds.to);
+
+    // 닉네임별 집계 + tabs는 stats 테이블에서
+    const nameCount = {};
+    const nameLast = {};
+    filtered.forEach(r => {
+      nameCount[r.name] = (nameCount[r.name] || 0) + 1;
+      if (!nameLast[r.name] || r.at > nameLast[r.name]) nameLast[r.name] = r.at;
+    });
+    const names = Object.keys(nameCount).sort((a, b) => nameCount[b] - nameCount[a] || (nameLast[b] - nameLast[a]));
+    document.getElementById("charNameCount").textContent = names.length;
+
+    const { data: stats } = await supabase
+      .from("char_lookup_stats")
+      .select("name,tabs,last_seen,count")
+      .in("name", names.length ? names.slice(0, 100) : ["__none__"]);
+
+    const tabMap = {};
+    (stats || []).forEach(s => { tabMap[s.name] = s.tabs; });
+
+    if (!names.length) {
+      listEl.innerHTML = '<div class="loading-text">이 기간에 조회 기록이 없습니다</div>';
+    } else {
+      listEl.innerHTML = names.map(name => {
+        return '<div class="char-row">'
+          + '<div class="char-row-top"><div class="char-row-name">' + name + '</div>'
+          + '<div class="char-row-count">' + nameCount[name] + '회</div></div>'
+          + '<div class="char-row-meta">마지막 ' + fmtKst(nameLast[name].toISOString()) + '</div>'
+          + '<div class="char-row-tabs"><b>탭</b> ' + tabsPath(tabMap[name]) + '</div>'
+          + '</div>';
+      }).join("");
+    }
+
+    // 차트
+    document.getElementById("charChartTitle").textContent =
+      bounds.mode === "hour" ? "시간대 (KST)" : "일별 조회 (KST)";
+    hourEl.innerHTML = "";
+    if (bounds.mode === "hour") {
+      const hourCount = {};
+      for (let h = 0; h < 24; h++) hourCount[h] = 0;
+      filtered.forEach(r => { hourCount[kstHour(r.at)] = (hourCount[kstHour(r.at)] || 0) + 1; });
+      const maxH = Math.max(1, ...Object.values(hourCount));
+      for (let h = 0; h < 24; h++) {
+        const n = hourCount[h] || 0;
+        const pct = Math.max(n ? 8 : 2, Math.round(n / maxH * 100));
+        const col = document.createElement("div");
+        col.className = "char-hour-col";
+        col.title = h + "시 " + n + "회";
+        col.innerHTML = '<div class="char-hour-bar" style="height:' + pct + '%;opacity:' + (n ? 1 : .25) + '"></div>'
+          + (h % 3 === 0 ? '<div class="char-hour-lbl">' + h + '</div>' : '<div class="char-hour-lbl">&nbsp;</div>');
+        hourEl.appendChild(col);
+      }
+    } else {
+      // day bars from from..to
+      const days = [];
+      const cur = new Date(bounds.from + "T12:00:00+09:00");
+      const end = new Date(bounds.to + "T12:00:00+09:00");
+      while (cur <= end) {
+        days.push(kstYmd(cur));
+        cur.setDate(cur.getDate() + 1);
+      }
+      const dayCount = {};
+      days.forEach(d => dayCount[d] = 0);
+      filtered.forEach(r => { dayCount[r.day] = (dayCount[r.day] || 0) + 1; });
+      const maxD = Math.max(1, ...Object.values(dayCount));
+      days.forEach(d => {
+        const n = dayCount[d] || 0;
+        const pct = Math.max(n ? 8 : 2, Math.round(n / maxD * 100));
+        const col = document.createElement("div");
+        col.className = "char-hour-col";
+        col.title = d + " " + n + "회";
+        const label = d.slice(5); // MM-DD
+        col.innerHTML = '<div class="char-hour-bar" style="height:' + pct + '%;opacity:' + (n ? 1 : .25) + '"></div>'
+          + '<div class="char-hour-lbl">' + label + '</div>';
+        hourEl.appendChild(col);
+      });
+    }
+  } catch (err) {
+    console.error("loadCharLookup", err);
+    listEl.innerHTML = '<div class="loading-text">조회 실패 😢<br><span style="font-size:11px">' + (err && err.message ? err.message : err) + '</span></div>';
+    if (hourEl) hourEl.innerHTML = '<div class="loading-text">-</div>';
   }
 }
 
+function initCharLookupUI() {
+  document.querySelectorAll(".char-period-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".char-period-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      charRange = btn.dataset.range;
+      const custom = document.getElementById("charCustomRange");
+      if (charRange === "custom") {
+        custom.classList.add("show");
+        const today = kstYmd(new Date());
+        if (!document.getElementById("charTo").value) document.getElementById("charTo").value = today;
+        if (!document.getElementById("charFrom").value) {
+          const d = new Date(); d.setDate(d.getDate() - 6);
+          document.getElementById("charFrom").value = kstYmd(d);
+        }
+      } else {
+        custom.classList.remove("show");
+        loadCharLookup();
+      }
+    });
+  });
+  const applyBtn = document.getElementById("charCustomApply");
+  if (applyBtn) applyBtn.addEventListener("click", () => {
+    charFrom = document.getElementById("charFrom").value;
+    charTo = document.getElementById("charTo").value;
+    if (!charFrom) { alert("시작일을 선택하세요"); return; }
+    if (!charTo) charTo = charFrom;
+    charRange = "custom";
+    loadCharLookup();
+  });
+  const ref = document.getElementById("charRefreshBtn");
+  if (ref) ref.addEventListener("click", () => loadCharLookup());
+}
 
 function initDashboard(){
   document.querySelectorAll(".main-tab").forEach(btn=>{
@@ -503,8 +617,8 @@ function initDashboard(){
   document.getElementById("classPickSelect").onchange=function(){if(this.value)loadClassPickData(this.value,currentPickType);else document.getElementById("classPickResult").innerHTML='<div class="loading-text">클래스를 선택하세요 🎯</div>'};
   // fill option values
   document.querySelectorAll("#classPickSelect option").forEach(o=>{if(o.value===""&&o.textContent&&!o.textContent.includes("선택"))o.value=o.textContent});
+  initCharLookupUI();
   loadMainTable();
-  loadGrade();
   loadCharLookup();
 }
 
