@@ -98,6 +98,16 @@ body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif
 .char-row-meta{font-size:10px;color:#5a6a82;margin-top:3px}
 .char-row-tabs{font-size:10px;color:#9aa8bc;margin-top:4px;line-height:1.4}
 .char-row-tabs b{color:#ffd48a;font-weight:800}
+.char-exclude-panel{display:none;margin-bottom:10px;padding:10px;border-radius:12px;background:rgba(255,80,80,.05);border:1px solid rgba(255,80,80,.25)}
+.char-exclude-panel.show{display:block}
+.char-exclude-title{font-size:10px;font-weight:800;color:#ff9a9a;margin-bottom:8px;line-height:1.5}
+.char-exclude-row{display:flex;gap:6px}
+.char-exclude-row input{flex:1;min-width:0;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#fff;font-size:11px}
+.char-exclude-row button,.char-exclude-mine{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,120,120,.3);background:rgba(255,80,80,.12);color:#ff9a9a;font-size:11px;font-weight:900;cursor:pointer}
+.char-exclude-mine{margin-top:6px;width:100%}
+.char-exclude-item{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:6px;padding:5px 8px;border-radius:8px;background:rgba(0,0,0,.2);font-size:10px;color:#9aa8bc;word-break:break-all}
+.char-exclude-item button{padding:3px 8px;border-radius:6px;border:none;background:rgba(255,255,255,.08);color:#ddd;font-size:10px;cursor:pointer;white-space:nowrap}
+.char-exclude-empty{margin-top:6px;font-size:10px;color:#5a6a82}
 .char-group{display:flex;flex-direction:column;gap:4px;padding:6px;border-radius:12px;border:1.5px solid rgba(255,180,60,.45);background:rgba(255,180,60,.05)}
 .char-group-head{font-size:10px;font-weight:900;color:#ffd48a;padding:2px 4px 4px;letter-spacing:.3px}
 .char-placeholder{border-radius:14px;padding:28px 16px;text-align:center;background:rgba(255,180,60,.04);border:1px dashed rgba(255,180,60,.28)}
@@ -222,7 +232,19 @@ body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif
       <div class="admin-card col-char">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px">
           <span class="col-label" style="margin:0">캐릭터 조회</span>
-          <button type="button" class="char-refresh-btn" id="charRefreshBtn">↻ 새로고침</button>
+          <div style="display:flex;gap:6px">
+            <button type="button" class="char-refresh-btn" id="charExcludeBtn">🚫 제외 key</button>
+            <button type="button" class="char-refresh-btn" id="charRefreshBtn">↻ 새로고침</button>
+          </div>
+        </div>
+        <div class="char-exclude-panel" id="charExcludePanel">
+          <div class="char-exclude-title">제외할 방문자 key (이 키의 조회는 아래 목록·집계에서 빠집니다)</div>
+          <div class="char-exclude-row">
+            <input type="text" id="charExcludeInput" placeholder="내 key 붙여넣기"/>
+            <button type="button" id="charExcludeAdd">추가</button>
+          </div>
+          <button type="button" class="char-exclude-mine" id="charExcludeMine">이 브라우저의 내 key 넣기</button>
+          <div id="charExcludeList"></div>
         </div>
         <div class="char-toolbar">
           <div class="char-period-bar" id="charPeriodBar">
@@ -473,7 +495,9 @@ async function loadCharLookup() {
     if (e2) throw e2;
 
     const filtered = [];
+    const excl = new Set(getExcluded());
     (logs || []).forEach(row => {
+      if (row.visitor_id && excl.has(row.visitor_id)) return;   // 제외 key
       const d = new Date(row.created_at);
       const day = kstYmd(d);
       if (day >= bounds.from && day <= bounds.to) filtered.push({ name: row.name, at: d, day: day, vid: row.visitor_id || null });
@@ -589,7 +613,61 @@ async function loadCharLookup() {
   }
 }
 
+const EXC_KEY = "loaview-admin-exclude";
+function getExcluded() {
+  try { const v = JSON.parse(localStorage.getItem(EXC_KEY)); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+}
+function setExcluded(arr) {
+  try { localStorage.setItem(EXC_KEY, JSON.stringify(arr)); } catch (e) {}
+}
+function renderExcludeUI() {
+  const list = getExcluded();
+  const btn = document.getElementById("charExcludeBtn");
+  if (btn) btn.textContent = "🚫 제외 key" + (list.length ? " (" + list.length + ")" : "");
+  const box = document.getElementById("charExcludeList");
+  if (!box) return;
+  box.innerHTML = list.length ? list.map((k, i) =>
+    '<div class="char-exclude-item"><span>' + k + '</span><button type="button" data-i="' + i + '">삭제</button></div>'
+  ).join("") : '<div class="char-exclude-empty">등록된 제외 key 없음</div>';
+}
+function initExcludeUI() {
+  const btn = document.getElementById("charExcludeBtn");
+  const panel = document.getElementById("charExcludePanel");
+  const input = document.getElementById("charExcludeInput");
+  if (!btn || !panel) return;
+  btn.addEventListener("click", () => panel.classList.toggle("show"));
+  const add = () => {
+    const k = input.value.trim();
+    if (!k) return;
+    const list = getExcluded();
+    if (!list.includes(k)) list.push(k);
+    setExcluded(list);
+    input.value = "";
+    renderExcludeUI();
+    loadCharLookup();
+  };
+  document.getElementById("charExcludeAdd").addEventListener("click", add);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") add(); });
+  document.getElementById("charExcludeMine").addEventListener("click", () => {
+    let v = null;
+    try { v = localStorage.getItem("loaview-vid"); } catch (e) {}
+    if (v) input.value = v;
+    else alert("이 브라우저에서 저장된 key가 없습니다.\n(관리자 페이지가 로아뷰와 다른 주소면 로아뷰 사이트 콘솔에서 localStorage.getItem('loaview-vid') 로 확인하세요)");
+  });
+  document.getElementById("charExcludeList").addEventListener("click", e => {
+    const b = e.target.closest("button[data-i]");
+    if (!b) return;
+    const list = getExcluded();
+    list.splice(Number(b.dataset.i), 1);
+    setExcluded(list);
+    renderExcludeUI();
+    loadCharLookup();
+  });
+  renderExcludeUI();
+}
+
 function initCharLookupUI() {
+  initExcludeUI();
   document.querySelectorAll(".char-period-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".char-period-btn").forEach(b => b.classList.remove("active"));
