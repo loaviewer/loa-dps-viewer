@@ -66,7 +66,28 @@ body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif
 .record-text{font-size:10px;color:#5a6a82;margin-top:2px}
 .champ-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.22);border-radius:7px;padding:2px 7px;font-size:11px;font-weight:900;color:#ffd700}
 .loading-text{text-align:center;color:#5a6a82;font-size:13px;padding:20px 0}
+
+.char-summary{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.char-sum-box{border-radius:10px;padding:8px 10px;background:rgba(255,180,60,.06);border:1px solid rgba(255,180,60,.14)}
+.char-sum-label{font-size:9px;color:#7a8da8;font-weight:800;text-transform:uppercase;margin-bottom:3px}
+.char-sum-value{font-size:16px;font-weight:900;color:#ffd48a}
+.char-hour-wrap{margin-bottom:12px}
+.char-hour-title{font-size:11px;font-weight:900;color:#7fc6ff;margin-bottom:6px;letter-spacing:.5px}
+.char-hour-bars{display:flex;align-items:flex-end;gap:2px;height:56px;padding:4px 2px;background:rgba(0,0,0,.2);border-radius:8px}
+.char-hour-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.char-hour-bar{width:100%;max-width:12px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,#ffd48a,#ff9f43);min-height:2px}
+.char-hour-lbl{font-size:8px;color:#5a6a82;margin-top:2px;transform:scale(.9)}
+.char-list-title{font-size:11px;font-weight:900;color:#7fc6ff;margin:8px 0 6px;letter-spacing:.5px}
+.char-list{display:flex;flex-direction:column;gap:4px;max-height:340px;overflow-y:auto}
+.char-row{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05)}
+.char-row-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.char-row-name{font-size:13px;font-weight:900;color:#fff}
+.char-row-count{font-size:12px;font-weight:900;color:#ffd48a;white-space:nowrap}
+.char-row-meta{font-size:10px;color:#5a6a82;margin-top:3px}
+.char-row-tabs{font-size:10px;color:#9aa8bc;margin-top:4px;line-height:1.4}
+.char-row-tabs b{color:#ffd48a;font-weight:800}
 .char-placeholder{border-radius:14px;padding:28px 16px;text-align:center;background:rgba(255,180,60,.04);border:1px dashed rgba(255,180,60,.28)}
+
 .char-placeholder-ico{font-size:36px;margin-bottom:10px}
 .char-placeholder-title{font-size:15px;font-weight:900;color:#ffd48a;margin-bottom:6px}
 .char-placeholder-desc{font-size:12px;color:#7a8da8;line-height:1.6}
@@ -186,18 +207,22 @@ body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif
       <!-- 주황: 조회 자리 -->
       <div class="admin-card col-char">
         <span class="col-label">캐릭터 조회</span>
-        <div class="char-placeholder">
-          <div class="char-placeholder-ico">📊</div>
-          <div class="char-placeholder-title">조회 통계 예정</div>
-          <div class="char-placeholder-desc">Supabase 테이블 + 사이트 연동 후<br>여기에 데이터가 표시됩니다.</div>
-          <div class="char-placeholder-list">
-            <b>예정 항목</b><br>
-            · 닉네임별 조회 횟수<br>
-            · 마지막 조회 시각 (KST)<br>
-            · 조회 후 이동 탭 경로<br>
-            · 당일 시간대별 그래프
+        <div class="char-summary">
+          <div class="char-sum-box">
+            <div class="char-sum-label">오늘 조회</div>
+            <div class="char-sum-value" id="charTodayCount">-</div>
+          </div>
+          <div class="char-sum-box">
+            <div class="char-sum-label">닉네임 수</div>
+            <div class="char-sum-value" id="charNameCount">-</div>
           </div>
         </div>
+        <div class="char-hour-wrap">
+          <div class="char-hour-title">당일 시간대 (KST)</div>
+          <div class="char-hour-bars" id="charHourBars"><div class="loading-text" style="width:100%;padding:12px 0">불러오는 중...</div></div>
+        </div>
+        <div class="char-list-title">닉네임별 조회 (최근순)</div>
+        <div class="char-list" id="charLookupList"><div class="loading-text">불러오는 중...</div></div>
       </div>
       <!-- 파랑: 문의 -->
       <div class="admin-card col-inq">
@@ -358,6 +383,95 @@ async function loadGrade(){
   if(data) for(const r of data){ if(r.grade) counts[r.grade]=(counts[r.grade]||0)+1; }
   renderGrade(counts);
 }
+
+
+const TAB_LABEL_MAP = {info:"정보",stat:"스텟",skill:"스킬",arkgrid:"아크그리드",arkpassive:"아크패시브",expedition:"원정대",gakgak:"직각 티어"};
+
+function fmtKst(iso) {
+  try {
+    return new Date(iso).toLocaleString("ko-KR", {
+      timeZone: "Asia/Seoul",
+      year: "2-digit", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", hour12: false
+    });
+  } catch (e) { return "-"; }
+}
+
+function tabsPath(tabs) {
+  if (!tabs || !tabs.length) return "-";
+  return tabs.map(t => TAB_LABEL_MAP[t] || t).join(" → ");
+}
+
+async function loadCharLookup() {
+  const listEl = document.getElementById("charLookupList");
+  const hourEl = document.getElementById("charHourBars");
+  if (!listEl) return;
+
+  // 닉네임 집계
+  const { data: stats, error: e1 } = await supabase
+    .from("char_lookup_stats")
+    .select("name,count,first_seen,last_seen,tabs")
+    .order("last_seen", { ascending: false })
+    .limit(80);
+
+  if (e1) {
+    listEl.innerHTML = '<div class="loading-text">조회 실패 😢<br><span style="font-size:11px">' + (e1.message || "") + "</span></div>";
+  } else if (!stats || !stats.length) {
+    document.getElementById("charNameCount").textContent = "0";
+    listEl.innerHTML = '<div class="loading-text">아직 조회 기록이 없습니다</div>';
+  } else {
+    document.getElementById("charNameCount").textContent = stats.length;
+    listEl.innerHTML = stats.map(row => {
+      return '<div class="char-row">'
+        + '<div class="char-row-top"><div class="char-row-name">' + row.name + '</div>'
+        + '<div class="char-row-count">' + row.count + '회</div></div>'
+        + '<div class="char-row-meta">마지막 ' + fmtKst(row.last_seen) + '</div>'
+        + '<div class="char-row-tabs"><b>탭</b> ' + tabsPath(row.tabs) + '</div>'
+        + '</div>';
+    }).join("");
+  }
+
+  // 오늘(KST) 로그 → 시간대 그래프 + 오늘 건수
+  const { data: logs, error: e2 } = await supabase
+    .from("char_lookup_logs")
+    .select("created_at")
+    .order("created_at", { ascending: false })
+    .limit(2000);
+
+  const hourCount = {};
+  for (let h = 0; h < 24; h++) hourCount[h] = 0;
+  let todayN = 0;
+
+  if (!e2 && logs) {
+    const todayKst = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" }); // YYYY-MM-DD
+    logs.forEach(row => {
+      const d = new Date(row.created_at);
+      const kstDate = d.toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
+      if (kstDate !== todayKst) return;
+      todayN++;
+      const hour = Number(d.toLocaleString("en-US", { timeZone: "Asia/Seoul", hour: "numeric", hour12: false }));
+      // hour12 false can give 24 in some engines — normalize
+      const h = hour === 24 ? 0 : hour;
+      hourCount[h] = (hourCount[h] || 0) + 1;
+    });
+  }
+  document.getElementById("charTodayCount").textContent = todayN;
+
+  const maxH = Math.max(1, ...Object.values(hourCount));
+  // 표시: 최근 활동 구간에 맞춰 0~23 전체 (좁으면 너무 작음)
+  hourEl.innerHTML = "";
+  for (let h = 0; h < 24; h++) {
+    const n = hourCount[h] || 0;
+    const pct = Math.max(n ? 8 : 2, Math.round(n / maxH * 100));
+    const col = document.createElement("div");
+    col.className = "char-hour-col";
+    col.title = h + "시 " + n + "회";
+    col.innerHTML = '<div class="char-hour-bar" style="height:' + pct + '%;opacity:' + (n ? 1 : .25) + '"></div>'
+      + (h % 3 === 0 ? '<div class="char-hour-lbl">' + h + '</div>' : '<div class="char-hour-lbl">&nbsp;</div>');
+    hourEl.appendChild(col);
+  }
+}
+
 
 function initDashboard(){
   document.querySelectorAll(".main-tab").forEach(btn=>{
