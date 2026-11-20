@@ -298,7 +298,7 @@ async function checkPassword(){
     document.getElementById("lockScreen").style.display="none";
     document.body.style.alignItems="flex-start";
     document.getElementById("adminPage").classList.add("show");
-    initDashboard(); loadAdminInquiries(); setTimeout(function(){ try{ loadCharLookup(); }catch(e){} }, 500);
+    initDashboard(); loadAdminInquiries();
   } else {
     document.getElementById("pwError").style.display="block";
     document.getElementById("pwInput").value="";
@@ -374,6 +374,7 @@ async function loadMainTable(){
 
 function renderGrade(counts){
   const c=document.getElementById("opGradeList");
+  if(!c) return;
   const total=Object.values(counts).reduce((a,b)=>a+b,0);
   if(!total){c.innerHTML='<div class="loading-text">데이터 없음 😢</div>';return}
   c.innerHTML=`<div class="grade-total">실시간 집계중</div><div class="grade-list">${GRADE_TABLE.map(g=>{
@@ -611,12 +612,21 @@ function initDashboard(){
   document.querySelectorAll(".champ-type-btn").forEach(btn=>{
     btn.onclick=()=>{document.querySelectorAll(".champ-type-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");champType=btn.dataset.type;if(currentTab==="champ")loadMainTable()};
   });
-  document.querySelectorAll(".pick-toggle-btn").forEach(btn=>{
-    btn.onclick=()=>{document.querySelectorAll(".pick-toggle-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");currentPickType=btn.dataset.type;const s=document.getElementById("classPickSelect");if(s.value)loadClassPickData(s.value,currentPickType)};
-  });
-  document.getElementById("classPickSelect").onchange=function(){if(this.value)loadClassPickData(this.value,currentPickType);else document.getElementById("classPickResult").innerHTML='<div class="loading-text">클래스를 선택하세요 🎯</div>'};
-  // fill option values
-  document.querySelectorAll("#classPickSelect option").forEach(o=>{if(o.value===""&&o.textContent&&!o.textContent.includes("선택"))o.value=o.textContent});
+
+  // 클래스 선택 영역은 HTML에 있을 때만 초기화 (없으면 건너뜀)
+  const pickSel=document.getElementById("classPickSelect");
+  if(pickSel){
+    document.querySelectorAll(".pick-toggle-btn").forEach(btn=>{
+      btn.onclick=()=>{document.querySelectorAll(".pick-toggle-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");currentPickType=btn.dataset.type;if(pickSel.value)loadClassPickData(pickSel.value,currentPickType)};
+    });
+    pickSel.onchange=function(){
+      const r=document.getElementById("classPickResult");
+      if(this.value)loadClassPickData(this.value,currentPickType);
+      else if(r)r.innerHTML='<div class="loading-text">클래스를 선택하세요 🎯</div>';
+    };
+    document.querySelectorAll("#classPickSelect option").forEach(o=>{if(o.value===""&&o.textContent&&!o.textContent.includes("선택"))o.value=o.textContent});
+  }
+
   initCharLookupUI();
   loadMainTable();
   loadCharLookup();
@@ -624,6 +634,7 @@ function initDashboard(){
 
 async function loadClassPickData(className,type){
   const el=document.getElementById("classPickResult");
+  if(!el) return;
   el.innerHTML='<div class="loading-text">불러오는 중...</div>';
   const {data,error}=await supabase.rpc("get_class_winner_stats",{p_class:className,p_type:type});
   if(error||!data||!data.length){el.innerHTML='<div class="loading-text">데이터 없음 😢</div>';return}
