@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>로아뷰 | 관리자</title>
+<title>로이터 베이스 | 관리자</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif;background:linear-gradient(135deg,#0b1018 0%,#0d1320 45%,#121927 100%);color:#f3ead6;display:flex;align-items:center;justify-content:center}
@@ -294,7 +294,7 @@ async function checkPassword(){
     document.getElementById("lockScreen").style.display="none";
     document.body.style.alignItems="flex-start";
     document.getElementById("adminPage").classList.add("show");
-    initDashboard(); loadAdminInquiries();
+    initDashboard(); loadAdminInquiries(); setTimeout(function(){ try{ loadCharLookup(); }catch(e){} }, 500);
   } else {
     document.getElementById("pwError").style.display="block";
     document.getElementById("pwInput").value="";
@@ -503,7 +503,9 @@ function initDashboard(){
   document.getElementById("classPickSelect").onchange=function(){if(this.value)loadClassPickData(this.value,currentPickType);else document.getElementById("classPickResult").innerHTML='<div class="loading-text">클래스를 선택하세요 🎯</div>'};
   // fill option values
   document.querySelectorAll("#classPickSelect option").forEach(o=>{if(o.value===""&&o.textContent&&!o.textContent.includes("선택"))o.value=o.textContent});
-  loadMainTable(); loadGrade();
+  loadMainTable();
+  loadGrade();
+  loadCharLookup();
 }
 
 async function loadClassPickData(className,type){
