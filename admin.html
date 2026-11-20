@@ -98,6 +98,8 @@ body{margin:0;min-height:100vh;font-family:"Segoe UI","Malgun Gothic",sans-serif
 .char-row-meta{font-size:10px;color:#5a6a82;margin-top:3px}
 .char-row-tabs{font-size:10px;color:#9aa8bc;margin-top:4px;line-height:1.4}
 .char-row-tabs b{color:#ffd48a;font-weight:800}
+.char-group{display:flex;flex-direction:column;gap:4px;padding:6px;border-radius:12px;border:1.5px solid rgba(255,180,60,.45);background:rgba(255,180,60,.05)}
+.char-group-head{font-size:10px;font-weight:900;color:#ffd48a;padding:2px 4px 4px;letter-spacing:.3px}
 .char-placeholder{border-radius:14px;padding:28px 16px;text-align:center;background:rgba(255,180,60,.04);border:1px dashed rgba(255,180,60,.28)}
 
 .char-placeholder-ico{font-size:36px;margin-bottom:10px}
@@ -453,19 +455,28 @@ async function loadCharLookup() {
   try {
     const bounds = charRangeBounds();
     // 넉넉히 가져와서 클라이언트에서 KST 필터 (timestamptz)
-    const { data: logs, error: e2 } = await supabase
+    let { data: logs, error: e2 } = await supabase
       .from("char_lookup_logs")
-      .select("name,created_at")
+      .select("name,created_at,visitor_id")
       .order("created_at", { ascending: false })
       .limit(5000);
 
+    // visitor_id 컬럼이 아직 없으면 예전 방식으로 조회 (묶음 없이 표시)
+    if (e2) {
+      const r2 = await supabase
+        .from("char_lookup_logs")
+        .select("name,created_at")
+        .order("created_at", { ascending: false })
+        .limit(5000);
+      logs = r2.data; e2 = r2.error;
+    }
     if (e2) throw e2;
 
     const filtered = [];
     (logs || []).forEach(row => {
       const d = new Date(row.created_at);
       const day = kstYmd(d);
-      if (day >= bounds.from && day <= bounds.to) filtered.push({ name: row.name, at: d, day: day });
+      if (day >= bounds.from && day <= bounds.to) filtered.push({ name: row.name, at: d, day: day, vid: row.visitor_id || null });
     });
 
     document.getElementById("charTodayCount").textContent = filtered.length;
@@ -493,12 +504,36 @@ async function loadCharLookup() {
     if (!names.length) {
       listEl.innerHTML = '<div class="loading-text">이 기간에 조회 기록이 없습니다</div>';
     } else {
-      listEl.innerHTML = names.map(name => {
-        return '<div class="char-row">'
-          + '<div class="char-row-top"><div class="char-row-name">' + name + '</div>'
-          + '<div class="char-row-count">' + nameCount[name] + '회</div></div>'
-          + '<div class="char-row-meta">마지막 ' + fmtKst(nameLast[name].toISOString()) + '</div>'
-          + '<div class="char-row-tabs"><b>탭</b> ' + tabsPath(tabMap[name]) + '</div>'
+      // 방문자(visitor_id)별로 묶기. visitor_id 없는 기록은 닉네임 단위로 따로 취급
+      const groups = new Map();
+      filtered.forEach(r => {
+        const key = r.vid ? "v:" + r.vid : "n:" + r.name;
+        let g = groups.get(key);
+        if (!g) { g = { last: r.at, names: new Map(), total: 0 }; groups.set(key, g); }
+        if (r.at > g.last) g.last = r.at;
+        g.total++;
+        let e = g.names.get(r.name);
+        if (!e) { e = { count: 0, last: r.at }; g.names.set(r.name, e); }
+        e.count++;
+        if (r.at > e.last) e.last = r.at;
+      });
+      // 방문자 그룹: 가장 최근에 조회한 사람이 맨 위 / 그룹 안에서도 최근 닉네임이 위
+      const sortedGroups = Array.from(groups.values()).sort((a, b) => b.last - a.last);
+
+      const rowHtml = (name, e) =>
+        '<div class="char-row">'
+        + '<div class="char-row-top"><div class="char-row-name">' + name + '</div>'
+        + '<div class="char-row-count">' + e.count + '회</div></div>'
+        + '<div class="char-row-meta">마지막 ' + fmtKst(e.last.toISOString()) + '</div>'
+        + '<div class="char-row-tabs"><b>탭</b> ' + tabsPath(tabMap[name]) + '</div>'
+        + '</div>';
+
+      listEl.innerHTML = sortedGroups.map(g => {
+        const entries = Array.from(g.names.entries()).sort((a, b) => b[1].last - a[1].last);
+        if (entries.length === 1) return rowHtml(entries[0][0], entries[0][1]);
+        return '<div class="char-group">'
+          + '<div class="char-group-head">👤 한 방문자 · 닉네임 ' + entries.length + '개 · 총 ' + g.total + '회</div>'
+          + entries.map(en => rowHtml(en[0], en[1])).join("")
           + '</div>';
       }).join("");
     }
