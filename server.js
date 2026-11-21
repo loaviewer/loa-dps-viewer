@@ -257,14 +257,14 @@ app.get("/news/notices", (req, res) => callLostArk(`/news/notices`, res));
 const IDLE_LIMIT_MS = 10000;
 
 const CACHE = {
-  enhance:           { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 15000, lastRequestedAt: 0, isFetching: false },
-  engravings:        { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 10000, lastRequestedAt: 0, isFetching: false },
-  auctionEngravings: { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 10000, lastRequestedAt: 0, isFetching: false },
-  gems:              { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 8000,  lastRequestedAt: 0, isFetching: false },
-  life:              { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 25000, lastRequestedAt: 0, isFetching: false },
+  enhance:           { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 15000, lastRequestedAt: 0, isFetching: false, refreshPromise: null },
+  engravings:        { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 10000, lastRequestedAt: 0, isFetching: false, refreshPromise: null },
+  auctionEngravings: { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 10000, lastRequestedAt: 0, isFetching: false, refreshPromise: null },
+  gems:              { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 8000,  lastRequestedAt: 0, isFetching: false, refreshPromise: null },
+  life:              { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 25000, lastRequestedAt: 0, isFetching: false, refreshPromise: null },
   // 2026년 8월 6일 추가: 배틀 아이템(전투 용품) / 에스더의 기운
-  battleItems:       { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 15000, lastRequestedAt: 0, isFetching: false },
-  esther:            { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 20000, lastRequestedAt: 0, isFetching: false },
+  battleItems:       { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 15000, lastRequestedAt: 0, isFetching: false, refreshPromise: null },
+  esther:            { data: null, updatedAt: null, lastSuccessAt: null, lastAttemptAt: null, apiStatus: "OFFLINE", intervalMs: 20000, lastRequestedAt: 0, isFetching: false, refreshPromise: null },
 };
 
 async function refreshEnhanceCache() {
@@ -662,20 +662,6 @@ async function refreshGemsCache() {
   }
 }
 
-// 사이트에 방문자가 없어도 30분마다 보석 가격을 조회해서 기록
-setInterval(async () => {
-  const entry = CACHE.gems;
-  if (entry.isFetching) return;
-  if (Date.now() - lastGemSampleAt < GEM_SAMPLE_INTERVAL_MS) return;
-  try {
-    entry.isFetching = true;
-    entry.lastAttemptAt = Date.now();
-    await refreshGemsCache();
-  } finally {
-    entry.isFetching = false;
-  }
-}, 60 * 1000);
-
 async function refreshAuctionEngravingsCache() {
   const key = getNextApiKey();
   if (!key) { CACHE.auctionEngravings.apiStatus = "OFFLINE"; return; }
@@ -757,27 +743,48 @@ const REFRESHERS = {
   esther: refreshEstherCache,
 };
 
+// 같은 카테고리를 동시에 여러 번 갱신하지 않도록, 진행 중인 작업 하나를 모두가 공유
+// (워밍업 / 워처 / 방문자 요청 / 보석 30분 기록이 전부 이 함수를 거침)
+function startRefresh(name) {
+  const entry = CACHE[name];
+  if (entry.refreshPromise) return entry.refreshPromise;
+  entry.isFetching = true;
+  entry.lastAttemptAt = Date.now();
+  entry.refreshPromise = Promise.resolve()
+    .then(() => REFRESHERS[name]())
+    .catch((err) => console.error(`[cache] ${name} 갱신 실패:`, err.message))
+    .finally(() => {
+      entry.isFetching = false;
+      entry.refreshPromise = null;
+    });
+  return entry.refreshPromise;
+}
+
 // 워밍업
 async function warmUpCaches() {
   console.log("[cache] 서버 시작 - 캐시 워밍업 시작");
   for (const name of Object.keys(REFRESHERS)) {
     try {
-      CACHE[name].isFetching = true;
-      await REFRESHERS[name]();
+      await startRefresh(name);
       console.log(`[cache] ${name} 워밍업 완료`);
     } catch (err) {
       console.error(`[cache] ${name} 워밍업 실패:`, err.message);
-    } finally {
-      CACHE[name].isFetching = false;
     }
   }
   console.log("[cache] 캐시 워밍업 전체 완료");
 }
 warmUpCaches();
 
-// 워처
+// 사이트에 방문자가 없어도 30분마다 보석 가격을 조회해서 기록
+setInterval(() => {
+  if (CACHE.gems.isFetching) return;
+  if (Date.now() - lastGemSampleAt < GEM_SAMPLE_INTERVAL_MS) return;
+  startRefresh("gems");
+}, 60 * 1000);
+
+// 워처: 방문자가 있는 동안(마지막 요청 후 IDLE_LIMIT_MS 이내) 각 카테고리를 intervalMs마다 갱신
 Object.keys(CACHE).forEach((name) => {
-  setInterval(async () => {
+  setInterval(() => {
     const entry = CACHE[name];
     const now = Date.now();
 
@@ -791,30 +798,46 @@ Object.keys(CACHE).forEach((name) => {
     const dueForRefresh = !entry.lastAttemptAt || now - entry.lastAttemptAt >= entry.intervalMs;
     if (!dueForRefresh) return;
 
-    try {
-      entry.isFetching = true;
-      entry.lastAttemptAt = now;
-      await REFRESHERS[name]();
-    } finally {
-      entry.isFetching = false;
-    }
+    startRefresh(name);
   }, 1000);
 });
 
-// 캐시 반환 라우트 (점검 중이어도 캐시 데이터 보존 반환)
-function sendCache(name, res) {
-  const entry = CACHE[name];
-  entry.lastRequestedAt = Date.now();
+// 캐시 반환 라우트
+// - 데이터가 STALE_WAIT_MS보다 오래됐으면(예: 방문자가 한동안 없었음) 응답하기 전에 먼저 갱신해서 최신 시세를 줌
+// - 갱신이 WAIT_TIMEOUT_MS보다 오래 걸리면 기다리지 않고 지금 가진 데이터로 응답
+// - 점검 중(OFFLINE)이면 방문자를 기다리게 하지 않고 마지막 성공 데이터를 바로 반환
+const STALE_WAIT_MS = 30 * 1000;
+const WAIT_TIMEOUT_MS = 3000;
 
-  const responseData = entry.data || { TotalCount: 0, Items: [] };
+async function sendCache(name, res) {
+  try {
+    const entry = CACHE[name];
+    const now = Date.now();
+    entry.lastRequestedAt = now;
 
-  res.json({ 
-    ready: true, 
-    apiStatus: entry.apiStatus,         // ONLINE / OFFLINE
-    lastSuccessAt: entry.lastSuccessAt, // 마지막 성공 타임스탬프 (ms)
-    UpdatedAt: entry.updatedAt, 
-    ...responseData 
-  });
+    const age = entry.updatedAt ? now - entry.updatedAt : Infinity;
+    const canRetry = !entry.lastAttemptAt || now - entry.lastAttemptAt >= entry.intervalMs;
+
+    // 이미 갱신이 진행 중이면(워밍업 포함) 그 작업을 기다리고, 아니면 필요할 때 새로 시작
+    let pending = entry.refreshPromise;
+    if (!pending && age > STALE_WAIT_MS && canRetry) pending = startRefresh(name);
+
+    if (pending && (entry.apiStatus === "ONLINE" || !entry.data)) {
+      await Promise.race([pending, new Promise((r) => setTimeout(r, WAIT_TIMEOUT_MS))]);
+    }
+
+    const responseData = entry.data || { TotalCount: 0, Items: [] };
+    res.json({
+      ready: true,
+      apiStatus: entry.apiStatus,         // ONLINE / OFFLINE
+      lastSuccessAt: entry.lastSuccessAt, // 마지막 성공 타임스탬프 (ms)
+      UpdatedAt: entry.updatedAt,
+      ...responseData,
+    });
+  } catch (err) {
+    console.error("sendCache 오류:", err.message);
+    if (!res.headersSent) res.status(500).json({ error: "시세 조회 중 오류가 발생했습니다." });
+  }
 }
 
 app.get("/markets/enhance", (req, res) => sendCache("enhance", res));
